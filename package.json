@@ -1,0 +1,77 @@
+{
+  "name": "ppaekkom-index",
+  "version": "1.0.1",
+  "description": "Floating index app for presentation hosts",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "dist:win": "electron-builder --win nsis",
+    "dist:win:unsigned": "set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder --win nsis",
+    "dist:plus": "electron-builder --config electron-builder-plus.json --win nsis"
+  },
+  "keywords": [
+    "electron",
+    "presentation",
+    "floating-index"
+  ],
+  "author": "",
+  "license": "MIT",
+  "build": {
+    "appId": "com.ppaekkom.index",
+    "productName": "빼꼼 인덱스",
+    "asar": true,
+    "files": [
+      "main.js",
+      "index.html",
+      "settings.html",
+      "assets/**/*",
+      "build/icon.ico",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "extraResources": [
+      {
+        "from": "build/icon.ico",
+        "to": "icon.ico"
+      }
+    ],
+    "icon": "build/icon.ico",
+    "afterPack": "scripts/embed-win-icon.js",
+    "win": {
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "빼꼼 인덱스-Setup.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "빼꼼 인덱스",
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "installerHeaderIcon": "build/icon.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^36.0.0",
+    "electron-builder": "^24.13.3",
+    "png-to-ico": "^3.0.1",
+    "rcedit": "^4.0.1"
+  },
+  "dependencies": {
+    "marked": "^18.0.5"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "appId": "com.ppaekkom.plus",
+  "productName": "Peekom Plus",
+  "extends": null,
+  "asar": true,
+  "icon": "build/icon.ico",
+  "files": [
+    "main.js",
+    "index.html",
+    "settings.html",
+    "assets/**/*",
+    "build/icon.ico",
+    "build/plus.png",
+    "package.json",
+    "node_modules/marked/**/*"
+  ],
+  "directories": {
+    "output": "dist",
+    "buildResources": "build"
+  },
+  "afterPack": "scripts/embed-win-icon.js",
+  "win": {
+    "icon": "build/icon.ico",
+    "signAndEditExecutable": false,
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ],
+    "artifactName": "Peekom Plus-Setup.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "shortcutName": "Peekom Plus"
+  }
+}

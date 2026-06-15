@@ -1,0 +1,1878 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peekom Plus</title>
+    <script src="assets/i18n.js"></script>
+    <style>
+      :root {
+        --collapsed-width: 32px;
+        --panel-width: 420px;
+        --handle-height: 10vh;
+        --active-y-slot: 0;
+        --note-bg: #fff4b8;
+        --note-text: #2f3750;
+        --muted-text: #7f8797;
+        --accent: #4a79ff;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        font-family: "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        color: var(--note-text);
+      }
+
+      #app {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .floating-panel {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        isolation: isolate;
+      }
+
+      .handle-column {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: var(--collapsed-width);
+        height: 100%;
+        z-index: 100;
+        pointer-events: none;
+      }
+
+      .edge-handle {
+        position: absolute;
+        right: 0;
+        width: 100%;
+        height: var(--handle-height);
+        border: 0;
+        background: color-mix(in srgb, var(--handle-bg, var(--note-bg)) 90%, var(--handle-text, var(--note-text)) 10%);
+        color: var(--handle-text, var(--note-text));
+        border-radius: 12px 0 0 12px;
+        border-left: 2px solid rgba(79, 84, 95, 0.28);
+        box-shadow: inset 2px 0 0 rgba(255, 255, 255, 0.35);
+        cursor: ew-resize;
+        padding: 4px 2px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        touch-action: none;
+        pointer-events: auto;
+      }
+
+      .edge-handle.is-active {
+        background: color-mix(in srgb, var(--handle-bg, var(--note-bg)) 78%, var(--handle-text, var(--note-text)) 22%);
+      }
+
+      .edge-handle.is-dragging-reorder {
+        opacity: 0.92;
+        z-index: 120;
+      }
+
+      .handle-label-text {
+        writing-mode: vertical-rl;
+        text-orientation: upright;
+        letter-spacing: 1px;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.05;
+        max-height: 100%;
+        overflow: hidden;
+        text-align: center;
+        color: var(--handle-text, var(--note-text));
+        pointer-events: none;
+        user-select: none;
+      }
+
+      .memo-editor h1 {
+        font-size: 1.45em;
+        font-weight: 700;
+        margin: 0.2em 0;
+      }
+
+      .memo-editor h2 {
+        font-size: 1.25em;
+        font-weight: 700;
+        margin: 0.2em 0;
+      }
+
+      .memo-editor h3 {
+        font-size: 1.1em;
+        font-weight: 700;
+        margin: 0.2em 0;
+      }
+
+      .first-run-tip {
+        position: absolute;
+        right: calc(var(--collapsed-width) + 10px);
+        max-width: 220px;
+        padding: 10px 11px;
+        border-radius: 9px;
+        background: rgba(255, 255, 255, 0.96);
+        color: #404a60;
+        font-size: 11px;
+        line-height: 1.4;
+        z-index: 18;
+        pointer-events: auto;
+      }
+
+      .note-shell {
+        position: absolute;
+        top: calc(var(--handle-height) * var(--active-y-slot, 0));
+        right: 0;
+        width: 100%;
+        height: var(--note-shell-height, 40vh);
+        max-height: var(--note-shell-maxh, 40vh);
+        padding: 10px 10px 6px;
+        padding-right: calc(var(--collapsed-width) + 8px);
+        border-radius: 12px 0 0 12px;
+        background: var(--note-bg);
+        transform: translateX(120%);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: transform 280ms cubic-bezier(0.2, 1, 0.25, 1), opacity 150ms ease;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        z-index: 1;
+      }
+
+      .floating-panel.expanded .note-shell {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .settings-icon-btn {
+        position: absolute;
+        top: 8px;
+        right: calc(var(--collapsed-width) + 12px);
+        width: 28px;
+        height: 28px;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.78);
+        color: #3a455f;
+        font-size: 13px;
+        cursor: pointer;
+        z-index: 22;
+        pointer-events: auto;
+      }
+
+      .note-editor-wrap {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        background: var(--note-bg);
+        overflow: hidden;
+      }
+
+      .memo-editor {
+        flex: 1;
+        min-height: 0;
+        padding: 10px 8px 6px;
+        outline: none;
+        overflow: auto;
+        font-size: 18px;
+        line-height: 1.52;
+        color: var(--note-text);
+        background: var(--note-bg);
+        word-break: break-word;
+      }
+
+      .memo-editor a[data-external] {
+        color: var(--accent);
+        text-decoration: underline;
+        cursor: pointer;
+      }
+
+      .memo-editor a[data-external]:hover {
+        filter: brightness(0.9);
+      }
+
+      .memo-editor ul,
+      .memo-editor ol {
+        margin-left: 18px;
+      }
+
+      .note-footer {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 0 6px;
+        height: 30px;
+        min-height: 30px;
+        padding-top: 2px;
+        color: var(--muted-text);
+        font-size: 11px;
+        overflow: hidden;
+      }
+
+      .mode-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 22px;
+        min-width: 40px;
+        padding: 0 7px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        flex-shrink: 0;
+        border: 0;
+        cursor: pointer;
+        position: relative;
+      }
+      .mode-chip:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+      }
+      .mode-chip[title]:hover::after {
+        content: attr(title);
+        position: absolute;
+        bottom: calc(100% + 4px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(30,36,54,0.92);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 400;
+        white-space: nowrap;
+        padding: 3px 7px;
+        border-radius: 5px;
+        pointer-events: none;
+        z-index: 999;
+      }
+
+      .mode-chip.peek {
+        background: #f8d878;
+        color: #5c4a08;
+      }
+
+      .mode-chip.ice {
+        background: #cfe5ff;
+        color: #21518f;
+      }
+
+      .format-bar {
+        display: inline-flex;
+        flex-wrap: nowrap;
+        gap: 0 4px;
+        align-items: center;
+        flex: 1;
+        min-width: 0;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .tool-btn {
+        height: 24px;
+        min-width: 20px;
+        border: 0;
+        border-radius: 5px;
+        background: transparent;
+        color: #34405a;
+        font-size: 13px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 3px;
+        transition: background 120ms ease;
+        flex-shrink: 0;
+      }
+
+      .tool-btn:hover {
+        background: rgba(0, 0, 0, 0.06);
+      }
+
+      .tool-btn.active {
+        color: var(--accent);
+        font-weight: 700;
+      }
+
+      .tool-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 1px;
+        flex-shrink: 0;
+      }
+
+      .tool-separator {
+        width: 1px;
+        height: 12px;
+        background: rgba(62, 70, 90, 0.2);
+        flex-shrink: 0;
+        margin: 0 2px;
+      }
+
+      .save-indicator {
+        position: absolute;
+        right: calc(var(--collapsed-width) + 12px);
+        bottom: 8px;
+        font-size: 10px;
+        color: var(--muted-text);
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 999px;
+        padding: 2px 8px;
+        opacity: 0;
+        transition: opacity 280ms ease;
+        pointer-events: none;
+        z-index: 20;
+      }
+
+      .save-indicator.visible {
+        opacity: 1;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .note-shell {
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main id="app">
+      <section id="panel" class="floating-panel" aria-label="Floating index panel">
+        <div id="handleColumn" class="handle-column" aria-hidden="false"></div>
+
+        <div id="firstRunTip" class="first-run-tip hidden">
+          오른쪽 손잡이를 클릭하면 인덱스가 나옵니다.<br />
+          세로로 드래그하면 위치를 바꿀 수 있어요. 좌우로 드래그하면 순서를 바꿀 수 있어요.
+        </div>
+
+        <button id="settingsIconBtn" class="settings-icon-btn hidden" type="button" aria-label="인덱스 설정 열기">
+          ⚙
+        </button>
+
+        <article id="noteShell" class="note-shell">
+          <div class="note-editor-wrap">
+            <div id="memoEditor" class="memo-editor" contenteditable="true"></div>
+          </div>
+
+          <div class="note-footer">
+            <button id="modeChip" class="mode-chip peek" type="button">빼꼼</button>
+
+            <div id="formatBar" class="format-bar">
+              <div class="tool-group">
+                <button id="fontDecreaseBtn" class="tool-btn" type="button" title="글자 작게">A-</button>
+                <button id="fontIncreaseBtn" class="tool-btn" type="button" title="글자 크게">A+</button>
+              </div>
+              <span class="tool-separator"></span>
+              <div class="tool-group">
+                <button class="tool-btn" type="button" data-cmd="bold" title="굵게"><b>B</b></button>
+                <button class="tool-btn" type="button" data-cmd="italic" title="기울임"><i>I</i></button>
+                <button class="tool-btn" type="button" data-cmd="underline" title="밑줄"><u>U</u></button>
+              </div>
+              <span class="tool-separator"></span>
+              <div class="tool-group">
+                <button id="alignCycleBtn" class="tool-btn" type="button" title="정렬 순환">☰</button>
+                <button id="listCycleBtn" class="tool-btn" type="button" title="목록 순환">•</button>
+              </div>
+              <span class="tool-separator"></span>
+              <div class="tool-group">
+                <button id="textColorCycleBtn" class="tool-btn" type="button" title="글자색 순환">🅰</button>
+                <button id="highlightCycleBtn" class="tool-btn" type="button" title="형광 순환">🖍</button>
+                <button id="clearAllBtn" class="tool-btn" type="button" title="전체 삭제">🗑</button>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <div id="saveIndicator" class="save-indicator">저장됨</div>
+      </section>
+    </main>
+
+    <script>
+      const { ipcRenderer } = require("electron");
+      let marked;
+      try {
+        ({ marked } = require("marked"));
+      } catch (e) {
+        marked = (text) => text;
+      }
+
+      const STATE_KEY = "ppaekkom-plus-state-v5";
+      const STATE_KEY_V4 = "ppaekkom-plus-state-v4";
+      const LEGACY_V3_KEY = "ppaekkom-app-state-v3";
+      const FIRST_RUN_KEY = "ppaekkom-first-run-seen";
+      const LEGACY_SETTINGS_KEY = "ppaekkom-app-settings-v2";
+      const LEGACY_MEMO_KEY = "ppaekkom-memo-html-v2";
+
+      const DEFAULT_HOVER_DELAY = 250;
+      const LABEL_MAX = 6;
+      const MAX_SLOTS = 10;
+      const MAX_Y_SLOTS = 10;
+      const PANEL_CONTENT_WIDTH = 420;
+      const COLLAPSED_WIDTH = 32;
+      const DRAG_THRESHOLD = 12;
+      const SWAP_HOLD_MS = 400;
+      const FONT_SIZE_MIN = 8;
+      const FONT_SIZE_MAX = 36;
+      const DEFAULT_FONT_SIZE = 18;
+      const THEME_NAMES = ["yellow", "pink", "blue", "green", "custom"];
+      const THEME_MAP = {
+        yellow: { bg: "#FFF4B8", text: "#2F3750", accent: "#4A79FF" },
+        pink: { bg: "#FFD9E8", text: "#3B3350", accent: "#B1457A" },
+        blue: { bg: "#DDEBFF", text: "#2B3D5D", accent: "#2F67D8" },
+        green: { bg: "#DCF5DE", text: "#2A4B38", accent: "#2A7C44" },
+        custom: null
+      };
+
+      const URL_REGEX = /\b((?:https?:\/\/|www\.)[^\s<>"]+)/gi;
+
+      function defaultGlobal() {
+        return {
+          anchor: "middle",
+          lengthMode: "long",
+          triggerMode: "hover",
+          shortcut: "CommandOrControl+Shift+M",
+          hoverDelayMs: DEFAULT_HOVER_DELAY,
+          manualYOffset: 0,
+          openAtLogin: false,
+          language: null,
+          monitorMode: "auto",
+          monitorTargetId: null,
+          pinToggleMode: "chip",
+          setupCompleted: false
+        };
+      }
+
+      function defaultSlot(index = 0) {
+        return {
+          label: "",
+          theme: "yellow",
+          memoHtml: "",
+          ySlot: clamp(index, 0, MAX_Y_SLOTS - 1),
+          fontSize: DEFAULT_FONT_SIZE,
+          customBg: "#FFF4B8",
+          customText: "#2F3750"
+        };
+      }
+
+      function normalizeSlot(raw, index) {
+        const base = defaultSlot(index);
+        return {
+          label: typeof raw?.label === "string" ? raw.label.slice(0, LABEL_MAX) : "",
+          theme: THEME_NAMES.includes(raw?.theme) ? raw.theme : "yellow",
+          memoHtml: typeof raw?.memoHtml === "string" ? raw.memoHtml : "",
+          ySlot: clamp(
+            typeof raw?.ySlot === "number" && Number.isFinite(raw.ySlot)
+              ? Math.round(raw.ySlot)
+              : index,
+            0,
+            MAX_Y_SLOTS - 1
+          ),
+          fontSize: clamp(
+            typeof raw?.fontSize === "number" && Number.isFinite(raw.fontSize)
+              ? Math.round(raw.fontSize)
+              : DEFAULT_FONT_SIZE,
+            FONT_SIZE_MIN,
+            FONT_SIZE_MAX
+          ),
+          customBg:
+            typeof raw?.customBg === "string" && /^#[0-9A-Fa-f]{6}$/.test(raw.customBg)
+              ? raw.customBg
+              : base.customBg,
+          customText:
+            typeof raw?.customText === "string" && /^#[0-9A-Fa-f]{6}$/.test(raw.customText)
+              ? raw.customText
+              : base.customText
+        };
+      }
+
+      function createFreshState() {
+        return {
+          version: 5,
+          global: defaultGlobal(),
+          enabledCount: 1,
+          slots: Array.from({ length: MAX_SLOTS }, (_, i) => defaultSlot(i)),
+          order: [0],
+          activeSlot: 0
+        };
+      }
+
+      function migrateFromV4(v4) {
+        return {
+          version: 5,
+          global: { ...defaultGlobal(), ...v4.global },
+          enabledCount: clamp(Math.round(v4.enabledCount) || 1, 1, MAX_SLOTS),
+          slots: v4.slots.map((sl, i) => normalizeSlot(sl, i)),
+          order: normalizeOrder(v4.order, clamp(Math.round(v4.enabledCount) || 1, 1, MAX_SLOTS)),
+          activeSlot: clampSlotIndex(v4.activeSlot, clamp(Math.round(v4.enabledCount) || 1, 1, MAX_SLOTS))
+        };
+      }
+
+      function migrateFromV3(v3) {
+        const enabledCount = clamp(Math.round(v3.enabledCount) || 1, 1, MAX_SLOTS);
+        const slots = Array.from({ length: MAX_SLOTS }, (_, i) => defaultSlot(i));
+        for (let i = 0; i < Math.min(3, MAX_SLOTS); i++) {
+          if (v3.slots?.[i]) {
+            slots[i] = normalizeSlot(v3.slots[i], i);
+          }
+        }
+        return {
+          version: 5,
+          global: { ...defaultGlobal(), ...v3.global },
+          enabledCount,
+          slots,
+          order: normalizeOrder(v3.order, enabledCount),
+          activeSlot: clampSlotIndex(v3.activeSlot, enabledCount)
+        };
+      }
+
+      function migrateLegacy() {
+        let g = defaultGlobal();
+        try {
+          const raw = localStorage.getItem(LEGACY_SETTINGS_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            g = { ...g, ...parsed };
+          }
+        } catch {
+          /* ignore */
+        }
+        const memoHtml = localStorage.getItem(LEGACY_MEMO_KEY) || "";
+        const theme = g.theme || "yellow";
+        delete g.theme;
+        return {
+          version: 5,
+          global: g,
+          enabledCount: 1,
+          slots: Array.from({ length: MAX_SLOTS }, (_, i) =>
+            i === 0 ? { ...defaultSlot(0), theme, memoHtml } : defaultSlot(i)
+          ),
+          order: [0],
+          activeSlot: 0
+        };
+      }
+
+      function ensureMinimumOneSlot(state) {
+        if (!state.enabledCount || state.enabledCount < 1) {
+          state.enabledCount = 1;
+          if (!state.slots[0] || typeof state.slots[0].memoHtml !== "string") {
+            state.slots[0] = defaultSlot(0);
+          }
+          state.order = [0];
+          state.activeSlot = 0;
+        }
+        return state;
+      }
+
+      function loadState() {
+        try {
+          const rawV5 = localStorage.getItem(STATE_KEY);
+          if (rawV5) {
+            const s = JSON.parse(rawV5);
+            if (s && s.version === 5 && Array.isArray(s.slots) && s.slots.length === MAX_SLOTS) {
+              s.global = { ...defaultGlobal(), ...s.global };
+              s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
+              s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
+              s.order = normalizeOrder(s.order, s.enabledCount);
+              s.activeSlot = clampSlotIndex(s.activeSlot, s.enabledCount);
+              return ensureMinimumOneSlot(s);
+            }
+          }
+
+          const rawV4 = localStorage.getItem(STATE_KEY_V4);
+          if (rawV4) {
+            const v4 = JSON.parse(rawV4);
+            if (v4 && v4.version === 4 && Array.isArray(v4.slots) && v4.slots.length === MAX_SLOTS) {
+              return ensureMinimumOneSlot(migrateFromV4(v4));
+            }
+          }
+
+          const rawV3 = localStorage.getItem(LEGACY_V3_KEY);
+          if (rawV3) {
+            const v3 = JSON.parse(rawV3);
+            if (v3 && v3.version === 3 && Array.isArray(v3.slots)) {
+              return ensureMinimumOneSlot(migrateFromV3(v3));
+            }
+          }
+        } catch {
+          /* fallthrough */
+        }
+        return migrateLegacy();
+      }
+
+      function saveState(state) {
+        localStorage.setItem(STATE_KEY, JSON.stringify(state));
+      }
+
+      function clamp(n, a, b) {
+        return Math.max(a, Math.min(b, n));
+      }
+
+      function clampSlotIndex(slot, enabledCount) {
+        return clamp(slot, 0, enabledCount - 1);
+      }
+
+      function normalizeOrder(order, enabledCount) {
+        const base = [];
+        for (let i = 0; i < enabledCount; i++) base.push(i);
+        if (!Array.isArray(order) || order.length !== enabledCount) return base;
+        const set = new Set(order);
+        if (set.size !== enabledCount) return base;
+        for (let i = 0; i < enabledCount; i++) {
+          if (!set.has(i)) return base;
+        }
+        return order;
+      }
+
+      /** @type {ReturnType<typeof createFreshState>} */
+      let appState = createFreshState();
+      let appSettings = { ...defaultGlobal() };
+
+      const panel = document.getElementById("panel");
+      const handleColumn = document.getElementById("handleColumn");
+      const noteShell = document.getElementById("noteShell");
+      const memoEditor = document.getElementById("memoEditor");
+      const modeChip = document.getElementById("modeChip");
+      const firstRunTip = document.getElementById("firstRunTip");
+      const settingsIconBtn = document.getElementById("settingsIconBtn");
+      const alignCycleBtn = document.getElementById("alignCycleBtn");
+      const listCycleBtn = document.getElementById("listCycleBtn");
+      const textColorCycleBtn = document.getElementById("textColorCycleBtn");
+      const highlightCycleBtn = document.getElementById("highlightCycleBtn");
+      const clearAllBtn = document.getElementById("clearAllBtn");
+      const fontDecreaseBtn = document.getElementById("fontDecreaseBtn");
+      const fontIncreaseBtn = document.getElementById("fontIncreaseBtn");
+      const saveIndicator = document.getElementById("saveIndicator");
+
+      let isExpanded = false;
+      let isPinned = false;
+      let hoverTimer = null;
+      let settingsRevealTimer = null;
+      let hoverDelayMs = DEFAULT_HOVER_DELAY;
+      let saveIndicatorTimer = null;
+      let pendingClearAll = false;
+      let pendingClearAllTimer = null;
+      let urlScanTimer = null;
+
+      let draggingHandle = false;
+      let dragMoved = false;
+      let lastDragY = 0;
+
+      let dragMode = null;
+      let dragPointerId = null;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      let reorderSlot = null;
+      let swapTimer = null;
+      let swapTargetSlot = null;
+      let lastReorderPointer = { clientX: 0, clientY: 0 };
+      /** @type {HTMLElement | null} */
+      let pointerCaptureEl = null;
+
+      const alignCycle = ["justifyLeft", "justifyCenter", "justifyRight"];
+      const alignCycleLabel = ["☰", "☷", "☲"];
+      const listCycle = ["bullet", "check", "clear"];
+      const listCycleLabel = ["•", "☐", "∅"];
+      const textColorCycle = ["#2F3750", "#C13A3A", "#2D6CDF", "#2D8A42"];
+      const highlightCycle = ["#FFF59D", "#FFD9E8", "#DDEBFF", "transparent"];
+      let alignCycleIndex = -1;
+      let listCycleIndex = -1;
+      let textColorCycleIndex = -1;
+      let highlightCycleIndex = -1;
+
+      function clearHoverTimer() {
+        if (hoverTimer) {
+          clearTimeout(hoverTimer);
+          hoverTimer = null;
+        }
+      }
+
+      function clearRevealTimer() {
+        if (settingsRevealTimer) {
+          clearTimeout(settingsRevealTimer);
+          settingsRevealTimer = null;
+        }
+      }
+
+      function clearSwapTimer() {
+        if (swapTimer) {
+          clearTimeout(swapTimer);
+          swapTimer = null;
+        }
+        swapTargetSlot = null;
+      }
+
+      function showSaveIndicator() {
+        if (!saveIndicator) return;
+        saveIndicator.classList.add("visible");
+        if (saveIndicatorTimer) clearTimeout(saveIndicatorTimer);
+        saveIndicatorTimer = setTimeout(() => {
+          saveIndicator.classList.remove("visible");
+        }, 1200);
+      }
+
+      function persistActiveMemo() {
+        const slot = appState.activeSlot;
+        appState.slots[slot].memoHtml = memoEditor.innerHTML;
+        saveState(appState);
+        showSaveIndicator();
+      }
+
+      function loadMemoForActiveSlot() {
+        memoEditor.innerHTML = appState.slots[appState.activeSlot].memoHtml || "";
+        applyFontSizeForSlot(appState.activeSlot);
+        scanAndLinkifyEditor(true);
+      }
+
+      function applyFontSizeForSlot(slotIndex) {
+        const size = appState.slots[slotIndex]?.fontSize ?? DEFAULT_FONT_SIZE;
+        memoEditor.style.fontSize = `${size}px`;
+      }
+
+      function adjustFontSize(delta) {
+        const slot = appState.activeSlot;
+        const next = clamp(
+          (appState.slots[slot].fontSize ?? DEFAULT_FONT_SIZE) + delta,
+          FONT_SIZE_MIN,
+          FONT_SIZE_MAX
+        );
+        appState.slots[slot].fontSize = next;
+        memoEditor.style.fontSize = `${next}px`;
+        saveState(appState);
+      }
+
+      function applyThemeForSlot(slotIndex) {
+        const slot = appState.slots[slotIndex];
+        const themeName = slot.theme;
+        let bg;
+        let text;
+        let accent;
+
+        if (themeName === "custom") {
+          bg = slot.customBg || "#FFF4B8";
+          text = slot.customText || "#2F3750";
+          accent = "#4A79FF";
+        } else {
+          const safeTheme = THEME_MAP[themeName] ? themeName : "yellow";
+          const theme = THEME_MAP[safeTheme];
+          bg = theme.bg;
+          text = theme.text;
+          accent = theme.accent;
+        }
+
+        document.documentElement.style.setProperty("--note-bg", bg);
+        document.documentElement.style.setProperty("--note-text", text);
+        document.documentElement.style.setProperty("--accent", accent);
+      }
+
+      function updatePanelPosition() {
+        const ySlot = appState.slots[appState.activeSlot]?.ySlot ?? 0;
+        document.documentElement.style.setProperty("--active-y-slot", String(ySlot));
+
+        const totalH = window.innerHeight;
+        const slotH = totalH / MAX_Y_SLOTS;
+        const preferredH = totalH * 0.40;          // 40vh
+        const handleTopPx = ySlot * slotH;
+        // 메모가 화면 밖으로 나가지 않도록: 아래쪽 공간이 부족하면 위로 밀어올림
+        const availableBelow = totalH - handleTopPx;
+        let topPx;
+        if (availableBelow >= preferredH) {
+          topPx = handleTopPx;
+        } else {
+          // 손잡이 위쪽으로 정렬 (메모 하단 = 손잡이 하단)
+          topPx = Math.max(0, handleTopPx + slotH - preferredH);
+        }
+        const heightPx = Math.min(preferredH, totalH - topPx);
+
+        noteShell.style.top = `${topPx}px`;
+        noteShell.style.height = `${heightPx}px`;
+        noteShell.style.maxHeight = `${heightPx}px`;
+        // CSS 변수도 업데이트 (전환에 사용)
+        document.documentElement.style.setProperty("--note-shell-height", `${heightPx}px`);
+        document.documentElement.style.setProperty("--note-shell-maxh", `${heightPx}px`);
+
+        const tipTop = `${topPx + 14}px`;
+        firstRunTip.style.top = tipTop;
+      }
+
+      function getSlotHeightPx() {
+        return window.innerHeight / MAX_Y_SLOTS;
+      }
+
+      function pixelYToSlot(pixelY) {
+        const slotH = getSlotHeightPx();
+        if (slotH <= 0) return 0;
+        return clamp(Math.round(pixelY / slotH), 0, MAX_Y_SLOTS - 1);
+      }
+
+      /** 손잡이·메모·설정버튼 등 실제 인터랙션이 있는 영역 */
+      const HIT_TARGET_SELECTOR =
+        ".edge-handle, .floating-panel.expanded .note-shell, .first-run-tip:not(.hidden), .settings-icon-btn:not(.hidden)";
+      /** OS 폴링이 연속으로 "바깥" 판정할 때만 접기 (창 리사이즈 false-positive 방지) */
+      const COLLAPSE_CONFIRM_POLLS = 2;
+
+      let hitTestRafId = null;
+      /** 연속으로 인덱스 바깥에 있는 폴링 횟수 카운터 */
+      let consecutiveOutsidePollCount = 0;
+
+      function isInteractiveHitTarget(el) {
+        return Boolean(el && el.closest(HIT_TARGET_SELECTOR));
+      }
+
+      function shouldAutoCollapseOnHoverOutside() {
+        return (
+          isExpanded &&
+          !isPinned &&
+          appState.global.triggerMode === "hover" &&
+          !draggingHandle
+        );
+      }
+
+      async function syncWindowInteraction(partial = {}) {
+        try {
+          await ipcRenderer.invoke("window:sync-interaction", partial);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      async function syncPeekAutoCollapseToMain() {
+        try {
+          await ipcRenderer.invoke("window:set-peek-auto-collapse", shouldAutoCollapseOnHoverOutside());
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      function collapseIfOutsideIndexFromPoll(payload = {}) {
+        if (!shouldAutoCollapseOnHoverOutside()) {
+          consecutiveOutsidePollCount = 0;
+          return;
+        }
+
+        let isOutside = false;
+
+        if (payload.outsideWindow) {
+          isOutside = true;
+        } else {
+          const x = payload.clientX;
+          const y = payload.clientY;
+          if (typeof x === "number" && typeof y === "number" && x >= 0 && y >= 0) {
+            const el = document.elementFromPoint(x, y);
+            isOutside = !isInteractiveHitTarget(el);
+          }
+        }
+
+        if (isOutside) {
+          consecutiveOutsidePollCount++;
+          if (consecutiveOutsidePollCount >= COLLAPSE_CONFIRM_POLLS) {
+            consecutiveOutsidePollCount = 0;
+            setExpanded(false);
+          }
+        } else {
+          consecutiveOutsidePollCount = 0;
+        }
+      }
+
+      async function syncPanelLayoutToMain() {
+        try {
+          await ipcRenderer.invoke("window:set-panel-expanded", isExpanded);
+        } catch (error) {
+          console.error(error);
+        }
+        refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
+      }
+
+      function refreshPointerHitTest(event, force = false) {
+        if (!force && hitTestRafId !== null) return;
+        if (hitTestRafId !== null) {
+          cancelAnimationFrame(hitTestRafId);
+        }
+
+        hitTestRafId = requestAnimationFrame(() => {
+          hitTestRafId = null;
+
+          if (!isExpanded) {
+            const x = typeof event.clientX === "number" ? event.clientX : -1;
+            const y = typeof event.clientY === "number" ? event.clientY : -1;
+            const hasValidCoords = x >= 0 && y >= 0;
+            const el = hasValidCoords ? document.elementFromPoint(x, y) : null;
+            const overHandle = Boolean(el && el.closest(".edge-handle"));
+            syncWindowInteraction({
+              ignoreMouse: !overHandle,
+              pointerOver: overHandle
+            });
+            return;
+          }
+
+          const x = typeof event.clientX === "number" ? event.clientX : -1;
+          const y = typeof event.clientY === "number" ? event.clientY : -1;
+          const hasValidCoords = x >= 0 && y >= 0;
+          const el = hasValidCoords ? document.elementFromPoint(x, y) : null;
+          const interactive = isInteractiveHitTarget(el);
+
+          // 클릭 통과 제어만 담당. 접힘은 OS 폴링(collapseIfOutsideIndexFromPoll)만 담당.
+          syncWindowInteraction({
+            ignoreMouse: !interactive,
+            pointerOver: interactive
+          });
+        });
+      }
+
+      function setExpanded(nextExpanded) {
+        if (!nextExpanded && isExpanded) {
+          persistActiveMemo();
+        }
+        isExpanded = nextExpanded;
+        consecutiveOutsidePollCount = 0;
+        panel.classList.toggle("expanded", nextExpanded);
+
+        if (!nextExpanded) {
+          clearRevealTimer();
+          settingsIconBtn.classList.add("hidden");
+        } else {
+          clearRevealTimer();
+          settingsRevealTimer = setTimeout(() => {
+            if (isExpanded) settingsIconBtn.classList.remove("hidden");
+          }, 1000);
+        }
+
+        syncPanelLayoutToMain();
+        syncPeekAutoCollapseToMain();
+        updatePanelPosition();
+      }
+
+      function setPinned(nextPinned) {
+        isPinned = nextPinned;
+        const lang = (typeof PeekomI18n !== "undefined") ? PeekomI18n.getCurrentLang() : "ko";
+        const ti = (k) => (typeof PeekomI18n !== "undefined") ? PeekomI18n.t(k, lang) : (k === "modePeek" ? "빼꼼" : "얼음");
+        modeChip.textContent = nextPinned ? ti("modeIce") : ti("modePeek");
+        modeChip.title = nextPinned ? ti("modeChipTipIce") : ti("modeChipTipPeek");
+        modeChip.classList.toggle("ice", nextPinned);
+        modeChip.classList.toggle("peek", !nextPinned);
+        syncPeekAutoCollapseToMain();
+      }
+
+      function handleLabelDisplay(slotIndex) {
+        const raw = appState.slots[slotIndex].label.trim();
+        if (raw.length > 0) return raw.slice(0, LABEL_MAX);
+        return String(slotIndex + 1);
+      }
+
+      function getThemeColorsForSlot(slotIndex) {
+        const slot = appState.slots[slotIndex];
+        if (slot.theme === "custom") {
+          return { bg: slot.customBg || "#FFF4B8", text: slot.customText || "#2F3750" };
+        }
+        const theme = THEME_MAP[slot.theme] || THEME_MAP.yellow;
+        return { bg: theme.bg, text: theme.text };
+      }
+
+      function renderHandleStack() {
+        const ec = appState.enabledCount;
+        const ord = appState.order.slice(0, ec);
+        handleColumn.innerHTML = "";
+
+        ord.forEach((slotIndex) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "edge-handle";
+          btn.dataset.slotIndex = String(slotIndex);
+          const ySlot = appState.slots[slotIndex].ySlot ?? slotIndex;
+          btn.style.top = `calc(var(--handle-height) * ${ySlot})`;
+          if (slotIndex === appState.activeSlot) btn.classList.add("is-active");
+
+          const themeColors = getThemeColorsForSlot(slotIndex);
+          btn.style.setProperty("--handle-bg", themeColors.bg);
+          btn.style.setProperty("--handle-text", themeColors.text);
+
+          const labelEl = document.createElement("span");
+          labelEl.className = "handle-label-text";
+          labelEl.setAttribute("aria-hidden", "true");
+          labelEl.textContent = handleLabelDisplay(slotIndex);
+
+          btn.appendChild(labelEl);
+          btn.setAttribute(
+            "aria-label",
+            `인덱스 ${slotIndex + 1}, ${handleLabelDisplay(slotIndex)}. 열기·위치 이동·순서 바꾸기`
+          );
+
+          btn.addEventListener("mouseenter", onHandleMouseEnter);
+          btn.addEventListener("mouseleave", onHandleMouseLeave);
+          btn.addEventListener("pointerdown", onHandlePointerDown);
+          btn.addEventListener("click", onHandleClick);
+
+          handleColumn.appendChild(btn);
+        });
+
+        updatePanelPosition();
+      }
+
+      function repositionHandle(slotIndex) {
+        const btn = handleColumn.querySelector(`[data-slot-index="${slotIndex}"]`);
+        if (!btn) return;
+        const ySlot = appState.slots[slotIndex].ySlot ?? 0;
+        btn.style.top = `calc(var(--handle-height) * ${ySlot})`;
+      }
+
+      // is-active 클래스만 교체 — DOM 전체 재생성 없이 깜빡임 방지
+      function updateActiveHandle(newActiveSlot) {
+        handleColumn.querySelectorAll(".edge-handle").forEach((btn) => {
+          const si = Number(btn.dataset.slotIndex);
+          btn.classList.toggle("is-active", si === newActiveSlot);
+        });
+        updatePanelPosition();
+      }
+
+      function reorderHandleDom() {
+        const ec = appState.enabledCount;
+        const ord = appState.order.slice(0, ec);
+        ord.forEach((slotIndex) => {
+          const btn = handleColumn.querySelector(`[data-slot-index="${slotIndex}"]`);
+          if (btn) handleColumn.appendChild(btn);
+        });
+      }
+
+      function onHandleMouseEnter() {
+        // 손잡이는 클릭으로만 열립니다. 호버 열기 없음.
+      }
+
+      function onHandleMouseLeave() {
+        // no-op
+      }
+
+      function onHandlePointerDown(event) {
+        if (event.button !== 0) return;
+        draggingHandle = true;
+        syncPeekAutoCollapseToMain();
+        dragMoved = false;
+        lastDragY = event.clientY;
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        dragMode = null;
+        const btn = event.currentTarget;
+        pointerCaptureEl = btn;
+        reorderSlot = Number(btn.dataset.slotIndex);
+        dragPointerId = event.pointerId;
+        try {
+          btn.setPointerCapture(event.pointerId);
+        } catch {
+          /* ignore */
+        }
+      }
+
+      function onHandleClick(event) {
+        const btn = event.currentTarget;
+        if (dragMode === "reorder" || dragMoved) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+
+        localStorage.setItem(FIRST_RUN_KEY, "1");
+        firstRunTip.classList.add("hidden");
+
+        const slot = Number(btn.dataset.slotIndex);
+        if (appState.activeSlot !== slot) {
+          persistActiveMemo();
+          appState.activeSlot = slot;
+          applyThemeForSlot(slot);
+          loadMemoForActiveSlot();
+          saveState(appState);
+          updateActiveHandle(slot);
+        }
+
+        if (!isExpanded) {
+          setExpanded(true);
+          return;
+        }
+
+        setPinned(false);
+        setExpanded(false);
+      }
+
+      function onWindowPointerMove(event) {
+        refreshPointerHitTest(event);
+
+        if (!draggingHandle || dragPointerId !== event.pointerId) return;
+
+        const dx = event.clientX - dragStartX;
+        const dy = event.clientY - dragStartY;
+        const dist = Math.hypot(dx, dy);
+
+        if (!dragMode && dist >= DRAG_THRESHOLD) {
+          if (Math.abs(dx) >= Math.abs(dy)) {
+            dragMode = "reorder";
+            clearHoverTimer();
+            const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
+            if (btn) btn.classList.add("is-dragging-reorder");
+          } else {
+            dragMode = "moveSlot";
+          }
+        }
+
+        if (dragMode === "moveSlot") {
+          dragMoved = true;
+          const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
+          if (btn) {
+            const rect = handleColumn.getBoundingClientRect();
+            const relativeY = event.clientY - rect.top;
+            const newSlot = pixelYToSlot(relativeY - getSlotHeightPx() / 2);
+            const currentSlot = appState.slots[reorderSlot].ySlot;
+
+            if (newSlot !== currentSlot) {
+              const occupant = findSlotAtYSlot(newSlot, reorderSlot);
+              if (occupant !== null) {
+                if (swapTargetSlot !== occupant) {
+                  clearSwapTimer();
+                  swapTargetSlot = occupant;
+                  const targetSlot = occupant;
+                  swapTimer = setTimeout(() => {
+                    swapYSlots(reorderSlot, targetSlot);
+                  }, SWAP_HOLD_MS);
+                }
+              } else {
+                clearSwapTimer();
+                appState.slots[reorderSlot].ySlot = newSlot;
+                repositionHandle(reorderSlot);
+                if (reorderSlot === appState.activeSlot) updatePanelPosition();
+              }
+            } else {
+              clearSwapTimer();
+            }
+          }
+          event.preventDefault();
+          return;
+        }
+
+        if (dragMode === "reorder") {
+          dragMoved = true;
+          lastReorderPointer = { clientX: event.clientX, clientY: event.clientY };
+          const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
+          if (btn) {
+            btn.style.transform = `translate(${dx}px, ${dy}px)`;
+          }
+
+          const handles = Array.from(handleColumn.querySelectorAll(".edge-handle"));
+          let overSlot = null;
+          for (const h of handles) {
+            const si = Number(h.dataset.slotIndex);
+            if (si === reorderSlot) continue;
+            const r = h.getBoundingClientRect();
+            if (
+              event.clientX >= r.left &&
+              event.clientX <= r.right &&
+              event.clientY >= r.top &&
+              event.clientY <= r.bottom
+            ) {
+              overSlot = si;
+              break;
+            }
+          }
+
+          if (overSlot !== null && overSlot !== swapTargetSlot) {
+            clearSwapTimer();
+            swapTargetSlot = overSlot;
+            const targetB = overSlot;
+            swapTimer = setTimeout(() => {
+              swapOrderSlots(reorderSlot, targetB);
+            }, SWAP_HOLD_MS);
+          } else if (overSlot === null) {
+            clearSwapTimer();
+          }
+
+          event.preventDefault();
+        }
+      }
+
+      function findSlotAtYSlot(ySlot, excludeSlot) {
+        const ec = appState.enabledCount;
+        const ord = appState.order.slice(0, ec);
+        for (const si of ord) {
+          if (si === excludeSlot) continue;
+          if (appState.slots[si].ySlot === ySlot) return si;
+        }
+        return null;
+      }
+
+      function swapYSlots(a, b) {
+        const ya = appState.slots[a].ySlot;
+        const yb = appState.slots[b].ySlot;
+        appState.slots[a].ySlot = yb;
+        appState.slots[b].ySlot = ya;
+        saveState(appState);
+        repositionHandle(a);
+        repositionHandle(b);
+        if (a === appState.activeSlot || b === appState.activeSlot) {
+          updatePanelPosition();
+        }
+        clearSwapTimer();
+      }
+
+      function swapOrderSlots(a, b) {
+        const ord = appState.order.slice(0, appState.enabledCount);
+        const ia = ord.indexOf(a);
+        const ib = ord.indexOf(b);
+        if (ia === -1 || ib === -1) return;
+        const t = ord[ia];
+        ord[ia] = ord[ib];
+        ord[ib] = t;
+        appState.order = ord;
+        saveState(appState);
+        reorderHandleDom();
+        clearSwapTimer();
+
+        const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
+        if (btn) {
+          btn.style.transform = "";
+          btn.classList.remove("is-dragging-reorder");
+        }
+        dragStartX = lastReorderPointer.clientX;
+        dragStartY = lastReorderPointer.clientY;
+      }
+
+      function onWindowPointerUp(event) {
+        if (!draggingHandle || dragPointerId !== event.pointerId) return;
+
+        const wasMoveSlot = dragMode === "moveSlot";
+        draggingHandle = false;
+        dragPointerId = null;
+
+        if (dragMode === "reorder") {
+          const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
+          if (btn) {
+            btn.style.transform = "";
+            btn.classList.remove("is-dragging-reorder");
+          }
+          clearSwapTimer();
+        }
+
+        dragMode = null;
+        reorderSlot = null;
+
+        try {
+          if (pointerCaptureEl && pointerCaptureEl.releasePointerCapture) {
+            pointerCaptureEl.releasePointerCapture(event.pointerId);
+          }
+        } catch {
+          /* ignore */
+        }
+        pointerCaptureEl = null;
+        syncPeekAutoCollapseToMain();
+
+        if (wasMoveSlot) {
+          saveState(appState);
+        }
+      }
+
+      ipcRenderer.on("peek:auto-collapse-poll", (_, payload) => {
+        collapseIfOutsideIndexFromPoll(payload);
+      });
+
+      panel.addEventListener("mouseenter", () => {
+        consecutiveOutsidePollCount = 0;
+        syncWindowInteraction({ pointerOver: true });
+      });
+
+      // mouseleave는 alwaysOnTop 정책용 pointerOver 해제만 담당.
+      // ignoreMouse 제어는 refreshPointerHitTest(pointermove)가 전담한다.
+      // 창 이동/리사이즈 시 Windows가 synthetic mouseleave를 보내므로
+      // 여기서 ignoreMouse를 건드리면 손잡이 오른쪽 클릭이 통과되는 버그 발생.
+      panel.addEventListener("mouseleave", () => {
+        syncWindowInteraction({ pointerOver: false });
+      });
+
+      // modeChip 버튼 클릭: 항상 빼꼼/얼음 전환
+      modeChip.addEventListener("click", (event) => {
+        event.stopPropagation();
+        if (!isExpanded) return;
+        setPinned(!isPinned);
+      });
+
+      noteShell.addEventListener("click", (event) => {
+        // 칩 클릭은 위에서 처리, 서식바/입력/링크는 무시
+        if (event.target.closest("button, select, input, .format-bar, a")) return;
+        if (!isExpanded) return;
+        const mode = appState.global.pinToggleMode || "chip";
+        if (mode === "click") {
+          setPinned(!isPinned);
+        }
+        // "chip" 또는 "dblclick" 일 때는 메모 클릭으로 전환하지 않음
+      });
+
+      noteShell.addEventListener("dblclick", (event) => {
+        if (event.target.closest("button, select, input, .format-bar, a")) return;
+        if (!isExpanded) return;
+        const mode = appState.global.pinToggleMode || "chip";
+        if (mode === "dblclick") {
+          setPinned(!isPinned);
+        }
+      });
+
+      noteShell.addEventListener("mouseenter", () => {
+        if (!isExpanded) return;
+        clearRevealTimer();
+        settingsRevealTimer = setTimeout(() => {
+          if (isExpanded) settingsIconBtn.classList.remove("hidden");
+        }, 1000);
+      });
+
+      noteShell.addEventListener("mouseleave", () => {
+        clearRevealTimer();
+        if (!settingsIconBtn.matches(":hover")) {
+          settingsIconBtn.classList.add("hidden");
+        }
+      });
+
+      settingsIconBtn.addEventListener("mouseenter", () => {
+        clearRevealTimer();
+        settingsIconBtn.classList.remove("hidden");
+      });
+
+      settingsIconBtn.addEventListener("mouseleave", () => {
+        if (!noteShell.matches(":hover")) {
+          settingsIconBtn.classList.add("hidden");
+        }
+      });
+
+      memoEditor.addEventListener("input", () => {
+        processMarkdownInput();
+        persistActiveMemo();
+        scheduleUrlScan();
+      });
+
+      memoEditor.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          setTimeout(() => processMarkdownLineOnEnter(), 0);
+        }
+      });
+
+      memoEditor.addEventListener(
+        "wheel",
+        (event) => {
+          if (!event.ctrlKey && !event.metaKey) return;
+          event.preventDefault();
+          adjustFontSize(event.deltaY < 0 ? 1 : -1);
+        },
+        { passive: false }
+      );
+
+      memoEditor.addEventListener("paste", () => {
+        setTimeout(() => {
+          scanAndLinkifyEditor();
+          persistActiveMemo();
+        }, 0);
+      });
+
+      memoEditor.addEventListener("click", (event) => {
+        const link = event.target.closest("a[data-external]");
+        if (!link) return;
+        event.preventDefault();
+        const href = link.getAttribute("href");
+        if (href) {
+          ipcRenderer.invoke("shell:open-external", href).catch((err) => console.error(err));
+        }
+      });
+
+      const toolbarButtons = Array.from(document.querySelectorAll(".tool-btn[data-cmd]"));
+      toolbarButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          executeCmd(button.dataset.cmd);
+        });
+      });
+
+      alignCycleBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        cycleAlignment();
+      });
+
+      listCycleBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        cycleListMode();
+      });
+
+      textColorCycleBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        cycleTextColor();
+      });
+
+      highlightCycleBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        cycleHighlightColor();
+      });
+
+      clearAllBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        onClearAllClick();
+      });
+
+      fontDecreaseBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        adjustFontSize(-1);
+      });
+
+      fontIncreaseBtn.addEventListener("click", (event) => {
+        event.stopPropagation();
+        adjustFontSize(1);
+      });
+
+      function executeCmd(command, value = null) {
+        memoEditor.focus();
+        document.execCommand(command, false, value);
+      }
+
+      function insertChecklist() {
+        memoEditor.focus();
+        document.execCommand("insertHTML", false, "<div>☐ </div>");
+      }
+
+      function cycleAlignment() {
+        alignCycleIndex = (alignCycleIndex + 1) % alignCycle.length;
+        executeCmd(alignCycle[alignCycleIndex]);
+        alignCycleBtn.textContent = alignCycleLabel[alignCycleIndex];
+      }
+
+      function cycleListMode() {
+        listCycleIndex = (listCycleIndex + 1) % listCycle.length;
+        const mode = listCycle[listCycleIndex];
+
+        if (mode === "bullet") {
+          executeCmd("insertUnorderedList");
+        } else if (mode === "check") {
+          insertChecklist();
+        } else {
+          executeCmd("insertParagraph");
+        }
+
+        listCycleBtn.textContent = listCycleLabel[listCycleIndex];
+      }
+
+      function cycleTextColor() {
+        textColorCycleIndex = (textColorCycleIndex + 1) % textColorCycle.length;
+        const color = textColorCycle[textColorCycleIndex];
+        executeCmd("foreColor", color);
+        textColorCycleBtn.style.color = color;
+      }
+
+      function cycleHighlightColor() {
+        highlightCycleIndex = (highlightCycleIndex + 1) % highlightCycle.length;
+        const color = highlightCycle[highlightCycleIndex];
+        executeCmd("hiliteColor", color);
+        highlightCycleBtn.style.color = color === "transparent" ? "#34405a" : color;
+      }
+
+      function onClearAllClick() {
+        if (pendingClearAll) {
+          memoEditor.innerHTML = "";
+          persistActiveMemo();
+          resetPendingClearAll();
+          return;
+        }
+
+        pendingClearAll = true;
+        clearAllBtn.style.color = "#d04646";
+        clearAllBtn.title = "다시 누르면 전체 삭제됩니다";
+        if (pendingClearAllTimer) clearTimeout(pendingClearAllTimer);
+        pendingClearAllTimer = setTimeout(resetPendingClearAll, 3500);
+      }
+
+      function resetPendingClearAll() {
+        pendingClearAll = false;
+        clearAllBtn.style.color = "";
+        clearAllBtn.title = "전체 삭제";
+        if (pendingClearAllTimer) {
+          clearTimeout(pendingClearAllTimer);
+          pendingClearAllTimer = null;
+        }
+      }
+
+      function getCurrentLineElement() {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return null;
+        let node = sel.anchorNode;
+        if (!node) return null;
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+        if (!node || !memoEditor.contains(node)) return null;
+        while (node && node.parentElement !== memoEditor) {
+          node = node.parentElement;
+        }
+        return node;
+      }
+
+      function getLinePlainText(lineEl) {
+        if (!lineEl) return "";
+        return lineEl.textContent || "";
+      }
+
+      function replaceLineElement(lineEl, html) {
+        if (!lineEl || !lineEl.parentNode) return;
+        const caret = getCaretCharOffset(memoEditor);
+        const newEl = document.createElement("div");
+        newEl.innerHTML = html;
+        const frag = document.createDocumentFragment();
+        while (newEl.firstChild) frag.appendChild(newEl.firstChild);
+        lineEl.parentNode.replaceChild(frag, lineEl);
+        if (caret !== null) setCaretByCharOffset(memoEditor, caret);
+      }
+
+      function processMarkdownLineOnEnter() {
+        const lineEl = getCurrentLineElement();
+        if (!lineEl) return;
+        const text = getLinePlainText(lineEl).trimStart();
+        let html = null;
+
+        if (text.startsWith("### ")) {
+          html = `<h3>${marked.parseInline(text.slice(4))}</h3>`;
+        } else if (text.startsWith("## ")) {
+          html = `<h2>${marked.parseInline(text.slice(3))}</h2>`;
+        } else if (text.startsWith("# ")) {
+          html = `<h1>${marked.parseInline(text.slice(2))}</h1>`;
+        } else if (text.startsWith("- ")) {
+          html = `<ul><li>${marked.parseInline(text.slice(2))}</li></ul>`;
+        }
+
+        if (html) replaceLineElement(lineEl, html);
+      }
+
+      function processInlineMarkdownInLine(lineEl) {
+        if (!lineEl || lineEl.closest("h1,h2,h3,ul,ol")) return false;
+        const text = getLinePlainText(lineEl);
+        let html = text;
+        let changed = false;
+
+        const boldMatch = text.match(/\*\*(.+?)\*\*/);
+        if (boldMatch) {
+          html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+          changed = true;
+        }
+
+        const italicMatch = text.match(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/);
+        if (italicMatch) {
+          html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, "<em>$1</em>");
+          changed = true;
+        }
+
+        if (changed && html !== text) {
+          replaceLineElement(lineEl, html);
+          return true;
+        }
+        return false;
+      }
+
+      function processMarkdownInput() {
+        const lineEl = getCurrentLineElement();
+        if (!lineEl) return;
+        processInlineMarkdownInLine(lineEl);
+      }
+
+      function scheduleUrlScan() {
+        if (urlScanTimer) clearTimeout(urlScanTimer);
+        urlScanTimer = setTimeout(() => {
+          urlScanTimer = null;
+          scanAndLinkifyEditor();
+        }, 500);
+      }
+
+      function getCaretCharOffset(parent) {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return null;
+        const range = sel.getRangeAt(0);
+        if (!parent.contains(range.endContainer)) return null;
+        const pre = range.cloneRange();
+        pre.selectNodeContents(parent);
+        pre.setEnd(range.endContainer, range.endOffset);
+        return pre.toString().length;
+      }
+
+      function setCaretByCharOffset(parent, offset) {
+        if (offset === null || offset === undefined) return;
+        const range = document.createRange();
+        const sel = window.getSelection();
+        let remaining = offset;
+        let nodeFound = false;
+
+        function walk(node) {
+          if (nodeFound) return;
+          if (node.nodeType === Node.TEXT_NODE) {
+            const len = node.nodeValue.length;
+            if (remaining <= len) {
+              range.setStart(node, remaining);
+              range.setEnd(node, remaining);
+              nodeFound = true;
+              return;
+            }
+            remaining -= len;
+          } else {
+            for (const child of node.childNodes) {
+              walk(child);
+              if (nodeFound) return;
+            }
+          }
+        }
+
+        walk(parent);
+        if (!nodeFound) {
+          range.selectNodeContents(parent);
+          range.collapse(false);
+        }
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+
+      function scanAndLinkifyEditor(skipCaret = false) {
+        const caret = skipCaret ? null : getCaretCharOffset(memoEditor);
+        let mutated = false;
+
+        const walker = document.createTreeWalker(memoEditor, NodeFilter.SHOW_TEXT, {
+          acceptNode(node) {
+            if (!node.nodeValue || node.nodeValue.length < 4) return NodeFilter.FILTER_REJECT;
+            if (node.parentElement && node.parentElement.closest("a")) {
+              return NodeFilter.FILTER_REJECT;
+            }
+            return NodeFilter.FILTER_ACCEPT;
+          }
+        });
+
+        const targets = [];
+        let cur;
+        while ((cur = walker.nextNode())) targets.push(cur);
+
+        targets.forEach((textNode) => {
+          const text = textNode.nodeValue;
+          URL_REGEX.lastIndex = 0;
+          if (!URL_REGEX.test(text)) return;
+          URL_REGEX.lastIndex = 0;
+
+          const frag = document.createDocumentFragment();
+          let lastIndex = 0;
+          let m;
+          while ((m = URL_REGEX.exec(text)) !== null) {
+            const matchStart = m.index;
+            const matchEnd = matchStart + m[0].length;
+            if (matchStart > lastIndex) {
+              frag.appendChild(document.createTextNode(text.slice(lastIndex, matchStart)));
+            }
+            const a = document.createElement("a");
+            const href = /^https?:\/\//i.test(m[0]) ? m[0] : `https://${m[0]}`;
+            a.setAttribute("href", href);
+            a.setAttribute("data-external", "1");
+            a.textContent = m[0];
+            frag.appendChild(a);
+            lastIndex = matchEnd;
+          }
+          if (lastIndex < text.length) {
+            frag.appendChild(document.createTextNode(text.slice(lastIndex)));
+          }
+          textNode.parentNode.replaceChild(frag, textNode);
+          mutated = true;
+        });
+
+        if (mutated && caret !== null) {
+          setCaretByCharOffset(memoEditor, caret);
+        }
+      }
+
+      async function syncSettingsToMain() {
+        const payload = {
+          anchor: appState.global.anchor,
+          lengthMode: appState.global.lengthMode,
+          triggerMode: appState.global.triggerMode,
+          shortcut: appState.global.shortcut,
+          manualYOffset: appState.global.manualYOffset
+        };
+        const result = await ipcRenderer.invoke("settings:update", payload);
+        if (result?.windowState?.settings) {
+          appSettings = { ...appSettings, ...result.windowState.settings };
+          appState.global = { ...appState.global, ...result.windowState.settings };
+          hoverDelayMs = appState.global.hoverDelayMs;
+        }
+        saveState(appState);
+        return result;
+      }
+
+      settingsIconBtn.addEventListener("click", async () => {
+        try {
+          await ipcRenderer.invoke("settings:open-window");
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      ipcRenderer.on("settings:applied", () => {
+        const fresh = loadState();
+        appState = fresh;
+        appSettings = { ...defaultGlobal(), ...appState.global };
+        hoverDelayMs = appState.global.hoverDelayMs;
+        // 언어 변경 동기화
+        if (typeof PeekomI18n !== "undefined" && appState.global.language) {
+          PeekomI18n.setLang(appState.global.language);
+          document.documentElement.lang = PeekomI18n.getCurrentLang();
+        }
+
+        if (appState.activeSlot >= appState.enabledCount) {
+          appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
+          saveState(appState);
+        }
+
+        applyThemeForSlot(appState.activeSlot);
+        loadMemoForActiveSlot();
+        renderHandleStack();
+        updatePanelPosition();
+        setPinned(isPinned);  // 언어 변경 시 칩 텍스트 갱신
+        syncPeekAutoCollapseToMain();
+      });
+
+      ipcRenderer.on("shortcut:toggle-expand", () => {
+        if (isExpanded) {
+          setPinned(false);
+          setExpanded(false);
+        } else {
+          applyThemeForSlot(appState.activeSlot);
+          loadMemoForActiveSlot();
+          setExpanded(true);
+          setPinned(true);
+        }
+      });
+
+      window.addEventListener("keydown", (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        const key = event.key;
+
+        if (key === "-" || key === "_" || key === "=" || key === "+") {
+          event.preventDefault();
+          adjustFontSize(key === "-" || key === "_" ? -1 : 1);
+          return;
+        }
+
+        if (key === "0") {
+          event.preventDefault();
+          const idx = 9;
+          if (idx >= appState.enabledCount) return;
+          switchToSlot(idx);
+          return;
+        }
+
+        if (key < "1" || key > "9") return;
+        const idx = Number(key) - 1;
+        if (idx >= appState.enabledCount) return;
+        event.preventDefault();
+        switchToSlot(idx);
+      });
+
+      function switchToSlot(idx) {
+        if (appState.activeSlot !== idx) {
+          persistActiveMemo();
+          appState.activeSlot = idx;
+          applyThemeForSlot(idx);
+          loadMemoForActiveSlot();
+          saveState(appState);
+          updateActiveHandle(idx);
+        }
+        setExpanded(true);
+        setPinned(true);
+      }
+
+      function initializeFirstRunTip() {
+        const seen = localStorage.getItem(FIRST_RUN_KEY) === "1";
+        firstRunTip.classList.toggle("hidden", seen);
+      }
+
+      async function initialize() {
+        appState = loadState();
+
+        // 최소 1개 인덱스 보장
+        if (!appState.enabledCount || appState.enabledCount < 1) {
+          appState.enabledCount = 1;
+          appState.slots[0] = { ...defaultSlot(0), ...appState.slots[0] };
+          appState.order = [0];
+          appState.activeSlot = 0;
+        }
+
+        // 언어 적용
+        if (typeof PeekomI18n !== "undefined") {
+          const savedLang = appState.global.language;
+          if (savedLang) PeekomI18n.setLang(savedLang);
+          document.documentElement.lang = PeekomI18n.getCurrentLang();
+        }
+
+        saveState(appState);
+        appSettings = { ...defaultGlobal(), ...appState.global };
+        hoverDelayMs = appState.global.hoverDelayMs;
+
+        // 패널 폭 30vh로 동적 계산
+        const dynPanelWidth = Math.round(window.innerHeight * 0.30);
+        document.documentElement.style.setProperty("--panel-width", `${dynPanelWidth}px`);
+        document.documentElement.style.setProperty("--collapsed-width", `${COLLAPSED_WIDTH}px`);
+
+        applyThemeForSlot(appState.activeSlot);
+        loadMemoForActiveSlot();
+        updatePanelPosition();
+
+        initializeFirstRunTip();
+        setPinned(false);
+        renderHandleStack();
+
+        window.addEventListener("pointermove", onWindowPointerMove);
+        window.addEventListener("pointerup", onWindowPointerUp);
+        window.addEventListener("pointercancel", onWindowPointerUp);
+        window.addEventListener("resize", () => {
+          const w = Math.round(window.innerHeight * 0.30);
+          document.documentElement.style.setProperty("--panel-width", `${w}px`);
+          updatePanelPosition();
+        });
+
+        try {
+          const st = await ipcRenderer.invoke("startup:get");
+          if (st?.ok) {
+            appState.global.openAtLogin = st.openAtLogin;
+            saveState(appState);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+
+        // 저장된 모니터 설정 복원
+        try {
+          if (appState.global.monitorMode === "fixed" && appState.global.monitorTargetId !== null) {
+            await ipcRenderer.invoke("window:set-target-display", appState.global.monitorTargetId);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+
+        try {
+          await syncSettingsToMain();
+          await syncPanelLayoutToMain();
+          await syncPeekAutoCollapseToMain();
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      initialize();
+    </script>
+  </body>
+</html>

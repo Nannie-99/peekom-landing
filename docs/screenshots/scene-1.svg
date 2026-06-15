@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <rect width="640" height="400" fill="#1a1a1a"/>
+  <rect x="24" y="24" width="592" height="352" rx="8" fill="#252525" stroke="#333"/>
+  <rect x="580" y="120" width="28" height="80" rx="10 0 0 10" fill="#fff4b8" stroke="#8e44ad" stroke-width="2"/>
+  <text x="48" y="72" fill="#666" font-family="Segoe UI,sans-serif" font-size="14">Scene 1  Edge handle (replace with screenshot)</text>
+  <text x="48" y="200" fill="#444" font-family="Segoe UI,sans-serif" font-size="22">Presentation slide area</text>
+</svg>

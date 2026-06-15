@@ -1,0 +1,1974 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Peekom Plus Settings</title>
+    <script src="assets/i18n.js"></script>
+    <style>
+      :root {
+        --accent: #4a79ff;
+        --text: #2f3750;
+        --muted: #64718b;
+        --border: #d7dde9;
+        --danger: #d04646;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #ffffff;
+        font-family: "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+        font-size: 15px;
+        color: var(--text);
+      }
+
+      .settings-root {
+        width: 100%;
+        height: 100%;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .settings-title {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
+      .settings-tab-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .settings-tab {
+        flex: 0 1 auto;
+        min-width: 72px;
+        height: 36px;
+        padding: 0 12px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 13px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+
+      .settings-tab.active {
+        border-color: var(--accent);
+        background: rgba(74, 121, 255, 0.12);
+        font-weight: 700;
+      }
+
+      .settings-tab .tab-color-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        flex-shrink: 0;
+      }
+
+      .add-tab-btn {
+        width: 36px;
+        height: 36px;
+        border: 1px dashed var(--border);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        color: var(--muted);
+      }
+
+      .add-tab-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .add-tab-btn[disabled] {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .panel-host {
+        flex: 1;
+        min-height: 0;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding-right: 4px;
+      }
+
+      .settings-panel {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .settings-panel.active {
+        display: flex;
+      }
+
+      .setting-row {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .setting-row > label:not(.setting-checkbox-label) {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .row-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+      }
+
+      .char-count {
+        font-size: 12px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .setting-checkbox-label {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text);
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .setting-checkbox-label input[type="checkbox"] {
+        margin-top: 2px;
+        width: 20px;
+        height: 20px;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .setting-hint {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 400;
+        margin-top: 2px;
+        padding-left: 0;
+        line-height: 1.4;
+      }
+
+      .setting-hint.indented {
+        padding-left: 30px;
+      }
+
+      .setting-input,
+      .setting-select {
+        height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0 12px;
+        font-size: 15px;
+      }
+
+      .theme-group {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      .custom-color-row {
+        display: none;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 6px;
+      }
+
+      .custom-color-row.visible {
+        display: grid;
+      }
+
+      .color-picker-label {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .color-picker-label input[type="color"] {
+        width: 100%;
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 2px;
+        cursor: pointer;
+      }
+
+      .export-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .export-item {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .export-btn {
+        height: 42px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        text-align: left;
+        padding: 0 14px;
+      }
+
+      .export-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .theme-btn {
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: #fff;
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .theme-btn.active {
+        border-color: var(--accent);
+        background: rgba(74, 121, 255, 0.12);
+      }
+
+      .delete-row {
+        margin-top: 8px;
+        padding-top: 12px;
+        border-top: 1px dashed var(--border);
+      }
+
+      .delete-btn {
+        height: 42px;
+        width: 100%;
+        border: 1px solid var(--danger);
+        border-radius: 10px;
+        background: #fff;
+        color: var(--danger);
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .delete-btn[disabled] {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      .delete-btn.confirming {
+        background: var(--danger);
+        color: #fff;
+      }
+
+      .delete-warning {
+        margin-top: 8px;
+        font-size: 13px;
+        color: var(--danger);
+        line-height: 1.4;
+        display: none;
+      }
+
+      .delete-warning.visible {
+        display: block;
+      }
+
+      .settings-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      .settings-action-btn {
+        height: 44px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .settings-action-btn.primary {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+        font-weight: 700;
+      }
+
+      .settings-action-btn.primary[disabled] {
+        background: #b0bec5;
+        border-color: #b0bec5;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .status-text {
+        font-size: 12px;
+        color: var(--muted);
+        min-height: 16px;
+      }
+
+      .about-card {
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: linear-gradient(135deg, #fdf6e3 0%, #fff7fb 100%);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .about-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .about-desc {
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.6;
+        font-weight: 400;
+      }
+
+      .about-dev {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+
+      .about-dev a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 600;
+      }
+
+      .about-dev a:hover {
+        text-decoration: underline;
+      }
+
+      .how-to-card {
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        background: #f7f9ff;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .how-to-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+      }
+
+      .how-to-steps {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .how-to-steps li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        font-size: 13px;
+        line-height: 1.45;
+        color: var(--text);
+      }
+
+      .how-to-steps li .step-num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .shortcut-row {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .shortcut-row.visible {
+        display: flex;
+      }
+
+      .font-size-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .font-size-btn {
+        height: 42px;
+        width: 48px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .font-size-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .font-size-display {
+        height: 42px;
+        flex: 1;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        color: var(--text);
+      }
+
+      /* Color palette popover */
+      .color-palette-wrap {
+        position: relative;
+      }
+      .color-palette-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #fff;
+        cursor: pointer;
+        padding: 0 10px;
+        width: 100%;
+        font-size: 13px;
+        color: var(--text);
+      }
+      .color-swatch {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.12);
+        flex-shrink: 0;
+      }
+      .color-popover {
+        display: none;
+        position: absolute;
+        bottom: calc(100% + 4px);
+        left: 0;
+        z-index: 9999;
+        background: #fff;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+        min-width: 200px;
+      }
+      .color-popover.visible { display: block; }
+      .recent-colors-title {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 6px;
+      }
+      .recent-colors-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin-bottom: 8px;
+      }
+      .recent-color-swatch {
+        width: 22px;
+        height: 22px;
+        border-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.12);
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .recent-color-swatch:hover {
+        transform: scale(1.18);
+        outline: 2px solid var(--accent);
+      }
+      .popover-native-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 4px;
+      }
+      .popover-native-wrap input[type="color"] {
+        width: 40px;
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        cursor: pointer;
+        padding: 2px;
+        flex-shrink: 0;
+      }
+      .popover-hex-input {
+        flex: 1;
+        height: 36px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        padding: 0 8px;
+        font-size: 13px;
+        font-family: monospace;
+      }
+
+      /* Export / Import revamp */
+      .export-indices-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 8px;
+        max-height: 120px;
+        overflow-y: auto;
+      }
+      .export-check-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+      }
+      .export-format-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      .export-format-label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 13px;
+        cursor: pointer;
+      }
+      .import-btn {
+        height: 42px;
+        border: 1px solid var(--accent);
+        border-radius: 10px;
+        background: #fff;
+        font-size: 14px;
+        cursor: pointer;
+        color: var(--accent);
+        font-weight: 600;
+        width: 100%;
+      }
+      .import-btn:hover { background: rgba(74,121,255,0.08); }
+
+      /* Info cards */
+      .info-card {
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: #f7f9ff;
+      }
+      .info-card-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+      }
+      .info-card p, .info-card li {
+        font-size: 12px;
+        color: var(--text);
+        line-height: 1.55;
+      }
+      .md-examples {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px 12px;
+        margin-top: 6px;
+      }
+      .md-example-row {
+        display: contents;
+      }
+      .md-syntax {
+        font-family: monospace;
+        font-size: 12px;
+        color: #3a5080;
+      }
+      .md-result {
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      /* Language selector */
+      .lang-select-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 0 6px;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2px;
+      }
+      .lang-select-row label {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text);
+        flex-shrink: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="settings-root">
+      <h2 class="settings-title" id="settingsTitle">Peekom Plus</h2>
+
+      <div id="settingsTabRow" class="settings-tab-row" role="tablist"></div>
+
+      <div id="panelHost" class="panel-host"></div>
+
+      <div id="settingsStatusText" class="status-text"></div>
+
+      <div class="settings-actions">
+        <button id="settingsApplyBtn" class="settings-action-btn primary" type="button" disabled>적용</button>
+        <button id="settingsCloseBtn" class="settings-action-btn" type="button">닫기</button>
+      </div>
+    </main>
+
+    <script>
+      const { ipcRenderer } = require("electron");
+
+      const STATE_KEY = "ppaekkom-plus-state-v5";
+      const STATE_KEY_V4 = "ppaekkom-plus-state-v4";
+      const LEGACY_V3_KEY = "ppaekkom-app-state-v3";
+      const LEGACY_SETTINGS_KEY = "ppaekkom-app-settings-v2";
+      const LEGACY_MEMO_KEY = "ppaekkom-memo-html-v2";
+      const RECENT_BG_KEY = "ppaekkom-recent-bg";
+      const RECENT_TEXT_KEY = "ppaekkom-recent-text";
+
+      const LABEL_MAX = 6;
+      const MAX_SLOTS = 10;
+      const FONT_SIZE_MIN = 8;
+      const FONT_SIZE_MAX = 36;
+      const THEME_NAMES = ["yellow", "pink", "blue", "green", "custom"];
+      const THEME_LABELS = {
+        yellow: "노랑",
+        pink: "분홍",
+        blue: "파랑",
+        green: "초록",
+        custom: "커스텀"
+      };
+      const THEME_MAP = {
+        yellow: { bg: "#FFF4B8", text: "#2F3750", accent: "#4A79FF" },
+        pink: { bg: "#FFD9E8", text: "#3B3350", accent: "#B1457A" },
+        blue: { bg: "#DDEBFF", text: "#2B3D5D", accent: "#2F67D8" },
+        green: { bg: "#DCF5DE", text: "#2A4B38", accent: "#2A7C44" },
+        custom: null
+      };
+
+      function clamp(n, a, b) {
+        return Math.max(a, Math.min(b, n));
+      }
+
+      function defaultGlobal() {
+        return {
+          anchor: "middle",
+          lengthMode: "long",
+          triggerMode: "hover",
+          shortcut: "CommandOrControl+Shift+M",
+          hoverDelayMs: 250,
+          manualYOffset: 0,
+          openAtLogin: false,
+          language: null,
+          monitorMode: "auto",
+          monitorTargetId: null,
+          pinToggleMode: "chip",
+          setupCompleted: false
+        };
+      }
+
+      function defaultSlot(index = 0) {
+        return {
+          label: "",
+          theme: "yellow",
+          memoHtml: "",
+          ySlot: index,
+          fontSize: 18,
+          customBg: "#FFF4B8",
+          customText: "#2F3750"
+        };
+      }
+
+      function normalizeSlot(raw, index) {
+        const base = defaultSlot(index);
+        return {
+          label: typeof raw?.label === "string" ? raw.label.slice(0, LABEL_MAX) : "",
+          theme: THEME_NAMES.includes(raw?.theme) ? raw.theme : "yellow",
+          memoHtml: typeof raw?.memoHtml === "string" ? raw.memoHtml : "",
+          ySlot:
+            typeof raw?.ySlot === "number" && Number.isFinite(raw.ySlot)
+              ? clamp(Math.round(raw.ySlot), 0, 9)
+              : index,
+          fontSize:
+            typeof raw?.fontSize === "number" && Number.isFinite(raw.fontSize)
+              ? clamp(Math.round(raw.fontSize), FONT_SIZE_MIN, FONT_SIZE_MAX)
+              : 18,
+          customBg:
+            typeof raw?.customBg === "string" && /^#[0-9A-Fa-f]{6}$/.test(raw.customBg)
+              ? raw.customBg
+              : base.customBg,
+          customText:
+            typeof raw?.customText === "string" && /^#[0-9A-Fa-f]{6}$/.test(raw.customText)
+              ? raw.customText
+              : base.customText
+        };
+      }
+
+      function clampSlotIndex(slot, enabledCount) {
+        return clamp(slot, 0, enabledCount - 1);
+      }
+
+      function normalizeOrder(order, enabledCount) {
+        const base = [];
+        for (let i = 0; i < enabledCount; i++) base.push(i);
+        if (!Array.isArray(order) || order.length !== enabledCount) return base;
+        const set = new Set(order);
+        if (set.size !== enabledCount) return base;
+        for (let i = 0; i < enabledCount; i++) {
+          if (!set.has(i)) return base;
+        }
+        return order;
+      }
+
+      function migrateLegacy() {
+        let g = defaultGlobal();
+        try {
+          const raw = localStorage.getItem(LEGACY_SETTINGS_KEY);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            g = { ...g, ...parsed };
+          }
+        } catch {
+          /* ignore */
+        }
+        const memoHtml = localStorage.getItem(LEGACY_MEMO_KEY) || "";
+        const theme = g.theme || "yellow";
+        delete g.theme;
+        return {
+          version: 4,
+          global: g,
+          enabledCount: 1,
+          slots: Array.from({ length: MAX_SLOTS }, (_, i) =>
+            i === 0 ? { ...defaultSlot(0), theme, memoHtml } : defaultSlot(i)
+          ),
+          order: [0],
+          activeSlot: 0
+        };
+      }
+
+      function migrateFromV3(v3) {
+        const enabledCount = clamp(Math.round(v3.enabledCount) || 1, 1, MAX_SLOTS);
+        const slots = Array.from({ length: MAX_SLOTS }, (_, i) => defaultSlot(i));
+        for (let i = 0; i < Math.min(3, MAX_SLOTS); i++) {
+          if (v3.slots?.[i]) slots[i] = normalizeSlot(v3.slots[i], i);
+        }
+        return {
+          version: 4,
+          global: { ...defaultGlobal(), ...v3.global },
+          enabledCount,
+          slots,
+          order: normalizeOrder(v3.order, enabledCount),
+          activeSlot: clampSlotIndex(v3.activeSlot, enabledCount)
+        };
+      }
+
+      function ensureMinimumOneSlot(state) {
+        if (!state.enabledCount || state.enabledCount < 1) {
+          state.enabledCount = 1;
+          if (!state.slots[0] || typeof state.slots[0].memoHtml !== "string") {
+            state.slots[0] = defaultSlot(0);
+          }
+          state.order = [0];
+          state.activeSlot = 0;
+        }
+        return state;
+      }
+
+      function loadState() {
+        try {
+          const rawV5 = localStorage.getItem(STATE_KEY);
+          if (rawV5) {
+            const s = JSON.parse(rawV5);
+            if (s && s.version === 5 && Array.isArray(s.slots) && s.slots.length === MAX_SLOTS) {
+              s.global = { ...defaultGlobal(), ...s.global };
+              s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
+              s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
+              s.order = normalizeOrder(s.order, s.enabledCount);
+              s.activeSlot = clampSlotIndex(s.activeSlot, s.enabledCount);
+              return ensureMinimumOneSlot(s);
+            }
+          }
+
+          const rawV4 = localStorage.getItem(STATE_KEY_V4);
+          if (rawV4) {
+            const s = JSON.parse(rawV4);
+            if (s && s.version === 4 && Array.isArray(s.slots) && s.slots.length === MAX_SLOTS) {
+              s.version = 5;
+              s.global = { ...defaultGlobal(), ...s.global };
+              s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
+              s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
+              s.order = normalizeOrder(s.order, s.enabledCount);
+              s.activeSlot = clampSlotIndex(s.activeSlot, s.enabledCount);
+              return ensureMinimumOneSlot(s);
+            }
+          }
+
+          const rawV3 = localStorage.getItem(LEGACY_V3_KEY);
+          if (rawV3) {
+            const v3 = JSON.parse(rawV3);
+            if (v3 && v3.version === 3 && Array.isArray(v3.slots)) {
+              return ensureMinimumOneSlot(migrateFromV3(v3));
+            }
+          }
+        } catch {
+          /* fallthrough */
+        }
+        return migrateLegacy();
+      }
+
+      function saveState(state) {
+        localStorage.setItem(STATE_KEY, JSON.stringify(state));
+      }
+
+      function refreshSlotMemosFromDisk() {
+        try {
+          const raw = localStorage.getItem(STATE_KEY);
+          if (raw) {
+            const onDisk = JSON.parse(raw);
+            if (onDisk && Array.isArray(onDisk.slots) && onDisk.slots.length === MAX_SLOTS) {
+              for (let i = 0; i < MAX_SLOTS; i++) {
+                if (typeof onDisk.slots[i]?.memoHtml === "string") {
+                  appState.slots[i].memoHtml = onDisk.slots[i].memoHtml;
+                }
+              }
+            }
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+
+      function htmlToPlainText(html) {
+        const div = document.createElement("div");
+        div.innerHTML = html || "";
+        return div.textContent || "";
+      }
+
+      function htmlToMarkdown(html) {
+        let md = html || "";
+        md = md.replace(/<h1[^>]*>(.*?)<\/h1>/gi, "# $1\n");
+        md = md.replace(/<h2[^>]*>(.*?)<\/h2>/gi, "## $1\n");
+        md = md.replace(/<h3[^>]*>(.*?)<\/h3>/gi, "### $1\n");
+        md = md.replace(/<strong[^>]*>(.*?)<\/strong>/gi, "**$1**");
+        md = md.replace(/<b[^>]*>(.*?)<\/b>/gi, "**$1**");
+        md = md.replace(/<em[^>]*>(.*?)<\/em>/gi, "*$1*");
+        md = md.replace(/<i[^>]*>(.*?)<\/i>/gi, "*$1*");
+        md = md.replace(/<li[^>]*>(.*?)<\/li>/gi, "- $1\n");
+        md = md.replace(/<\/?ul[^>]*>/gi, "\n");
+        md = md.replace(/<br\s*\/?>/gi, "\n");
+        md = md.replace(/<div[^>]*>(.*?)<\/div>/gi, "$1\n");
+        md = md.replace(/<[^>]+>/g, "");
+        return htmlToPlainText(md).trim();
+      }
+
+      function applyCustomColor(slotIndex, isBg, hex) {
+        if (isBg) {
+          appState.slots[slotIndex].customBg = hex;
+          saveRecentColor(RECENT_BG_KEY, hex);
+          const swatch = document.getElementById(`bgSwatch${slotIndex}`);
+          const label = document.getElementById(`bgHexLabel${slotIndex}`);
+          const inp = document.querySelector(`[data-custom-bg="${slotIndex}"]`);
+          if (swatch) swatch.style.background = hex;
+          if (label) label.textContent = hex;
+          if (inp) inp.value = hex;
+        } else {
+          appState.slots[slotIndex].customText = hex;
+          saveRecentColor(RECENT_TEXT_KEY, hex);
+          const swatch = document.getElementById(`textSwatch${slotIndex}`);
+          const label = document.getElementById(`textHexLabel${slotIndex}`);
+          const inp = document.querySelector(`[data-custom-text="${slotIndex}"]`);
+          if (swatch) swatch.style.background = hex;
+          if (label) label.textContent = hex;
+          if (inp) inp.value = hex;
+        }
+        appState.slots[slotIndex].theme = "custom";
+        syncThemeGroupSelection();
+        syncCustomColorVisibility();
+        const dotInTab = tabRow.querySelector(`[data-settings-tab="idx${slotIndex}"] .tab-color-dot`);
+        if (dotInTab) dotInTab.style.background = appState.slots[slotIndex].customBg;
+        refreshApplyButton();
+      }
+
+      async function onExportSelected() {
+        refreshSlotMemosFromDisk();
+        const format = (document.querySelector('input[name="exportFormat"]:checked') || {}).value || "txt";
+        const statusEl = document.getElementById("exportStatusText");
+
+        if (format === "json") {
+          const content = JSON.stringify(appState, null, 2);
+          try {
+            const result = await ipcRenderer.invoke("export:save", { format: "json", content, defaultName: "ppaekkom-plus-backup.json" });
+            if (result?.ok) setStatus(ti("exportDone"), 2500);
+            else if (!result?.canceled) setStatus(result?.message || ti("exportFail"), 5000);
+          } catch (err) { setStatus(ti("exportFail"), 5000); }
+          return;
+        }
+
+        const checkedIndices = Array.from(document.querySelectorAll(".export-idx-check"))
+          .filter(cb => cb.checked)
+          .map(cb => Number(cb.dataset.idx));
+
+        if (checkedIndices.length === 0) {
+          setStatus("내보낼 인덱스를 하나 이상 선택하세요.", 3000);
+          return;
+        }
+
+        let done = 0;
+        for (const idx of checkedIndices) {
+          if (statusEl) statusEl.textContent = `${done + 1} / ${checkedIndices.length}${ti("exportDoing")}`;
+          const memoHtml = appState.slots[idx]?.memoHtml || "";
+          const label = appState.slots[idx]?.label || `index${idx + 1}`;
+          let content;
+          if (format === "md") content = htmlToMarkdown(memoHtml);
+          else content = htmlToPlainText(memoHtml);
+          try {
+            const result = await ipcRenderer.invoke("export:save", { format, content, defaultName: `${label}.${format}` });
+            if (!result?.ok && !result?.canceled) { setStatus(result?.message || ti("exportFail"), 5000); return; }
+          } catch (err) { setStatus(ti("exportFail"), 5000); return; }
+          done++;
+        }
+        if (statusEl) statusEl.textContent = "";
+        setStatus(ti("exportDone"), 2500);
+      }
+
+      async function onImportBackup() {
+        const ok = confirm(ti("importConfirm"));
+        if (!ok) return;
+        try {
+          const result = await ipcRenderer.invoke("import:load");
+          if (result?.canceled) return;
+          if (!result?.ok) { setStatus(ti("importError"), 5000); return; }
+          const data = result.data;
+          if (!data || !Array.isArray(data.slots) || data.slots.length !== 10) {
+            setStatus(ti("importFail"), 5000); return;
+          }
+          localStorage.setItem(STATE_KEY, JSON.stringify(data));
+          appState = loadState();
+          baselineSnapshot = buildSnapshot(appState);
+          activeTab = "common";
+          renderTabs();
+          renderPanels();
+          applySettingsForm();
+          refreshApplyButton();
+          setStatus(ti("importDone"), 3000);
+          await ipcRenderer.invoke("settings:notify-applied");
+        } catch (err) {
+          console.error(err);
+          setStatus(ti("importError"), 5000);
+        }
+      }
+
+      // ── draft / baseline 패턴 ──────────────────────────────────────────
+      // 적용 버튼은 "저장된 내용"(baseline)과 "현재 폼"(draft)이 다를 때만 활성화
+
+      let appState = loadState();
+      let activeTab = "common";
+      let pendingDeleteSlot = null;
+      let statusFadeTimer = null;
+
+      // 모니터 선택 임시값 (적용 전까지 IPC 전송 안 함)
+      let draftMonitorTarget = null;
+
+      function buildSnapshot(state) {
+        const slotData = state.slots.slice(0, state.enabledCount).map((sl) => ({
+          label: sl.label,
+          theme: sl.theme,
+          customBg: sl.customBg,
+          customText: sl.customText,
+          ySlot: sl.ySlot,
+          fontSize: sl.fontSize
+        }));
+        return JSON.stringify({
+          triggerMode: state.global.triggerMode,
+          shortcut: state.global.shortcut,
+          openAtLogin: state.global.openAtLogin,
+          language: state.global.language,
+          pinToggleMode: state.global.pinToggleMode,
+          enabledCount: state.enabledCount,
+          activeSlot: state.activeSlot,
+          slots: slotData,
+          monitorTarget: draftMonitorTarget
+        });
+      }
+
+      let baselineSnapshot = buildSnapshot(appState);
+
+      function isDirty() {
+        return buildSnapshot(appState) !== baselineSnapshot;
+      }
+
+      function refreshApplyButton() {
+        applyBtn.disabled = !isDirty();
+      }
+
+      // ─────────────────────────────────────────────────────────────────
+
+      function setStatus(msg, ms = 2500) {
+        statusText.textContent = msg;
+        if (statusFadeTimer) {
+          clearTimeout(statusFadeTimer);
+          statusFadeTimer = null;
+        }
+        if (ms > 0) {
+          statusFadeTimer = setTimeout(() => {
+            statusText.textContent = "";
+            statusFadeTimer = null;
+          }, ms);
+        }
+      }
+
+      const tabRow = document.getElementById("settingsTabRow");
+      const panelHost = document.getElementById("panelHost");
+      const statusText = document.getElementById("settingsStatusText");
+      const applyBtn = document.getElementById("settingsApplyBtn");
+      const closeBtn = document.getElementById("settingsCloseBtn");
+
+      // ── 공통 패널 ─────────────────────────────────────────────────────
+      function ti(key) {
+        if (typeof PeekomI18n === "undefined") return key;
+        return PeekomI18n.t(key, PeekomI18n.getCurrentLang());
+      }
+
+      function buildHowToCard() {
+        const steps = ti("howToSteps");
+        const stepsHtml = Array.isArray(steps)
+          ? steps.map((s, i) => `<li><span class="step-num">${i+1}</span><span>${s}</span></li>`).join("")
+          : "";
+        return `
+          <section class="info-card">
+            <p class="info-card-title">${ti("howToTitle")}</p>
+            <ul class="how-to-steps">${stepsHtml}</ul>
+          </section>`;
+      }
+
+      function buildMarkdownCard() {
+        const examples = ti("markdownExamples");
+        let exHtml = "";
+        if (Array.isArray(examples)) {
+          exHtml = `<div class="md-examples">` +
+            examples.map(e => `<span class="md-syntax">${e.syntax}</span><span class="md-result">${e.result}</span>`).join("") +
+            `</div>`;
+        }
+        return `
+          <section class="info-card">
+            <p class="info-card-title">${ti("markdownTitle")}</p>
+            <p>${ti("markdownDesc")}</p>
+            ${exHtml}
+          </section>`;
+      }
+
+      function buildExportIndicesList() {
+        let html = `<div class="export-indices-list" id="exportIndicesList">`;
+        html += `<label class="export-check-row"><input type="checkbox" id="exportSelectAll" /><strong>${ti("exportSelectAll")}</strong></label>`;
+        for (let i = 0; i < appState.enabledCount; i++) {
+          const label = appState.slots[i].label || `${ti("indexLabel")} ${i+1}`;
+          html += `<label class="export-check-row"><input type="checkbox" class="export-idx-check" data-idx="${i}" checked />${label}</label>`;
+        }
+        html += `</div>`;
+        return html;
+      }
+
+      function buildCommonPanel() {
+        const langOptions = (typeof PeekomI18n !== "undefined")
+          ? PeekomI18n.LANG_META.map(l => `<option value="${l.code}">${l.label}</option>`).join("")
+          : `<option value="ko">한국어</option>`;
+
+        const div = document.createElement("div");
+        div.className = "settings-panel";
+        div.dataset.settingsPanel = "common";
+        div.innerHTML = `
+          <!-- 언어 선택 -->
+          <div class="lang-select-row">
+            <label for="langSelect">${ti("langLabel")}</label>
+            <select id="langSelect" class="setting-select" style="flex:1;height:36px;">${langOptions}</select>
+          </div>
+
+          <!-- 소개 -->
+          <section class="about-card">
+            <h3 class="about-title">${ti("aboutTitle")}</h3>
+            <p class="about-desc">${ti("aboutDesc")}</p>
+            <p class="about-dev">
+              만든 사람: <strong>난쌤</strong>
+              · <a href="#" data-external-url="https://instagram.com/hello.nan_ssaem">@hello.nan_ssaem</a>
+            </p>
+          </section>
+
+          <!-- 사용 방법 -->
+          ${buildHowToCard()}
+
+          <!-- 마크다운 안내 -->
+          ${buildMarkdownCard()}
+
+          <!-- 표시 모니터 -->
+          <div class="setting-row">
+            <label for="monitorSelect">${ti("monitorLabel")}</label>
+            <select id="monitorSelect" class="setting-select"></select>
+          </div>
+
+          <!-- 동작 방식 -->
+          <div class="setting-row">
+            <label for="triggerSelect">${ti("triggerLabel")}</label>
+            <select id="triggerSelect" class="setting-select">
+              <option value="hover">${ti("triggerHover")}</option>
+              <option value="shortcut">${ti("triggerShortcut")}</option>
+            </select>
+            <span class="setting-hint" id="triggerHoverHint">${ti("triggerHoverHint")}</span>
+          </div>
+          <div class="shortcut-row" id="shortcutRow">
+            <label for="shortcutInput">${ti("shortcutLabel")}</label>
+            <input id="shortcutInput" class="setting-input" type="text" placeholder="CommandOrControl+Shift+M" />
+            <span class="setting-hint">${ti("shortcutHint")}</span>
+          </div>
+
+          <!-- 빼꼼/얼음 전환 방식 -->
+          <div class="setting-row">
+            <label for="pinToggleSelect">${ti("pinToggleLabel")}</label>
+            <select id="pinToggleSelect" class="setting-select">
+              <option value="chip">${ti("pinToggleChip")}</option>
+              <option value="dblclick">${ti("pinToggleDblclick")}</option>
+              <option value="click">${ti("pinToggleClick")}</option>
+            </select>
+            <span class="setting-hint">${ti("pinToggleHint")}</span>
+          </div>
+
+          <!-- 자동 실행 -->
+          <div class="setting-row">
+            <label class="setting-checkbox-label" for="openAtLoginCheckbox">
+              <input id="openAtLoginCheckbox" type="checkbox" />
+              ${ti("openAtLogin")}
+            </label>
+            <span class="setting-hint indented">${ti("openAtLoginHint")}</span>
+          </div>
+
+          <!-- 내보내기 -->
+          <div class="setting-row">
+            <label>${ti("exportLabel")}</label>
+            ${buildExportIndicesList()}
+            <div class="export-format-row">
+              <label class="export-format-label"><input type="radio" name="exportFormat" value="txt" checked />${ti("exportFormatTxt")}</label>
+              <label class="export-format-label"><input type="radio" name="exportFormat" value="md" />${ti("exportFormatMd")}</label>
+              <label class="export-format-label"><input type="radio" name="exportFormat" value="json" />${ti("exportFormatJson")}</label>
+            </div>
+            <button type="button" class="export-btn" id="exportSelectedBtn">${ti("exportBtn")}</button>
+            <div id="exportStatusText" style="font-size:12px;color:var(--muted);margin-top:4px;"></div>
+          </div>
+
+          <!-- 올리기 (백업 복원) -->
+          <div class="setting-row">
+            <label>${ti("importLabel")}</label>
+            <button type="button" class="import-btn" id="importBackupBtn">${ti("importBtn")}</button>
+            <span class="setting-hint">${ti("importHint")}</span>
+          </div>
+        `;
+        return div;
+      }
+
+      // ── 인덱스별 패널 ─────────────────────────────────────────────────
+      function buildIndexPanel(slotIndex) {
+        const div = document.createElement("div");
+        div.className = "settings-panel";
+        div.dataset.settingsPanel = `idx${slotIndex}`;
+
+        const isLastIndex = appState.enabledCount <= 1;
+
+        const themeButtons = THEME_NAMES.map(
+          (name) =>
+            `<button type="button" class="theme-btn" data-theme="${name}">${THEME_LABELS[name]}</button>`
+        ).join("");
+
+        const ySlotOptions = Array.from({ length: 10 }, (_, i) =>
+          `<option value="${i}">${i + 1}번 칸 (화면 위에서 ${i + 1}번째)</option>`
+        ).join("");
+
+        const deleteSection = isLastIndex
+          ? `<div class="delete-row">
+              <p class="setting-hint" style="padding:0; color: var(--muted);">
+                인덱스는 항상 1개 이상 있어야 해서 마지막 인덱스는 삭제할 수 없어요.<br>
+                새 인덱스를 추가한 뒤 삭제할 수 있습니다.
+              </p>
+            </div>`
+          : `<div class="delete-row">
+              <button type="button" class="delete-btn" data-delete-slot="${slotIndex}">이 인덱스 삭제</button>
+              <div class="delete-warning" data-delete-warning="${slotIndex}">
+                이 인덱스의 메모, 제목, 색상이 모두 사라집니다. 다시 한 번 누르면 완전히 삭제됩니다.
+              </div>
+            </div>`;
+
+        div.innerHTML = `
+          <div class="setting-row">
+            <div class="row-head">
+              <label for="slot${slotIndex}Label">인덱스 제목 (최대 6자)</label>
+              <span class="char-count" data-count="${slotIndex}">0 / ${LABEL_MAX}</span>
+            </div>
+            <input id="slot${slotIndex}Label" class="setting-input" type="text" maxlength="6" placeholder="짧게 입력 (예: 1강, A, 발표)" />
+          </div>
+          <div class="setting-row">
+            <label for="slot${slotIndex}YSlot">손잡이 위치</label>
+            <select id="slot${slotIndex}YSlot" class="setting-select" data-yslot="${slotIndex}">
+              ${ySlotOptions}
+            </select>
+            <span class="setting-hint">화면을 위에서 아래로 10칸으로 나눈 위치예요. 손잡이를 직접 드래그해도 돼요.</span>
+          </div>
+          <div class="setting-row">
+            <label>기본 글자 크기</label>
+            <div class="font-size-row">
+              <button type="button" class="font-size-btn" data-font-dec="${slotIndex}">A−</button>
+              <div class="font-size-display" id="slot${slotIndex}FontDisplay">18px</div>
+              <button type="button" class="font-size-btn" data-font-inc="${slotIndex}">A+</button>
+            </div>
+            <span class="setting-hint">이 인덱스 메모를 열었을 때의 기본 글 크기예요. 범위: 8 ~ 36px</span>
+          </div>
+          <div class="setting-row">
+            <label>색 테마</label>
+            <div class="theme-group" data-theme-group="${slotIndex}">${themeButtons}</div>
+            <div class="custom-color-row" data-custom-colors="${slotIndex}">
+              <div class="color-picker-label">
+                배경색
+                <div class="color-palette-wrap">
+                  <button type="button" class="color-palette-btn" data-palette-btn="bg-${slotIndex}">
+                    <span class="color-swatch" id="bgSwatch${slotIndex}"></span>
+                    <span id="bgHexLabel${slotIndex}">#FFF4B8</span>
+                  </button>
+                  <div class="color-popover" id="bgPopover${slotIndex}">
+                    <p class="recent-colors-title">최근 사용한 색</p>
+                    <div class="recent-colors-grid" id="bgRecentGrid${slotIndex}"></div>
+                    <div class="popover-native-wrap">
+                      <input type="color" data-custom-bg="${slotIndex}" />
+                      <input type="text" class="popover-hex-input" id="bgHexInput${slotIndex}" maxlength="7" placeholder="#FFF4B8" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="color-picker-label">
+                글자색
+                <div class="color-palette-wrap">
+                  <button type="button" class="color-palette-btn" data-palette-btn="text-${slotIndex}">
+                    <span class="color-swatch" id="textSwatch${slotIndex}"></span>
+                    <span id="textHexLabel${slotIndex}">#2F3750</span>
+                  </button>
+                  <div class="color-popover" id="textPopover${slotIndex}">
+                    <p class="recent-colors-title">최근 사용한 색</p>
+                    <div class="recent-colors-grid" id="textRecentGrid${slotIndex}"></div>
+                    <div class="popover-native-wrap">
+                      <input type="color" data-custom-text="${slotIndex}" />
+                      <input type="text" class="popover-hex-input" id="textHexInput${slotIndex}" maxlength="7" placeholder="#2F3750" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          ${deleteSection}
+        `;
+        return div;
+      }
+
+      // ── 탭 렌더 ────────────────────────────────────────────────────────
+      function renderTabs() {
+        tabRow.innerHTML = "";
+
+        const commonBtn = document.createElement("button");
+        commonBtn.type = "button";
+        commonBtn.className = "settings-tab" + (activeTab === "common" ? " active" : "");
+        commonBtn.dataset.settingsTab = "common";
+        commonBtn.role = "tab";
+        commonBtn.textContent = "공통";
+        commonBtn.addEventListener("click", () => switchTab("common"));
+        tabRow.appendChild(commonBtn);
+
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "settings-tab" + (activeTab === `idx${s}` ? " active" : "");
+          btn.dataset.settingsTab = `idx${s}`;
+          btn.role = "tab";
+
+          const dot = document.createElement("span");
+          dot.className = "tab-color-dot";
+          const themeName = appState.slots[s].theme;
+          dot.style.background =
+            appState.slots[s].theme === "custom"
+              ? appState.slots[s].customBg || "#fff"
+              : THEME_MAP[themeName]?.bg || "#fff";
+          btn.appendChild(dot);
+
+          const labelText = document.createElement("span");
+          labelText.textContent = appState.slots[s].label || `인덱스 ${s + 1}`;
+          btn.appendChild(labelText);
+
+          btn.addEventListener("click", () => switchTab(`idx${s}`));
+          tabRow.appendChild(btn);
+        }
+
+        if (appState.enabledCount < MAX_SLOTS) {
+          const addBtn = document.createElement("button");
+          addBtn.type = "button";
+          addBtn.className = "add-tab-btn";
+          addBtn.title = "인덱스 추가";
+          addBtn.textContent = "+";
+          addBtn.addEventListener("click", onAddIndex);
+          tabRow.appendChild(addBtn);
+        }
+      }
+
+      function renderPanels() {
+        panelHost.innerHTML = "";
+        panelHost.appendChild(buildCommonPanel());
+        for (let s = 0; s < appState.enabledCount; s++) {
+          panelHost.appendChild(buildIndexPanel(s));
+        }
+        applyActivePanel();
+        bindPanelEvents();
+      }
+
+      function applyActivePanel() {
+        panelHost.querySelectorAll(".settings-panel").forEach((p) => {
+          p.classList.toggle("active", p.dataset.settingsPanel === activeTab);
+        });
+        tabRow.querySelectorAll(".settings-tab").forEach((t) => {
+          t.classList.toggle("active", t.dataset.settingsTab === activeTab);
+        });
+      }
+
+      function switchTab(tabId) {
+        if (activeTab === tabId) return;
+        readSettingsForm();
+        resetPendingDelete();
+        activeTab = tabId;
+        applyActivePanel();
+        applySettingsForm();
+      }
+
+      function onAddIndex() {
+        if (appState.enabledCount >= MAX_SLOTS) return;
+        readSettingsForm();
+        refreshSlotMemosFromDisk();
+        const newSlotIndex = appState.enabledCount;
+        appState.slots[newSlotIndex] = defaultSlot(newSlotIndex);
+        appState.enabledCount += 1;
+        appState.order = normalizeOrder(appState.order, appState.enabledCount);
+        saveState(appState);
+        baselineSnapshot = buildSnapshot(appState);
+        activeTab = `idx${newSlotIndex}`;
+        renderTabs();
+        renderPanels();
+        applySettingsForm();
+        refreshApplyButton();
+        // 메인 패널에 즉시 반영
+        ipcRenderer.invoke("settings:notify-applied").catch(() => {});
+      }
+
+      function resetPendingDelete() {
+        pendingDeleteSlot = null;
+        panelHost.querySelectorAll(".delete-btn").forEach((b) => {
+          b.classList.remove("confirming");
+          b.textContent = "이 인덱스 삭제";
+        });
+        panelHost.querySelectorAll(".delete-warning").forEach((w) => {
+          w.classList.remove("visible");
+        });
+      }
+
+      function performDelete(slotIndex) {
+        if (slotIndex < 0 || slotIndex >= appState.enabledCount) return;
+        if (appState.enabledCount <= 1) return; // 최소 1개 유지
+
+        refreshSlotMemosFromDisk();
+        for (let i = slotIndex; i < MAX_SLOTS - 1; i++) {
+          appState.slots[i] = appState.slots[i + 1];
+        }
+        appState.slots[MAX_SLOTS - 1] = defaultSlot(MAX_SLOTS - 1);
+        appState.enabledCount -= 1;
+        // 삭제 후에도 최소 1개 재확인
+        if (appState.enabledCount < 1) appState.enabledCount = 1;
+        appState.order = normalizeOrder(appState.order, appState.enabledCount);
+        appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
+
+        saveState(appState);
+        baselineSnapshot = buildSnapshot(appState);
+        activeTab = "common";
+        pendingDeleteSlot = null;
+        renderTabs();
+        renderPanels();
+        applySettingsForm();
+        refreshApplyButton();
+        ipcRenderer.invoke("settings:notify-applied");
+      }
+
+      function updateCharCount(slotIndex) {
+        const inp = document.getElementById(`slot${slotIndex}Label`);
+        const counter = panelHost.querySelector(`[data-count="${slotIndex}"]`);
+        if (!inp || !counter) return;
+        const len = Array.from(inp.value).length;
+        counter.textContent = `${len} / ${LABEL_MAX}`;
+      }
+
+      function updateFontDisplay(slotIndex) {
+        const display = document.getElementById(`slot${slotIndex}FontDisplay`);
+        if (!display) return;
+        display.textContent = `${appState.slots[slotIndex].fontSize ?? 18}px`;
+      }
+
+      function syncShortcutRowVisibility() {
+        const triggerSelect = document.getElementById("triggerSelect");
+        const shortcutRow = document.getElementById("shortcutRow");
+        const triggerHint = document.getElementById("triggerHoverHint");
+        if (!triggerSelect || !shortcutRow) return;
+        const isShortcut = triggerSelect.value === "shortcut";
+        shortcutRow.classList.toggle("visible", isShortcut);
+        if (triggerHint) triggerHint.style.display = isShortcut ? "none" : "";
+      }
+
+      // 최근 색상 관리
+      function loadRecentColors(key) {
+        try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; }
+      }
+      function saveRecentColor(key, hex) {
+        const list = loadRecentColors(key).filter(c => c !== hex);
+        list.unshift(hex);
+        localStorage.setItem(key, JSON.stringify(list.slice(0, 8)));
+      }
+      function renderRecentColors(gridEl, hex, onPick) {
+        const list = loadRecentColors(gridEl.id.includes("bg") ? RECENT_BG_KEY : RECENT_TEXT_KEY);
+        gridEl.innerHTML = "";
+        if (list.length === 0) {
+          gridEl.innerHTML = `<span style="font-size:11px;color:var(--muted)">없음</span>`;
+          return;
+        }
+        list.forEach(color => {
+          const sw = document.createElement("button");
+          sw.type = "button";
+          sw.className = "recent-color-swatch";
+          sw.style.background = color;
+          sw.title = color;
+          sw.addEventListener("click", () => onPick(color));
+          gridEl.appendChild(sw);
+        });
+      }
+
+      function openPalette(popoverId, recentGridId, recentKey, currentHex, onPick) {
+        // Close any open popovers first
+        document.querySelectorAll(".color-popover.visible").forEach(p => {
+          if (p.id !== popoverId) p.classList.remove("visible");
+        });
+        const pop = document.getElementById(popoverId);
+        if (!pop) return;
+        pop.classList.toggle("visible");
+        if (pop.classList.contains("visible")) {
+          const grid = document.getElementById(recentGridId);
+          if (grid) renderRecentColors(grid, currentHex, onPick);
+        }
+      }
+
+      // Close palettes on outside click
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest(".color-palette-wrap")) {
+          document.querySelectorAll(".color-popover.visible").forEach(p => p.classList.remove("visible"));
+        }
+      }, true);
+
+      function bindPanelEvents() {
+        const monitorSelect = document.getElementById("monitorSelect");
+        if (monitorSelect && !monitorSelect.dataset.bound) {
+          monitorSelect.dataset.bound = "1";
+          loadDisplays();
+        }
+
+        const langSelect = document.getElementById("langSelect");
+        if (langSelect) {
+          langSelect.value = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "ko");
+          langSelect.addEventListener("change", () => {
+            const lang = langSelect.value;
+            if (typeof PeekomI18n !== "undefined") PeekomI18n.setLang(lang);
+            appState.global.language = lang;
+            refreshApplyButton();
+          });
+        }
+
+        const pinToggleSelect = document.getElementById("pinToggleSelect");
+        if (pinToggleSelect) {
+          pinToggleSelect.addEventListener("change", () => refreshApplyButton());
+        }
+
+        const triggerSelect = document.getElementById("triggerSelect");
+        if (triggerSelect) {
+          triggerSelect.addEventListener("change", () => {
+            syncShortcutRowVisibility();
+            refreshApplyButton();
+          });
+        }
+
+        const shortcutInput = document.getElementById("shortcutInput");
+        if (shortcutInput) {
+          shortcutInput.addEventListener("input", () => refreshApplyButton());
+        }
+
+        const openAtLoginCheckbox = document.getElementById("openAtLoginCheckbox");
+        if (openAtLoginCheckbox) {
+          openAtLoginCheckbox.addEventListener("change", () => refreshApplyButton());
+        }
+
+        // Export (new multi-index version)
+        const exportSelectAllCb = document.getElementById("exportSelectAll");
+        if (exportSelectAllCb) {
+          exportSelectAllCb.addEventListener("change", () => {
+            document.querySelectorAll(".export-idx-check").forEach(cb => { cb.checked = exportSelectAllCb.checked; });
+          });
+        }
+        document.querySelectorAll(".export-idx-check").forEach(cb => {
+          cb.addEventListener("change", () => {
+            const all = Array.from(document.querySelectorAll(".export-idx-check"));
+            if (exportSelectAllCb) exportSelectAllCb.checked = all.every(c => c.checked);
+          });
+        });
+
+        const exportSelectedBtn = document.getElementById("exportSelectedBtn");
+        if (exportSelectedBtn) {
+          exportSelectedBtn.addEventListener("click", () => onExportSelected());
+        }
+
+        const importBtn = document.getElementById("importBackupBtn");
+        if (importBtn) {
+          importBtn.addEventListener("click", () => onImportBackup());
+        }
+
+        panelHost.querySelectorAll('input[id^="slot"][id$="Label"]').forEach((inp) => {
+          const match = inp.id.match(/slot(\d+)Label/);
+          if (!match) return;
+          const slot = Number(match[1]);
+          inp.addEventListener("input", () => {
+            updateCharCount(slot);
+            // 탭 라벨 실시간 갱신
+            const chars = Array.from(inp.value);
+            appState.slots[slot].label = chars.slice(0, LABEL_MAX).join("");
+            const tabLabel = tabRow.querySelector(
+              `[data-settings-tab="idx${slot}"] span:last-child`
+            );
+            if (tabLabel) tabLabel.textContent = appState.slots[slot].label || `인덱스 ${slot + 1}`;
+            refreshApplyButton();
+          });
+        });
+
+        panelHost.querySelectorAll("[data-yslot]").forEach((sel) => {
+          const slotIndex = Number(sel.dataset.yslot);
+          sel.addEventListener("change", () => {
+            appState.slots[slotIndex].ySlot = Number(sel.value);
+            refreshApplyButton();
+          });
+        });
+
+        panelHost.querySelectorAll("[data-font-dec]").forEach((btn) => {
+          const slotIndex = Number(btn.dataset.fontDec);
+          btn.addEventListener("click", () => {
+            const cur = appState.slots[slotIndex].fontSize ?? 18;
+            appState.slots[slotIndex].fontSize = clamp(cur - 1, FONT_SIZE_MIN, FONT_SIZE_MAX);
+            updateFontDisplay(slotIndex);
+            refreshApplyButton();
+          });
+        });
+
+        panelHost.querySelectorAll("[data-font-inc]").forEach((btn) => {
+          const slotIndex = Number(btn.dataset.fontInc);
+          btn.addEventListener("click", () => {
+            const cur = appState.slots[slotIndex].fontSize ?? 18;
+            appState.slots[slotIndex].fontSize = clamp(cur + 1, FONT_SIZE_MIN, FONT_SIZE_MAX);
+            updateFontDisplay(slotIndex);
+            refreshApplyButton();
+          });
+        });
+
+        panelHost.querySelectorAll("[data-theme-group]").forEach((group) => {
+          const slotIndex = Number(group.dataset.themeGroup);
+          group.querySelectorAll(".theme-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const themeName = btn.dataset.theme;
+              if (!THEME_NAMES.includes(themeName)) return;
+              appState.slots[slotIndex].theme = themeName;
+              syncThemeGroupSelection();
+              syncCustomColorVisibility();
+              const dotInTab = tabRow.querySelector(
+                `[data-settings-tab="idx${slotIndex}"] .tab-color-dot`
+              );
+              if (dotInTab) {
+                dotInTab.style.background =
+                  themeName === "custom"
+                    ? appState.slots[slotIndex].customBg
+                    : THEME_MAP[themeName].bg;
+              }
+              refreshApplyButton();
+            });
+          });
+        });
+
+        // Color palette popover events
+        panelHost.querySelectorAll("[data-palette-btn]").forEach((btn) => {
+          const key = btn.dataset.paletteBtn;
+          const isBg = key.startsWith("bg-");
+          const slotIndex = Number(key.split("-")[1]);
+          const popoverId = isBg ? `bgPopover${slotIndex}` : `textPopover${slotIndex}`;
+          const recentGridId = isBg ? `bgRecentGrid${slotIndex}` : `textRecentGrid${slotIndex}`;
+          const recentKey = isBg ? RECENT_BG_KEY : RECENT_TEXT_KEY;
+
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const currentHex = isBg
+              ? (appState.slots[slotIndex].customBg || "#FFF4B8")
+              : (appState.slots[slotIndex].customText || "#2F3750");
+            openPalette(popoverId, recentGridId, recentKey, currentHex, (color) => {
+              applyCustomColor(slotIndex, isBg, color);
+              document.getElementById(popoverId)?.classList.remove("visible");
+            });
+          });
+        });
+
+        panelHost.querySelectorAll("[data-custom-bg]").forEach((inp) => {
+          const slotIndex = Number(inp.dataset.customBg);
+          inp.addEventListener("input", () => {
+            applyCustomColor(slotIndex, true, inp.value);
+          });
+        });
+
+        panelHost.querySelectorAll("[data-custom-text]").forEach((inp) => {
+          const slotIndex = Number(inp.dataset.customText);
+          inp.addEventListener("input", () => {
+            applyCustomColor(slotIndex, false, inp.value);
+          });
+        });
+
+        // HEX text inputs in popover
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const bgHex = document.getElementById(`bgHexInput${s}`);
+          if (bgHex) {
+            bgHex.addEventListener("change", () => {
+              if (/^#[0-9A-Fa-f]{6}$/.test(bgHex.value)) applyCustomColor(s, true, bgHex.value);
+            });
+          }
+          const textHex = document.getElementById(`textHexInput${s}`);
+          if (textHex) {
+            textHex.addEventListener("change", () => {
+              if (/^#[0-9A-Fa-f]{6}$/.test(textHex.value)) applyCustomColor(s, false, textHex.value);
+            });
+          }
+        }
+
+        panelHost.querySelectorAll("[data-delete-slot]").forEach((btn) => {
+          const slotIndex = Number(btn.dataset.deleteSlot);
+          if (appState.enabledCount <= 1) {
+            btn.disabled = true;
+            btn.title = "마지막 남은 인덱스는 삭제할 수 없습니다.";
+          }
+          btn.addEventListener("click", () => onDeleteClick(slotIndex));
+        });
+      }
+
+      function onDeleteClick(slotIndex) {
+        readSettingsForm();
+
+        if (pendingDeleteSlot === slotIndex) {
+          performDelete(slotIndex);
+          return;
+        }
+
+        resetPendingDelete();
+        pendingDeleteSlot = slotIndex;
+        const btn = panelHost.querySelector(`[data-delete-slot="${slotIndex}"]`);
+        const warn = panelHost.querySelector(`[data-delete-warning="${slotIndex}"]`);
+        if (btn) {
+          btn.classList.add("confirming");
+          btn.textContent = "삭제 확인 (다시 한 번 누르세요)";
+        }
+        if (warn) warn.classList.add("visible");
+
+        setTimeout(() => {
+          if (pendingDeleteSlot === slotIndex) resetPendingDelete();
+        }, 6000);
+      }
+
+      function syncCustomColorVisibility() {
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const row = panelHost.querySelector(`[data-custom-colors="${s}"]`);
+          if (row) {
+            row.classList.toggle("visible", appState.slots[s].theme === "custom");
+          }
+          const bgInp = panelHost.querySelector(`[data-custom-bg="${s}"]`);
+          const textInp = panelHost.querySelector(`[data-custom-text="${s}"]`);
+          const bgHex = appState.slots[s].customBg || "#FFF4B8";
+          const textHex = appState.slots[s].customText || "#2F3750";
+          if (bgInp) bgInp.value = bgHex;
+          if (textInp) textInp.value = textHex;
+          // Update swatches / hex labels
+          const bgSwatch = document.getElementById(`bgSwatch${s}`);
+          const bgLabel = document.getElementById(`bgHexLabel${s}`);
+          const textSwatch = document.getElementById(`textSwatch${s}`);
+          const textLabel = document.getElementById(`textHexLabel${s}`);
+          if (bgSwatch) bgSwatch.style.background = bgHex;
+          if (bgLabel) bgLabel.textContent = bgHex;
+          if (textSwatch) textSwatch.style.background = textHex;
+          if (textLabel) textLabel.textContent = textHex;
+          const bgHexInp = document.getElementById(`bgHexInput${s}`);
+          const textHexInp = document.getElementById(`textHexInput${s}`);
+          if (bgHexInp) bgHexInp.value = bgHex;
+          if (textHexInp) textHexInp.value = textHex;
+        }
+      }
+
+      function syncThemeGroupSelection() {
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const group = panelHost.querySelector(`[data-theme-group="${s}"]`);
+          if (!group) continue;
+          group.querySelectorAll(".theme-btn").forEach((b) => {
+            b.classList.toggle("active", b.dataset.theme === appState.slots[s].theme);
+          });
+        }
+      }
+
+      function applySettingsForm() {
+        const triggerSelect = document.getElementById("triggerSelect");
+        const shortcutInput = document.getElementById("shortcutInput");
+        const openAtLoginCheckbox = document.getElementById("openAtLoginCheckbox");
+        const pinToggleSelect = document.getElementById("pinToggleSelect");
+        const langSelect = document.getElementById("langSelect");
+
+        if (triggerSelect) triggerSelect.value = appState.global.triggerMode;
+        if (shortcutInput) shortcutInput.value = appState.global.shortcut;
+        if (openAtLoginCheckbox) openAtLoginCheckbox.checked = Boolean(appState.global.openAtLogin);
+        if (pinToggleSelect) pinToggleSelect.value = appState.global.pinToggleMode || "chip";
+        if (langSelect) langSelect.value = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "ko");
+
+        syncShortcutRowVisibility();
+
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const inp = document.getElementById(`slot${s}Label`);
+          if (inp) inp.value = appState.slots[s].label;
+          updateCharCount(s);
+
+          const ySlotSel = document.getElementById(`slot${s}YSlot`);
+          if (ySlotSel) ySlotSel.value = String(appState.slots[s].ySlot ?? s);
+
+          updateFontDisplay(s);
+        }
+        syncThemeGroupSelection();
+        syncCustomColorVisibility();
+      }
+
+      function readSettingsForm() {
+        const triggerSelect = document.getElementById("triggerSelect");
+        const shortcutInput = document.getElementById("shortcutInput");
+        const openAtLoginCheckbox = document.getElementById("openAtLoginCheckbox");
+        const pinToggleSelect = document.getElementById("pinToggleSelect");
+        const langSelect = document.getElementById("langSelect");
+
+        if (triggerSelect) appState.global.triggerMode = triggerSelect.value;
+        if (shortcutInput)
+          appState.global.shortcut =
+            shortcutInput.value.trim() || "CommandOrControl+Shift+M";
+        if (openAtLoginCheckbox) appState.global.openAtLogin = openAtLoginCheckbox.checked;
+        if (pinToggleSelect) appState.global.pinToggleMode = pinToggleSelect.value;
+        if (langSelect) appState.global.language = langSelect.value;
+
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const inp = document.getElementById(`slot${s}Label`);
+          if (inp) {
+            const chars = Array.from(inp.value);
+            appState.slots[s].label = chars.slice(0, LABEL_MAX).join("");
+          }
+
+          const ySlotSel = document.getElementById(`slot${s}YSlot`);
+          if (ySlotSel) appState.slots[s].ySlot = Number(ySlotSel.value);
+        }
+      }
+
+      function buildDisplayLabel(display) {
+        return `${display.label} (${display.bounds.width}x${display.bounds.height})`;
+      }
+
+      async function loadDisplays() {
+        const monitorSelect = document.getElementById("monitorSelect");
+        if (!monitorSelect) return;
+        try {
+          const payload = await ipcRenderer.invoke("display:list");
+          monitorSelect.innerHTML = "";
+
+          const autoOption = document.createElement("option");
+          autoOption.value = "auto";
+          autoOption.textContent = "자동 (현재 마우스 모니터)";
+          monitorSelect.appendChild(autoOption);
+
+          payload.displays.forEach((display) => {
+            const option = document.createElement("option");
+            option.value = String(display.id);
+            option.textContent = buildDisplayLabel(display);
+            monitorSelect.appendChild(option);
+          });
+
+          const currentVal = payload.windowState.followCursorMode
+            ? "auto"
+            : String(payload.windowState.targetDisplayId ?? "auto");
+          monitorSelect.value = currentVal;
+
+          // 초기 baseline 에 모니터 값 반영
+          draftMonitorTarget =
+            payload.windowState.followCursorMode ? null : payload.windowState.targetDisplayId;
+          baselineSnapshot = buildSnapshot(appState);
+          refreshApplyButton();
+
+          monitorSelect.addEventListener("change", (event) => {
+            const selected = event.target.value === "auto" ? null : Number(event.target.value);
+            draftMonitorTarget = selected;
+            refreshApplyButton();
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      async function applyAndSync() {
+        readSettingsForm();
+
+        const payload = {
+          triggerMode: appState.global.triggerMode,
+          shortcut: appState.global.shortcut,
+          manualYOffset: appState.global.manualYOffset
+        };
+
+        try {
+          const result = await ipcRenderer.invoke("settings:update", payload);
+          if (result?.shortcutStatus?.ok === false) {
+            setStatus("단축키 등록 실패: 다른 조합으로 바꿔주세요.", 5000);
+            return;
+          }
+        } catch (err) {
+          console.error(err);
+          setStatus("설정 적용 중 오류가 발생했습니다.", 5000);
+          return;
+        }
+
+        try {
+          const r = await ipcRenderer.invoke("startup:set", Boolean(appState.global.openAtLogin));
+          if (!r?.ok) {
+            setStatus(r?.message || "시작 프로그램 설정을 적용하지 못했습니다.", 5000);
+            return;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+
+        // 모니터 변경 적용
+        try {
+          await ipcRenderer.invoke("window:set-target-display", draftMonitorTarget);
+        } catch (err) {
+          console.error(err);
+        }
+
+        // 모니터 설정 영속화
+        appState.global.monitorMode = draftMonitorTarget === null ? "auto" : "fixed";
+        appState.global.monitorTargetId = draftMonitorTarget;
+        // 설정 완료 표시
+        appState.global.setupCompleted = true;
+        // 언어 적용
+        if (typeof PeekomI18n !== "undefined" && appState.global.language) {
+          PeekomI18n.setLang(appState.global.language);
+        }
+
+        refreshSlotMemosFromDisk();
+        saveState(appState);
+        baselineSnapshot = buildSnapshot(appState);
+        refreshApplyButton();
+        setStatus(ti("statusApplied"), 2500);
+        await ipcRenderer.invoke("settings:notify-applied");
+      }
+
+      applyBtn.addEventListener("click", applyAndSync);
+
+      closeBtn.addEventListener("click", async () => {
+        if (isDirty()) {
+          const ok = confirm(ti("unsavedChangesConfirm"));
+          if (!ok) return;
+        }
+        await ipcRenderer.invoke("settings:close-window");
+      });
+
+      function initialize() {
+        renderTabs();
+        renderPanels();
+        applySettingsForm();
+        refreshApplyButton();
+
+        panelHost.addEventListener("click", (e) => {
+          const a = e.target.closest("a[data-external-url]");
+          if (!a) return;
+          e.preventDefault();
+          ipcRenderer.invoke("shell:open-external", a.dataset.externalUrl);
+        });
+
+        ipcRenderer
+          .invoke("startup:get")
+          .then((st) => {
+            if (st?.ok) {
+              appState.global.openAtLogin = st.openAtLogin;
+              const cb = document.getElementById("openAtLoginCheckbox");
+              if (cb) cb.checked = Boolean(st.openAtLogin);
+              baselineSnapshot = buildSnapshot(appState);
+              refreshApplyButton();
+            }
+          })
+          .catch(() => {});
+      }
+
+      initialize();
+    </script>
+  </body>
+</html>
