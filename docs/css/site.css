@@ -633,7 +633,7 @@
 
         a.hero-offer-card--link {
             text-decoration: none;
-            color: inherit;
+            color: #1a1a1a;
             cursor: pointer;
             transition: border-color 0.15s, box-shadow 0.15s;
         }
@@ -672,6 +672,7 @@
             font-weight: 700;
             font-size: 15px;
             line-height: 1.2;
+            color: #1a1a1a;
         }
 
         .hero-offer-card__badge {
@@ -2182,6 +2183,13 @@
         }
 
         .modal__close:hover { color: var(--text); }
+
+        .modal-info-body {
+            padding: 4px 20px 24px;
+            font-size: 15px;
+            line-height: 1.75;
+            color: var(--text);
+        }
 
         .guide-list {
             list-style: decimal;

@@ -2,12 +2,14 @@
 (function () {
 "use strict";
 
-/* ── Download URLs (추후 실제 링크로 교체) ── */
+/* ── Download URLs ── */
 const LINKS = {
     win: "https://github.com/peekom/peekom/releases/latest/download/Peekom-Setup.exe",
     mac: "https://github.com/peekom/peekom/releases/latest",
     buy: "https://peekom.lemonsqueezy.com/buy"
 };
+
+const WIN_SETUP_FILENAME = "Peekom-Setup.exe";
 
 const PRICING = { list: 12.99, sale: 9.99, currency: 'USD' };
 
@@ -116,7 +118,7 @@ function buildGuidePlusHtml(d) {
             "<p>" + (d.guidePlusStep1 || "1. 아래 버튼에서 Peekom Plus를 구매합니다.") + "</p>" +
             '<p class="guide-plus-cta"><a href="' + buyLink + '" class="btn btn--buy btn--plus" target="_blank" rel="noopener">' + cta + "</a></p>" +
             "<p>" + (d.guidePlusStep2 || "2. 이메일로 받은 라이선스 키를 확인합니다.") + "</p>" +
-            "<p>" + (d.guidePlusStep3 || "3. Peekom을 실행한 뒤 잠금 화면 또는 설정에서 키를 입력합니다.") + "</p>" +
+            "<p>" + (d.guidePlusStep3 || "3. Peekom을 실행한 뒤 <strong>설정창</strong> 또는 <strong>설정</strong>에서 키를 입력합니다.") + "</p>" +
             "<p>" + (d.guidePlusStep4 || "4. Peekom Plus 활성화가 완료됩니다.") + "</p>" +
         "</div>"
     );
@@ -418,7 +420,7 @@ const i18n = {
             '<div class="guide-step guide-step--last">' +
                 "<h3>4. Peekom Plus 업그레이드</h3>" +
                 '<ul class="guide-step-list">' +
-                    "<li>앱의 <strong>Plus 업그레이드</strong> 버튼(또는 처음 실행 시 잠금 화면)에서 라이선스 키를 입력하면 업그레이드됩니다.</li>" +
+                    "<li>앱의 <strong>Plus 업그레이드</strong> 버튼(또는 처음 실행 시 설정창)에서 라이선스 키를 입력하면 업그레이드됩니다.</li>" +
                     '<li>자세한 순서는 아래 <a href="#guide-plus">Plus 활성화</a> 섹션을 확인하세요.</li>' +
                 "</ul>" +
             "</div>",
@@ -542,7 +544,9 @@ const i18n = {
         guidePlusTitle: "Plus 활성화",
         guidePlusStep1: "1. 아래 버튼에서 Peekom Plus를 구매합니다.",
         guidePlusStep2: "2. 이메일로 받은 라이선스 키를 확인합니다.",
-        guidePlusStep3: "3. Peekom을 실행한 뒤 <strong>잠금 화면</strong> 또는 <strong>설정</strong>에서 키를 입력합니다.",
+        guidePlusStep3: "3. Peekom을 실행한 뒤 <strong>설정창</strong> 또는 <strong>설정</strong>에서 키를 입력합니다.",
+        macComingSoonTitle: "macOS 안내",
+        macComingSoonBody: "macOS 버전은 현재 개발 중입니다.<br><strong>2026년 7월</strong> 중 배포 예정입니다.",
         guidePlusStep4: "4. Peekom Plus 활성화가 완료됩니다.",
         guideNavStart: "시작하기", guideNavKeys: "단축키", guideNavEdit: "편집", guideNavPlus: "Plus 활성화",
         guideSectionEditTitle: "편집",
@@ -640,7 +644,7 @@ const i18n = {
             '<div class="guide-step guide-step--last">' +
                 "<h3>4. Upgrade to Peekom Plus</h3>" +
                 '<ul class="guide-step-list">' +
-                    "<li>Enter your license key via the in-app <strong>Upgrade to Plus</strong> button (or the lock screen on first launch).</li>" +
+                    "<li>Enter your license key via the in-app <strong>Upgrade to Plus</strong> button (or the <strong>Settings</strong> window on first launch).</li>" +
                     '<li>See <a href="#guide-plus">Activate Plus</a> for step-by-step instructions.</li>' +
                 "</ul>" +
             "</div>",
@@ -729,7 +733,9 @@ const i18n = {
         guidePlusTitle: "Activate Plus",
         guidePlusStep1: "1. Buy Peekom Plus using the button below.",
         guidePlusStep2: "2. Check your email for the license key.",
-        guidePlusStep3: "3. Open Peekom and enter the key on the <strong>lock screen</strong> or in <strong>Settings</strong>.",
+        guidePlusStep3: "3. Open Peekom and enter the key in the <strong>Settings</strong> window or in <strong>Settings</strong>.",
+        macComingSoonTitle: "macOS",
+        macComingSoonBody: "The macOS version is in development.<br>Expected release: <strong>July 2026</strong>.",
         guidePlusStep4: "4. Peekom Plus activation is complete.",
         guideNavStart: "Getting started", guideNavKeys: "Shortcuts", guideNavEdit: "Editing", guideNavPlus: "Activate Plus",
         guideSectionEditTitle: "Editing",
@@ -1656,6 +1662,8 @@ function enrichLocaleData(data) {
     next.guidePlusStep2 = next.guidePlusStep2 || en.guidePlusStep2;
     next.guidePlusStep3 = next.guidePlusStep3 || en.guidePlusStep3;
     next.guidePlusStep4 = next.guidePlusStep4 || en.guidePlusStep4;
+    next.macComingSoonTitle = next.macComingSoonTitle || en.macComingSoonTitle;
+    next.macComingSoonBody = next.macComingSoonBody || en.macComingSoonBody;
     next.featuresTitle = next.featuresTitle || en.featuresTitle;
     next.featuresSub = next.featuresSub || en.featuresSub;
     next.compareTitle = next.compareTitle || en.compareTitle;
@@ -1849,20 +1857,108 @@ function setLanguage(lang) {
 }
 
 function applyLinks() {
-    const ids = {
-        heroWinBtn: LINKS.win,
-        heroMacPlusBuyBtn: LINKS.buy,
-        heroMacBtn: LINKS.mac,
-        heroPlusBuyBtn: LINKS.buy,
-        dlPlusBuyBtn: LINKS.buy,
-        dlMacPlusBuyBtn: LINKS.buy,
-        dlWinBtn: LINKS.win,
-        dlMacBtn: LINKS.mac,
-        dlBuyLink: LINKS.buy
-    };
-    Object.keys(ids).forEach(function(id) {
+    const winDownloadIds = ["heroWinBtn", "dlWinBtn"];
+    winDownloadIds.forEach(function (id) {
         const el = document.getElementById(id);
-        if (el) el.href = ids[id];
+        if (!el) return;
+        el.href = LINKS.win;
+        el.setAttribute("download", WIN_SETUP_FILENAME);
+        el.removeAttribute("target");
+    });
+
+    const macBlockedIds = ["heroMacBtn", "heroMacPlusBuyBtn", "dlMacBtn", "dlMacPlusBuyBtn"];
+    macBlockedIds.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.href = "#";
+        el.removeAttribute("target");
+    });
+
+    const winPlusBuyIds = ["heroPlusBuyBtn", "dlPlusBuyBtn"];
+    winPlusBuyIds.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.href = "#";
+        el.removeAttribute("target");
+    });
+
+    const buyOnlyIds = ["dlBuyLink"];
+    buyOnlyIds.forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.href = LINKS.buy;
+    });
+}
+
+function triggerWinSetupDownload() {
+    const a = document.createElement("a");
+    a.href = LINKS.win;
+    a.download = WIN_SETUP_FILENAME;
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+function restoreModalGuideView() {
+    const overlay = document.getElementById("modalOverlay");
+    if (!overlay) return;
+    const list = overlay.querySelector(".guide-list");
+    const infoEl = document.getElementById("modalInfoBody");
+    if (list) list.hidden = false;
+    if (infoEl) infoEl.hidden = true;
+    const d = getLocaleData();
+    const guideTitleEl = document.getElementById("guideTitle");
+    if (guideTitleEl && d.guideTitle) guideTitleEl.textContent = d.guideTitle;
+}
+
+function showMacComingSoon(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    const d = getLocaleData();
+    const overlay = document.getElementById("modalOverlay");
+    if (!overlay) return;
+    const titleEl = document.getElementById("guideTitle");
+    const list = overlay.querySelector(".guide-list");
+    let infoEl = document.getElementById("modalInfoBody");
+    if (!infoEl) {
+        infoEl = document.createElement("p");
+        infoEl.id = "modalInfoBody";
+        infoEl.className = "modal-info-body";
+        if (list) list.parentNode.insertBefore(infoEl, list);
+        else overlay.querySelector(".modal")?.appendChild(infoEl);
+    }
+    if (titleEl) titleEl.textContent = d.macComingSoonTitle || "macOS";
+    infoEl.innerHTML = d.macComingSoonBody || "macOS version is in development.";
+    infoEl.hidden = false;
+    if (list) list.hidden = true;
+    openModal({ mode: "info" });
+}
+
+function handleWinPlusBuyClick(event) {
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+    triggerWinSetupDownload();
+    window.open(LINKS.buy, "_blank", "noopener,noreferrer");
+}
+
+var heroOfferActionsBound = false;
+
+function initHeroOfferActions() {
+    if (heroOfferActionsBound) return;
+    heroOfferActionsBound = true;
+
+    ["heroMacBtn", "heroMacPlusBuyBtn", "dlMacBtn", "dlMacPlusBuyBtn"].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("click", showMacComingSoon);
+    });
+
+    ["heroPlusBuyBtn", "dlPlusBuyBtn"].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("click", handleWinPlusBuyClick);
     });
 }
 
@@ -2241,12 +2337,17 @@ document.addEventListener('click', function(e) {
 });
 
 /* ── Modal ── */
-function openModal() {
-    document.getElementById('modalOverlay').classList.add('active');
+function openModal(options) {
+    options = options || {};
+    if (options.mode !== "info") {
+        restoreModalGuideView();
+    }
+    document.getElementById("modalOverlay").classList.add("active");
 }
 
 function closeModal() {
-    document.getElementById('modalOverlay').classList.remove('active');
+    document.getElementById("modalOverlay").classList.remove("active");
+    restoreModalGuideView();
 }
 
 function closeModalOnBackdrop(e) {
@@ -2274,6 +2375,7 @@ window.onload = function() {
     updateUI();
     updateActiveNav();
     initFaqAccordion();
+    initHeroOfferActions();
     if (window.PeekomCarousel) window.PeekomCarousel.init();
 };
     window.PeekomSite = {
@@ -2283,7 +2385,9 @@ window.onload = function() {
         openModal: openModal,
         closeModal: closeModal,
         closeModalOnBackdrop: closeModalOnBackdrop,
-        closeSearch: closeSearch
+        closeSearch: closeSearch,
+        showMacComingSoon: showMacComingSoon,
+        handleWinPlusBuyClick: handleWinPlusBuyClick
     };
     window.setLanguage = setLanguage;
     window.openModal = openModal;
