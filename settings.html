@@ -3,15 +3,30 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Peekom Plus Settings</title>
+    <title>Peekom Settings</title>
     <script src="assets/i18n.js"></script>
+    <script src="assets/i18n-locale-extra.js"></script>
+    <script src="assets/memo-sanitize.js"></script>
+    <script src="assets/premium-config.js"></script>
+    <script src="assets/premium-ui.js"></script>
     <style>
       :root {
-        --accent: #4a79ff;
-        --text: #2f3750;
-        --muted: #64718b;
-        --border: #d7dde9;
-        --danger: #d04646;
+        --accent: #0067c0;
+        --accent-subtle: rgba(0, 103, 192, 0.08);
+        --text: #202020;
+        --muted: #616161;
+        --border: #e0e0e0;
+        --surface: #ffffff;
+        --surface-alt: #f9f9f9;
+        --canvas: #f3f3f3;
+        --danger: #c42b1c;
+        --radius: 4px;
+        --radius-md: 5px;
+        --field-label-width: 112px;
+        --field-gap: 6px;
+        --setting-control-width: 220px;
+        --about-text-offset: 68px;
+        --settings-gutter: 10px;
       }
 
       * {
@@ -25,70 +40,345 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background: #ffffff;
-        font-family: "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
-        font-size: 15px;
+        background: var(--canvas);
+        font-family: "Segoe UI Variable", "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+        font-size: 13px;
         color: var(--text);
+        -webkit-font-smoothing: antialiased;
       }
 
       .settings-root {
         width: 100%;
         height: 100%;
-        padding: 14px;
+        padding: 6px 6px 5px;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 5px;
+        background: var(--canvas);
+      }
+
+      .settings-header-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 7px;
+        padding: 2px 2px 0;
+      }
+
+      .settings-header-left {
+        display: flex;
+        flex-direction: column;
+        gap: 1px;
+        min-width: 0;
       }
 
       .settings-title {
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 15px;
+        font-weight: 600;
+        flex-shrink: 0;
+        letter-spacing: -0.01em;
+      }
+
+      .settings-tier-badge {
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--muted);
+      }
+
+      .premium-lock-badge {
+        display: inline-flex;
+        align-items: center;
+        font-size: 11px;
+        color: #8e44ad;
+        font-weight: 500;
+        margin-left: 4px;
+        white-space: nowrap;
+      }
+
+      .premium-control-locked {
+        opacity: 0.72;
+        cursor: not-allowed;
+      }
+
+      .premium-trigger-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .slot-image-thumb-box {
+        margin-top: 6px;
+        padding: 8px;
+        border-radius: var(--radius-md);
+        background: #eceef1;
+        border: 1px solid var(--border);
+        min-height: 72px;
+      }
+
+      .slot-image-thumb-grid {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+        width: 100%;
+        align-items: stretch;
+      }
+
+      .slot-image-thumb {
+        flex: 1 1 0;
+        max-width: calc(20% - 5px);
+        aspect-ratio: 1;
+        min-width: 0;
+        min-height: 48px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        cursor: pointer;
+        background: var(--surface);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+
+      .slot-image-thumb-empty {
+        width: 100%;
+        min-height: 56px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .color-advanced-btn {
+        flex-shrink: 0;
+        height: 30px;
+        padding: 0 8px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        cursor: pointer;
+        font-size: 11px;
+        font-family: inherit;
+        color: var(--text);
+        white-space: nowrap;
+      }
+      .color-advanced-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .popover-native-wrap input[type="color"].color-input-hidden {
+        position: absolute;
+        width: 0;
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .image-lightbox {
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0.72);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+
+      .image-lightbox.hidden {
+        display: none;
+      }
+
+      .image-lightbox-card {
+        background: #fff;
+        border-radius: 8px;
+        max-width: min(92vw, 720px);
+        max-height: 88vh;
+        overflow: auto;
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .image-lightbox-card img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 0 auto;
+      }
+
+      .image-lightbox-note {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .image-lightbox-close {
+        align-self: flex-end;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        padding: 4px 10px;
+        cursor: pointer;
+        font-size: 12px;
+      }
+
+      .settings-meta {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .settings-home-link {
+        font-size: 11px;
+        color: var(--accent);
+        text-decoration: none;
+      }
+
+      .settings-home-link:hover {
+        text-decoration: underline;
+      }
+
+      .lang-select-compact {
+        height: 26px;
+        padding: 0 6px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-size: 12px;
+        font-family: inherit;
+        color: var(--text);
+        background: var(--surface);
+        max-width: 132px;
+      }
+
+      .lang-select-compact:focus {
+        outline: 1px solid var(--accent);
+        outline-offset: -1px;
+      }
+
+      .settings-divider {
+        border: none;
+        border-top: 1px solid var(--border);
+        margin: 0;
       }
 
       .settings-tab-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 3px;
         align-items: center;
+        max-height: 58px;
+        overflow: hidden;
+        padding: 1px 0;
+      }
+
+      .settings-tab-wrap {
+        position: relative;
+        flex: 1 1 calc((100% - 36px) / 6);
+        min-width: 0;
+        max-width: calc((100% - 36px) / 6);
+      }
+
+      .settings-tab-wrap .settings-tab {
+        width: 100%;
       }
 
       .settings-tab {
         flex: 0 1 auto;
-        min-width: 72px;
-        height: 36px;
-        padding: 0 12px;
+        min-width: 0;
+        height: 26px;
+        padding: 0 6px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        background: #fff;
-        font-size: 13px;
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 11px;
+        font-family: inherit;
         cursor: pointer;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 6px;
+        gap: 3px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .settings-tab.settings-tab-common {
+        flex: 0 0 28px;
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        padding: 0;
+        border-radius: var(--radius);
+        background: var(--surface-alt);
+        color: #5c5c5c;
+      }
+
+      .settings-tab.settings-tab-common svg {
+        display: block;
+        width: 15px;
+        height: 15px;
       }
 
       .settings-tab.active {
         border-color: var(--accent);
-        background: rgba(74, 121, 255, 0.12);
-        font-weight: 700;
+        background: var(--accent-subtle);
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      .settings-tab.settings-tab-common.active {
+        background: #ebebeb;
+        color: #323130;
+        border-color: #c8c8c8;
       }
 
       .settings-tab .tab-color-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 999px;
-        border: 1px solid rgba(0, 0, 0, 0.15);
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.12);
         flex-shrink: 0;
       }
 
+      .settings-tab-wrap:hover .tab-delete-btn {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .tab-delete-btn {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        width: 14px;
+        height: 14px;
+        border: 1px solid #fff;
+        border-radius: 50%;
+        background: var(--danger);
+        color: #fff;
+        font-size: 10px;
+        line-height: 1;
+        cursor: pointer;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      }
+
       .add-tab-btn {
-        width: 36px;
-        height: 36px;
+        flex: 0 0 26px;
+        width: 26px;
+        height: 26px;
         border: 1px dashed var(--border);
-        border-radius: 10px;
-        background: #fff;
-        font-size: 18px;
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 14px;
         cursor: pointer;
         color: var(--muted);
       }
@@ -96,6 +386,7 @@
       .add-tab-btn:hover {
         border-color: var(--accent);
         color: var(--accent);
+        background: var(--accent-subtle);
       }
 
       .add-tab-btn[disabled] {
@@ -106,43 +397,276 @@
       .panel-host {
         flex: 1;
         min-height: 0;
-        overflow: auto;
+        overflow: hidden;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        padding-right: 4px;
+        gap: 5px;
+        padding-right: 0;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
       }
 
       .settings-panel {
         display: none;
         flex-direction: column;
-        gap: 10px;
+        gap: 5px;
+        min-height: 0;
+        overflow: hidden;
       }
 
       .settings-panel.active {
         display: flex;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .panel-scroll {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 6px 5px 6px 0;
       }
 
       .setting-row {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 2px;
+      }
+
+      .field-inline {
+        display: flex;
+        align-items: center;
+        gap: var(--field-gap);
+        min-height: 28px;
+        padding-left: var(--settings-gutter);
+      }
+
+      .field-inline.field-block-nested {
+        padding-left: 0;
+      }
+
+      .field-inline > label {
+        flex: 0 0 var(--field-label-width);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+      }
+
+      .field-inline > .setting-select,
+      .field-inline > .setting-input,
+      .field-inline > .font-size-row,
+      .field-inline > .premium-trigger-wrap {
+        flex: 0 0 auto;
+        width: var(--setting-control-width);
+        min-width: 0;
+      }
+
+      .field-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding-left: var(--settings-gutter);
+      }
+
+      .field-stack .field-inline {
+        padding-left: 0;
+      }
+
+      .field-hint-below {
+        margin: 0;
+        padding-left: calc(var(--field-label-width) + var(--field-gap));
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.3;
+      }
+
+      .field-error {
+        margin: 4px 0 0;
+        padding-left: calc(var(--field-label-width) + var(--field-gap));
+        font-size: 11px;
+        color: #d04646;
+        line-height: 1.35;
+      }
+
+      .field-error.hidden {
+        display: none;
+      }
+
+      .setting-input.input-invalid {
+        border-color: #d04646;
+        box-shadow: 0 0 0 1px rgba(208, 70, 70, 0.25);
+      }
+
+      .field-block {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding-left: var(--settings-gutter);
+      }
+
+      .field-block.field-block-nested {
+        padding-left: 0;
+      }
+
+      .field-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .field-block > .setting-select,
+      .field-block > .setting-input {
+        width: var(--setting-control-width);
+      }
+
+      .field-hint {
+        margin-left: calc(var(--settings-gutter) + var(--field-label-width) + var(--field-gap));
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.3;
+      }
+
+      .field-hint.field-hint-flush {
+        margin-left: var(--settings-gutter);
+      }
+
+      .field-hint.font-size-hint-error {
+        color: var(--danger);
       }
 
       .setting-row > label:not(.setting-checkbox-label) {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--muted);
+      }
+
+      .about-card {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 8px;
+        padding: 6px 8px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        background: var(--surface-alt);
+      }
+
+      .about-logo {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--radius-md);
+        flex-shrink: 0;
+        object-fit: cover;
+        border: 1px solid var(--border);
+      }
+
+      .about-body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .backup-section {
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 5px 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        background: var(--surface-alt);
+      }
+
+      .backup-section-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 5px;
+      }
+
+      .backup-head-left {
+        display: flex;
+        align-items: baseline;
+        gap: 5px;
+        flex-wrap: wrap;
+        min-width: 0;
+      }
+
+      .backup-section h4 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+      }
+
+      .backup-head-hint {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      .backup-toggle-btn {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 11px;
+        font-family: inherit;
+        color: var(--muted);
+        padding: 2px 6px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .backup-body.hidden {
+        display: none;
+      }
+
+      .backup-action-row {
+        display: flex;
+        gap: 4px;
+      }
+
+      .backup-tab-btn {
+        flex: 1;
+        height: 26px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 12px;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .backup-tab-btn.active {
+        border-color: var(--accent);
+        background: var(--accent-subtle);
+        font-weight: 600;
+        color: var(--accent);
+      }
+
+      .backup-panel.hidden {
+        display: none;
+      }
+
+      .export-indices-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px 5px;
+        max-height: 120px;
+        overflow-y: auto;
+        margin: 2px 0;
       }
 
       .row-head {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
-        gap: 8px;
+        gap: 5px;
       }
 
       .char-count {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--muted);
         font-variant-numeric: tabular-nums;
       }
@@ -150,8 +674,8 @@
       .setting-checkbox-label {
         display: flex;
         align-items: flex-start;
-        gap: 10px;
-        font-size: 14px;
+        gap: 6px;
+        font-size: 12px;
         font-weight: 600;
         color: var(--text);
         cursor: pointer;
@@ -159,46 +683,56 @@
       }
 
       .setting-checkbox-label input[type="checkbox"] {
-        margin-top: 2px;
-        width: 20px;
-        height: 20px;
+        margin-top: 1px;
+        width: 16px;
+        height: 16px;
         flex-shrink: 0;
         cursor: pointer;
       }
 
       .setting-hint {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--muted);
         font-weight: 400;
-        margin-top: 2px;
+        margin-top: 1px;
         padding-left: 0;
-        line-height: 1.4;
+        line-height: 1.35;
       }
 
       .setting-hint.indented {
-        padding-left: 30px;
+        padding-left: 22px;
       }
 
       .setting-input,
       .setting-select {
-        height: 42px;
+        height: 28px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 0 12px;
-        font-size: 15px;
+        border-radius: var(--radius);
+        padding: 0 7px;
+        font-size: 12px;
+        font-family: inherit;
+        color: var(--text);
+        background: var(--surface);
+      }
+
+      .setting-input:focus,
+      .setting-select:focus {
+        outline: 1px solid var(--accent);
+        outline-offset: -1px;
+        border-color: var(--accent);
       }
 
       .theme-group {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 6px;
+        gap: 4px;
       }
 
       .custom-color-row {
         display: none;
         grid-template-columns: 1fr 1fr;
-        gap: 8px;
-        margin-top: 6px;
+        gap: 5px;
+        margin-top: 4px;
       }
 
       .custom-color-row.visible {
@@ -208,76 +742,108 @@
       .color-picker-label {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        font-size: 12px;
+        gap: 2px;
+        font-size: 11px;
         color: var(--muted);
       }
 
       .color-picker-label input[type="color"] {
         width: 100%;
-        height: 40px;
+        height: 32px;
         border: 1px solid var(--border);
-        border-radius: 8px;
-        padding: 2px;
+        border-radius: var(--radius);
+        padding: 1px;
         cursor: pointer;
+        background: var(--surface);
       }
 
       .export-group {
         display: flex;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
       }
 
       .export-item {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: 1px;
       }
 
       .export-btn {
-        height: 42px;
+        height: 32px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        background: #fff;
-        font-size: 14px;
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 12px;
+        font-family: inherit;
         cursor: pointer;
         text-align: left;
-        padding: 0 14px;
+        padding: 0 8px;
       }
 
       .export-btn:hover {
         border-color: var(--accent);
         color: var(--accent);
+        background: var(--accent-subtle);
       }
 
       .theme-btn {
-        height: 36px;
+        height: 30px;
         border: 1px solid var(--border);
-        border-radius: 999px;
-        background: #fff;
-        font-size: 13px;
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 12px;
+        font-family: inherit;
         cursor: pointer;
+      }
+
+      .theme-btn[data-theme="yellow"] {
+        background: #fff4b8;
+        color: #2f3750;
+      }
+
+      .theme-btn[data-theme="pink"] {
+        background: #ffd9e8;
+        color: #3b3350;
+      }
+
+      .theme-btn[data-theme="blue"] {
+        background: #ddebff;
+        color: #2b3d5d;
+      }
+
+      .theme-btn[data-theme="green"] {
+        background: #dcf5de;
+        color: #2a4b38;
+      }
+
+      .theme-btn-custom {
+        background: linear-gradient(90deg, #f66, #fc0, #3c3, #09f, #93c);
+        color: #fff;
       }
 
       .theme-btn.active {
         border-color: var(--accent);
-        background: rgba(74, 121, 255, 0.12);
+        outline: 1px solid var(--accent);
+        outline-offset: -1px;
+        font-weight: 600;
       }
 
       .delete-row {
-        margin-top: 8px;
-        padding-top: 12px;
-        border-top: 1px dashed var(--border);
+        margin-top: 5px;
+        padding-top: 7px;
+        border-top: 1px solid var(--border);
       }
 
       .delete-btn {
-        height: 42px;
+        height: 32px;
         width: 100%;
         border: 1px solid var(--danger);
-        border-radius: 10px;
-        background: #fff;
+        border-radius: var(--radius);
+        background: var(--surface);
         color: var(--danger);
-        font-size: 14px;
+        font-size: 12px;
+        font-family: inherit;
         font-weight: 600;
         cursor: pointer;
       }
@@ -293,10 +859,10 @@
       }
 
       .delete-warning {
-        margin-top: 8px;
-        font-size: 13px;
+        margin-top: 5px;
+        font-size: 12px;
         color: var(--danger);
-        line-height: 1.4;
+        line-height: 1.35;
         display: none;
       }
 
@@ -305,67 +871,62 @@
       }
 
       .settings-actions {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 5px;
       }
 
       .settings-action-btn {
-        height: 44px;
+        height: 26px;
+        min-width: 68px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        background: #fff;
-        font-size: 15px;
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 12px;
+        font-family: inherit;
         cursor: pointer;
+        color: var(--text);
       }
 
       .settings-action-btn.primary {
         background: var(--accent);
         border-color: var(--accent);
         color: #fff;
-        font-weight: 700;
+        font-weight: 600;
       }
 
       .settings-action-btn.primary[disabled] {
-        background: #b0bec5;
-        border-color: #b0bec5;
+        background: #c8c8c8;
+        border-color: #c8c8c8;
+        color: #fff;
         cursor: not-allowed;
-        opacity: 0.6;
+        opacity: 1;
       }
 
       .status-text {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--muted);
-        min-height: 16px;
-      }
-
-      .about-card {
-        padding: 14px 16px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: linear-gradient(135deg, #fdf6e3 0%, #fff7fb 100%);
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
+        min-height: 12px;
       }
 
       .about-title {
-        font-size: 15px;
-        font-weight: 700;
+        font-size: 13px;
+        font-weight: 600;
         color: var(--text);
       }
 
       .about-desc {
-        font-size: 13px;
+        font-size: 12px;
         color: var(--text);
-        line-height: 1.6;
+        line-height: 1.4;
         font-weight: 400;
       }
 
       .about-dev {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--muted);
-        line-height: 1.4;
+        line-height: 1.35;
       }
 
       .about-dev a {
@@ -379,18 +940,18 @@
       }
 
       .how-to-card {
-        padding: 12px 16px;
+        padding: 6px 8px;
         border: 1px solid var(--border);
-        border-radius: 12px;
-        background: #f7f9ff;
+        border-radius: var(--radius-md);
+        background: var(--surface-alt);
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 5px;
       }
 
       .how-to-title {
-        font-size: 13px;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 600;
         color: var(--text);
       }
 
@@ -398,15 +959,15 @@
         list-style: none;
         display: flex;
         flex-direction: column;
-        gap: 5px;
+        gap: 3px;
       }
 
       .how-to-steps li {
         display: flex;
         align-items: flex-start;
-        gap: 8px;
-        font-size: 13px;
-        line-height: 1.45;
+        gap: 5px;
+        font-size: 12px;
+        line-height: 1.4;
         color: var(--text);
       }
 
@@ -414,13 +975,13 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 20px;
-        height: 20px;
-        border-radius: 999px;
+        width: 18px;
+        height: 18px;
+        border-radius: var(--radius);
         background: var(--accent);
         color: #fff;
-        font-size: 11px;
-        font-weight: 700;
+        font-size: 10px;
+        font-weight: 600;
         flex-shrink: 0;
         margin-top: 1px;
       }
@@ -428,27 +989,84 @@
       .shortcut-row {
         display: none;
         flex-direction: column;
-        gap: 6px;
+        gap: 4px;
       }
 
       .shortcut-row.visible {
         display: flex;
       }
 
+      .hover-delay-row {
+        display: none;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .hover-delay-row.visible {
+        display: flex;
+      }
+
+      .shortcut-capture-input {
+        cursor: pointer;
+        font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .shortcut-capture-input:focus {
+        border-color: var(--accent);
+        outline: none;
+        box-shadow: 0 0 0 2px var(--accent-subtle);
+      }
+
+      .opacity-range-min {
+        font-size: 11px;
+        color: var(--muted);
+        flex-shrink: 0;
+        min-width: 22px;
+      }
+
+      #memoOpacityLabel {
+        font-size: 11px;
+        color: var(--muted);
+        flex-shrink: 0;
+        min-width: 28px;
+        text-align: right;
+      }
+
+      .setting-range {
+        flex: 1;
+        min-width: 0;
+        height: 28px;
+        margin: 0;
+        padding: 0;
+        accent-color: var(--accent);
+      }
+
+      .common-reset-section {
+        padding-left: var(--settings-gutter);
+        margin: 8px 0;
+      }
+
+      .common-reset-section .field-hint-below {
+        padding-left: 0;
+        margin-top: 4px;
+      }
+
       .font-size-row {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 5px;
       }
 
       .font-size-btn {
-        height: 42px;
-        width: 48px;
+        height: 28px;
+        width: 34px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        background: #fff;
-        font-size: 15px;
-        font-weight: 700;
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 12px;
+        font-family: inherit;
+        font-weight: 600;
         cursor: pointer;
         flex-shrink: 0;
       }
@@ -456,18 +1074,20 @@
       .font-size-btn:hover {
         border-color: var(--accent);
         color: var(--accent);
+        background: var(--accent-subtle);
       }
 
       .font-size-display {
-        height: 42px;
+        height: 28px;
         flex: 1;
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: var(--radius);
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 15px;
+        font-size: 12px;
         color: var(--text);
+        background: var(--surface-alt);
       }
 
       /* Color palette popover */
@@ -477,161 +1097,164 @@
       .color-palette-btn {
         display: flex;
         align-items: center;
-        gap: 8px;
-        height: 40px;
+        gap: 5px;
+        height: 32px;
         border: 1px solid var(--border);
-        border-radius: 8px;
-        background: #fff;
+        border-radius: var(--radius);
+        background: var(--surface);
         cursor: pointer;
-        padding: 0 10px;
+        padding: 0 7px;
         width: 100%;
-        font-size: 13px;
+        font-size: 12px;
+        font-family: inherit;
         color: var(--text);
       }
       .color-swatch {
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        border: 1px solid rgba(0,0,0,0.12);
+        width: 18px;
+        height: 18px;
+        border-radius: var(--radius);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         flex-shrink: 0;
       }
       .color-popover {
         display: none;
         position: absolute;
-        bottom: calc(100% + 4px);
+        bottom: calc(100% + 3px);
         left: 0;
         z-index: 9999;
-        background: #fff;
+        background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 10px;
-        padding: 10px;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.13);
+        border-radius: var(--radius-md);
+        padding: 6px;
         min-width: 200px;
       }
       .color-popover.visible { display: block; }
       .recent-colors-title {
         font-size: 11px;
         color: var(--muted);
-        margin-bottom: 6px;
+        margin-bottom: 4px;
       }
       .recent-colors-grid {
         display: flex;
         flex-wrap: wrap;
-        gap: 5px;
-        margin-bottom: 8px;
+        gap: 4px;
+        margin-bottom: 5px;
       }
       .recent-color-swatch {
-        width: 22px;
-        height: 22px;
-        border-radius: 4px;
-        border: 1px solid rgba(0,0,0,0.12);
+        width: 20px;
+        height: 20px;
+        border-radius: var(--radius);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         cursor: pointer;
         flex-shrink: 0;
       }
       .recent-color-swatch:hover {
-        transform: scale(1.18);
-        outline: 2px solid var(--accent);
+        outline: 1px solid var(--accent);
+        outline-offset: 1px;
       }
       .popover-native-wrap {
         display: flex;
         align-items: center;
-        gap: 8px;
-        margin-top: 4px;
+        gap: 5px;
+        margin-top: 3px;
       }
       .popover-native-wrap input[type="color"] {
-        width: 40px;
-        height: 36px;
+        width: 36px;
+        height: 30px;
         border: 1px solid var(--border);
-        border-radius: 6px;
+        border-radius: var(--radius);
         cursor: pointer;
-        padding: 2px;
+        padding: 1px;
         flex-shrink: 0;
+        background: var(--surface);
       }
       .popover-hex-input {
         flex: 1;
-        height: 36px;
+        height: 30px;
         border: 1px solid var(--border);
-        border-radius: 6px;
-        padding: 0 8px;
-        font-size: 13px;
-        font-family: monospace;
+        border-radius: var(--radius);
+        padding: 0 6px;
+        font-size: 12px;
+        font-family: "Cascadia Mono", "Consolas", monospace;
+        background: var(--surface);
       }
 
       /* Export / Import revamp */
       .export-indices-list {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        margin-bottom: 8px;
-        max-height: 120px;
-        overflow-y: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3px 6px;
+        margin-bottom: 5px;
+        max-height: none;
+        overflow: hidden;
       }
       .export-check-row {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 13px;
+        gap: 5px;
+        font-size: 12px;
       }
       .export-format-row {
         display: flex;
         flex-wrap: wrap;
-        gap: 6px;
-        margin-bottom: 10px;
+        gap: 4px;
+        margin-bottom: 6px;
       }
       .export-format-label {
         display: flex;
         align-items: center;
-        gap: 5px;
-        font-size: 13px;
+        gap: 4px;
+        font-size: 12px;
         cursor: pointer;
       }
       .import-btn {
-        height: 42px;
+        height: 28px;
         border: 1px solid var(--accent);
-        border-radius: 10px;
-        background: #fff;
-        font-size: 14px;
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 12px;
+        font-family: inherit;
         cursor: pointer;
         color: var(--accent);
         font-weight: 600;
         width: 100%;
       }
-      .import-btn:hover { background: rgba(74,121,255,0.08); }
+      .import-btn:hover { background: var(--accent-subtle); }
 
       /* Info cards */
       .info-card {
-        padding: 12px 14px;
+        padding: 6px 8px;
         border: 1px solid var(--border);
-        border-radius: 10px;
-        background: #f7f9ff;
+        border-radius: var(--radius-md);
+        background: var(--surface-alt);
       }
       .info-card-title {
-        font-size: 13px;
-        font-weight: 700;
+        font-size: 12px;
+        font-weight: 600;
         color: var(--text);
-        margin-bottom: 8px;
+        margin-bottom: 5px;
       }
       .info-card p, .info-card li {
         font-size: 12px;
         color: var(--text);
-        line-height: 1.55;
+        line-height: 1.45;
       }
       .md-examples {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 3px 12px;
-        margin-top: 6px;
+        gap: 2px 7px;
+        margin-top: 4px;
       }
       .md-example-row {
         display: contents;
       }
       .md-syntax {
-        font-family: monospace;
-        font-size: 12px;
-        color: #3a5080;
+        font-family: "Cascadia Mono", "Consolas", monospace;
+        font-size: 11px;
+        color: #005a9e;
       }
       .md-result {
-        font-size: 12px;
+        font-size: 11px;
         color: var(--muted);
       }
 
@@ -639,39 +1262,162 @@
       .lang-select-row {
         display: flex;
         align-items: center;
-        gap: 8px;
-        padding: 8px 0 6px;
+        gap: 5px;
+        padding: 3px 0;
         border-bottom: 1px solid var(--border);
-        margin-bottom: 2px;
+        margin-bottom: 1px;
       }
       .lang-select-row label {
-        font-size: 13px;
+        font-size: 12px;
         font-weight: 600;
         color: var(--text);
         flex-shrink: 0;
+      }
+
+      .settings-bottom-bar {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 5px;
+        border-top: 1px solid var(--border);
+        padding-top: 4px;
+      }
+
+      .bottom-left-checks {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .bottom-check-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 12px;
+        color: var(--text);
+        user-select: none;
+      }
+
+      .bottom-check-label input {
+        width: 14px;
+        height: 14px;
+      }
+
+      .contrast-warning {
+        margin-top: 4px;
+        font-size: 11px;
+        color: var(--danger);
+        line-height: 1.3;
+        white-space: nowrap;
+      }
+
+      .unsaved-modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 10000;
+        background: rgba(0, 0, 0, 0.35);
+        align-items: center;
+        justify-content: center;
+      }
+      .unsaved-modal-overlay.visible {
+        display: flex;
+      }
+      .unsaved-modal-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 20px 22px;
+        max-width: 320px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+      .unsaved-modal-card h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+      }
+      .unsaved-modal-card p {
+        margin: 0 0 16px;
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+      .unsaved-modal-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+      .unsaved-modal-actions button {
+        padding: 6px 14px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
+        font-size: 13px;
+      }
+      .unsaved-modal-actions button.primary {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
       }
     </style>
   </head>
   <body>
     <main class="settings-root">
-      <h2 class="settings-title" id="settingsTitle">Peekom Plus</h2>
+      <div class="settings-header-row">
+        <div class="settings-header-left">
+          <h2 class="settings-title" id="settingsTitle">Peekom 설정 <span class="settings-tier-badge" id="settingsTierBadge">[무료]</span></h2>
+          <p class="settings-meta">© 2026. Peekom All rights reserved.</p>
+          <a class="settings-home-link" href="#" data-external-url="https://www.peekom.com/">https://www.peekom.com/</a>
+        </div>
+        <select id="langSelect" class="lang-select-compact" aria-label="언어"></select>
+      </div>
 
       <div id="settingsTabRow" class="settings-tab-row" role="tablist"></div>
+      <hr class="settings-divider" />
 
       <div id="panelHost" class="panel-host"></div>
 
-      <div id="settingsStatusText" class="status-text"></div>
-
-      <div class="settings-actions">
-        <button id="settingsApplyBtn" class="settings-action-btn primary" type="button" disabled>적용</button>
-        <button id="settingsCloseBtn" class="settings-action-btn" type="button">닫기</button>
+      <div class="settings-bottom-bar">
+        <div class="bottom-left-checks">
+          <label class="bottom-check-label" for="showTrayIconCheckbox">
+            <input id="showTrayIconCheckbox" type="checkbox" checked />
+            트레이 아이콘 표시
+          </label>
+          <label class="bottom-check-label" for="runZoomitOnStartupCheckbox">
+            <input id="runZoomitOnStartupCheckbox" type="checkbox" />
+            Windows 시작 시 빼꼼 플러스 자동 실행
+          </label>
+        </div>
+        <div class="settings-actions">
+          <button id="settingsApplyBtn" class="settings-action-btn primary" type="button" disabled>적용</button>
+          <button id="settingsCloseBtn" class="settings-action-btn" type="button">닫기</button>
+        </div>
       </div>
     </main>
 
+    <div id="unsavedModal" class="unsaved-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="unsavedModalTitle">
+      <div class="unsaved-modal-card">
+        <h3 id="unsavedModalTitle">변경 사항이 적용되지 않았습니다</h3>
+        <p id="unsavedModalMessage">저장하지 않은 설정이 있습니다. 적용하거나 취소해 주세요.</p>
+        <div class="unsaved-modal-actions">
+          <button type="button" id="unsavedModalCancelBtn">취소</button>
+          <button type="button" id="unsavedModalApplyBtn" class="primary">적용</button>
+        </div>
+      </div>
+    </div>
+
     <script>
-      const { ipcRenderer } = require("electron");
+      const ipcRenderer = {
+        invoke: (channel, ...args) => window.peekom.invoke(channel, ...args),
+        send: (channel, ...args) => window.peekom.send(channel, ...args),
+        sendSync: (channel, ...args) => window.peekom.sendSync(channel, ...args),
+        on(channel, listener) {
+          return window.peekom.on(channel, (...args) => listener(null, ...args));
+        }
+      };
 
       const STATE_KEY = "ppaekkom-plus-state-v5";
+      const STATE_KEY_BACKUP = "ppaekkom-plus-state-v5-backup";
       const STATE_KEY_V4 = "ppaekkom-plus-state-v4";
       const LEGACY_V3_KEY = "ppaekkom-app-state-v3";
       const LEGACY_SETTINGS_KEY = "ppaekkom-app-settings-v2";
@@ -681,6 +1427,16 @@
 
       const LABEL_MAX = 6;
       const MAX_SLOTS = 10;
+      const FREE_MAX_SLOTS = (typeof PeekomPremiumConfig !== "undefined")
+        ? PeekomPremiumConfig.FREE_MAX_SLOTS
+        : 3;
+      const PREMIUM_MAX_SLOTS = (typeof PeekomPremiumConfig !== "undefined")
+        ? PeekomPremiumConfig.PREMIUM_MAX_SLOTS
+        : 10;
+      const CONTACT_EMAIL = (typeof PeekomPremiumConfig !== "undefined")
+        ? PeekomPremiumConfig.CONTACT_EMAIL
+        : "hello.peekom@gmail.com";
+      let isPremium = false;
       const FONT_SIZE_MIN = 8;
       const FONT_SIZE_MAX = 36;
       const THEME_NAMES = ["yellow", "pink", "blue", "green", "custom"];
@@ -703,20 +1459,31 @@
         return Math.max(a, Math.min(b, n));
       }
 
+      function normalizeMemoAspectRatio(ratio) {
+        return ratio === "1:1" ? "1:1" : "3:4";
+      }
+
       function defaultGlobal() {
         return {
           anchor: "middle",
           lengthMode: "long",
           triggerMode: "hover",
           shortcut: "CommandOrControl+Shift+M",
-          hoverDelayMs: 250,
+          shortcutSlotPrev: "CommandOrControl+Shift+Up",
+          shortcutSlotNext: "CommandOrControl+Shift+Down",
+          hoverDelayMs: 300,
           manualYOffset: 0,
           openAtLogin: false,
           language: null,
           monitorMode: "auto",
           monitorTargetId: null,
-          pinToggleMode: "chip",
-          setupCompleted: false
+          pinToggleMode: "dblclick",
+          setupCompleted: false,
+          showTrayIcon: true,
+          memoAspectRatio: "3:4",
+          imageLayout: "below",
+          lastOpenedSlotIndex: 0,
+          memoDefaultOpacity: 100
         };
       }
 
@@ -726,10 +1493,110 @@
           theme: "yellow",
           memoHtml: "",
           ySlot: index,
+          ySlotUpdatedAt: 0,
           fontSize: 18,
           customBg: "#FFF4B8",
-          customText: "#2F3750"
+          customText: "#2F3750",
+          fontFamily: "",
+          imageData: null,
+          imageScale: 100,
+          images: []
         };
+      }
+
+      function normalizeSlotImageEntry(raw) {
+        if (!raw || typeof raw !== "object") return null;
+        const dataUrl =
+          typeof raw.dataUrl === "string" && raw.dataUrl.startsWith("data:image/") ? raw.dataUrl : null;
+        if (!dataUrl) return null;
+        return {
+          id: typeof raw.id === "string" && raw.id ? raw.id : crypto.randomUUID(),
+          sourcePath: typeof raw.sourcePath === "string" ? raw.sourcePath : null,
+          dataUrl,
+          scale:
+            typeof raw.scale === "number" && Number.isFinite(raw.scale)
+              ? clamp(Math.round(raw.scale), 50, 150)
+              : 100,
+          insertedAt: typeof raw.insertedAt === "string" ? raw.insertedAt : new Date().toISOString()
+        };
+      }
+
+      function syncSlotImagesFromMemo(slot) {
+        if (!slot) return;
+        const parsed = parseImagesFromMemoHtml(slot.memoHtml || "", slot);
+        const liveIds = new Set(parsed.map((entry) => entry.id));
+        if (!Array.isArray(slot.images)) slot.images = [];
+        slot.images = slot.images.filter((entry) => liveIds.has(entry.id));
+        parsed.forEach((img) => {
+          const idx = slot.images.findIndex((entry) => entry.id === img.id);
+          if (idx >= 0) {
+            slot.images[idx] = {
+              ...slot.images[idx],
+              ...img,
+              insertedAt: slot.images[idx].insertedAt || img.insertedAt || new Date().toISOString()
+            };
+          } else {
+            slot.images.push({
+              ...img,
+              insertedAt: img.insertedAt || new Date().toISOString()
+            });
+          }
+        });
+        if (!parsed.length) {
+          slot.images = [];
+          if (slot.imageData) {
+            slot.imageData = null;
+            slot.imageScale = 100;
+          }
+        }
+      }
+
+      function syncAllSlotsImagesFromMemo() {
+        if (!appState?.slots) return;
+        for (let i = 0; i < appState.enabledCount; i++) {
+          syncSlotImagesFromMemo(appState.slots[i]);
+        }
+      }
+
+      function syncSlotsImagesFromMemoState(state) {
+        if (!state?.slots) return;
+        const count = clamp(Math.round(state.enabledCount) || 1, 1, MAX_SLOTS);
+        for (let i = 0; i < count; i++) {
+          syncSlotImagesFromMemo(state.slots[i]);
+        }
+      }
+
+      function collectSlotImages(slot) {
+        return parseImagesFromMemoHtml(slot?.memoHtml || "", slot);
+      }
+
+      function parseImagesFromMemoHtml(memoHtml, slot) {
+        const images = [];
+        try {
+          const doc = new DOMParser().parseFromString(memoHtml || "", "text/html");
+          doc.querySelectorAll("img[data-peekom-id]").forEach((img) => {
+            const id = img.getAttribute("data-peekom-id");
+            const src = img.getAttribute("src") || "";
+            if (!id || !src.startsWith("data:image/")) return;
+            const meta = (slot?.images || []).find((entry) => entry.id === id);
+            const widthStyle = img.getAttribute("style") || "";
+            const widthMatch = widthStyle.match(/width:\s*(\d+)%/);
+            images.push(
+              meta
+                ? { ...meta, dataUrl: src, scale: widthMatch ? Number(widthMatch[1]) : meta.scale }
+                : {
+                    id,
+                    sourcePath: null,
+                    dataUrl: src,
+                    scale: widthMatch ? Number(widthMatch[1]) : 100,
+                    insertedAt: ""
+                  }
+            );
+          });
+        } catch {
+          /* ignore */
+        }
+        return images;
       }
 
       function normalizeSlot(raw, index) {
@@ -742,6 +1609,10 @@
             typeof raw?.ySlot === "number" && Number.isFinite(raw.ySlot)
               ? clamp(Math.round(raw.ySlot), 0, 9)
               : index,
+          ySlotUpdatedAt:
+            typeof raw?.ySlotUpdatedAt === "number" && Number.isFinite(raw.ySlotUpdatedAt)
+              ? raw.ySlotUpdatedAt
+              : 0,
           fontSize:
             typeof raw?.fontSize === "number" && Number.isFinite(raw.fontSize)
               ? clamp(Math.round(raw.fontSize), FONT_SIZE_MIN, FONT_SIZE_MAX)
@@ -753,7 +1624,19 @@
           customText:
             typeof raw?.customText === "string" && /^#[0-9A-Fa-f]{6}$/.test(raw.customText)
               ? raw.customText
-              : base.customText
+              : base.customText,
+          fontFamily: typeof raw?.fontFamily === "string" ? raw.fontFamily : "",
+          imageData:
+            typeof raw?.imageData === "string" && raw.imageData.startsWith("data:image/")
+              ? raw.imageData
+              : null,
+          imageScale:
+            typeof raw?.imageScale === "number" && Number.isFinite(raw.imageScale)
+              ? clamp(Math.round(raw.imageScale), 50, 150)
+              : 100,
+          images: Array.isArray(raw?.images)
+            ? raw.images.map(normalizeSlotImageEntry).filter(Boolean)
+            : []
         };
       }
 
@@ -827,27 +1710,61 @@
         return state;
       }
 
-      function loadState() {
-        try {
-          const rawV5 = localStorage.getItem(STATE_KEY);
-          if (rawV5) {
-            const s = JSON.parse(rawV5);
-            if (s && s.version === 5 && Array.isArray(s.slots) && s.slots.length === MAX_SLOTS) {
-              s.global = { ...defaultGlobal(), ...s.global };
-              s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
-              s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
-              s.order = normalizeOrder(s.order, s.enabledCount);
-              s.activeSlot = clampSlotIndex(s.activeSlot, s.enabledCount);
-              return ensureMinimumOneSlot(s);
-            }
-          }
+      function createFreshState() {
+        return {
+          version: 5,
+          global: defaultGlobal(),
+          enabledCount: 1,
+          slots: Array.from({ length: MAX_SLOTS }, (_, i) => defaultSlot(i)),
+          order: [0],
+          activeSlot: 0
+        };
+      }
 
+      function parseStateFromRaw(raw) {
+        if (!raw) return null;
+        try {
+          const s = JSON.parse(raw);
+          if (!s || s.version !== 5 || !Array.isArray(s.slots) || s.slots.length !== MAX_SLOTS) return null;
+          s.global = { ...defaultGlobal(), ...s.global };
+          delete s.global.imageSize;
+          s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
+          if (!s.global.setupCompleted && s.enabledCount > 1) {
+            s.enabledCount = 1;
+            s.order = [0];
+            s.activeSlot = 0;
+          }
+          s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
+          s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
+          s.order = normalizeOrder(s.order, s.enabledCount);
+          s.activeSlot = clampSlotIndex(s.activeSlot, s.enabledCount);
+          syncSlotsImagesFromMemoState(s);
+          return ensureMinimumOneSlot(s);
+        } catch {
+          return null;
+        }
+      }
+
+      function loadStateFromLocal() {
+        const parsed = parseStateFromRaw(localStorage.getItem(STATE_KEY));
+        if (parsed) return parsed;
+
+        try {
+          const parsedBackup = parseStateFromRaw(localStorage.getItem(STATE_KEY_BACKUP));
+          if (parsedBackup) return parsedBackup;
+        } catch {
+          /* fallthrough */
+        }
+
+        try {
           const rawV4 = localStorage.getItem(STATE_KEY_V4);
           if (rawV4) {
             const s = JSON.parse(rawV4);
             if (s && s.version === 4 && Array.isArray(s.slots) && s.slots.length === MAX_SLOTS) {
               s.version = 5;
               s.global = { ...defaultGlobal(), ...s.global };
+              delete s.global.imageSize;
+              s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
               s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
               s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
               s.order = normalizeOrder(s.order, s.enabledCount);
@@ -869,26 +1786,266 @@
         return migrateLegacy();
       }
 
-      function saveState(state) {
-        localStorage.setItem(STATE_KEY, JSON.stringify(state));
+      async function loadStateAsync() {
+        try {
+          const res = await ipcRenderer.invoke("shared-state:get");
+          if (res?.ok) {
+            const parsed = parseStateFromRaw(res.raw) || parseStateFromRaw(res.backup);
+            if (parsed) return parsed;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        return loadStateFromLocal();
       }
 
-      function refreshSlotMemosFromDisk() {
+      function loadState() {
+        return loadStateFromLocal();
+      }
+
+      function saveStateLocal(state) {
+        const next = { ...state, version: 5 };
         try {
-          const raw = localStorage.getItem(STATE_KEY);
-          if (raw) {
-            const onDisk = JSON.parse(raw);
-            if (onDisk && Array.isArray(onDisk.slots) && onDisk.slots.length === MAX_SLOTS) {
-              for (let i = 0; i < MAX_SLOTS; i++) {
-                if (typeof onDisk.slots[i]?.memoHtml === "string") {
-                  appState.slots[i].memoHtml = onDisk.slots[i].memoHtml;
-                }
-              }
-            }
-          }
+          const prev = localStorage.getItem(STATE_KEY);
+          if (prev) localStorage.setItem(STATE_KEY_BACKUP, prev);
         } catch {
           /* ignore */
         }
+        localStorage.setItem(STATE_KEY, JSON.stringify(next));
+      }
+
+      async function saveStateAsync(state) {
+        const next = { ...state, version: 5 };
+        const json = JSON.stringify(next);
+        let syncOk = false;
+        try {
+          const res = await ipcRenderer.invoke("shared-state:set", json);
+          syncOk = Boolean(res?.ok);
+          if (!syncOk) {
+            console.error("shared-state:set failed", res);
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        saveStateLocal(next);
+        return { ok: syncOk, json, state: next };
+      }
+
+      async function saveState(state) {
+        return saveStateAsync(state);
+      }
+
+      async function saveAndNotifyMain(state, options = {}) {
+        const { skipSettingsReload = true } = options;
+        const saved = await saveStateAsync(state);
+        if (!saved.ok) {
+          return saved;
+        }
+        await ipcRenderer.invoke("settings:notify-applied", {
+          skipSettingsReload,
+          stateJson: saved.json,
+          language: state?.global?.language
+        });
+        return saved;
+      }
+
+      function mergeSettingsFromPending(target, pending) {
+        target.global = { ...target.global, ...pending.global };
+        target.enabledCount = pending.enabledCount;
+        target.activeSlot = pending.activeSlot;
+        target.order = normalizeOrder(pending.order, pending.enabledCount);
+        for (let i = 0; i < pending.enabledCount; i++) {
+          const src = pending.slots[i];
+          const dst = target.slots[i];
+          const preservedMemoHtml = dst.memoHtml;
+          const preservedImages = Array.isArray(dst.images) ? dst.images.slice() : [];
+          dst.label = src.label;
+          dst.theme = src.theme;
+          dst.ySlot = src.ySlot;
+          dst.ySlotUpdatedAt = src.ySlotUpdatedAt;
+          dst.fontSize = src.fontSize;
+          dst.fontFamily = src.fontFamily;
+          dst.customBg = src.customBg;
+          dst.customText = src.customText;
+          dst.imageScale = src.imageScale;
+          if (src.imageData != null) dst.imageData = src.imageData;
+          dst.memoHtml = preservedMemoHtml;
+          dst.images = preservedImages;
+        }
+        return target;
+      }
+
+      function normalizeActiveTab() {
+        if (!activeTab.startsWith("idx")) return;
+        const idx = Number(activeTab.slice(3));
+        if (!Number.isFinite(idx) || idx >= appState.enabledCount) {
+          activeTab = appState.enabledCount > 0 ? `idx${Math.max(0, appState.enabledCount - 1)}` : "common";
+        }
+      }
+
+
+      let reloadConfirmOpen = false;
+      let suppressExternalReloadUntil = 0;
+      let settingsLocalMutationUntil = 0;
+
+      function markSettingsLocalMutation() {
+        const until = Date.now() + 8000;
+        settingsLocalMutationUntil = until;
+        suppressExternalReloadUntil = until;
+      }
+
+      function syncSlotFieldsFromDisk(diskState) {
+        const count = Math.min(appState.enabledCount, diskState.enabledCount);
+        for (let s = 0; s < count; s++) {
+          const src = diskState.slots[s];
+          const dst = appState.slots[s];
+          dst.fontSize = src.fontSize;
+          dst.ySlot = src.ySlot;
+          dst.ySlotUpdatedAt = src.ySlotUpdatedAt;
+          dst.memoHtml = src.memoHtml;
+          dst.images = Array.isArray(src.images) ? src.images.slice() : [];
+          dst.label = src.label;
+          dst.theme = src.theme;
+          dst.customBg = src.customBg;
+          dst.customText = src.customText;
+          dst.fontFamily = src.fontFamily;
+
+          updateFontDisplay(s);
+          const ySlotSel = document.getElementById(`slot${s}YSlot`);
+          if (ySlotSel) ySlotSel.value = String(dst.ySlot ?? s);
+          const inp = document.getElementById(`slot${s}Label`);
+          if (inp) inp.value = getSlotLabelFormValue(s);
+          const tabLabel = tabRow.querySelector(`[data-settings-tab="idx${s}"] span:last-child`);
+          if (tabLabel) tabLabel.textContent = resolveSlotLabel(dst.label, s);
+          const dot = tabRow.querySelector(`[data-settings-tab="idx${s}"] .tab-color-dot`);
+          if (dot) {
+            dot.style.background =
+              dst.theme === "custom" ? dst.customBg || "#fff" : THEME_MAP[dst.theme]?.bg || "#fff";
+          }
+          const fontSel = document.getElementById(`slot${s}FontFamily`);
+          if (fontSel) fontSel.value = dst.fontFamily || "";
+        }
+        syncThemeGroupSelection();
+        syncCustomColorVisibility();
+        renderAllSlotImageThumbs();
+      }
+
+      async function reloadStateFromDisk(options = {}) {
+        const { force = false, fontSizeOnly = false } = options;
+        if (Date.now() < suppressExternalReloadUntil) return false;
+        if (reloadConfirmOpen) return false;
+
+        const diskState = await loadStateAsync();
+
+        if (fontSizeOnly) {
+          const count = Math.min(appState.enabledCount, diskState.enabledCount);
+          for (let s = 0; s < count; s++) {
+            appState.slots[s].fontSize = diskState.slots[s].fontSize;
+            updateFontDisplay(s);
+          }
+          return true;
+        }
+
+        const structuralChange = diskState.enabledCount !== appState.enabledCount;
+
+        if (!force && !structuralChange && isDirty()) {
+          reloadConfirmOpen = true;
+          let ok = false;
+          try {
+            ok = confirm(
+              ti("stateChangedConfirm")
+            );
+          } finally {
+            reloadConfirmOpen = false;
+          }
+          if (!ok) {
+            suppressExternalReloadUntil = Date.now() + 3000;
+            return false;
+          }
+        }
+
+        appState = diskState;
+        draftMonitorTarget =
+          appState.global.monitorMode === "fixed" ? appState.global.monitorTargetId : null;
+        normalizeActiveTab();
+        renderTabs();
+        renderPanels();
+        applySettingsForm();
+        await loadDisplays();
+        patchBaseline();
+        refreshApplyButton();
+        return true;
+      }
+
+      function revertToBaseline() {
+        try {
+          const parsed = JSON.parse(baselineSnapshot);
+          appState.global.triggerMode = parsed.triggerMode;
+          appState.global.shortcut = parsed.shortcut;
+          appState.global.shortcutSlotPrev = parsed.shortcutSlotPrev;
+          appState.global.shortcutSlotNext = parsed.shortcutSlotNext;
+          appState.global.language = parsed.language;
+          appState.global.pinToggleMode = parsed.pinToggleMode;
+          appState.global.memoAspectRatio = parsed.memoAspectRatio;
+          appState.global.memoDefaultOpacity = parsed.memoDefaultOpacity;
+          appState.global.imageLayout = parsed.imageLayout;
+          appState.global.hoverDelayMs = parsed.hoverDelayMs;
+          appState.global.openAtLogin = parsed.openAtLogin;
+          appState.global.showTrayIcon = parsed.showTrayIcon;
+          appState.enabledCount = parsed.enabledCount;
+          appState.activeSlot = parsed.activeSlot;
+          draftMonitorTarget = parsed.monitorTarget;
+          parsed.slots.forEach((sl, i) => {
+            if (!appState.slots[i]) return;
+            Object.assign(appState.slots[i], sl);
+          });
+          if (typeof PeekomI18n !== "undefined" && appState.global.language) {
+            PeekomI18n.setLang(appState.global.language);
+          }
+          normalizeActiveTab();
+          renderTabs();
+          renderPanels();
+          applySettingsForm();
+          refreshApplyButton();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      let pendingCloseAfterApply = false;
+
+      function updateUnsavedModalText() {
+        const title = document.getElementById("unsavedModalTitle");
+        const message = document.getElementById("unsavedModalMessage");
+        const cancelBtn = document.getElementById("unsavedModalCancelBtn");
+        const applyBtn = document.getElementById("unsavedModalApplyBtn");
+        if (title) title.textContent = ti("unsavedChangesTitle");
+        if (message) message.textContent = ti("unsavedChangesMessage");
+        if (cancelBtn) cancelBtn.textContent = ti("unsavedChangesCancel");
+        if (applyBtn) applyBtn.textContent = ti("unsavedChangesApply");
+      }
+
+      function showUnsavedModal(forClose = false) {
+        pendingCloseAfterApply = forClose;
+        updateUnsavedModalText();
+        document.getElementById("unsavedModal")?.classList.add("visible");
+      }
+
+      function hideUnsavedModal() {
+        pendingCloseAfterApply = false;
+        document.getElementById("unsavedModal")?.classList.remove("visible");
+      }
+
+      async function requestSettingsClose() {
+        if (isDirty()) {
+          showUnsavedModal(true);
+          return;
+        }
+        await ipcRenderer.invoke("settings:close-window");
+      }
+
+      function refreshSlotMemosFromDisk() {
+        reloadStateFromDisk({ force: true });
       }
 
       function htmlToPlainText(html) {
@@ -914,10 +2071,58 @@
         return htmlToPlainText(md).trim();
       }
 
-      function applyCustomColor(slotIndex, isBg, hex) {
+      function hexToRgb(hex) {
+        const normalized = String(hex || "").trim().replace("#", "");
+        if (!/^[0-9a-fA-F]{6}$/.test(normalized)) return null;
+        return {
+          r: parseInt(normalized.slice(0, 2), 16),
+          g: parseInt(normalized.slice(2, 4), 16),
+          b: parseInt(normalized.slice(4, 6), 16)
+        };
+      }
+
+      function relativeLuminance({ r, g, b }) {
+        const srgb = [r, g, b].map((v) => {
+          const c = v / 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * srgb[0] + 0.7152 * srgb[1] + 0.0722 * srgb[2];
+      }
+
+      function contrastRatio(bgHex, fgHex) {
+        const bg = hexToRgb(bgHex);
+        const fg = hexToRgb(fgHex);
+        if (!bg || !fg) return 21;
+        const l1 = relativeLuminance(bg);
+        const l2 = relativeLuminance(fg);
+        const lighter = Math.max(l1, l2);
+        const darker = Math.min(l1, l2);
+        return (lighter + 0.05) / (darker + 0.05);
+      }
+
+      function updateContrastWarning(slotIndex) {
+        const row = panelHost.querySelector(`[data-custom-colors="${slotIndex}"]`);
+        if (!row) return;
+        let warn = row.querySelector(".contrast-warning");
+        const bg = appState.slots[slotIndex].customBg || "#FFF4B8";
+        const fg = appState.slots[slotIndex].customText || "#2F3750";
+        const ratio = contrastRatio(bg, fg);
+        if (ratio >= 4.5) {
+          if (warn) warn.remove();
+          return;
+        }
+        if (!warn) {
+          warn = document.createElement("p");
+          warn.className = "contrast-warning";
+          row.appendChild(warn);
+        }
+        warn.textContent = ti("contrastWarning", { ratio: ratio.toFixed(1) });
+      }
+
+      function applyCustomColor(slotIndex, isBg, hex, recordRecent = true) {
         if (isBg) {
           appState.slots[slotIndex].customBg = hex;
-          saveRecentColor(RECENT_BG_KEY, hex);
+          if (recordRecent) saveRecentColor(RECENT_BG_KEY, hex);
           const swatch = document.getElementById(`bgSwatch${slotIndex}`);
           const label = document.getElementById(`bgHexLabel${slotIndex}`);
           const inp = document.querySelector(`[data-custom-bg="${slotIndex}"]`);
@@ -926,7 +2131,7 @@
           if (inp) inp.value = hex;
         } else {
           appState.slots[slotIndex].customText = hex;
-          saveRecentColor(RECENT_TEXT_KEY, hex);
+          if (recordRecent) saveRecentColor(RECENT_TEXT_KEY, hex);
           const swatch = document.getElementById(`textSwatch${slotIndex}`);
           const label = document.getElementById(`textHexLabel${slotIndex}`);
           const inp = document.querySelector(`[data-custom-text="${slotIndex}"]`);
@@ -939,10 +2144,12 @@
         syncCustomColorVisibility();
         const dotInTab = tabRow.querySelector(`[data-settings-tab="idx${slotIndex}"] .tab-color-dot`);
         if (dotInTab) dotInTab.style.background = appState.slots[slotIndex].customBg;
+        updateContrastWarning(slotIndex);
         refreshApplyButton();
       }
 
       async function onExportSelected() {
+        if (showPremiumModalIfFree()) return;
         refreshSlotMemosFromDisk();
         const format = (document.querySelector('input[name="exportFormat"]:checked') || {}).value || "txt";
         const statusEl = document.getElementById("exportStatusText");
@@ -962,7 +2169,7 @@
           .map(cb => Number(cb.dataset.idx));
 
         if (checkedIndices.length === 0) {
-          setStatus("내보낼 인덱스를 하나 이상 선택하세요.", 3000);
+          setStatus(ti("exportSelectOneError"), 3000);
           return;
         }
 
@@ -985,6 +2192,7 @@
       }
 
       async function onImportBackup() {
+        if (showPremiumModalIfFree()) return;
         const ok = confirm(ti("importConfirm"));
         if (!ok) return;
         try {
@@ -995,16 +2203,18 @@
           if (!data || !Array.isArray(data.slots) || data.slots.length !== 10) {
             setStatus(ti("importFail"), 5000); return;
           }
-          localStorage.setItem(STATE_KEY, JSON.stringify(data));
-          appState = loadState();
-          baselineSnapshot = buildSnapshot(appState);
+          const imported = await saveAndNotifyMain(data);
+          if (!imported.ok) {
+            setStatus(ti("importSyncFail"), 5000);
+          }
+          appState = await loadStateAsync();
+          patchBaseline();
           activeTab = "common";
           renderTabs();
           renderPanels();
           applySettingsForm();
           refreshApplyButton();
           setStatus(ti("importDone"), 3000);
-          await ipcRenderer.invoke("settings:notify-applied");
         } catch (err) {
           console.error(err);
           setStatus(ti("importError"), 5000);
@@ -1014,9 +2224,8 @@
       // ── draft / baseline 패턴 ──────────────────────────────────────────
       // 적용 버튼은 "저장된 내용"(baseline)과 "현재 폼"(draft)이 다를 때만 활성화
 
-      let appState = loadState();
+      let appState = createFreshState();
       let activeTab = "common";
-      let pendingDeleteSlot = null;
       let statusFadeTimer = null;
 
       // 모니터 선택 임시값 (적용 전까지 IPC 전송 안 함)
@@ -1029,14 +2238,18 @@
           customBg: sl.customBg,
           customText: sl.customText,
           ySlot: sl.ySlot,
+          ySlotUpdatedAt: sl.ySlotUpdatedAt,
           fontSize: sl.fontSize
         }));
         return JSON.stringify({
           triggerMode: state.global.triggerMode,
           shortcut: state.global.shortcut,
           openAtLogin: state.global.openAtLogin,
+          showTrayIcon: state.global.showTrayIcon,
           language: state.global.language,
           pinToggleMode: state.global.pinToggleMode,
+          memoAspectRatio: state.global.memoAspectRatio,
+          imageLayout: state.global.imageLayout,
           enabledCount: state.enabledCount,
           activeSlot: state.activeSlot,
           slots: slotData,
@@ -1044,10 +2257,46 @@
         });
       }
 
-      let baselineSnapshot = buildSnapshot(appState);
+      function buildSnapshotForDirty(state) {
+        const slotData = state.slots.slice(0, state.enabledCount).map((sl, i) => ({
+          label: resolveSlotLabel(sl.label, i),
+          theme: sl.theme,
+          customBg: sl.customBg,
+          customText: sl.customText,
+          ySlot: sl.ySlot,
+          ySlotUpdatedAt: sl.ySlotUpdatedAt,
+          fontSize: sl.fontSize,
+          fontFamily: sl.fontFamily || ""
+        }));
+        return JSON.stringify({
+          triggerMode: state.global.triggerMode,
+          shortcut: state.global.shortcut,
+          shortcutSlotPrev: state.global.shortcutSlotPrev,
+          shortcutSlotNext: state.global.shortcutSlotNext,
+          language: state.global.language,
+          pinToggleMode: state.global.pinToggleMode,
+          memoAspectRatio: state.global.memoAspectRatio,
+          memoDefaultOpacity: state.global.memoDefaultOpacity,
+          imageLayout: state.global.imageLayout,
+          hoverDelayMs: state.global.hoverDelayMs,
+          openAtLogin: state.global.openAtLogin,
+          showTrayIcon: state.global.showTrayIcon,
+          enabledCount: state.enabledCount,
+          activeSlot: state.activeSlot,
+          slots: slotData,
+          monitorTarget: draftMonitorTarget
+        });
+      }
+
+      let baselineSnapshot = buildSnapshotForDirty(appState);
 
       function isDirty() {
-        return buildSnapshot(appState) !== baselineSnapshot;
+        readSettingsForm();
+        return buildSnapshotForDirty(appState) !== baselineSnapshot;
+      }
+
+      function patchBaseline() {
+        baselineSnapshot = buildSnapshotForDirty(appState);
       }
 
       function refreshApplyButton() {
@@ -1077,140 +2326,442 @@
       const closeBtn = document.getElementById("settingsCloseBtn");
 
       // ── 공통 패널 ─────────────────────────────────────────────────────
-      function ti(key) {
+      function ti(key, vars) {
         if (typeof PeekomI18n === "undefined") return key;
-        return PeekomI18n.t(key, PeekomI18n.getCurrentLang());
-      }
-
-      function buildHowToCard() {
-        const steps = ti("howToSteps");
-        const stepsHtml = Array.isArray(steps)
-          ? steps.map((s, i) => `<li><span class="step-num">${i+1}</span><span>${s}</span></li>`).join("")
-          : "";
-        return `
-          <section class="info-card">
-            <p class="info-card-title">${ti("howToTitle")}</p>
-            <ul class="how-to-steps">${stepsHtml}</ul>
-          </section>`;
-      }
-
-      function buildMarkdownCard() {
-        const examples = ti("markdownExamples");
-        let exHtml = "";
-        if (Array.isArray(examples)) {
-          exHtml = `<div class="md-examples">` +
-            examples.map(e => `<span class="md-syntax">${e.syntax}</span><span class="md-result">${e.result}</span>`).join("") +
-            `</div>`;
+        let text = PeekomI18n.t(key, PeekomI18n.getCurrentLang());
+        if (vars) {
+          Object.keys(vars).forEach((k) => {
+            text = text.replace(new RegExp("\\{" + k + "\\}", "g"), vars[k]);
+          });
         }
-        return `
-          <section class="info-card">
-            <p class="info-card-title">${ti("markdownTitle")}</p>
-            <p>${ti("markdownDesc")}</p>
-            ${exHtml}
-          </section>`;
+        return text;
+      }
+
+      function resolveSlotLabel(storedLabel, slotIndex) {
+        if (typeof PeekomI18n !== "undefined" && PeekomI18n.resolveSlotLabel) {
+          return PeekomI18n.resolveSlotLabel(storedLabel, slotIndex, LABEL_MAX);
+        }
+        const raw = typeof storedLabel === "string" ? storedLabel.trim() : "";
+        if (raw.length > 0) return Array.from(raw).slice(0, LABEL_MAX).join("");
+        return `Index${slotIndex + 1}`;
+      }
+
+      function getSlotLabelFormValue(slotIndex) {
+        const raw = appState.slots[slotIndex]?.label;
+        return typeof raw === "string" ? raw : "";
+      }
+
+      function clearSlotLabelError(slotIndex) {
+        const err = document.getElementById(`slot${slotIndex}LabelError`);
+        const inp = document.getElementById(`slot${slotIndex}Label`);
+        if (err) {
+          err.textContent = "";
+          err.classList.add("hidden");
+        }
+        if (inp) {
+          inp.classList.remove("input-invalid");
+          inp.removeAttribute("aria-invalid");
+        }
+      }
+
+      function clearAllSlotLabelErrors() {
+        for (let s = 0; s < appState.enabledCount; s++) {
+          clearSlotLabelError(s);
+        }
+      }
+
+      function showSlotLabelError(slotIndex) {
+        const err = document.getElementById(`slot${slotIndex}LabelError`);
+        const inp = document.getElementById(`slot${slotIndex}Label`);
+        if (err) {
+          err.textContent = ti("indexTitleRequired");
+          err.classList.remove("hidden");
+        }
+        if (inp) {
+          inp.classList.add("input-invalid");
+          inp.setAttribute("aria-invalid", "true");
+          inp.focus();
+        }
+      }
+
+      function getThemeLabel(name) {
+        const map = {
+          yellow: "themeYellow",
+          pink: "themePink",
+          blue: "themeBlue",
+          green: "themeGreen",
+          custom: "themeCustom"
+        };
+        return ti(map[name] || "themeYellow");
+      }
+
+      function applyStaticSettingsLabels() {
+        if (applyBtn) applyBtn.textContent = ti("settingsApply");
+        if (closeBtn) closeBtn.textContent = ti("settingsClose");
+        const langSelect = document.getElementById("langSelect");
+        if (langSelect) langSelect.setAttribute("aria-label", ti("langLabel"));
+        const trayCb = document.querySelector('label[for="showTrayIconCheckbox"]');
+        if (trayCb) {
+          trayCb.childNodes[trayCb.childNodes.length - 1].textContent = ti("showTrayIcon");
+        }
+        const startupCb = document.querySelector('label[for="runZoomitOnStartupCheckbox"]');
+        if (startupCb) {
+          startupCb.childNodes[startupCb.childNodes.length - 1].textContent = ti("runAtStartupWin");
+        }
+        updateSettingsTitle();
+        const backupToggleBtn = document.getElementById("backupToggleBtn");
+        if (backupToggleBtn) {
+          const collapsed = document.getElementById("backupBody")?.classList.contains("hidden");
+          backupToggleBtn.textContent = collapsed ? ti("backupExpand") : ti("backupCollapse");
+        }
+        const lightboxClose = document.getElementById("settingsImageLightboxClose");
+        if (lightboxClose) lightboxClose.textContent = ti("settingsClose");
+      }
+
+      function resolveYSlotConflicts(slots, enabledCount) {
+        const entries = [];
+        for (let i = 0; i < enabledCount; i++) {
+          entries.push({
+            slot: i,
+            ySlot: clamp(slots[i].ySlot ?? i, 0, 9),
+            at: slots[i].ySlotUpdatedAt ?? 0
+          });
+        }
+        entries.sort((a, b) => b.at - a.at);
+        const occupied = new Set();
+        const displaced = [];
+        for (const e of entries) {
+          if (!occupied.has(e.ySlot)) {
+            occupied.add(e.ySlot);
+            slots[e.slot].ySlot = e.ySlot;
+          } else {
+            displaced.push(e.slot);
+          }
+        }
+        for (const slot of displaced) {
+          let free = 0;
+          while (occupied.has(free) && free < 10) free++;
+          if (free < 10) {
+            occupied.add(free);
+            slots[slot].ySlot = free;
+          }
+        }
       }
 
       function buildExportIndicesList() {
         let html = `<div class="export-indices-list" id="exportIndicesList">`;
         html += `<label class="export-check-row"><input type="checkbox" id="exportSelectAll" /><strong>${ti("exportSelectAll")}</strong></label>`;
         for (let i = 0; i < appState.enabledCount; i++) {
-          const label = appState.slots[i].label || `${ti("indexLabel")} ${i+1}`;
+          const label = resolveSlotLabel(appState.slots[i].label, i);
           html += `<label class="export-check-row"><input type="checkbox" class="export-idx-check" data-idx="${i}" checked />${label}</label>`;
         }
         html += `</div>`;
         return html;
       }
 
-      function buildCommonPanel() {
-        const langOptions = (typeof PeekomI18n !== "undefined")
-          ? PeekomI18n.LANG_META.map(l => `<option value="${l.code}">${l.label}</option>`).join("")
-          : `<option value="ko">한국어</option>`;
+      function measureSettingControlWidth() {
+        const samples = [
+          ti("triggerHover"),
+          ti("triggerShortcut"),
+          ti("pinToggleDblclickDefault"),
+          ti("monitorAuto"),
+          ti("memoAspectSquare"),
+          ti("memoAspectPortrait")
+        ];
+        const probe = document.createElement("span");
+        probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font-size:14px;padding:0 8px;";
+        document.body.appendChild(probe);
+        let maxW = 180;
+        samples.forEach((t) => {
+          probe.textContent = t;
+          maxW = Math.max(maxW, probe.offsetWidth + 28);
+        });
+        document.body.removeChild(probe);
+        document.documentElement.style.setProperty("--setting-control-width", `${Math.min(240, maxW)}px`);
+      }
 
+      function getMaxEnabledSlots() {
+        return isPremium ? MAX_SLOTS : FREE_MAX_SLOTS;
+      }
+
+      async function syncPremiumState() {
+        try {
+          const p = await ipcRenderer.invoke("premium:get");
+          isPremium = Boolean(p.isPremium);
+        } catch {
+          isPremium = false;
+        }
+      }
+
+      function updateSettingsTitle() {
+        const titleEl = document.getElementById("settingsTitle");
+        const lang = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "en");
+        const prefix = isPremium
+          ? (lang === "ko" ? ti("settingsTitlePlusKo") : ti("settingsTitlePlus"))
+          : (lang === "ko" ? ti("settingsTitleFreeKo") : ti("settingsTitleFree"));
+        const tier = isPremium ? ti("settingsTierPaid") : ti("settingsTierFree");
+        if (titleEl) {
+          titleEl.innerHTML =
+            prefix + ' <span class="settings-tier-badge" id="settingsTierBadge">' + tier + "</span>";
+        }
+        document.title = prefix;
+        applyPremiumGating();
+      }
+
+      function showPremiumModalIfFree() {
+        if (isPremium) return false;
+        if (typeof PeekomPremiumUI !== "undefined") PeekomPremiumUI.showPremiumModal();
+        return true;
+      }
+
+      function applyPremiumGating() {
+        const backupBadge = document.getElementById("backupPremiumBadge");
+        if (backupBadge) backupBadge.hidden = isPremium;
+
+        const opacityBadge = document.getElementById("opacityPremiumBadge");
+        if (opacityBadge) opacityBadge.hidden = isPremium;
+
+        const opacityRange = document.getElementById("memoOpacityRange");
+        const opacityLabel = document.getElementById("memoOpacityLabel");
+        const opacityWrap = document.getElementById("memoOpacityTriggerWrap");
+        if (opacityRange) {
+          if (!isPremium) {
+            opacityRange.value = "100";
+            opacityRange.disabled = true;
+            if (opacityLabel) opacityLabel.textContent = "100%";
+          } else {
+            opacityRange.disabled = false;
+          }
+        }
+        if (opacityWrap) {
+          opacityWrap.toggleAttribute("data-premium-trigger", !isPremium);
+        }
+
+        const backupBody = document.getElementById("backupBody");
+        const backupToggle = document.getElementById("backupToggleBtn");
+        if (backupBody && !isPremium) {
+          backupBody.classList.add("hidden");
+          if (backupToggle) {
+            backupToggle.setAttribute("aria-expanded", "false");
+            backupToggle.textContent = ti("backupExpand");
+          }
+        }
+        if (backupToggle) {
+          backupToggle.toggleAttribute("data-premium-trigger", !isPremium);
+        }
+        document.querySelectorAll("#backupBody [data-premium-trigger-backup]").forEach((el) => {
+          el.toggleAttribute("data-premium-trigger", !isPremium);
+        });
+
+        document.querySelectorAll("[data-font-dec], [data-font-inc]").forEach((btn) => {
+          btn.disabled = !isPremium;
+          btn.toggleAttribute("data-premium-trigger", !isPremium);
+        });
+        for (let s = 0; s < (appState?.enabledCount || 0); s++) {
+          const fontSel = document.getElementById(`slot${s}FontFamily`);
+          if (fontSel) {
+            fontSel.disabled = !isPremium;
+            fontSel.toggleAttribute("data-premium-trigger", !isPremium);
+          }
+          const fontDisplay = document.getElementById(`slot${s}FontDisplay`);
+          if (fontDisplay) {
+            fontDisplay.classList.toggle("premium-control-locked", !isPremium);
+            fontDisplay.toggleAttribute("data-premium-trigger", !isPremium);
+          }
+          const fontSizeBadge = document.getElementById(`slot${s}FontSizeBadge`);
+          if (fontSizeBadge) fontSizeBadge.hidden = isPremium;
+          const fontFamilyBadge = document.getElementById(`slot${s}FontFamilyBadge`);
+          if (fontFamilyBadge) fontFamilyBadge.hidden = isPremium;
+        }
+
+        document.querySelectorAll(".theme-btn[data-theme='custom']").forEach((btn) => {
+          btn.classList.toggle("premium-control-locked", !isPremium);
+          btn.toggleAttribute("data-premium-trigger", !isPremium);
+        });
+
+        syncCustomColorVisibility();
+      }
+
+      function bindPremiumTriggers() {
+        if (panelHost.dataset.premiumTriggersBound) return;
+        panelHost.dataset.premiumTriggersBound = "1";
+        panelHost.addEventListener(
+          "click",
+          (e) => {
+            if (isPremium) return;
+            const trigger = e.target.closest("[data-premium-trigger]");
+            if (!trigger) return;
+            e.preventDefault();
+            e.stopPropagation();
+            showPremiumModalIfFree();
+          },
+          true
+        );
+      }
+
+      window.onPremiumActivated = async () => {
+        await syncPremiumState();
+        updateSettingsTitle();
+        renderTabs();
+        renderPanels();
+        applySettingsForm();
+        patchBaseline();
+        refreshApplyButton();
+      };
+
+      function populateLangSelect() {
+        const langSelect = document.getElementById("langSelect");
+        if (!langSelect) return;
+        const options = (typeof PeekomI18n !== "undefined")
+          ? PeekomI18n.LANG_META.map((l) => `<option value="${l.code}">${l.label}</option>`).join("")
+          : `<option value="ko">한국어</option>`;
+        langSelect.innerHTML = options;
+      }
+
+      function buildCommonPanel() {
+        const logo = isPremium ? "build/plus.png" : "build/index.png";
+        const appLabel = isPremium ? "Peekom Plus" : "Peekom";
         const div = document.createElement("div");
         div.className = "settings-panel";
         div.dataset.settingsPanel = "common";
         div.innerHTML = `
-          <!-- 언어 선택 -->
-          <div class="lang-select-row">
-            <label for="langSelect">${ti("langLabel")}</label>
-            <select id="langSelect" class="setting-select" style="flex:1;height:36px;">${langOptions}</select>
-          </div>
+          <div class="panel-scroll">
+            <section class="about-card">
+              <img class="about-logo" src="${logo}" alt="${appLabel}" id="aboutLogo" />
+              <div class="about-body">
+                <h3 class="about-title">${appLabel}</h3>
+                <p class="about-desc">${ti("settingsAboutShort")}</p>
+                <p class="about-dev">
+                  문의: <a href="#" data-external-url="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
+                  · 만든 사람: <strong>난쌤</strong>
+                  · <a href="#" data-external-url="https://instagram.com/hello.nan_ssaem">@hello.nan_ssaem</a>
+                </p>
+                ${isPremium ? "" : `<button type="button" class="settings-action-btn primary" id="settingsUpgradeBtn" style="margin-top:8px;">${ti("upgradePlusBtn")}</button>`}
+              </div>
+            </section>
 
-          <!-- 소개 -->
-          <section class="about-card">
-            <h3 class="about-title">${ti("aboutTitle")}</h3>
-            <p class="about-desc">${ti("aboutDesc")}</p>
-            <p class="about-dev">
-              만든 사람: <strong>난쌤</strong>
-              · <a href="#" data-external-url="https://instagram.com/hello.nan_ssaem">@hello.nan_ssaem</a>
-            </p>
-          </section>
-
-          <!-- 사용 방법 -->
-          ${buildHowToCard()}
-
-          <!-- 마크다운 안내 -->
-          ${buildMarkdownCard()}
-
-          <!-- 표시 모니터 -->
-          <div class="setting-row">
-            <label for="monitorSelect">${ti("monitorLabel")}</label>
-            <select id="monitorSelect" class="setting-select"></select>
-          </div>
-
-          <!-- 동작 방식 -->
-          <div class="setting-row">
-            <label for="triggerSelect">${ti("triggerLabel")}</label>
-            <select id="triggerSelect" class="setting-select">
-              <option value="hover">${ti("triggerHover")}</option>
-              <option value="shortcut">${ti("triggerShortcut")}</option>
-            </select>
-            <span class="setting-hint" id="triggerHoverHint">${ti("triggerHoverHint")}</span>
-          </div>
-          <div class="shortcut-row" id="shortcutRow">
-            <label for="shortcutInput">${ti("shortcutLabel")}</label>
-            <input id="shortcutInput" class="setting-input" type="text" placeholder="CommandOrControl+Shift+M" />
-            <span class="setting-hint">${ti("shortcutHint")}</span>
-          </div>
-
-          <!-- 빼꼼/얼음 전환 방식 -->
-          <div class="setting-row">
-            <label for="pinToggleSelect">${ti("pinToggleLabel")}</label>
-            <select id="pinToggleSelect" class="setting-select">
-              <option value="chip">${ti("pinToggleChip")}</option>
-              <option value="dblclick">${ti("pinToggleDblclick")}</option>
-              <option value="click">${ti("pinToggleClick")}</option>
-            </select>
-            <span class="setting-hint">${ti("pinToggleHint")}</span>
-          </div>
-
-          <!-- 자동 실행 -->
-          <div class="setting-row">
-            <label class="setting-checkbox-label" for="openAtLoginCheckbox">
-              <input id="openAtLoginCheckbox" type="checkbox" />
-              ${ti("openAtLogin")}
-            </label>
-            <span class="setting-hint indented">${ti("openAtLoginHint")}</span>
-          </div>
-
-          <!-- 내보내기 -->
-          <div class="setting-row">
-            <label>${ti("exportLabel")}</label>
-            ${buildExportIndicesList()}
-            <div class="export-format-row">
-              <label class="export-format-label"><input type="radio" name="exportFormat" value="txt" checked />${ti("exportFormatTxt")}</label>
-              <label class="export-format-label"><input type="radio" name="exportFormat" value="md" />${ti("exportFormatMd")}</label>
-              <label class="export-format-label"><input type="radio" name="exportFormat" value="json" />${ti("exportFormatJson")}</label>
+            <div class="field-stack" id="monitorFieldWrap">
+              <div class="field-inline">
+                <label class="field-label" for="monitorSelect">${ti("monitorLabel")}</label>
+                <select id="monitorSelect" class="setting-select"></select>
+              </div>
+              <p class="field-hint-below">${ti("monitorHint")}</p>
             </div>
-            <button type="button" class="export-btn" id="exportSelectedBtn">${ti("exportBtn")}</button>
-            <div id="exportStatusText" style="font-size:12px;color:var(--muted);margin-top:4px;"></div>
-          </div>
 
-          <!-- 올리기 (백업 복원) -->
-          <div class="setting-row">
-            <label>${ti("importLabel")}</label>
-            <button type="button" class="import-btn" id="importBackupBtn">${ti("importBtn")}</button>
-            <span class="setting-hint">${ti("importHint")}</span>
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="memoAspectSelect">${ti("memoAspectLabel")}</label>
+                <select id="memoAspectSelect" class="setting-select">
+                  <option value="1:1">${ti("memoAspectSquare")}</option>
+                  <option value="3:4">${ti("memoAspectPortrait")}</option>
+                </select>
+              </div>
+              <p class="field-hint-below">${ti("memoAspectHint")}</p>
+            </div>
+
+            <div class="field-stack" id="memoOpacityWrap">
+              <div class="field-inline">
+                <label class="field-label" for="memoOpacityRange">${ti("memoOpacityLabel")}</label>
+                <span class="premium-trigger-wrap" id="memoOpacityTriggerWrap" data-premium-trigger="opacity">
+                  <span class="opacity-range-min">40%</span>
+                  <input id="memoOpacityRange" type="range" min="40" max="100" step="5" class="setting-range" />
+                  <span id="memoOpacityLabel">100%</span>
+                  <span class="premium-lock-badge" id="opacityPremiumBadge" hidden>Plus</span>
+                </span>
+              </div>
+              <p class="field-hint-below">${ti("memoOpacityHint")}</p>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="triggerSelect">${ti("triggerLabel")}</label>
+                <select id="triggerSelect" class="setting-select">
+                  <option value="hover">${ti("triggerHover")}</option>
+                  <option value="shortcut">${ti("triggerShortcut")}</option>
+                </select>
+              </div>
+              <p class="field-hint-below" id="triggerHoverHint">${ti("triggerHoverHint")}</p>
+            </div>
+            <div class="hover-delay-row" id="hoverDelayRow">
+              <div class="field-stack">
+                <div class="field-inline">
+                  <label class="field-label" for="hoverDelayInput">${ti("hoverDelayLabel")}</label>
+                  <input id="hoverDelayInput" class="setting-input" type="number" min="0.1" max="5" step="0.1" />
+                  <span style="font-size:12px;color:var(--muted);flex-shrink:0;">${ti("hoverDelayUnit")}</span>
+                </div>
+                <p class="field-hint-below">${ti("hoverDelayHint")}</p>
+              </div>
+            </div>
+            <div class="shortcut-row" id="shortcutRow">
+              <div class="field-stack">
+                <div class="field-inline">
+                  <label class="field-label" for="shortcutInput">${ti("shortcutOpenClose")}</label>
+                  <input id="shortcutInput" class="setting-input shortcut-capture-input" type="text" readonly placeholder="${ti("shortcutCapturePlaceholder")}" />
+                </div>
+              </div>
+              <div class="field-stack">
+                <div class="field-inline">
+                  <label class="field-label" for="shortcutSlotPrevInput">${ti("shortcutSlotUp")}</label>
+                  <input id="shortcutSlotPrevInput" class="setting-input shortcut-capture-input" type="text" readonly placeholder="${ti("shortcutCapturePlaceholder")}" />
+                </div>
+              </div>
+              <div class="field-stack">
+                <div class="field-inline">
+                  <label class="field-label" for="shortcutSlotNextInput">${ti("shortcutSlotDown")}</label>
+                  <input id="shortcutSlotNextInput" class="setting-input shortcut-capture-input" type="text" readonly placeholder="${ti("shortcutCapturePlaceholder")}" />
+                </div>
+                <p class="field-hint-below" id="shortcutIndexHint">${ti("shortcutIndexHint")}</p>
+              </div>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="pinToggleSelect">${ti("pinToggleLabel")}</label>
+                <select id="pinToggleSelect" class="setting-select">
+                  <option value="dblclick">${ti("pinToggleDblclickDefault")}</option>
+                  <option value="chip">${ti("pinToggleChipOnly")}</option>
+                  <option value="click">${ti("pinToggleClickMemo")}</option>
+                </select>
+              </div>
+              <p class="field-hint-below">${ti("pinToggleRecommendHint")}</p>
+            </div>
+
+            <div class="common-reset-section">
+              <button type="button" class="settings-action-btn" id="resetCommonDefaultsBtn">${ti("resetCommonDefaults")}</button>
+              <p class="field-hint-below">${ti("resetCommonDefaultsHint")}</p>
+            </div>
+
+            <section class="backup-section" id="backupSection">
+              <div class="backup-section-head">
+                <div class="backup-head-left">
+                  <h4>${ti("backupManageTitle")}<span class="premium-lock-badge" id="backupPremiumBadge" hidden>Plus</span></h4>
+                  <span class="backup-head-hint">${ti("backupHeadHint")}</span>
+                </div>
+                <button type="button" class="backup-toggle-btn" id="backupToggleBtn" aria-expanded="false">${ti("backupExpand")}</button>
+              </div>
+              <div class="backup-body hidden" id="backupBody">
+                <div class="backup-action-row">
+                  <button type="button" class="backup-tab-btn active" data-backup-mode="export" data-premium-trigger-backup>${ti("backupExportTab")}</button>
+                  <button type="button" class="backup-tab-btn" data-backup-mode="import" data-premium-trigger-backup>${ti("backupImportTab")}</button>
+                </div>
+                <div class="backup-panel" id="backupExportPanel">
+                  <label style="font-size:12px;color:var(--muted);">${ti("exportIndicesLabel")}</label>
+                  ${buildExportIndicesList()}
+                  <label style="font-size:12px;color:var(--muted);margin-top:4px;">${ti("exportFormat")}</label>
+                  <div class="export-format-row">
+                    <label class="export-format-label"><input type="radio" name="exportFormat" value="txt" checked data-premium-trigger-backup />${ti("exportFormatTxtShort")}</label>
+                    <label class="export-format-label"><input type="radio" name="exportFormat" value="md" data-premium-trigger-backup />${ti("exportFormatMdShort")}</label>
+                    <label class="export-format-label"><input type="radio" name="exportFormat" value="json" data-premium-trigger-backup />${ti("exportFormatJsonShort")}</label>
+                  </div>
+                  <button type="button" class="export-btn" id="exportSelectedBtn" data-premium-trigger-backup>${ti("exportRunBtn")}</button>
+                  <div id="exportStatusText" style="font-size:12px;color:var(--muted);margin-top:4px;"></div>
+                </div>
+                <div class="backup-panel hidden" id="backupImportPanel">
+                  <p class="field-hint" style="margin-left:0;">${ti("importOverwriteHint")}</p>
+                  <button type="button" class="import-btn" id="importBackupBtn" data-premium-trigger-backup>${ti("importBtn")}</button>
+                </div>
+              </div>
+            </section>
           </div>
         `;
         return div;
@@ -1222,99 +2773,206 @@
         div.className = "settings-panel";
         div.dataset.settingsPanel = `idx${slotIndex}`;
 
-        const isLastIndex = appState.enabledCount <= 1;
+        const ySlotOptions = Array.from({ length: 10 }, (_, i) =>
+          `<option value="${i}">${ti("handleSlotOption", { n: i + 1 })}</option>`
+        ).join("");
 
         const themeButtons = THEME_NAMES.map(
           (name) =>
-            `<button type="button" class="theme-btn" data-theme="${name}">${THEME_LABELS[name]}</button>`
+            `<button type="button" class="theme-btn${name === "custom" ? " theme-btn-custom" : ""}" data-theme="${name}">${getThemeLabel(name)}</button>`
         ).join("");
-
-        const ySlotOptions = Array.from({ length: 10 }, (_, i) =>
-          `<option value="${i}">${i + 1}번 칸 (화면 위에서 ${i + 1}번째)</option>`
-        ).join("");
-
-        const deleteSection = isLastIndex
-          ? `<div class="delete-row">
-              <p class="setting-hint" style="padding:0; color: var(--muted);">
-                인덱스는 항상 1개 이상 있어야 해서 마지막 인덱스는 삭제할 수 없어요.<br>
-                새 인덱스를 추가한 뒤 삭제할 수 있습니다.
-              </p>
-            </div>`
-          : `<div class="delete-row">
-              <button type="button" class="delete-btn" data-delete-slot="${slotIndex}">이 인덱스 삭제</button>
-              <div class="delete-warning" data-delete-warning="${slotIndex}">
-                이 인덱스의 메모, 제목, 색상이 모두 사라집니다. 다시 한 번 누르면 완전히 삭제됩니다.
-              </div>
-            </div>`;
 
         div.innerHTML = `
-          <div class="setting-row">
-            <div class="row-head">
-              <label for="slot${slotIndex}Label">인덱스 제목 (최대 6자)</label>
-              <span class="char-count" data-count="${slotIndex}">0 / ${LABEL_MAX}</span>
+          <div class="panel-scroll">
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="slot${slotIndex}Label">${ti("indexTitleLabel")}</label>
+                <input id="slot${slotIndex}Label" class="setting-input" type="text" maxlength="6" />
+              </div>
+              <p class="field-hint-below">${ti("indexTitleMaxHint")}</p>
+              <p class="field-error hidden" id="slot${slotIndex}LabelError" role="alert"></p>
             </div>
-            <input id="slot${slotIndex}Label" class="setting-input" type="text" maxlength="6" placeholder="짧게 입력 (예: 1강, A, 발표)" />
-          </div>
-          <div class="setting-row">
-            <label for="slot${slotIndex}YSlot">손잡이 위치</label>
-            <select id="slot${slotIndex}YSlot" class="setting-select" data-yslot="${slotIndex}">
-              ${ySlotOptions}
-            </select>
-            <span class="setting-hint">화면을 위에서 아래로 10칸으로 나눈 위치예요. 손잡이를 직접 드래그해도 돼요.</span>
-          </div>
-          <div class="setting-row">
-            <label>기본 글자 크기</label>
-            <div class="font-size-row">
-              <button type="button" class="font-size-btn" data-font-dec="${slotIndex}">A−</button>
-              <div class="font-size-display" id="slot${slotIndex}FontDisplay">18px</div>
-              <button type="button" class="font-size-btn" data-font-inc="${slotIndex}">A+</button>
+
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="slot${slotIndex}YSlot">${ti("handlePositionLabel")}</label>
+                <select id="slot${slotIndex}YSlot" class="setting-select" data-yslot="${slotIndex}">
+                  ${ySlotOptions}
+                </select>
+              </div>
+              <p class="field-hint-below">${ti("handlePositionHint")}</p>
             </div>
-            <span class="setting-hint">이 인덱스 메모를 열었을 때의 기본 글 크기예요. 범위: 8 ~ 36px</span>
-          </div>
-          <div class="setting-row">
-            <label>색 테마</label>
-            <div class="theme-group" data-theme-group="${slotIndex}">${themeButtons}</div>
-            <div class="custom-color-row" data-custom-colors="${slotIndex}">
-              <div class="color-picker-label">
-                배경색
-                <div class="color-palette-wrap">
-                  <button type="button" class="color-palette-btn" data-palette-btn="bg-${slotIndex}">
-                    <span class="color-swatch" id="bgSwatch${slotIndex}"></span>
-                    <span id="bgHexLabel${slotIndex}">#FFF4B8</span>
-                  </button>
-                  <div class="color-popover" id="bgPopover${slotIndex}">
-                    <p class="recent-colors-title">최근 사용한 색</p>
-                    <div class="recent-colors-grid" id="bgRecentGrid${slotIndex}"></div>
-                    <div class="popover-native-wrap">
-                      <input type="color" data-custom-bg="${slotIndex}" />
-                      <input type="text" class="popover-hex-input" id="bgHexInput${slotIndex}" maxlength="7" placeholder="#FFF4B8" />
+
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label">${ti("indexFontLabel")}</label>
+                <div class="font-size-row">
+                  <button type="button" class="font-size-btn" data-font-dec="${slotIndex}">A−</button>
+                  <div class="font-size-display" id="slot${slotIndex}FontDisplay">18px</div>
+                  <button type="button" class="font-size-btn" data-font-inc="${slotIndex}">A+</button>
+                </div>
+                <span class="premium-lock-badge" id="slot${slotIndex}FontSizeBadge" hidden>Plus</span>
+              </div>
+              <p class="field-hint-below" id="slot${slotIndex}FontHint">${ti("fontSizePlusHint")}</p>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="slot${slotIndex}FontFamily">${ti("fontFamilyLabel")}</label>
+                <select id="slot${slotIndex}FontFamily" class="setting-select" data-font-family="${slotIndex}">
+                  <option value="">${ti("fontSystemDefault")}</option>
+                </select>
+                <span class="premium-lock-badge" id="slot${slotIndex}FontFamilyBadge" hidden>Plus</span>
+              </div>
+              <p class="field-hint-below">${ti("fontFamilyPlusHint")}</p>
+            </div>
+
+            <div class="field-block">
+              <label class="field-label">${ti("indexThemeLabel")}</label>
+              <div class="theme-group" data-theme-group="${slotIndex}">${themeButtons}</div>
+              <div class="custom-color-row" data-custom-colors="${slotIndex}">
+                <div class="field-inline field-block-nested">
+                  <label class="field-label">${ti("customBgLabel")}</label>
+                  <div class="color-palette-wrap">
+                    <button type="button" class="color-palette-btn" data-palette-btn="bg-${slotIndex}">
+                      <span class="color-swatch" id="bgSwatch${slotIndex}"></span>
+                      <span id="bgHexLabel${slotIndex}">#FFF4B8</span>
+                    </button>
+                    <div class="color-popover" id="bgPopover${slotIndex}">
+                      <p class="recent-colors-title">${ti("recentColors")}</p>
+                      <div class="recent-colors-grid" id="bgRecentGrid${slotIndex}"></div>
+                      <div class="popover-native-wrap">
+                        <input type="color" class="color-input-hidden" data-custom-bg="${slotIndex}" />
+                        <button type="button" class="color-advanced-btn" data-color-advanced="bg-${slotIndex}">${ti("colorAdvancedPicker")}</button>
+                        <input type="text" class="popover-hex-input" id="bgHexInput${slotIndex}" maxlength="7" placeholder="#FFF4B8" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field-inline field-block-nested">
+                  <label class="field-label">${ti("customTextLabel")}</label>
+                  <div class="color-palette-wrap">
+                    <button type="button" class="color-palette-btn" data-palette-btn="text-${slotIndex}">
+                      <span class="color-swatch" id="textSwatch${slotIndex}"></span>
+                      <span id="textHexLabel${slotIndex}">#2F3750</span>
+                    </button>
+                    <div class="color-popover" id="textPopover${slotIndex}">
+                      <p class="recent-colors-title">${ti("recentColors")}</p>
+                      <div class="recent-colors-grid" id="textRecentGrid${slotIndex}"></div>
+                      <div class="popover-native-wrap">
+                        <input type="color" class="color-input-hidden" data-custom-text="${slotIndex}" />
+                        <button type="button" class="color-advanced-btn" data-color-advanced="text-${slotIndex}">${ti("colorAdvancedPicker")}</button>
+                        <input type="text" class="popover-hex-input" id="textHexInput${slotIndex}" maxlength="7" placeholder="#2F3750" />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="color-picker-label">
-                글자색
-                <div class="color-palette-wrap">
-                  <button type="button" class="color-palette-btn" data-palette-btn="text-${slotIndex}">
-                    <span class="color-swatch" id="textSwatch${slotIndex}"></span>
-                    <span id="textHexLabel${slotIndex}">#2F3750</span>
-                  </button>
-                  <div class="color-popover" id="textPopover${slotIndex}">
-                    <p class="recent-colors-title">최근 사용한 색</p>
-                    <div class="recent-colors-grid" id="textRecentGrid${slotIndex}"></div>
-                    <div class="popover-native-wrap">
-                      <input type="color" data-custom-text="${slotIndex}" />
-                      <input type="text" class="popover-hex-input" id="textHexInput${slotIndex}" maxlength="7" placeholder="#2F3750" />
-                    </div>
-                  </div>
+            </div>
+
+            <div class="field-block">
+              <label class="field-label">${ti("attachedImagesLabel")}</label>
+              <div class="slot-image-thumb-box">
+                <div class="slot-image-thumb-grid" id="slot${slotIndex}ImageThumbs" data-slot-images="${slotIndex}">
+                  <span class="slot-image-thumb-empty">${ti("attachedImagesEmpty")}</span>
                 </div>
               </div>
+              <p class="field-hint-below">${ti("attachedImagesHint")}</p>
             </div>
           </div>
-          ${deleteSection}
         `;
         return div;
       }
+
+      function ensureImageLightbox() {
+        if (document.getElementById("settingsImageLightbox")) return;
+        const el = document.createElement("div");
+        el.id = "settingsImageLightbox";
+        el.className = "image-lightbox hidden";
+        el.innerHTML = `
+          <div class="image-lightbox-card" role="dialog" aria-modal="true">
+            <button type="button" class="image-lightbox-close" id="settingsImageLightboxClose">${ti("settingsClose")}</button>
+            <img id="settingsImageLightboxImg" alt="${ti("imagePreviewAlt")}" />
+            <p class="image-lightbox-note" id="settingsImageLightboxNote"></p>
+          </div>
+        `;
+        document.body.appendChild(el);
+        el.addEventListener("click", (e) => {
+          if (e.target === el) hideImageLightbox();
+        });
+        document.getElementById("settingsImageLightboxClose")?.addEventListener("click", hideImageLightbox);
+      }
+
+      function hideImageLightbox() {
+        const el = document.getElementById("settingsImageLightbox");
+        const img = document.getElementById("settingsImageLightboxImg");
+        if (el) el.classList.add("hidden");
+        if (img) img.removeAttribute("src");
+      }
+
+      async function openImageLightbox(imageEntry) {
+        if (!imageEntry) return;
+        ensureImageLightbox();
+        const el = document.getElementById("settingsImageLightbox");
+        const img = document.getElementById("settingsImageLightboxImg");
+        const note = document.getElementById("settingsImageLightboxNote");
+        if (!el || !img) return;
+
+        let src = imageEntry.dataUrl || "";
+        let noteText = "";
+        if (imageEntry.sourcePath) {
+          try {
+            const exists = await ipcRenderer.invoke("image:file-exists", imageEntry.sourcePath);
+            if (exists?.ok && exists.exists) {
+              const loaded = await ipcRenderer.invoke("image:read-file", imageEntry.sourcePath);
+              if (loaded?.ok && loaded.dataUrl) {
+                src = loaded.dataUrl;
+                noteText = ti("imageLoadedFromFile");
+              }
+            } else {
+              noteText = ti("imagePreviewFallback");
+            }
+          } catch {
+            noteText = ti("imagePreviewFallback");
+          }
+        } else {
+          noteText = ti("imageNoPathInfo");
+        }
+
+        img.src = src;
+        if (note) note.textContent = noteText;
+        el.classList.remove("hidden");
+      }
+
+      function renderSlotImageThumbs(slotIndex) {
+        const host = document.getElementById(`slot${slotIndex}ImageThumbs`);
+        if (!host) return;
+        const maxImages = isPremium ? 5 : 1;
+        const images = collectSlotImages(appState.slots[slotIndex]).slice(0, maxImages);
+        host.innerHTML = "";
+        if (!images.length) {
+          host.innerHTML = `<span class="slot-image-thumb-empty">${ti("attachedImagesEmpty")}</span>`;
+          return;
+        }
+        images.forEach((entry) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "slot-image-thumb";
+          btn.style.backgroundImage = `url("${entry.dataUrl}")`;
+          btn.title = ti("attachedImagesHint");
+          btn.addEventListener("click", () => openImageLightbox(entry));
+          host.appendChild(btn);
+        });
+      }
+
+      function renderAllSlotImageThumbs() {
+        syncAllSlotsImagesFromMemo();
+        for (let s = 0; s < appState.enabledCount; s++) {
+          renderSlotImageThumbs(s);
+        }
+      }
+
+      const GEAR_ICON_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.05 1.41 1.15H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
 
       // ── 탭 렌더 ────────────────────────────────────────────────────────
       function renderTabs() {
@@ -1322,14 +2980,19 @@
 
         const commonBtn = document.createElement("button");
         commonBtn.type = "button";
-        commonBtn.className = "settings-tab" + (activeTab === "common" ? " active" : "");
+        commonBtn.className =
+          "settings-tab settings-tab-common" + (activeTab === "common" ? " active" : "");
         commonBtn.dataset.settingsTab = "common";
         commonBtn.role = "tab";
-        commonBtn.textContent = "공통";
+        commonBtn.setAttribute("aria-label", ti("commonTabAriaLabel"));
+        commonBtn.innerHTML = GEAR_ICON_SVG;
         commonBtn.addEventListener("click", () => switchTab("common"));
         tabRow.appendChild(commonBtn);
 
         for (let s = 0; s < appState.enabledCount; s++) {
+          const wrap = document.createElement("div");
+          wrap.className = "settings-tab-wrap";
+
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "settings-tab" + (activeTab === `idx${s}` ? " active" : "");
@@ -1346,18 +3009,34 @@
           btn.appendChild(dot);
 
           const labelText = document.createElement("span");
-          labelText.textContent = appState.slots[s].label || `인덱스 ${s + 1}`;
+          labelText.textContent = resolveSlotLabel(appState.slots[s].label, s);
           btn.appendChild(labelText);
 
           btn.addEventListener("click", () => switchTab(`idx${s}`));
-          tabRow.appendChild(btn);
+          wrap.appendChild(btn);
+
+          if (appState.enabledCount > 1) {
+            const delBtn = document.createElement("button");
+            delBtn.type = "button";
+            delBtn.className = "tab-delete-btn";
+            delBtn.title = ti("indexDeleteBtn");
+            delBtn.setAttribute("aria-label", ti("indexDeleteBtn"));
+            delBtn.textContent = "×";
+            delBtn.addEventListener("click", (event) => {
+              event.stopPropagation();
+              onTabDeleteClick(s);
+            });
+            wrap.appendChild(delBtn);
+          }
+
+          tabRow.appendChild(wrap);
         }
 
-        if (appState.enabledCount < MAX_SLOTS) {
+        if (appState.enabledCount < PREMIUM_MAX_SLOTS) {
           const addBtn = document.createElement("button");
           addBtn.type = "button";
           addBtn.className = "add-tab-btn";
-          addBtn.title = "인덱스 추가";
+          addBtn.title = ti("indexAddBtn");
           addBtn.textContent = "+";
           addBtn.addEventListener("click", onAddIndex);
           tabRow.appendChild(addBtn);
@@ -1372,6 +3051,8 @@
         }
         applyActivePanel();
         bindPanelEvents();
+        applyPremiumGating();
+        renderAllSlotImageThumbs();
       }
 
       function applyActivePanel() {
@@ -1386,74 +3067,91 @@
       function switchTab(tabId) {
         if (activeTab === tabId) return;
         readSettingsForm();
-        resetPendingDelete();
         activeTab = tabId;
         applyActivePanel();
         applySettingsForm();
       }
 
-      function onAddIndex() {
-        if (appState.enabledCount >= MAX_SLOTS) return;
+      function onTabDeleteClick(slotIndex) {
+        if (appState.enabledCount <= 1) return;
+        const label = resolveSlotLabel(appState.slots[slotIndex]?.label, slotIndex);
+        const ok = confirm(
+          `「${label}」 인덱스를 삭제할까요?\n\n메모, 제목, 색상이 모두 사라집니다.`
+        );
+        if (!ok) return;
         readSettingsForm();
-        refreshSlotMemosFromDisk();
+        void performDelete(slotIndex);
+      }
+
+      async function onAddIndex() {
+        const max = getMaxEnabledSlots();
+        if (appState.enabledCount >= max) {
+          if (!isPremium && typeof PeekomPremiumUI !== "undefined") {
+            PeekomPremiumUI.showPremiumModal();
+          }
+          return;
+        }
+        markSettingsLocalMutation();
+        readSettingsForm();
+        const pendingMonitor = draftMonitorTarget;
+        const pending = JSON.parse(JSON.stringify(appState));
+        appState = await loadStateAsync();
+        mergeSettingsFromPending(appState, pending);
+        draftMonitorTarget = pendingMonitor;
         const newSlotIndex = appState.enabledCount;
-        appState.slots[newSlotIndex] = defaultSlot(newSlotIndex);
+        appState.slots[newSlotIndex] = {
+          ...defaultSlot(newSlotIndex),
+          label: resolveSlotLabel("", newSlotIndex)
+        };
         appState.enabledCount += 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
-        saveState(appState);
-        baselineSnapshot = buildSnapshot(appState);
+        const saved = await saveAndNotifyMain(appState);
+        if (!saved.ok) {
+          setStatus(ti("indexAddSyncFail"), 5000);
+        }
+        patchBaseline();
         activeTab = `idx${newSlotIndex}`;
         renderTabs();
         renderPanels();
         applySettingsForm();
         refreshApplyButton();
-        // 메인 패널에 즉시 반영
-        ipcRenderer.invoke("settings:notify-applied").catch(() => {});
       }
 
-      function resetPendingDelete() {
-        pendingDeleteSlot = null;
-        panelHost.querySelectorAll(".delete-btn").forEach((b) => {
-          b.classList.remove("confirming");
-          b.textContent = "이 인덱스 삭제";
-        });
-        panelHost.querySelectorAll(".delete-warning").forEach((w) => {
-          w.classList.remove("visible");
-        });
-      }
-
-      function performDelete(slotIndex) {
+      async function performDelete(slotIndex) {
         if (slotIndex < 0 || slotIndex >= appState.enabledCount) return;
-        if (appState.enabledCount <= 1) return; // 최소 1개 유지
+        if (appState.enabledCount <= 1) return;
 
-        refreshSlotMemosFromDisk();
+        markSettingsLocalMutation();
+        readSettingsForm();
+
         for (let i = slotIndex; i < MAX_SLOTS - 1; i++) {
           appState.slots[i] = appState.slots[i + 1];
         }
         appState.slots[MAX_SLOTS - 1] = defaultSlot(MAX_SLOTS - 1);
         appState.enabledCount -= 1;
-        // 삭제 후에도 최소 1개 재확인
         if (appState.enabledCount < 1) appState.enabledCount = 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
         appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
 
-        saveState(appState);
-        baselineSnapshot = buildSnapshot(appState);
-        activeTab = "common";
-        pendingDeleteSlot = null;
-        renderTabs();
-        renderPanels();
-        applySettingsForm();
-        refreshApplyButton();
-        ipcRenderer.invoke("settings:notify-applied");
-      }
-
-      function updateCharCount(slotIndex) {
-        const inp = document.getElementById(`slot${slotIndex}Label`);
-        const counter = panelHost.querySelector(`[data-count="${slotIndex}"]`);
-        if (!inp || !counter) return;
-        const len = Array.from(inp.value).length;
-        counter.textContent = `${len} / ${LABEL_MAX}`;
+        try {
+          const saved = await saveAndNotifyMain(appState, { skipSettingsReload: true });
+          if (!saved.ok) {
+            setStatus(ti("deleteSyncFail"), 5000);
+          } else {
+            setStatus(ti("indexDeleted"), 2500);
+            patchBaseline();
+          }
+        } catch (err) {
+          console.error(err);
+          setStatus(ti("deleteSyncFail"), 5000);
+        } finally {
+          normalizeActiveTab();
+          activeTab = "common";
+          renderTabs();
+          renderPanels();
+          applySettingsForm();
+          refreshApplyButton();
+        }
       }
 
       function updateFontDisplay(slotIndex) {
@@ -1462,24 +3160,209 @@
         display.textContent = `${appState.slots[slotIndex].fontSize ?? 18}px`;
       }
 
+      const FONT_HINT_DEFAULT = "Ctrl 키를 누른 채 스크롤 휠로도 크기를 조절할 수 있음";
+
+      function showFontBoundaryHint(slotIndex) {
+        const hint = document.getElementById(`slot${slotIndex}FontHint`);
+        if (!hint) return;
+        hint.textContent = ti("fontSizeRangeHint");
+        hint.classList.add("font-size-hint-error");
+        setTimeout(() => {
+          hint.textContent = FONT_HINT_DEFAULT;
+          hint.classList.remove("font-size-hint-error");
+        }, 2000);
+      }
+
+      async function applyTrayIconSetting(checked) {
+        appState = await loadStateAsync();
+        appState.global.showTrayIcon = checked;
+        try {
+          await ipcRenderer.invoke("tray:set-visible", checked);
+        } catch (err) {
+          console.error(err);
+        }
+        await saveStateAsync(appState);
+        patchBaseline();
+        refreshApplyButton();
+      }
+
+      async function applyStartupSetting(checked) {
+        appState = await loadStateAsync();
+        appState.global.openAtLogin = checked;
+        try {
+          const r = await ipcRenderer.invoke("startup:set", Boolean(checked));
+          if (!r?.ok) {
+            setStatus(r?.message || ti("statusStartupFail"), 5000);
+            const cb = document.getElementById("runZoomitOnStartupCheckbox");
+            if (cb) cb.checked = !checked;
+            appState.global.openAtLogin = !checked;
+            await saveStateAsync(appState);
+            patchBaseline();
+            refreshApplyButton();
+            return;
+          }
+          const verify = await ipcRenderer.invoke("startup:get");
+          const actual = Boolean(verify?.openAtLogin);
+          const cb = document.getElementById("runZoomitOnStartupCheckbox");
+          if (cb) cb.checked = actual;
+          appState.global.openAtLogin = actual;
+          if (actual !== Boolean(checked)) {
+            setStatus(ti("startupCheckFail"), 5000);
+          }
+        } catch (err) {
+          console.error(err);
+          setStatus(ti("startupSetError"), 5000);
+        }
+        await saveStateAsync(appState);
+        patchBaseline();
+        refreshApplyButton();
+      }
+
+      function formatShortcutDisplay(accelerator) {
+        return String(accelerator || "").replace(/CommandOrControl/g, "Ctrl");
+      }
+
+      function formatAcceleratorFromEvent(event) {
+        if (event.key === "Escape") return null;
+        const mods = [];
+        if (event.ctrlKey || event.metaKey) mods.push("CommandOrControl");
+        if (event.altKey) mods.push("Alt");
+        if (event.shiftKey) mods.push("Shift");
+        const key = event.key;
+        if (["Control", "Shift", "Alt", "Meta"].includes(key)) return null;
+        let keyName = key;
+        if (key === " ") keyName = "Space";
+        else if (key.length === 1) keyName = key.toUpperCase();
+        mods.push(keyName);
+        if (mods.length < 2) return null;
+        return mods.join("+");
+      }
+
+      function bindShortcutCapture(input, onCaptured) {
+        if (!input || input.dataset.shortcutBound) return;
+        input.dataset.shortcutBound = "1";
+        input.readOnly = true;
+        input.addEventListener("focus", () => {
+          input.dataset.recording = "1";
+          input.placeholder = ti("shortcutCapturePlaceholder");
+        });
+        input.addEventListener("blur", () => {
+          delete input.dataset.recording;
+          if (!input.value) input.placeholder = ti("shortcutCapturePlaceholder");
+        });
+        input.addEventListener("keydown", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          if (event.key === "Escape") {
+            input.blur();
+            return;
+          }
+          const acc = formatAcceleratorFromEvent(event);
+          if (!acc) return;
+          onCaptured(acc);
+          input.value = formatShortcutDisplay(acc);
+          input.dataset.accelerator = acc;
+          input.blur();
+          refreshApplyButton();
+        });
+      }
+
+      function setShortcutInputValue(input, accelerator) {
+        if (!input) return;
+        const acc = accelerator || "";
+        input.dataset.accelerator = acc;
+        input.value = formatShortcutDisplay(acc);
+      }
+
+      function getShortcutInputValue(input, fallback) {
+        if (!input) return fallback;
+        return input.dataset.accelerator || input.value.trim() || fallback;
+      }
+
+      function validateShortcutUniqueness() {
+        const toggle = getShortcutInputValue(
+          document.getElementById("shortcutInput"),
+          appState.global.shortcut
+        );
+        const prev = getShortcutInputValue(
+          document.getElementById("shortcutSlotPrevInput"),
+          appState.global.shortcutSlotPrev
+        );
+        const next = getShortcutInputValue(
+          document.getElementById("shortcutSlotNextInput"),
+          appState.global.shortcutSlotNext
+        );
+        const values = [toggle, prev, next].map((v) => v.toLowerCase());
+        return new Set(values).size === values.length;
+      }
+
       function syncShortcutRowVisibility() {
         const triggerSelect = document.getElementById("triggerSelect");
         const shortcutRow = document.getElementById("shortcutRow");
+        const hoverDelayRow = document.getElementById("hoverDelayRow");
         const triggerHint = document.getElementById("triggerHoverHint");
-        if (!triggerSelect || !shortcutRow) return;
+        if (!triggerSelect) return;
         const isShortcut = triggerSelect.value === "shortcut";
-        shortcutRow.classList.toggle("visible", isShortcut);
+        if (shortcutRow) shortcutRow.classList.toggle("visible", isShortcut);
+        if (hoverDelayRow) hoverDelayRow.classList.toggle("visible", !isShortcut);
         if (triggerHint) triggerHint.style.display = isShortcut ? "none" : "";
+      }
+
+      function commonResetDefaults() {
+        return {
+          monitorMode: "auto",
+          monitorTargetId: null,
+          memoAspectRatio: "3:4",
+          memoDefaultOpacity: 100,
+          triggerMode: "hover",
+          shortcut: "CommandOrControl+Shift+M",
+          shortcutSlotPrev: "CommandOrControl+Shift+Up",
+          shortcutSlotNext: "CommandOrControl+Shift+Down",
+          hoverDelayMs: 300,
+          pinToggleMode: "dblclick",
+          imageLayout: "below"
+        };
+      }
+
+      function resetCommonSettingsToDefaults() {
+        if (!confirm(ti("resetCommonConfirm"))) return;
+        const defaults = commonResetDefaults();
+        appState.global.monitorMode = defaults.monitorMode;
+        appState.global.monitorTargetId = defaults.monitorTargetId;
+        appState.global.memoAspectRatio = defaults.memoAspectRatio;
+        appState.global.memoDefaultOpacity = defaults.memoDefaultOpacity;
+        appState.global.triggerMode = defaults.triggerMode;
+        appState.global.shortcut = defaults.shortcut;
+        appState.global.shortcutSlotPrev = defaults.shortcutSlotPrev;
+        appState.global.shortcutSlotNext = defaults.shortcutSlotNext;
+        appState.global.hoverDelayMs = defaults.hoverDelayMs;
+        appState.global.pinToggleMode = defaults.pinToggleMode;
+        appState.global.imageLayout = defaults.imageLayout;
+        draftMonitorTarget = null;
+        applySettingsForm();
+        syncShortcutRowVisibility();
+        applyPremiumGating();
+        loadDisplays();
+        refreshApplyButton();
+        setStatus(ti("resetCommonDone"), 4000);
       }
 
       // 최근 색상 관리
       function loadRecentColors(key) {
-        try { return JSON.parse(localStorage.getItem(key) || "[]"); } catch { return []; }
+        try {
+          const raw = JSON.parse(localStorage.getItem(key) || "[]");
+          if (!Array.isArray(raw)) return [];
+          return raw
+            .filter((c) => typeof c === "string" && /^#[0-9A-Fa-f]{6}$/.test(c))
+            .slice(0, 7);
+        } catch {
+          return [];
+        }
       }
       function saveRecentColor(key, hex) {
         const list = loadRecentColors(key).filter(c => c !== hex);
         list.unshift(hex);
-        localStorage.setItem(key, JSON.stringify(list.slice(0, 8)));
+        localStorage.setItem(key, JSON.stringify(list.slice(0, 7)));
       }
       function renderRecentColors(gridEl, hex, onPick) {
         const list = loadRecentColors(gridEl.id.includes("bg") ? RECENT_BG_KEY : RECENT_TEXT_KEY);
@@ -1496,6 +3379,50 @@
           sw.title = color;
           sw.addEventListener("click", () => onPick(color));
           gridEl.appendChild(sw);
+        });
+      }
+
+      function bindColorScreenInputs() {
+        panelHost.querySelectorAll("[data-custom-bg], [data-custom-text]").forEach((inp) => {
+          if (inp.dataset.inputBound) return;
+          inp.dataset.inputBound = "1";
+          const isBg = inp.hasAttribute("data-custom-bg");
+          const slotIndex = Number(isBg ? inp.dataset.customBg : inp.dataset.customText);
+          inp.addEventListener("input", () => {
+            applyCustomColor(slotIndex, isBg, inp.value);
+          });
+        });
+
+        panelHost.querySelectorAll("[data-color-advanced]").forEach((btn) => {
+          if (btn.dataset.advancedBound) return;
+          btn.dataset.advancedBound = "1";
+          const key = btn.dataset.colorAdvanced;
+          const isBg = key.startsWith("bg-");
+          const slotIndex = Number(key.split("-")[1]);
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (showPremiumModalIfFree()) return;
+            const inp = panelHost.querySelector(
+              isBg ? `[data-custom-bg="${slotIndex}"]` : `[data-custom-text="${slotIndex}"]`
+            );
+            if (!inp) return;
+            ipcRenderer.sendSync("color:prepare-advanced-picker");
+            const popoverId = isBg ? `bgPopover${slotIndex}` : `textPopover${slotIndex}`;
+            const finishRestore = () => {
+              ipcRenderer.invoke("color:restore-advanced-picker").catch(() => {});
+            };
+            const onPicked = () => {
+              applyCustomColor(slotIndex, isBg, inp.value);
+              document.getElementById(popoverId)?.classList.remove("visible");
+            };
+            if (typeof inp.showPicker === "function") {
+              inp.showPicker().then(onPicked).catch(() => {}).finally(finishRestore);
+            } else {
+              inp.click();
+              onPicked();
+              finishRestore();
+            }
+          });
         });
       }
 
@@ -1528,20 +3455,55 @@
         }
 
         const langSelect = document.getElementById("langSelect");
-        if (langSelect) {
+        if (langSelect && !langSelect.dataset.bound) {
+          langSelect.dataset.bound = "1";
           langSelect.value = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "ko");
           langSelect.addEventListener("change", () => {
             const lang = langSelect.value;
             if (typeof PeekomI18n !== "undefined") PeekomI18n.setLang(lang);
             appState.global.language = lang;
+            readSettingsForm();
+            applyStaticSettingsLabels();
+            renderTabs();
+            renderPanels();
+            applySettingsForm();
             refreshApplyButton();
+            loadDisplays();
           });
         }
 
-        const pinToggleSelect = document.getElementById("pinToggleSelect");
-        if (pinToggleSelect) {
-          pinToggleSelect.addEventListener("change", () => refreshApplyButton());
+        document.querySelectorAll(".setting-select").forEach((sel) => {
+          if (sel.dataset.refreshBound) return;
+          sel.dataset.refreshBound = "1";
+          sel.addEventListener("change", () => refreshApplyButton());
+        });
+
+        const backupToggleBtn = document.getElementById("backupToggleBtn");
+        const backupBody = document.getElementById("backupBody");
+        if (backupToggleBtn && backupBody) {
+          backupToggleBtn.addEventListener("click", () => {
+            if (!isPremium) {
+              showPremiumModalIfFree();
+              return;
+            }
+            const collapsed = backupBody.classList.toggle("hidden");
+            backupToggleBtn.setAttribute("aria-expanded", collapsed ? "false" : "true");
+            backupToggleBtn.textContent = collapsed ? ti("backupExpand") : ti("backupCollapse");
+          });
         }
+
+        document.querySelectorAll("[data-backup-mode]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const mode = btn.dataset.backupMode;
+            document.querySelectorAll("[data-backup-mode]").forEach((b) => {
+              b.classList.toggle("active", b.dataset.backupMode === mode);
+            });
+            const exportPanel = document.getElementById("backupExportPanel");
+            const importPanel = document.getElementById("backupImportPanel");
+            if (exportPanel) exportPanel.classList.toggle("hidden", mode !== "export");
+            if (importPanel) importPanel.classList.toggle("hidden", mode !== "import");
+          });
+        });
 
         const triggerSelect = document.getElementById("triggerSelect");
         if (triggerSelect) {
@@ -1551,14 +3513,68 @@
           });
         }
 
-        const shortcutInput = document.getElementById("shortcutInput");
-        if (shortcutInput) {
-          shortcutInput.addEventListener("input", () => refreshApplyButton());
+        bindShortcutCapture(document.getElementById("shortcutInput"), (acc) => {
+          appState.global.shortcut = acc;
+        });
+        bindShortcutCapture(document.getElementById("shortcutSlotPrevInput"), (acc) => {
+          appState.global.shortcutSlotPrev = acc;
+        });
+        bindShortcutCapture(document.getElementById("shortcutSlotNextInput"), (acc) => {
+          appState.global.shortcutSlotNext = acc;
+        });
+
+        const hoverDelayInput = document.getElementById("hoverDelayInput");
+        if (hoverDelayInput && !hoverDelayInput.dataset.bound) {
+          hoverDelayInput.dataset.bound = "1";
+          hoverDelayInput.addEventListener("input", () => refreshApplyButton());
         }
 
-        const openAtLoginCheckbox = document.getElementById("openAtLoginCheckbox");
-        if (openAtLoginCheckbox) {
-          openAtLoginCheckbox.addEventListener("change", () => refreshApplyButton());
+        const upgradeBtn = document.getElementById("settingsUpgradeBtn");
+        if (upgradeBtn && !upgradeBtn.dataset.bound) {
+          upgradeBtn.dataset.bound = "1";
+          upgradeBtn.addEventListener("click", () => {
+            if (typeof PeekomPremiumUI !== "undefined") PeekomPremiumUI.showPremiumModal();
+          });
+        }
+
+        const resetCommonDefaultsBtn = document.getElementById("resetCommonDefaultsBtn");
+        if (resetCommonDefaultsBtn && !resetCommonDefaultsBtn.dataset.bound) {
+          resetCommonDefaultsBtn.dataset.bound = "1";
+          resetCommonDefaultsBtn.addEventListener("click", resetCommonSettingsToDefaults);
+        }
+
+        const opacityRange = document.getElementById("memoOpacityRange");
+        if (opacityRange && !opacityRange.dataset.bound) {
+          opacityRange.dataset.bound = "1";
+          opacityRange.addEventListener("input", () => {
+            const label = document.getElementById("memoOpacityLabel");
+            if (label) label.textContent = opacityRange.value + "%";
+            refreshApplyButton();
+          });
+          opacityRange.addEventListener("mousedown", (e) => {
+            if (isPremium) return;
+            e.preventDefault();
+            e.stopPropagation();
+            showPremiumModalIfFree();
+          });
+        }
+
+        populateFontSelects();
+        bindPremiumTriggers();
+
+        const runZoomitOnStartupCheckbox = document.getElementById("runZoomitOnStartupCheckbox");
+        if (runZoomitOnStartupCheckbox && !runZoomitOnStartupCheckbox.dataset.bound) {
+          runZoomitOnStartupCheckbox.dataset.bound = "1";
+          runZoomitOnStartupCheckbox.addEventListener("change", () => {
+            applyStartupSetting(runZoomitOnStartupCheckbox.checked);
+          });
+        }
+        const showTrayIconCheckbox = document.getElementById("showTrayIconCheckbox");
+        if (showTrayIconCheckbox && !showTrayIconCheckbox.dataset.bound) {
+          showTrayIconCheckbox.dataset.bound = "1";
+          showTrayIconCheckbox.addEventListener("change", () => {
+            applyTrayIconSetting(showTrayIconCheckbox.checked);
+          });
         }
 
         // Export (new multi-index version)
@@ -1590,14 +3606,13 @@
           if (!match) return;
           const slot = Number(match[1]);
           inp.addEventListener("input", () => {
-            updateCharCount(slot);
-            // 탭 라벨 실시간 갱신
             const chars = Array.from(inp.value);
             appState.slots[slot].label = chars.slice(0, LABEL_MAX).join("");
+            clearSlotLabelError(slot);
             const tabLabel = tabRow.querySelector(
               `[data-settings-tab="idx${slot}"] span:last-child`
             );
-            if (tabLabel) tabLabel.textContent = appState.slots[slot].label || `인덱스 ${slot + 1}`;
+            if (tabLabel) tabLabel.textContent = resolveSlotLabel(appState.slots[slot].label, slot);
             refreshApplyButton();
           });
         });
@@ -1606,6 +3621,7 @@
           const slotIndex = Number(sel.dataset.yslot);
           sel.addEventListener("change", () => {
             appState.slots[slotIndex].ySlot = Number(sel.value);
+            appState.slots[slotIndex].ySlotUpdatedAt = Date.now();
             refreshApplyButton();
           });
         });
@@ -1613,8 +3629,14 @@
         panelHost.querySelectorAll("[data-font-dec]").forEach((btn) => {
           const slotIndex = Number(btn.dataset.fontDec);
           btn.addEventListener("click", () => {
+            if (showPremiumModalIfFree()) return;
             const cur = appState.slots[slotIndex].fontSize ?? 18;
-            appState.slots[slotIndex].fontSize = clamp(cur - 1, FONT_SIZE_MIN, FONT_SIZE_MAX);
+            const next = clamp(cur - 1, FONT_SIZE_MIN, FONT_SIZE_MAX);
+            if (next === cur) {
+              showFontBoundaryHint(slotIndex);
+              return;
+            }
+            appState.slots[slotIndex].fontSize = next;
             updateFontDisplay(slotIndex);
             refreshApplyButton();
           });
@@ -1623,12 +3645,26 @@
         panelHost.querySelectorAll("[data-font-inc]").forEach((btn) => {
           const slotIndex = Number(btn.dataset.fontInc);
           btn.addEventListener("click", () => {
+            if (showPremiumModalIfFree()) return;
             const cur = appState.slots[slotIndex].fontSize ?? 18;
-            appState.slots[slotIndex].fontSize = clamp(cur + 1, FONT_SIZE_MIN, FONT_SIZE_MAX);
+            const next = clamp(cur + 1, FONT_SIZE_MIN, FONT_SIZE_MAX);
+            if (next === cur) {
+              showFontBoundaryHint(slotIndex);
+              return;
+            }
+            appState.slots[slotIndex].fontSize = next;
             updateFontDisplay(slotIndex);
             refreshApplyButton();
           });
         });
+
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const labelInput = document.getElementById(`slot${s}Label`);
+          if (labelInput && !labelInput.dataset.dirtyBound) {
+            labelInput.dataset.dirtyBound = "1";
+            labelInput.addEventListener("input", () => refreshApplyButton());
+          }
+        }
 
         panelHost.querySelectorAll("[data-theme-group]").forEach((group) => {
           const slotIndex = Number(group.dataset.themeGroup);
@@ -1636,6 +3672,7 @@
             btn.addEventListener("click", () => {
               const themeName = btn.dataset.theme;
               if (!THEME_NAMES.includes(themeName)) return;
+              if (themeName === "custom" && showPremiumModalIfFree()) return;
               appState.slots[slotIndex].theme = themeName;
               syncThemeGroupSelection();
               syncCustomColorVisibility();
@@ -1674,19 +3711,7 @@
           });
         });
 
-        panelHost.querySelectorAll("[data-custom-bg]").forEach((inp) => {
-          const slotIndex = Number(inp.dataset.customBg);
-          inp.addEventListener("input", () => {
-            applyCustomColor(slotIndex, true, inp.value);
-          });
-        });
-
-        panelHost.querySelectorAll("[data-custom-text]").forEach((inp) => {
-          const slotIndex = Number(inp.dataset.customText);
-          inp.addEventListener("input", () => {
-            applyCustomColor(slotIndex, false, inp.value);
-          });
-        });
+        bindColorScreenInputs();
 
         // HEX text inputs in popover
         for (let s = 0; s < appState.enabledCount; s++) {
@@ -1704,44 +3729,13 @@
           }
         }
 
-        panelHost.querySelectorAll("[data-delete-slot]").forEach((btn) => {
-          const slotIndex = Number(btn.dataset.deleteSlot);
-          if (appState.enabledCount <= 1) {
-            btn.disabled = true;
-            btn.title = "마지막 남은 인덱스는 삭제할 수 없습니다.";
-          }
-          btn.addEventListener("click", () => onDeleteClick(slotIndex));
-        });
-      }
-
-      function onDeleteClick(slotIndex) {
-        readSettingsForm();
-
-        if (pendingDeleteSlot === slotIndex) {
-          performDelete(slotIndex);
-          return;
-        }
-
-        resetPendingDelete();
-        pendingDeleteSlot = slotIndex;
-        const btn = panelHost.querySelector(`[data-delete-slot="${slotIndex}"]`);
-        const warn = panelHost.querySelector(`[data-delete-warning="${slotIndex}"]`);
-        if (btn) {
-          btn.classList.add("confirming");
-          btn.textContent = "삭제 확인 (다시 한 번 누르세요)";
-        }
-        if (warn) warn.classList.add("visible");
-
-        setTimeout(() => {
-          if (pendingDeleteSlot === slotIndex) resetPendingDelete();
-        }, 6000);
       }
 
       function syncCustomColorVisibility() {
         for (let s = 0; s < appState.enabledCount; s++) {
           const row = panelHost.querySelector(`[data-custom-colors="${s}"]`);
           if (row) {
-            row.classList.toggle("visible", appState.slots[s].theme === "custom");
+            row.classList.toggle("visible", isPremium && appState.slots[s].theme === "custom");
           }
           const bgInp = panelHost.querySelector(`[data-custom-bg="${s}"]`);
           const textInp = panelHost.querySelector(`[data-custom-text="${s}"]`);
@@ -1777,47 +3771,105 @@
 
       function applySettingsForm() {
         const triggerSelect = document.getElementById("triggerSelect");
-        const shortcutInput = document.getElementById("shortcutInput");
-        const openAtLoginCheckbox = document.getElementById("openAtLoginCheckbox");
+        const runZoomitOnStartupCheckbox = document.getElementById("runZoomitOnStartupCheckbox");
+        const showTrayIconCheckbox = document.getElementById("showTrayIconCheckbox");
         const pinToggleSelect = document.getElementById("pinToggleSelect");
+        const memoAspectSelect = document.getElementById("memoAspectSelect");
         const langSelect = document.getElementById("langSelect");
 
         if (triggerSelect) triggerSelect.value = appState.global.triggerMode;
-        if (shortcutInput) shortcutInput.value = appState.global.shortcut;
-        if (openAtLoginCheckbox) openAtLoginCheckbox.checked = Boolean(appState.global.openAtLogin);
-        if (pinToggleSelect) pinToggleSelect.value = appState.global.pinToggleMode || "chip";
+        setShortcutInputValue(document.getElementById("shortcutInput"), appState.global.shortcut);
+        setShortcutInputValue(
+          document.getElementById("shortcutSlotPrevInput"),
+          appState.global.shortcutSlotPrev || "CommandOrControl+Shift+Up"
+        );
+        setShortcutInputValue(
+          document.getElementById("shortcutSlotNextInput"),
+          appState.global.shortcutSlotNext || "CommandOrControl+Shift+Down"
+        );
+        const hoverDelayInput = document.getElementById("hoverDelayInput");
+        if (hoverDelayInput) {
+          hoverDelayInput.value = String(
+            clamp((appState.global.hoverDelayMs ?? 300) / 1000, 0.1, 5).toFixed(1)
+          );
+        }
+        if (runZoomitOnStartupCheckbox) runZoomitOnStartupCheckbox.checked = Boolean(appState.global.openAtLogin);
+        if (showTrayIconCheckbox) showTrayIconCheckbox.checked = appState.global.showTrayIcon !== false;
+        if (pinToggleSelect) pinToggleSelect.value = appState.global.pinToggleMode || "dblclick";
+        if (memoAspectSelect) {
+          memoAspectSelect.value = normalizeMemoAspectRatio(appState.global.memoAspectRatio);
+        }
         if (langSelect) langSelect.value = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "ko");
 
+        const opacityRange = document.getElementById("memoOpacityRange");
+        const opacityLabel = document.getElementById("memoOpacityLabel");
+        const opacityVal = clamp(Math.round(appState.global.memoDefaultOpacity ?? 100), 40, 100);
+        if (opacityRange) opacityRange.value = String(opacityVal);
+        if (opacityLabel) opacityLabel.textContent = opacityVal + "%";
+
+        updateSettingsTitle();
         syncShortcutRowVisibility();
 
         for (let s = 0; s < appState.enabledCount; s++) {
           const inp = document.getElementById(`slot${s}Label`);
-          if (inp) inp.value = appState.slots[s].label;
-          updateCharCount(s);
+          if (inp) inp.value = getSlotLabelFormValue(s);
 
           const ySlotSel = document.getElementById(`slot${s}YSlot`);
           if (ySlotSel) ySlotSel.value = String(appState.slots[s].ySlot ?? s);
 
           updateFontDisplay(s);
+
+          const fontSel = document.getElementById(`slot${s}FontFamily`);
+          if (fontSel) fontSel.value = appState.slots[s].fontFamily || "";
         }
         syncThemeGroupSelection();
         syncCustomColorVisibility();
+        applyPremiumGating();
       }
 
       function readSettingsForm() {
         const triggerSelect = document.getElementById("triggerSelect");
-        const shortcutInput = document.getElementById("shortcutInput");
-        const openAtLoginCheckbox = document.getElementById("openAtLoginCheckbox");
         const pinToggleSelect = document.getElementById("pinToggleSelect");
+        const memoAspectSelect = document.getElementById("memoAspectSelect");
         const langSelect = document.getElementById("langSelect");
 
         if (triggerSelect) appState.global.triggerMode = triggerSelect.value;
-        if (shortcutInput)
-          appState.global.shortcut =
-            shortcutInput.value.trim() || "CommandOrControl+Shift+M";
-        if (openAtLoginCheckbox) appState.global.openAtLogin = openAtLoginCheckbox.checked;
+        if (appState.global.triggerMode === "shortcut") {
+          appState.global.shortcut = getShortcutInputValue(
+            document.getElementById("shortcutInput"),
+            "CommandOrControl+Shift+M"
+          );
+          appState.global.shortcutSlotPrev = getShortcutInputValue(
+            document.getElementById("shortcutSlotPrevInput"),
+            "CommandOrControl+Shift+Up"
+          );
+          appState.global.shortcutSlotNext = getShortcutInputValue(
+            document.getElementById("shortcutSlotNextInput"),
+            "CommandOrControl+Shift+Down"
+          );
+        }
+        const hoverDelayInput = document.getElementById("hoverDelayInput");
+        if (hoverDelayInput && appState.global.triggerMode === "hover") {
+          const sec = Number(hoverDelayInput.value);
+          if (Number.isFinite(sec)) {
+            appState.global.hoverDelayMs = clamp(Math.round(sec * 1000), 100, 5000);
+          }
+        }
         if (pinToggleSelect) appState.global.pinToggleMode = pinToggleSelect.value;
-        if (langSelect) appState.global.language = langSelect.value;
+        if (memoAspectSelect) {
+          appState.global.memoAspectRatio = normalizeMemoAspectRatio(memoAspectSelect.value);
+        }
+        if (langSelect) {
+          appState.global.language = langSelect.value;
+          if (typeof PeekomI18n !== "undefined") PeekomI18n.setLang(langSelect.value);
+          updateSettingsTitle();
+          renderTabs();
+        }
+
+        const opacityRange = document.getElementById("memoOpacityRange");
+        if (opacityRange && isPremium) {
+          appState.global.memoDefaultOpacity = clamp(Number(opacityRange.value) || 100, 40, 100);
+        }
 
         for (let s = 0; s < appState.enabledCount; s++) {
           const inp = document.getElementById(`slot${s}Label`);
@@ -1827,12 +3879,83 @@
           }
 
           const ySlotSel = document.getElementById(`slot${s}YSlot`);
-          if (ySlotSel) appState.slots[s].ySlot = Number(ySlotSel.value);
+          if (ySlotSel) {
+            const nextY = Number(ySlotSel.value);
+            if (nextY !== appState.slots[s].ySlot) {
+              appState.slots[s].ySlot = nextY;
+              appState.slots[s].ySlotUpdatedAt = Date.now();
+            }
+          }
+
+          const fontSel = document.getElementById(`slot${s}FontFamily`);
+          if (fontSel && isPremium) {
+            appState.slots[s].fontFamily = fontSel.value || "";
+          }
+
+          const themeGroup = panelHost.querySelector(`[data-theme-group="${s}"]`);
+          if (themeGroup) {
+            const activeThemeBtn = themeGroup.querySelector(".theme-btn.active");
+            if (activeThemeBtn) {
+              const themeName = activeThemeBtn.dataset.theme;
+              if (THEME_NAMES.includes(themeName)) {
+                appState.slots[s].theme = themeName;
+              }
+            }
+          }
+
+          const bgHexInp = document.getElementById(`bgHexInput${s}`);
+          const textHexInp = document.getElementById(`textHexInput${s}`);
+          const bgColorInp = panelHost.querySelector(`[data-custom-bg="${s}"]`);
+          const textColorInp = panelHost.querySelector(`[data-custom-text="${s}"]`);
+          const bgVal = (bgHexInp?.value || bgColorInp?.value || "").trim();
+          const textVal = (textHexInp?.value || textColorInp?.value || "").trim();
+          if (/^#[0-9A-Fa-f]{6}$/.test(bgVal)) appState.slots[s].customBg = bgVal;
+          if (/^#[0-9A-Fa-f]{6}$/.test(textVal)) appState.slots[s].customText = textVal;
+        }
+      }
+
+      function isValidFontOptionName(name) {
+        if (typeof name !== "string") return false;
+        const trimmed = name.trim();
+        if (!trimmed || trimmed.includes("\uFFFD")) return false;
+        if (/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(trimmed)) return false;
+        if (/^(Regular|Bold|Light|Medium|Semilight|Semibold|Black|Heavy|Thin|Italic)$/i.test(trimmed)) {
+          return false;
+        }
+        return Array.from(trimmed).length <= 64;
+      }
+
+      async function populateFontSelects() {
+        let fonts = [];
+        try {
+          const result = await ipcRenderer.invoke("system:list-fonts");
+          fonts = (result?.fonts && Array.isArray(result.fonts)) ? result.fonts.filter(isValidFontOptionName) : [];
+        } catch {
+          fonts = [];
+        }
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const sel = document.getElementById(`slot${s}FontFamily`);
+          if (!sel || sel.dataset.fontsLoaded) continue;
+          sel.dataset.fontsLoaded = "1";
+          const current = appState.slots[s].fontFamily || "";
+          fonts.forEach((name) => {
+            const opt = document.createElement("option");
+            opt.value = name;
+            opt.textContent = name;
+            sel.appendChild(opt);
+          });
+          sel.value = current;
+          sel.addEventListener("change", () => refreshApplyButton());
         }
       }
 
       function buildDisplayLabel(display) {
-        return `${display.label} (${display.bounds.width}x${display.bounds.height})`;
+        const name = display.label || ti("monitorDisplayFallback", { id: display.id });
+        return ti("monitorDisplayLabel", {
+          name,
+          width: display.bounds.width,
+          height: display.bounds.height
+        });
       }
 
       async function loadDisplays() {
@@ -1844,7 +3967,7 @@
 
           const autoOption = document.createElement("option");
           autoOption.value = "auto";
-          autoOption.textContent = "자동 (현재 마우스 모니터)";
+          autoOption.textContent = ti("monitorAuto");
           monitorSelect.appendChild(autoOption);
 
           payload.displays.forEach((display) => {
@@ -1859,17 +3982,24 @@
             : String(payload.windowState.targetDisplayId ?? "auto");
           monitorSelect.value = currentVal;
 
-          // 초기 baseline 에 모니터 값 반영
           draftMonitorTarget =
             payload.windowState.followCursorMode ? null : payload.windowState.targetDisplayId;
-          baselineSnapshot = buildSnapshot(appState);
-          refreshApplyButton();
+          if (appState.global.monitorMode === "fixed" && appState.global.monitorTargetId !== null) {
+            draftMonitorTarget = appState.global.monitorTargetId;
+            monitorSelect.value = String(appState.global.monitorTargetId);
+          } else if (appState.global.monitorMode !== "fixed") {
+            monitorSelect.value = "auto";
+            draftMonitorTarget = null;
+          }
 
-          monitorSelect.addEventListener("change", (event) => {
-            const selected = event.target.value === "auto" ? null : Number(event.target.value);
-            draftMonitorTarget = selected;
-            refreshApplyButton();
-          });
+          if (!monitorSelect.dataset.bound) {
+            monitorSelect.dataset.bound = "1";
+            monitorSelect.addEventListener("change", (event) => {
+              const selected = event.target.value === "auto" ? null : Number(event.target.value);
+              draftMonitorTarget = selected;
+              refreshApplyButton();
+            });
+          }
         } catch (err) {
           console.error(err);
         }
@@ -1877,77 +4007,123 @@
 
       async function applyAndSync() {
         readSettingsForm();
+        clearAllSlotLabelErrors();
+        for (let s = 0; s < appState.enabledCount; s++) {
+          const labelVal = (document.getElementById(`slot${s}Label`)?.value || "").trim();
+          if (!labelVal) {
+            activeTab = `idx${s}`;
+            applyActivePanel();
+            showSlotLabelError(s);
+            return;
+          }
+          appState.slots[s].label = Array.from(labelVal).slice(0, LABEL_MAX).join("");
+        }
+        if (appState.global.triggerMode === "shortcut" && !validateShortcutUniqueness()) {
+          setStatus(ti("shortcutOverlapError"), 5000);
+          return;
+        }
+        syncAllSlotsImagesFromMemo();
+        resolveYSlotConflicts(appState.slots, appState.enabledCount);
+        const pendingMonitor = draftMonitorTarget;
+        const pending = JSON.parse(JSON.stringify(appState));
+
+        appState = await loadStateAsync();
+        mergeSettingsFromPending(appState, pending);
+        draftMonitorTarget = pendingMonitor;
 
         const payload = {
           triggerMode: appState.global.triggerMode,
           shortcut: appState.global.shortcut,
+          shortcutSlotPrev: appState.global.shortcutSlotPrev,
+          shortcutSlotNext: appState.global.shortcutSlotNext,
           manualYOffset: appState.global.manualYOffset
         };
 
         try {
           const result = await ipcRenderer.invoke("settings:update", payload);
           if (result?.shortcutStatus?.ok === false) {
-            setStatus("단축키 등록 실패: 다른 조합으로 바꿔주세요.", 5000);
+            setStatus(ti("statusShortcutFail"), 5000);
             return;
           }
         } catch (err) {
           console.error(err);
-          setStatus("설정 적용 중 오류가 발생했습니다.", 5000);
+          setStatus(ti("statusApplyError"), 5000);
           return;
         }
 
-        try {
-          const r = await ipcRenderer.invoke("startup:set", Boolean(appState.global.openAtLogin));
-          if (!r?.ok) {
-            setStatus(r?.message || "시작 프로그램 설정을 적용하지 못했습니다.", 5000);
-            return;
-          }
-        } catch (err) {
-          console.error(err);
-        }
-
-        // 모니터 변경 적용
         try {
           await ipcRenderer.invoke("window:set-target-display", draftMonitorTarget);
         } catch (err) {
           console.error(err);
         }
 
-        // 모니터 설정 영속화
         appState.global.monitorMode = draftMonitorTarget === null ? "auto" : "fixed";
         appState.global.monitorTargetId = draftMonitorTarget;
-        // 설정 완료 표시
         appState.global.setupCompleted = true;
-        // 언어 적용
         if (typeof PeekomI18n !== "undefined" && appState.global.language) {
           PeekomI18n.setLang(appState.global.language);
         }
+        updateSettingsTitle();
 
-        refreshSlotMemosFromDisk();
-        saveState(appState);
-        baselineSnapshot = buildSnapshot(appState);
+        const saved = await saveAndNotifyMain(appState, { skipSettingsReload: true });
+        if (!saved.ok) {
+          setStatus(ti("applySyncFail"), 5000);
+          return;
+        }
+        markSettingsLocalMutation();
+        applySettingsForm();
+        renderTabs();
+        syncThemeGroupSelection();
+        syncCustomColorVisibility();
+        renderAllSlotImageThumbs();
+        patchBaseline();
         refreshApplyButton();
         setStatus(ti("statusApplied"), 2500);
-        await ipcRenderer.invoke("settings:notify-applied");
       }
 
       applyBtn.addEventListener("click", applyAndSync);
 
-      closeBtn.addEventListener("click", async () => {
-        if (isDirty()) {
-          const ok = confirm(ti("unsavedChangesConfirm"));
-          if (!ok) return;
-        }
-        await ipcRenderer.invoke("settings:close-window");
+      closeBtn.addEventListener("click", () => {
+        void requestSettingsClose();
       });
 
-      function initialize() {
+      document.getElementById("unsavedModalCancelBtn")?.addEventListener("click", () => {
+        revertToBaseline();
+        hideUnsavedModal();
+      });
+
+      document.getElementById("unsavedModalApplyBtn")?.addEventListener("click", async () => {
+        const shouldClose = pendingCloseAfterApply;
+        hideUnsavedModal();
+        await applyAndSync();
+        if (shouldClose && !isDirty()) {
+          await ipcRenderer.invoke("settings:close-window");
+        }
+      });
+
+      async function initialize() {
+        appState = await loadStateAsync();
+        await syncPremiumState();
+        draftMonitorTarget =
+          appState.global.monitorMode === "fixed" ? appState.global.monitorTargetId : null;
+        populateLangSelect();
+        if (!appState.global.language) {
+          appState.global.language = typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "en";
+        }
+        if (typeof PeekomI18n !== "undefined") {
+          PeekomI18n.setLang(appState.global.language);
+        }
         renderTabs();
         renderPanels();
         applySettingsForm();
+        applyStaticSettingsLabels();
+        measureSettingControlWidth();
+        updateSettingsTitle();
+        patchBaseline();
         refreshApplyButton();
 
-        panelHost.addEventListener("click", (e) => {
+        const settingsRoot = document.querySelector(".settings-root");
+        (settingsRoot || panelHost).addEventListener("click", (e) => {
           const a = e.target.closest("a[data-external-url]");
           if (!a) return;
           e.preventDefault();
@@ -1959,16 +4135,68 @@
           .then((st) => {
             if (st?.ok) {
               appState.global.openAtLogin = st.openAtLogin;
-              const cb = document.getElementById("openAtLoginCheckbox");
+              const cb = document.getElementById("runZoomitOnStartupCheckbox");
               if (cb) cb.checked = Boolean(st.openAtLogin);
-              baselineSnapshot = buildSnapshot(appState);
+              patchBaseline();
               refreshApplyButton();
             }
           })
           .catch(() => {});
       }
 
-      initialize();
+        ipcRenderer.on("state:partial-changed", async (_event, payload = {}) => {
+          if (Date.now() < settingsLocalMutationUntil) return;
+          const diskState = await loadStateAsync();
+          if (!diskState) return;
+          if (diskState.enabledCount !== appState.enabledCount) {
+            await reloadStateFromDisk({ force: true });
+            return;
+          }
+          syncSlotFieldsFromDisk(diskState);
+        });
+
+        ipcRenderer.on("state:changed", async () => {
+          if (Date.now() < settingsLocalMutationUntil) return;
+
+          const diskState = await loadStateAsync();
+          if (!diskState) return;
+
+          if (diskState.enabledCount !== appState.enabledCount) {
+            await reloadStateFromDisk({ force: true });
+            return;
+          }
+          if (isDirty()) {
+            await reloadStateFromDisk({ fontSizeOnly: true });
+            return;
+          }
+          await reloadStateFromDisk();
+        });
+
+        ipcRenderer.on("settings:request-close", () => {
+          void requestSettingsClose();
+        });
+
+        ipcRenderer.on("premium:changed", async (_e, payload) => {
+          isPremium = Boolean(payload?.isPremium);
+          updateSettingsTitle();
+          renderTabs();
+          renderPanels();
+          applySettingsForm();
+          patchBaseline();
+          refreshApplyButton();
+        });
+
+        ipcRenderer.on("premium:show-modal", () => {
+          if (typeof PeekomPremiumUI !== "undefined") PeekomPremiumUI.showPremiumModal();
+        });
+
+        initialize()
+          .then(() => loadDisplays())
+          .then(() => {
+            patchBaseline();
+            refreshApplyButton();
+          })
+          .catch((err) => console.error(err));
     </script>
   </body>
 </html>

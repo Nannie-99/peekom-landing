@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Peekom 사용가이드 — 설치, 단축키, 마크다운, 서식바 안내.">
+    <title>Peekom — 가이드</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/theme.js"></script>
+</head>
+<body data-page="help">
+    <header class="topbar">
+        <div class="topbar__brand">
+            <a href="index.html">
+                <img src="images/index.png" alt="Peekom" id="brandIcon">
+                <span>Peekom</span>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="navbar__links">
+                <li><a href="index.html" data-nav="home" id="navHome">홈</a></li>
+                <li><a href="features.html" data-nav="features" id="navFeatures">기능</a></li>
+                <li><a href="download.html" data-nav="download" id="navDownload">다운로드</a></li>
+                <li><a href="help.html" data-nav="help" id="navHelp">가이드</a></li>
+                <li><a href="faq.html" data-nav="faq" id="navFaq">자주 묻는 질문</a></li>
+                <li><a href="contact.html" data-nav="contact" id="navContact">연락</a></li>
+            </ul>
+            <div class="navbar__right">
+                <div class="search-wrap">
+                    <input type="search" class="search-input" id="searchInput" placeholder="검색..." autocomplete="off">
+                    <span class="search-icon">&#128269;</span>
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+                <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
+                    <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="dark" aria-pressed="false" id="themeDarkBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="auto" aria-pressed="false" id="themeAutoBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M7 10h4M13 10h4M7 13h10"/></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="section" id="help">
+            <h2 class="section-title" id="helpTitle">가이드</h2>
+            <p class="section-sub" id="helpSub">Peekom을 빠르게 시작하는 방법.</p>
+            <nav class="guide-nav" aria-label="Guide sections">
+                <a href="#guide-start" id="guideNavStart">시작하기</a>
+                <a href="#guide-keys" id="guideNavKeys">단축키</a>
+                <a href="#guide-edit" id="guideNavEdit">편집</a>
+                <a href="#guide-plus" id="guideNavPlus">Plus 활성화</a>
+            </nav>
+            <div class="guide-section" id="guide-start">
+                <h2 class="guide-section__title" id="guideSectionStartTitle">시작하기</h2>
+                <div class="guide-section__body" id="guideStartBody"></div>
+            </div>
+            <div class="guide-section" id="guide-keys">
+                <h2 class="guide-section__title" id="guideSectionKeysTitle">단축키</h2>
+                <div class="guide-section__body">
+                    <p class="guide-table-intro" id="guideKeysIntro">설정 → 공통 → <strong>동작 방식</strong>에서 <strong>마우스 조작</strong> 또는 <strong>단축키 조작</strong>을 선택할 수 있습니다. macOS에서는 Ctrl 대신 ⌘(Command)를 사용합니다.</p>
+                    <table class="compare-table guide-table">
+                        <thead><tr><th id="gkColAction">동작</th><th id="gkColKey">기본</th><th id="gkColNote">비고</th></tr></thead>
+                        <tbody>
+                            <tr><td id="gk1a">메모 열기/닫기</td><td id="gk1k">Ctrl+Shift+M</td><td id="gk1n">최근 메모 1개 토글</td></tr>
+                            <tr><td id="gk2a">위쪽 인덱스 메모 열기</td><td id="gk2k">Ctrl+Shift+↑</td><td id="gk2n">이전 인덱스</td></tr>
+                            <tr><td id="gk3a">아래쪽 인덱스 메모 열기</td><td id="gk3k">Ctrl+Shift+↓</td><td id="gk3n">다음 인덱스</td></tr>
+                            <tr><td id="gk4a">인덱스 전환</td><td id="gk4k">↑ / ↓</td><td id="gk4n">마우스 조작 모드</td></tr>
+                            <tr><td id="gk5a">특정 인덱스로 이동</td><td id="gk5k">Ctrl+1 ~ 9 (Ctrl+0 = 10번)</td><td id="gk5n">해당 인덱스 메모 열기</td></tr>
+                            <tr><td id="gk6a">글자 크기</td><td id="gk6k">Ctrl + 휠</td><td id="gk6n">Plus</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="guide-section" id="guide-edit">
+                <h2 class="guide-section__title" id="guideSectionEditTitle">편집</h2>
+                <div class="guide-section__body">
+                    <h3 class="guide-subtitle" id="markdownGuideTitle">마크다운으로 메모하기</h3>
+                    <div id="markdownGuideBody"></div>
+                    <h3 class="guide-subtitle guide-subtitle--spaced" id="formatBarGuideTitle">서식바로 메모하기</h3>
+                    <div id="formatBarGuideBody"></div>
+                </div>
+            </div>
+            <div class="guide-section" id="guide-plus">
+                <h2 class="guide-section__title" id="guideSectionPlusTitle">Plus 활성화</h2>
+                <div class="guide-section__body" id="guidePlusBody"></div>
+            </div>
+            <div class="page-cta-strip" id="pageCtaStrip"></div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="footer__bar">
+            <p class="footer__copy">
+                <span id="footerCopy">&copy; 2026. Peekom All rights reserved.</span>
+                &nbsp;&middot;&nbsp;
+                <a href="privacy.html" id="footerPrivacy">개인정보 처리방침</a>
+            </p>
+            <div class="footer__controls">
+                <label class="footer__lang-label" for="langSelect" id="footerLangLabel">언어</label>
+                <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
+            </div>
+        </div>
+    </footer>
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBackdrop(event)">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+            <div class="modal__head">
+                <h3 class="modal__title" id="guideTitle">윈도우 SmartScreen 설치가이드</h3>
+                <button class="modal__close" onclick="closeModal()" aria-label="Close">&times;</button>
+            </div>
+            <ol class="guide-list">
+                <li id="step1"></li>
+                <li id="step2"></li>
+                <li id="step3"></li>
+            </ol>
+        </div>
+    </div>
+    <script src="js/compare.js"></script>
+    <script src="js/site.js"></script>
+</body>
+</html>

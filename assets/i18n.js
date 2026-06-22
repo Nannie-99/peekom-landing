@@ -32,11 +32,11 @@
       settingsClose: "닫기",
       langLabel: "언어",
       monitorLabel: "표시 모니터",
-      monitorAuto: "자동 (마우스 위치 화면)",
+      monitorAuto: "자동 (현재 마우스 모니터)",
       triggerLabel: "동작 방식",
-      triggerHover: "마우스가 멀어지면 자동으로 접기",
-      triggerShortcut: "단축키로 열기 / 닫기",
-      triggerHoverHint: "메모를 연 뒤 마우스가 창 밖으로 나가면 자동으로 접혀요.",
+      triggerHover: "마우스 조작",
+      triggerShortcut: "단축키 조작",
+      triggerHoverHint: "메모를 연 뒤 마우스가 창 밖으로 나가면 자동으로 접힘",
       shortcutLabel: "단축키",
       shortcutHint: "예시: Ctrl+Shift+M, Alt+Q 등. 잘못된 값이면 등록에 실패할 수 있어요.",
       openAtLogin: "컴퓨터를 켜면 자동으로 실행 (시작 프로그램)",
@@ -48,7 +48,7 @@
       pinToggleHint: "얼음 모드에서 메모를 편집할 때 실수로 전환되지 않으려면 '칩 클릭'을 권장해요.",
       exportLabel: "내보내기",
       exportSelectIndices: "내보낼 인덱스 선택",
-      exportSelectAll: "전체 선택",
+      exportSelectAll: "전부 선택",
       exportFormat: "형식",
       exportFormatTxt: ".txt (일반 텍스트)",
       exportFormatMd: ".md (마크다운)",
@@ -80,6 +80,7 @@
         { syntax: "**굵게**",    result: "굵은 글씨" },
         { syntax: "*기울임*",    result: "기울어진 글씨" },
         { syntax: "- 항목",      result: "글머리 목록" },
+        { syntax: "- [ ] 할 일", result: "체크 목록 (클릭 on/off)" },
         { syntax: "1. 순서",     result: "번호 목록" },
         { syntax: "`코드`",      result: "인라인 코드" }
       ],
@@ -105,16 +106,140 @@
       customTextLabel: "글자색",
       recentColors: "최근 사용한 색",
       aboutTitle: "빼꼼 플러스",
-      aboutDesc: "화면 오른쪽 가장자리에 메모 손잡이가 살짝 보이다가, 클릭하면 메모장이 펼쳐져요. 강의·발표·업무 중에도 다른 창 위에 떠 있어서, 메모를 확인하고 바로 접을 수 있어요. 인덱스를 최대 10개까지 만들 수 있고, 글 크기 조절·마크다운·내보내기도 지원해요.",
+      aboutDesc: "화면 오른쪽 가장자리에 메모 손잡이가 살짝 보이다가, 클릭하면 메모장이 펼쳐져요. 강의·발표·업무 중에도 다른 창 위에 떠 있어서, 메모를 확인하고 바로 접을 수 있어요. 무료에서도 마크다운·서식바를 쓸 수 있고, Plus는 인덱스 10개·글 크기 조절·내보내기 등을 지원해요.",
       statusApplied: "설정이 적용되었습니다.",
       statusShortcutFail: "단축키 등록 실패: 다른 조합으로 바꿔주세요.",
       statusStartupFail: "시작 프로그램 설정을 적용하지 못했습니다.",
       statusApplyError: "설정 적용 중 오류가 발생했습니다.",
-      unsavedChangesConfirm: "저장하지 않은 변경 내용이 있습니다.\n\n저장하지 않고 닫을까요?"
+      unsavedChangesConfirm: "저장하지 않은 변경 내용이 있습니다.\n\n저장하지 않고 닫을까요?",
+      unsavedChangesTitle: "변경 사항이 적용되지 않았습니다",
+      unsavedChangesMessage: "저장하지 않은 설정이 있습니다. 적용하거나 취소해 주세요.",
+      unsavedChangesApply: "적용",
+      unsavedChangesCancel: "취소",
+      indexTitleRequired: "인덱스 제목은 최소 1자 이상 입력해 주세요.",
+      settingsTitlePlusKo: "Peekom Plus 설정",
+      settingsTitleFreeKo: "Peekom 설정",
+      settingsTitlePlus: "Peekom Plus Settings",
+      settingsTitleFree: "Peekom Settings",
+      settingsAboutShort: "화면 우측 테두리에서 빠르게 열고 닫을 수 있는 메모 도구입니다.",
+      memoOpacityLabel: "메모 불투명도",
+      memoOpacityHint: "Plus — 메모 배경 기본 불투명도",
+      memoAspectLabel: "메모 비율",
+      memoAspectSquare: "1:1 (정사각형)",
+      memoAspectPortrait: "3:4 (세로형)",
+      memoAspectHint: "손잡이 높이 기준으로 메모 크기가 정해짐",
+      monitorHint: "현재 마우스가 있는 화면 또는 고정 모니터",
+      hoverDelayLabel: "자동 접힘 딜레이",
+      hoverDelayHint: "마우스가 멀어진 뒤 메모가 접히기까지 걸리는 시간",
+      hoverDelayUnit: "초",
+      shortcutOpenClose: "열기/닫기",
+      shortcutSlotUp: "위쪽 메모 열기",
+      shortcutSlotDown: "아래쪽 메모 열기",
+      shortcutIndexHint: "Ctrl+Shift+↑ / ↓ 로 다른 인덱스 메모를 열 수 있습니다.",
+      shortcutCapturePlaceholder: "클릭 후 키 조합 입력",
+      pinToggleDblclickDefault: "메모 더블클릭으로 전환 (기본)",
+      pinToggleChipOnly: "칩 클릭으로만 전환",
+      pinToggleClickMemo: "메모 클릭으로 전환",
+      pinToggleRecommendHint: "실수 전환 방지엔 칩 클릭을 권장함",
+      resetCommonDefaults: "기본 설정값으로 되돌리기",
+      resetCommonDefaultsHint: "표시 모니터·메모 비율·동작 방식 등 공통 항목을 초기값으로 바꿉니다.",
+      backupManageTitle: "백업 관리",
+      backupHeadHint: "순서대로 선택 후 실행",
+      backupExpand: "펼치기 ▾",
+      backupCollapse: "접기 ▴",
+      backupExportTab: "보내기",
+      backupImportTab: "복원",
+      exportIndicesLabel: "보낼 인덱스",
+      exportRunBtn: "보내기 실행",
+      exportFormatTxtShort: "텍스트 (.txt)",
+      exportFormatMdShort: "마크다운 (.md)",
+      exportFormatJsonShort: "전체 백업 (.json)",
+      importOverwriteHint: "JSON 백업을 불러오면 현재 데이터가 덮어써짐",
+      showTrayIcon: "트레이 아이콘 표시",
+      runAtStartupWin: "Windows 시작 시 Peekom 자동 실행",
+      indexTitleMaxHint: "최대 6자까지 입력 가능",
+      handlePositionLabel: "손잡이 위치",
+      handlePositionHint: "손잡이를 드래그하여 위치 바꾸기도 가능함",
+      handleSlotOption: "{n}번 칸",
+      fontSizePlusHint: "Plus — Ctrl+휠로도 크기 조절",
+      fontFamilyLabel: "글꼴",
+      fontSystemDefault: "시스템 기본",
+      fontFamilyPlusHint: "Plus — OS에 설치된 글꼴 선택",
+      attachedImagesLabel: "첨부 이미지",
+      attachedImagesHint: "첨부한 이미지의 썸네일을 클릭하여 크게 보기",
+      attachedImagesEmpty: "이미지 없음",
+      commonTabAriaLabel: "공통 설정",
+      upgradePlusBtn: "✨ Plus로 업그레이드",
+      eyedropperTitle: "스포이드",
+      eyedropperUnsupported: "이 환경에서는 스포이드를 사용할 수 없습니다.",
+      colorAdvancedPicker: "고급 색상",
+      colorPickScreen: "화면에서 선택",
+      settingsTierPaid: "[유료]",
+      settingsTierFree: "[무료]",
+      shortcutOverlapError: "단축키가 서로 겹칩니다. 각 항목에 다른 조합을 지정해 주세요.",
+      resetCommonConfirm: "공통 설정을 기본값으로 되돌릴까요?",
+      resetCommonDone: "기본값으로 변경했습니다. [적용]을 눌러 저장하세요.",
+      exportSelectOneError: "내보낼 인덱스를 하나 이상 선택하세요.",
+      importSyncFail: "가져오기는 완료됐지만 메인 화면 반영에 실패했습니다.",
+      indexAddSyncFail: "인덱스는 추가됐지만 메인 화면 반영에 실패했습니다.",
+      deleteSyncFail: "삭제는 완료됐지만 메인 화면 반영에 실패했습니다.",
+      indexDeleted: "인덱스를 삭제했습니다.",
+      imagePreviewAlt: "이미지 미리보기",
+      imageLoadedFromFile: "원본 파일에서 불러옴",
+      imagePreviewFallback: "원본 파일을 찾을 수 없어 저장된 미리보기를 표시합니다.",
+      imageNoPathInfo: "원본 경로 정보가 없어 저장된 미리보기를 표시합니다.",
+      fontSizeRangeHint: "범위: 8 ~ 36px",
+      startupCheckFail: "시작 프로그램 등록 상태를 확인하지 못했습니다. 다시 시도해 주세요.",
+      startupSetError: "시작 프로그램 설정 중 오류가 발생했습니다.",
+      stateChangedConfirm: "다른 화면에서 설정이 변경되었습니다.\n\n저장하지 않은 변경 내용을 버리고 최신 상태로 새로고침할까요?",
+      applySyncFail: "설정을 메인 화면에 반영하지 못했습니다. 앱을 다시 시작해 보세요.",
+      fmtTextColor: "글자 색",
+      fmtColorDefault: "기본색",
+      fmtColorRed: "빨강",
+      fmtColorBlue: "파랑",
+      fmtColorGreen: "초록",
+      fmtBold: "굵게",
+      fmtItalic: "기울임",
+      fmtUnderline: "밑줄",
+      fmtStrike: "취소선",
+      fmtAlignMenu: "정렬",
+      fmtAlignLeft: "왼쪽",
+      fmtAlignCenter: "가운데",
+      fmtAlignRight: "오른쪽",
+      fmtAlignJustify: "양쪽 맞춤",
+      fmtListMenu: "목록",
+      fmtListBullet: "점 목록",
+      fmtListSquare: "네모 목록",
+      fmtListNumber: "숫자 목록",
+      fmtListPlain: "원래 텍스트",
+      fmtInsertImage: "이미지 삽입",
+      fmtImageScale: "이미지 크기 조절",
+      monitorDisplayLabel: "{name} ({width}×{height})",
+      monitorDisplayFallback: "Display {id}",
+      indexTabFallback: "인덱스 {n}",
+      contrastWarning: "배경색과 글자색 대비가 낮아 읽기 어려울 수 있습니다. (대비 {ratio}:1)",
+      firstRunTipHtml: "손잡이를 클릭하면 인덱스가 나옵니다.<br />설정(⚙)에서 모드·색상을 바꿀 수 있어요.",
+      saveIndicatorSaved: "저장됨",
+      handleAddIndex: "인덱스 추가",
+      handleDeleteIndex: "인덱스 삭제",
+      handleUpgradePlus: "✨ Plus로 업그레이드",
+      handleAriaLabel: "인덱스 {n}, {label}. 열기·위치 이동·순서 바꾸기",
+      deleteIndexModalTitle: "인덱스 삭제",
+      deleteIndexModalDesc: "현재 인덱스의 메모·제목·색상·이미지가 모두 삭제됩니다. 되돌릴 수 없어요.",
+      deleteIndexCancel: "취소",
+      deleteIndexConfirm: "삭제",
+      imageSwitchIndexConfirm: "이미지 넣기를 취소하고 다른 인덱스로 이동할까요?",
+      indexMaxImagesAlert: "한 메모에 이미지는 최대 {max}개까지 넣을 수 있습니다.",
+      indexMaxSlotsAlert: "인덱스는 최대 {max}개까지 추가할 수 있습니다.",
+      indexMinOneAlert: "인덱스는 최소 1개는 유지해야 합니다.",
+      imageCropFree: "자유",
+      imageStagingCancel: "취소",
+      imageStagingInsert: "넣기",
+      imagePreviewAlt: "이미지 미리보기"
     },
     en: {
-      modePeek: "Peek",
-      modeIce: "Ice",
+      modePeek: "PEEK",
+      modeIce: "ICE",
       modeChipTipPeek: "Click to pin (Ice mode)",
       modeChipTipIce: "Click to unpin (Peek mode)",
       settingsTitle: "Peekom Plus Settings",
@@ -200,11 +325,135 @@
       statusShortcutFail: "Shortcut registration failed. Try a different combination.",
       statusStartupFail: "Failed to update startup setting.",
       statusApplyError: "Error applying settings.",
-      unsavedChangesConfirm: "You have unsaved changes.\n\nClose without saving?"
+      unsavedChangesConfirm: "You have unsaved changes.\n\nClose without saving?",
+      unsavedChangesTitle: "Changes not applied",
+      unsavedChangesMessage: "You have unsaved settings. Apply or cancel to continue.",
+      unsavedChangesApply: "Apply",
+      unsavedChangesCancel: "Cancel",
+      indexTitleRequired: "Index title must be at least 1 character.",
+      settingsTitlePlusKo: "Peekom Plus Settings",
+      settingsTitleFreeKo: "Peekom Settings",
+      settingsTitlePlus: "Peekom Plus Settings",
+      settingsTitleFree: "Peekom Settings",
+      settingsAboutShort: "A quick memo tool along the right edge of your screen.",
+      memoOpacityLabel: "Memo opacity",
+      memoOpacityHint: "Plus — default memo background opacity",
+      memoAspectLabel: "Memo aspect ratio",
+      memoAspectSquare: "1:1 (square)",
+      memoAspectPortrait: "3:4 (portrait)",
+      memoAspectHint: "Memo size is based on handle height",
+      monitorHint: "Current mouse display or a fixed monitor",
+      hoverDelayLabel: "Auto-collapse delay",
+      hoverDelayHint: "Time after the mouse leaves before the memo collapses",
+      hoverDelayUnit: "sec",
+      shortcutOpenClose: "Open / close",
+      shortcutSlotUp: "Open memo above",
+      shortcutSlotDown: "Open memo below",
+      shortcutIndexHint: "Use Ctrl+Shift+↑ / ↓ to open other index memos.",
+      shortcutCapturePlaceholder: "Click, then press key combo",
+      pinToggleDblclickDefault: "Double-click memo to toggle (default)",
+      pinToggleChipOnly: "Chip click only",
+      pinToggleClickMemo: "Click memo to toggle",
+      pinToggleRecommendHint: "Chip click is recommended to avoid accidental toggles",
+      resetCommonDefaults: "Reset common defaults",
+      resetCommonDefaultsHint: "Resets monitor, aspect ratio, trigger mode, and other common options.",
+      backupManageTitle: "Backup",
+      backupHeadHint: "Select options, then run",
+      backupExpand: "Expand ▾",
+      backupCollapse: "Collapse ▴",
+      backupExportTab: "Export",
+      backupImportTab: "Import",
+      exportIndicesLabel: "Indices to export",
+      exportRunBtn: "Run export",
+      exportFormatTxtShort: "Text (.txt)",
+      exportFormatMdShort: "Markdown (.md)",
+      exportFormatJsonShort: "Full backup (.json)",
+      importOverwriteHint: "Loading a JSON backup overwrites current data",
+      showTrayIcon: "Show tray icon",
+      runAtStartupWin: "Launch Peekom at Windows startup",
+      indexTitleMaxHint: "Up to 6 characters",
+      handlePositionLabel: "Handle position",
+      handlePositionHint: "You can also drag the handle to reposition it",
+      handleSlotOption: "Slot {n}",
+      fontSizePlusHint: "Plus — also adjust with Ctrl+scroll",
+      fontFamilyLabel: "Font",
+      fontSystemDefault: "System default",
+      fontFamilyPlusHint: "Plus — choose from installed OS fonts",
+      attachedImagesLabel: "Attached images",
+      attachedImagesHint: "Click a thumbnail to preview larger",
+      attachedImagesEmpty: "No images",
+      commonTabAriaLabel: "Common settings",
+      upgradePlusBtn: "✨ Upgrade to Plus",
+      eyedropperTitle: "Eyedropper",
+      eyedropperUnsupported: "Eyedropper is not supported in this environment.",
+      colorAdvancedPicker: "Advanced",
+      colorPickScreen: "Pick from screen",
+      settingsTierPaid: "[Plus]",
+      settingsTierFree: "[Free]",
+      shortcutOverlapError: "Shortcuts overlap. Use a different combination for each.",
+      resetCommonConfirm: "Reset common settings to defaults?",
+      resetCommonDone: "Reset to defaults. Click Apply to save.",
+      exportSelectOneError: "Select at least one index to export.",
+      importSyncFail: "Import finished but failed to sync the main window.",
+      indexAddSyncFail: "Index added but failed to sync the main window.",
+      deleteSyncFail: "Deleted but failed to sync the main window.",
+      indexDeleted: "Index deleted.",
+      imagePreviewAlt: "Image preview",
+      imageLoadedFromFile: "Loaded from original file",
+      imagePreviewFallback: "Original file not found; showing saved preview.",
+      imageNoPathInfo: "No original path; showing saved preview.",
+      fontSizeRangeHint: "Range: 8 – 36 px",
+      startupCheckFail: "Could not verify startup registration. Please try again.",
+      startupSetError: "Error while configuring startup settings.",
+      stateChangedConfirm: "Settings changed elsewhere.\n\nDiscard unsaved changes and refresh?",
+      applySyncFail: "Could not sync settings to the main window. Try restarting the app.",
+      fmtTextColor: "Text color",
+      fmtColorDefault: "Default",
+      fmtColorRed: "Red",
+      fmtColorBlue: "Blue",
+      fmtColorGreen: "Green",
+      fmtBold: "Bold",
+      fmtItalic: "Italic",
+      fmtUnderline: "Underline",
+      fmtStrike: "Strikethrough",
+      fmtAlignMenu: "Alignment",
+      fmtAlignLeft: "Align left",
+      fmtAlignCenter: "Center",
+      fmtAlignRight: "Align right",
+      fmtAlignJustify: "Justify",
+      fmtListMenu: "List",
+      fmtListBullet: "Bullet list",
+      fmtListSquare: "Square bullets",
+      fmtListNumber: "Numbered list",
+      fmtListPlain: "Plain text",
+      fmtInsertImage: "Insert image",
+      fmtImageScale: "Image size",
+      monitorDisplayLabel: "{name} ({width}×{height})",
+      monitorDisplayFallback: "Display {id}",
+      indexTabFallback: "Index {n}",
+      contrastWarning: "Low contrast may make text hard to read. (ratio {ratio}:1)",
+      firstRunTipHtml: "Click the handle to open an index.<br />Change mode and colors in Settings (⚙).",
+      saveIndicatorSaved: "Saved",
+      handleAddIndex: "Add index",
+      handleDeleteIndex: "Delete index",
+      handleUpgradePlus: "✨ Upgrade to Plus",
+      handleAriaLabel: "Index {n}, {label}. Open, move, or reorder",
+      deleteIndexModalTitle: "Delete index",
+      deleteIndexModalDesc: "This will delete the memo, title, colors, and images for this index. This cannot be undone.",
+      deleteIndexCancel: "Cancel",
+      deleteIndexConfirm: "Delete",
+      imageSwitchIndexConfirm: "Cancel image insert and switch to another index?",
+      indexMaxImagesAlert: "You can add up to {max} images per memo.",
+      indexMaxSlotsAlert: "You can add up to {max} indices.",
+      indexMinOneAlert: "At least one index must remain.",
+      imageCropFree: "Free",
+      imageStagingCancel: "Cancel",
+      imageStagingInsert: "Insert",
+      imagePreviewAlt: "Image preview"
     },
     ja: {
-      modePeek: "のぞく",
-      modeIce: "固定",
+      modePeek: "ピーク",
+      modeIce: "アイス",
       modeChipTipPeek: "クリックで固定（アイスモード）",
       modeChipTipIce: "クリックで解除（ピークモード）",
       settingsTitle: "Peekom Plus 設定",
@@ -315,7 +564,7 @@
       pinToggleChip: "点击标签切换（推荐）",
       pinToggleDblclick: "双击备忘录切换",
       pinToggleClick: "点击备忘录切换（原始）",
-      pinToggleHint: "建议使用"点击标签"，避免在固定模式下编辑时意外切换。",
+      pinToggleHint: "建议使用「点击标签」，避免在固定模式下编辑时意外切换。",
       exportLabel: "导出",
       exportSelectIndices: "选择要导出的索引",
       exportSelectAll: "全选",
@@ -796,21 +1045,25 @@
     }
   };
 
-  // Fill missing keys from English fallback
-  const base = STRINGS.en;
+  // Fill missing keys from Korean (canonical source)
+  const base = STRINGS.ko;
   Object.keys(STRINGS).forEach((lang) => {
-    if (lang === "en") return;
+    if (lang === "ko") return;
     STRINGS[lang] = Object.assign({}, base, STRINGS[lang]);
+    if (lang !== "ko" && lang !== "ja") {
+      STRINGS[lang].modePeek = "PEEK";
+      STRINGS[lang].modeIce = "ICE";
+    }
   });
 
   const LANG_STORAGE_KEY = "ppaekkom-lang";
 
   function resolveLang(code) {
-    if (!code) return "ko";
+    if (!code) return "en";
     if (STRINGS[code]) return code;
     const prefix = code.split("-")[0];
     const match = Object.keys(STRINGS).find((k) => k === prefix || k.startsWith(prefix + "-"));
-    return match || "ko";
+    return match || "en";
   }
 
   function getCurrentLang() {
@@ -819,10 +1072,10 @@
     if (typeof navigator !== "undefined") {
       for (const nav of (navigator.languages || [navigator.language])) {
         const resolved = resolveLang(nav);
-        if (resolved) return resolved;
+        if (resolved && STRINGS[resolved]) return resolved;
       }
     }
-    return "ko";
+    return "en";
   }
 
   function setLang(code) {
@@ -835,8 +1088,42 @@
 
   function t(key, lang) {
     const l = lang || getCurrentLang();
-    return (STRINGS[l] && STRINGS[l][key] !== undefined) ? STRINGS[l][key] : (STRINGS.en[key] || key);
+    if (STRINGS[l] && STRINGS[l][key] !== undefined) return STRINGS[l][key];
+    if (STRINGS.ko && STRINGS.ko[key] !== undefined) return STRINGS.ko[key];
+    if (STRINGS.en && STRINGS.en[key] !== undefined) return STRINGS.en[key];
+    return key;
   }
 
-  global.PeekomI18n = { LANG_META, STRINGS, getCurrentLang, setLang, resolveLang, t };
+  const INDEX_LABEL_MAX = 6;
+
+  function formatIndexTabLabel(slotIndex, lang, maxLen = INDEX_LABEL_MAX) {
+    const n = slotIndex + 1;
+    const applyTemplate = (code) =>
+      t("indexTabFallback", code).replace(/\{n\}/g, String(n)).replace(/\s+/g, "");
+    let text = applyTemplate(lang || getCurrentLang());
+    let chars = Array.from(text);
+    if (chars.length > maxLen) {
+      text = applyTemplate("en");
+      chars = Array.from(text);
+    }
+    return chars.slice(0, maxLen).join("");
+  }
+
+  function resolveSlotLabel(storedLabel, slotIndex, maxLen = INDEX_LABEL_MAX) {
+    const raw = typeof storedLabel === "string" ? storedLabel.trim() : "";
+    if (raw.length > 0) return Array.from(raw).slice(0, maxLen).join("");
+    return formatIndexTabLabel(slotIndex, undefined, maxLen);
+  }
+
+  global.PeekomI18n = {
+    LANG_META,
+    STRINGS,
+    INDEX_LABEL_MAX,
+    getCurrentLang,
+    setLang,
+    resolveLang,
+    t,
+    formatIndexTabLabel,
+    resolveSlotLabel
+  };
 })(typeof window !== "undefined" ? window : global);

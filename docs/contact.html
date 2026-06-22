@@ -1,0 +1,75 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Peekom 연락처 — 버그 리포트, 기능 제안, 라이선스 문의.">
+    <title>Peekom — 연락</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/theme.js"></script>
+</head>
+<body data-page="contact">
+    <header class="topbar">
+        <div class="topbar__brand">
+            <a href="index.html">
+                <img src="images/index.png" alt="Peekom" id="brandIcon">
+                <span>Peekom</span>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="navbar__links">
+                <li><a href="index.html" data-nav="home" id="navHome">홈</a></li>
+                <li><a href="features.html" data-nav="features" id="navFeatures">기능</a></li>
+                <li><a href="download.html" data-nav="download" id="navDownload">다운로드</a></li>
+                <li><a href="help.html" data-nav="help" id="navHelp">가이드</a></li>
+                <li><a href="faq.html" data-nav="faq" id="navFaq">자주 묻는 질문</a></li>
+                <li><a href="contact.html" data-nav="contact" id="navContact">연락</a></li>
+            </ul>
+                        <div class="navbar__right">
+                <div class="search-wrap">
+                    <input type="search" class="search-input" id="searchInput" placeholder="검색..." autocomplete="off">
+                    <span class="search-icon">&#128269;</span>
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+                <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
+                    <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="dark" aria-pressed="false" id="themeDarkBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="auto" aria-pressed="false" id="themeAutoBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M7 10h4M13 10h4M7 13h10"/></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="section" id="contact">
+            <h2 class="section-title" id="contactTitle">연락</h2>
+            <p class="section-sub" id="contactSub">문의 및 피드백을 보내주세요.</p>
+            <div class="contact-box">
+                <p id="contactBody">버그 리포트, 기능 제안, 라이선스 문의는 아래 이메일로 연락해 주세요.</p>
+                <p><a href="mailto:hello.peekom@gmail.com" id="contactEmail">hello.peekom@gmail.com</a></p>
+            </div>
+            <div class="page-cta-strip" id="pageCtaStrip"></div>
+        </section>
+    </main>
+        <footer class="footer">
+        <div class="footer__bar">
+            <p class="footer__copy">
+                <span id="footerCopy">&copy; 2026. Peekom All rights reserved.</span>
+                &nbsp;&middot;&nbsp;
+                <a href="privacy.html" id="footerPrivacy">개인정보 처리방침</a>
+            </p>
+            <div class="footer__controls">
+                <label class="footer__lang-label" for="langSelect" id="footerLangLabel">언어</label>
+                <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
+            </div>
+        </div>
+    </footer>
+    <script src="js/compare.js"></script>
+    <script src="js/site.js"></script>
+</body>
+</html>

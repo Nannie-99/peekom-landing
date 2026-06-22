@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Peekom 다운로드 — Windows·macOS 설치, 버전 기록, Changelog.">
+    <title>Peekom — 다운로드</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/theme.js"></script>
+</head>
+<body data-page="download">
+    <header class="topbar">
+        <div class="topbar__brand">
+            <a href="index.html">
+                <img src="images/index.png" alt="Peekom" id="brandIcon">
+                <span>Peekom</span>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="navbar__links">
+                <li><a href="index.html" data-nav="home" id="navHome">홈</a></li>
+                <li><a href="features.html" data-nav="features" id="navFeatures">기능</a></li>
+                <li><a href="download.html" data-nav="download" id="navDownload">다운로드</a></li>
+                <li><a href="help.html" data-nav="help" id="navHelp">가이드</a></li>
+                <li><a href="faq.html" data-nav="faq" id="navFaq">자주 묻는 질문</a></li>
+                <li><a href="contact.html" data-nav="contact" id="navContact">연락</a></li>
+            </ul>
+                        <div class="navbar__right">
+                <div class="search-wrap">
+                    <input type="search" class="search-input" id="searchInput" placeholder="검색..." autocomplete="off">
+                    <span class="search-icon">&#128269;</span>
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+                <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
+                    <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="dark" aria-pressed="false" id="themeDarkBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="auto" aria-pressed="false" id="themeAutoBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M7 10h4M13 10h4M7 13h10"/></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="section" id="download">
+            <h2 class="section-title" id="dlTitle">다운로드</h2>
+            <p class="section-sub" id="dlSub">Peekom 하나만 설치하세요. Peekom Plus는 앱 안에서 업그레이드.</p>
+            <div class="download-offers">
+                <div class="hero-plus-head-wrap">
+                    <div class="promo-section promo-section--compare">
+                        <div class="promo-section__head" id="dlPlusHeadBar">
+                            <span class="promo-section__line" aria-hidden="true"></span>
+                            <span class="promo-section__title" id="dlPlusHeadTitle">Peekom Plus(유료)</span>
+                            <span class="promo-section__line" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <p class="hero-text-note hero-text-note--compare" id="dlFreeCompareNote">무료와 Plus 차이를 확인하세요.</p>
+                <div class="hero-offer-stack hero-offer-stack--plus-row hero-dl-grid">
+                    <a href="#" class="hero-offer-card hero-offer-card--plus hero-offer-card--link" id="dlPlusBuyBtn" data-os="win" target="_blank" rel="noopener">
+                        <img class="hero-offer-card__icon" src="images/plus.png" alt="" width="32" height="32">
+                        <div class="hero-offer-card__body">
+                            <div class="hero-offer-card__title-row">
+                                <span class="hero-offer-card__title" id="dlPlusCardTitle">Peekom Plus</span>
+                                <span class="hero-offer-card__badge hero-offer-card__badge--plus" id="dlPlusCardBadge">PAID</span>
+                            </div>
+                            <div class="hero-offer-card__os" id="dlPlusCardOs">Windows</div>
+                            <div class="hero-offer-card__meta" id="dlPlusCardMeta">1회 구매 · 최대 2대 기기 · 영구 사용</div>
+                        </div>
+                        <div class="hero-offer-card__aside">
+                            <div class="hero-offer-card__pricing">
+                                <span class="hero-offer-card__pct" id="dlPlusPct">23% OFF</span>
+                                <div class="hero-offer-card__price-row">
+                                    <span class="pricing-was" id="dlPlusWas">$12.99</span>
+                                    <span class="hero-offer-card__now" id="dlPlusNow">$9.99</span>
+                                </div>
+                            </div>
+                            <span class="hero-offer-card__cta" id="dlPlusBuyBtnLabel">구입하기</span>
+                        </div>
+                    </a>
+                    <a href="#" class="hero-offer-card hero-offer-card--plus hero-offer-card--link" id="dlMacPlusBuyBtn" data-os="mac" target="_blank" rel="noopener">
+                        <img class="hero-offer-card__icon" src="images/plus.png" alt="" width="32" height="32">
+                        <div class="hero-offer-card__body">
+                            <div class="hero-offer-card__title-row">
+                                <span class="hero-offer-card__title" id="dlMacPlusCardTitle">Peekom Plus</span>
+                                <span class="hero-offer-card__badge hero-offer-card__badge--plus" id="dlMacPlusCardBadge">PAID</span>
+                            </div>
+                            <div class="hero-offer-card__os" id="dlMacPlusCardOs">macOS</div>
+                            <div class="hero-offer-card__meta" id="dlMacPlusCardMeta">1회 구매 · 최대 2대 기기 · 영구 사용</div>
+                        </div>
+                        <div class="hero-offer-card__aside">
+                            <div class="hero-offer-card__pricing">
+                                <span class="hero-offer-card__pct" id="dlMacPlusPct">23% OFF</span>
+                                <div class="hero-offer-card__price-row">
+                                    <span class="pricing-was" id="dlMacPlusWas">$12.99</span>
+                                    <span class="hero-offer-card__now" id="dlMacPlusNow">$9.99</span>
+                                </div>
+                            </div>
+                            <span class="hero-offer-card__cta" id="dlMacPlusBuyBtnLabel">구입하기</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="hero-free-wrap">
+                    <div class="promo-section promo-section--compare">
+                        <div class="promo-section__head" id="dlFreeBar">
+                            <span class="promo-section__line" aria-hidden="true"></span>
+                            <span class="promo-section__title" id="dlFreeTitle">Peekom(무료)</span>
+                            <span class="promo-section__line" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-offer-stack hero-offer-stack--free hero-offer-stack--free-row hero-dl-grid">
+                    <a href="#" class="hero-offer-card hero-offer-card--plus hero-offer-card--link hero-offer-card--download" id="dlWinBtn" data-os="win">
+                        <img class="hero-offer-card__icon" src="images/index.png" alt="" width="32" height="32">
+                        <div class="hero-offer-card__body">
+                            <div class="hero-offer-card__title-row">
+                                <span class="hero-offer-card__title" id="dlWinCardTitle">Peekom</span>
+                                <span class="hero-offer-card__badge hero-offer-card__badge--free" id="dlFreeCardBadge">Free</span>
+                            </div>
+                            <div class="hero-offer-card__meta hero-offer-card__meta--platform" id="dlWinCardMeta">Windows 10 · 11 (64-bit)</div>
+                        </div>
+                        <div class="hero-offer-card__aside">
+                            <span class="hero-offer-card__cta" id="dlWinBtnLabel">다운로드</span>
+                        </div>
+                    </a>
+                    <a href="#" class="hero-offer-card hero-offer-card--plus hero-offer-card--link hero-offer-card--download" id="dlMacBtn" data-os="mac">
+                        <img class="hero-offer-card__icon" src="images/index.png" alt="" width="32" height="32">
+                        <div class="hero-offer-card__body">
+                            <div class="hero-offer-card__title-row">
+                                <span class="hero-offer-card__title" id="dlMacFreeCardTitle">Peekom</span>
+                                <span class="hero-offer-card__badge hero-offer-card__badge--free" id="dlMacFreeCardBadge">Free</span>
+                            </div>
+                            <div class="hero-offer-card__meta hero-offer-card__meta--platform" id="dlMacFreeCardMeta">macOS</div>
+                        </div>
+                        <div class="hero-offer-card__aside">
+                            <span class="hero-offer-card__cta" id="dlMacBtnLabel">다운로드</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="version-section" id="version-history">
+                <h2 class="section-title" id="versionHistoryTitle">History Versions</h2>
+                <div id="versionHistoryHost"></div>
+            </div>
+            <div class="changelog-section" id="changelog">
+                <h2 class="section-title" id="changelogTitle">Changelog</h2>
+                <div id="changelogHost"></div>
+            </div>
+            <div class="page-cta-strip" id="pageCtaStrip"></div>
+        </section>
+    </main>
+        <footer class="footer">
+        <div class="footer__bar">
+            <p class="footer__copy">
+                <span id="footerCopy">&copy; 2026. Peekom All rights reserved.</span>
+                &nbsp;&middot;&nbsp;
+                <a href="privacy.html" id="footerPrivacy">개인정보 처리방침</a>
+            </p>
+            <div class="footer__controls">
+                <label class="footer__lang-label" for="langSelect" id="footerLangLabel">언어</label>
+                <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
+            </div>
+        </div>
+    </footer>
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBackdrop(event)">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+            <div class="modal__head">
+                <h3 class="modal__title" id="guideTitle">윈도우 SmartScreen 설치가이드</h3>
+                <button class="modal__close" onclick="closeModal()" aria-label="Close">&times;</button>
+            </div>
+            <ol class="guide-list">
+                <li id="step1"></li>
+                <li id="step2"></li>
+                <li id="step3"></li>
+            </ol>
+        </div>
+    </div>
+    <script src="js/compare.js"></script>
+    <script src="js/site.js"></script>
+</body>
+</html>

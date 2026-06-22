@@ -3,8 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Peekom Plus</title>
+    <title>Peekom</title>
     <script src="assets/i18n.js"></script>
+    <script src="assets/i18n-locale-extra.js"></script>
+    <script src="assets/memo-sanitize.js"></script>
+    <script src="assets/premium-config.js"></script>
+    <script src="assets/premium-ui.js"></script>
     <style>
       :root {
         --collapsed-width: 32px;
@@ -54,7 +58,7 @@
         width: var(--collapsed-width);
         height: 100%;
         z-index: 100;
-        pointer-events: none;
+        pointer-events: auto;
       }
 
       .edge-handle {
@@ -99,6 +103,295 @@
         color: var(--handle-text, var(--note-text));
         pointer-events: none;
         user-select: none;
+      }
+
+      .floating-panel:not(.expanded) .note-shell,
+      .floating-panel:not(.expanded) .first-run-tip {
+        pointer-events: none;
+      }
+
+      .floating-panel.expanded .edge-handle.is-active {
+        background: var(--note-bg);
+        border-left: 0;
+        box-shadow: none;
+        color: var(--note-text);
+      }
+
+      .note-backing {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 0;
+        height: 0;
+        background: var(--note-bg);
+        border-radius: 12px 0 0 12px;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+      }
+
+      .floating-panel.expanded .note-backing {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .handle-context-menu {
+        position: fixed;
+        z-index: 200;
+        min-width: 140px;
+        padding: 4px 0;
+        border-radius: 8px;
+        background: #fff;
+        border: 1px solid #dadce0;
+        box-shadow: 0 2px 10px rgba(60, 64, 67, 0.18);
+        pointer-events: auto;
+      }
+
+      .handle-context-menu.hidden {
+        display: none;
+      }
+
+      .handle-context-menu button {
+        display: block;
+        width: 100%;
+        border: 0;
+        background: transparent;
+        text-align: left;
+        padding: 8px 12px;
+        font-size: 12px;
+        color: #2f3750;
+        cursor: pointer;
+      }
+
+      .handle-context-menu button:hover:not(:disabled) {
+        background: #f1f3f4;
+      }
+
+      .handle-context-menu button:disabled {
+        color: #9aa0a6;
+        cursor: default;
+      }
+
+      .handle-context-menu button.danger {
+        color: #d04646;
+      }
+
+      .toolbar-dropdown-wrap {
+        position: relative;
+      }
+
+      .toolbar-dropdown {
+        position: absolute;
+        bottom: calc(100% + 4px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: none;
+        gap: 2px;
+        padding: 4px 6px;
+        background: #fff;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
+        box-shadow: 0 1px 6px rgba(60, 64, 67, 0.15);
+        z-index: 50;
+        white-space: nowrap;
+        align-items: center;
+      }
+
+      .toolbar-dropdown.open {
+        display: inline-flex;
+      }
+
+      .toolbar-caret {
+        font-size: 8px;
+        margin-left: 1px;
+        opacity: 0.65;
+      }
+
+      .color-swatch-btn {
+        width: 18px;
+        height: 18px;
+        border: 1px solid rgba(0, 0, 0, 0.15);
+        border-radius: 4px;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .toolbar-dropdown .tool-btn {
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        padding: 0;
+        font-size: 11px;
+      }
+
+      .list-style-btn svg {
+        display: block;
+      }
+
+      .peekom-list-square {
+        list-style-type: square;
+      }
+
+      .color-swatch-btn[data-color="theme"] {
+        background: var(--note-text);
+      }
+
+      .image-staging-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 26, 40, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 35;
+        pointer-events: auto;
+      }
+
+      .image-staging-overlay.hidden {
+        display: none;
+      }
+
+      .image-staging-card {
+        width: min(300px, 92%);
+        padding: 12px;
+        border-radius: 12px;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .image-staging-preview-wrap {
+        position: relative;
+        width: 100%;
+        max-height: 200px;
+        overflow: hidden;
+        border-radius: 6px;
+        background: #f4f6fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .image-staging-preview-wrap img {
+        display: block;
+        flex-shrink: 0;
+        object-fit: contain;
+        user-select: none;
+        -webkit-user-drag: none;
+        pointer-events: none;
+      }
+
+      .image-staging-crop-layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .image-staging-crop-layer:not(.hidden) {
+        pointer-events: auto;
+      }
+
+      .image-staging-crop-frame {
+        position: absolute;
+        border: 2px solid #fff;
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 0 0 9999px rgba(0, 0, 0, 0.35);
+        cursor: move;
+        box-sizing: border-box;
+      }
+
+      .image-staging-crop-ratios {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .image-staging-crop-ratios button {
+        height: 24px;
+        padding: 0 8px;
+        border: 1px solid #d7dde9;
+        border-radius: 6px;
+        background: #fff;
+        font-size: 11px;
+        cursor: pointer;
+        color: #3c4043;
+      }
+
+      .image-staging-crop-ratios button.active {
+        border-color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 12%, #fff);
+        color: var(--accent);
+      }
+
+      .image-staging-card img#imageStagingPreview {
+        max-width: none;
+        max-height: none;
+      }
+
+      .image-staging-actions {
+        display: flex;
+        gap: 8px;
+        width: 100%;
+        justify-content: flex-end;
+      }
+
+      .image-staging-actions button {
+        height: 30px;
+        padding: 0 12px;
+        border-radius: 8px;
+        border: 1px solid #d7dde9;
+        background: #fff;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .image-staging-actions button.primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+      }
+
+      .image-staging-scale-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        max-width: 240px;
+      }
+
+      .image-staging-scale-label {
+        font-size: 11px;
+        color: #64718b;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .image-staging-scale-wrap {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .image-staging-scale {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+
+      .memo-editor img.peekom-memo-image {
+        display: inline-block;
+        vertical-align: bottom;
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+        margin: 2px 4px;
+      }
+
+      .memo-editor .peekom-image-wrap {
+        display: inline;
+        line-height: 0;
       }
 
       .memo-editor h1 {
@@ -153,6 +446,7 @@
         flex-direction: column;
         gap: 6px;
         z-index: 1;
+        overflow: hidden;
       }
 
       .floating-panel.expanded .note-shell {
@@ -160,22 +454,11 @@
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
+        z-index: 3;
       }
 
       .settings-icon-btn {
-        position: absolute;
-        top: 8px;
-        right: calc(var(--collapsed-width) + 12px);
-        width: 28px;
-        height: 28px;
-        border: 0;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.78);
-        color: #3a455f;
-        font-size: 13px;
-        cursor: pointer;
-        z-index: 22;
-        pointer-events: auto;
+        display: none !important;
       }
 
       .note-editor-wrap {
@@ -184,7 +467,7 @@
         display: flex;
         flex-direction: column;
         border-radius: 12px;
-        background: var(--note-bg);
+        background: transparent;
         overflow: hidden;
       }
 
@@ -194,11 +477,20 @@
         padding: 10px 8px 6px;
         outline: none;
         overflow: auto;
-        font-size: 18px;
+        font-size: var(--memo-base-font-size, 18px);
         line-height: 1.52;
         color: var(--note-text);
-        background: var(--note-bg);
+        background: transparent;
+        font-family: var(--note-font-family, "Segoe UI", sans-serif);
         word-break: break-word;
+        pointer-events: auto;
+      }
+
+      .memo-editor div,
+      .memo-editor p,
+      .memo-editor li,
+      .memo-editor span:not(.peekom-task-check) {
+        font-size: inherit;
       }
 
       .memo-editor a[data-external] {
@@ -216,6 +508,156 @@
         margin-left: 18px;
       }
 
+      .peekom-task-list {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      .peekom-task-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        margin-left: 0;
+      }
+
+      .peekom-task-check {
+        flex-shrink: 0;
+        width: 15px;
+        height: 15px;
+        border: 1.5px solid currentColor;
+        border-radius: 3px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        user-select: none;
+        margin-top: 3px;
+        font-size: 11px;
+        line-height: 1;
+        box-sizing: border-box;
+      }
+
+      .peekom-task-list li[data-checked="true"] .peekom-task-check::after {
+        content: "✓";
+        font-weight: 700;
+        font-size: 10px;
+      }
+
+      .peekom-task-list li[data-checked="true"] {
+        opacity: 0.72;
+        text-decoration: line-through;
+        text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+      }
+
+      .memo-image-block {
+        flex-shrink: 0;
+        padding: 4px 8px 8px;
+        border-top: 1px dashed rgba(70, 84, 115, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: center;
+      }
+
+      .memo-image-block.hidden {
+        display: none;
+      }
+
+      .memo-image-frame {
+        position: relative;
+        max-width: 100%;
+        line-height: 0;
+      }
+
+      .memo-image-frame img {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        border-radius: 6px;
+        user-select: none;
+      }
+
+      .memo-image-remove {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 20px;
+        height: 20px;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        font-size: 12px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .memo-image-scale {
+        width: 100%;
+        max-width: 180px;
+        accent-color: var(--accent);
+      }
+
+      .memo-modal {
+        position: absolute;
+        inset: 0;
+        background: rgba(20, 26, 40, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 40;
+        pointer-events: auto;
+      }
+
+      .memo-modal.hidden {
+        display: none;
+      }
+
+      .memo-modal-card {
+        width: min(280px, 92%);
+        padding: 14px 14px 12px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+      }
+
+      .memo-modal-title {
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 6px;
+        color: #2f3750;
+      }
+
+      .memo-modal-desc {
+        font-size: 12px;
+        line-height: 1.45;
+        color: #64718b;
+        margin-bottom: 12px;
+      }
+
+      .memo-modal-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      .memo-modal-actions button {
+        height: 30px;
+        padding: 0 12px;
+        border-radius: 8px;
+        border: 1px solid #d7dde9;
+        background: #fff;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .memo-modal-actions button.danger {
+        border-color: #d04646;
+        background: #d04646;
+        color: #fff;
+      }
+
       .note-footer {
         display: flex;
         flex-wrap: nowrap;
@@ -224,10 +666,13 @@
         gap: 0 6px;
         height: 30px;
         min-height: 30px;
+        flex-shrink: 0;
         padding-top: 2px;
         color: var(--muted-text);
         font-size: 11px;
-        overflow: hidden;
+        overflow: visible;
+        position: relative;
+        z-index: 1;
       }
 
       .mode-chip {
@@ -235,8 +680,8 @@
         align-items: center;
         justify-content: center;
         height: 22px;
-        min-width: 40px;
-        padding: 0 7px;
+        min-width: 42px;
+        padding: 0 6px;
         border-radius: 999px;
         font-size: 10px;
         font-weight: 700;
@@ -280,36 +725,67 @@
       .format-bar {
         display: inline-flex;
         flex-wrap: nowrap;
-        gap: 0 4px;
+        gap: 0 2px;
         align-items: center;
         flex: 1;
         min-width: 0;
-        justify-content: center;
-        overflow: hidden;
+        justify-content: flex-start;
+        overflow: visible;
       }
 
       .tool-btn {
-        height: 24px;
-        min-width: 20px;
+        height: 26px;
+        min-width: 26px;
         border: 0;
-        border-radius: 5px;
+        border-radius: 4px;
         background: transparent;
-        color: #34405a;
-        font-size: 13px;
+        color: #3c4043;
+        font-size: 12px;
         line-height: 1;
         cursor: pointer;
         padding: 0 3px;
         transition: background 120ms ease;
         flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+
+      .format-bar .tool-btn[data-tip]:hover::after,
+      .toolbar-dropdown .tool-btn[data-tip]:hover::after,
+      .toolbar-dropdown .color-swatch-btn[data-tip]:hover::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: calc(100% + 4px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(30, 36, 54, 0.92);
+        color: #fff;
+        font-size: 10px;
+        font-weight: 400;
+        white-space: nowrap;
+        padding: 3px 7px;
+        border-radius: 5px;
+        pointer-events: none;
+        z-index: 1000;
+      }
+
+      .toolbar-dropdown .color-swatch-btn[data-tip] {
+        position: relative;
       }
 
       .tool-btn:hover {
-        background: rgba(0, 0, 0, 0.06);
+        background: #f1f3f4;
       }
 
       .tool-btn.active {
-        color: var(--accent);
-        font-weight: 700;
+        background: #e8eaed;
+        color: #202124;
+      }
+
+      .tool-btn-icon svg {
+        display: block;
       }
 
       .tool-group {
@@ -317,14 +793,6 @@
         align-items: center;
         gap: 1px;
         flex-shrink: 0;
-      }
-
-      .tool-separator {
-        width: 1px;
-        height: 12px;
-        background: rgba(62, 70, 90, 0.2);
-        flex-shrink: 0;
-        margin: 0 2px;
       }
 
       .save-indicator {
@@ -360,16 +828,13 @@
   <body>
     <main id="app">
       <section id="panel" class="floating-panel" aria-label="Floating index panel">
+        <div id="noteBacking" class="note-backing" aria-hidden="true"></div>
         <div id="handleColumn" class="handle-column" aria-hidden="false"></div>
 
         <div id="firstRunTip" class="first-run-tip hidden">
-          오른쪽 손잡이를 클릭하면 인덱스가 나옵니다.<br />
-          세로로 드래그하면 위치를 바꿀 수 있어요. 좌우로 드래그하면 순서를 바꿀 수 있어요.
+          손잡이를 클릭하면 인덱스가 나옵니다.<br />
+          드래그하면 위치·순서를 바꿀 수 있어요.
         </div>
-
-        <button id="settingsIconBtn" class="settings-icon-btn hidden" type="button" aria-label="인덱스 설정 열기">
-          ⚙
-        </button>
 
         <article id="noteShell" class="note-shell">
           <div class="note-editor-wrap">
@@ -380,55 +845,255 @@
             <button id="modeChip" class="mode-chip peek" type="button">빼꼼</button>
 
             <div id="formatBar" class="format-bar">
-              <div class="tool-group">
-                <button id="fontDecreaseBtn" class="tool-btn" type="button" title="글자 작게">A-</button>
-                <button id="fontIncreaseBtn" class="tool-btn" type="button" title="글자 크게">A+</button>
+              <div class="tool-group toolbar-dropdown-wrap" id="colorDropdownWrap">
+                <button id="colorMenuBtn" class="tool-btn" type="button" data-tip-key="fmtTextColor"><u>A</u><span class="toolbar-caret">▾</span></button>
+                <div class="toolbar-dropdown" id="colorDropdown">
+                  <button class="color-swatch-btn" type="button" data-color="theme" data-tip-key="fmtColorDefault"></button>
+                  <button class="color-swatch-btn" type="button" data-color="#D04646" data-tip-key="fmtColorRed" style="background:#D04646"></button>
+                  <button class="color-swatch-btn" type="button" data-color="#2F67D8" data-tip-key="fmtColorBlue" style="background:#2F67D8"></button>
+                  <button class="color-swatch-btn" type="button" data-color="#2A7C44" data-tip-key="fmtColorGreen" style="background:#2A7C44"></button>
+                </div>
               </div>
-              <span class="tool-separator"></span>
               <div class="tool-group">
-                <button class="tool-btn" type="button" data-cmd="bold" title="굵게"><b>B</b></button>
-                <button class="tool-btn" type="button" data-cmd="italic" title="기울임"><i>I</i></button>
-                <button class="tool-btn" type="button" data-cmd="underline" title="밑줄"><u>U</u></button>
+                <button class="tool-btn" type="button" data-cmd="bold" data-tip-key="fmtBold"><b>B</b></button>
+                <button class="tool-btn" type="button" data-cmd="italic" data-tip-key="fmtItalic"><i>I</i></button>
+                <button class="tool-btn" type="button" data-cmd="underline" data-tip-key="fmtUnderline"><u>U</u></button>
+                <button class="tool-btn" type="button" data-cmd="strikeThrough" data-tip-key="fmtStrike"><s>S</s></button>
               </div>
-              <span class="tool-separator"></span>
-              <div class="tool-group">
-                <button id="alignCycleBtn" class="tool-btn" type="button" title="정렬 순환">☰</button>
-                <button id="listCycleBtn" class="tool-btn" type="button" title="목록 순환">•</button>
+              <div class="tool-group toolbar-dropdown-wrap" id="alignDropdownWrap">
+                <button id="alignMenuBtn" class="tool-btn" type="button" data-tip-key="fmtAlignMenu">☰<span class="toolbar-caret">▾</span></button>
+                <div class="toolbar-dropdown" id="alignDropdown">
+                  <button class="tool-btn" type="button" data-align="justifyLeft" data-tip-key="fmtAlignLeft">☰</button>
+                  <button class="tool-btn" type="button" data-align="justifyCenter" data-tip-key="fmtAlignCenter">☷</button>
+                  <button class="tool-btn" type="button" data-align="justifyRight" data-tip-key="fmtAlignRight">☲</button>
+                  <button class="tool-btn" type="button" data-align="justifyFull" data-tip-key="fmtAlignJustify">≡</button>
+                </div>
               </div>
-              <span class="tool-separator"></span>
+              <div class="tool-group toolbar-dropdown-wrap" id="listDropdownWrap">
+                <button id="listMenuBtn" class="tool-btn tool-btn-icon" type="button" data-tip-key="fmtListMenu">
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="5" cy="6" r="1.5" fill="currentColor"/>
+                    <rect x="9" y="5.25" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+                    <circle cx="5" cy="12" r="1.5" fill="currentColor"/>
+                    <rect x="9" y="11.25" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+                    <circle cx="5" cy="18" r="1.5" fill="currentColor"/>
+                    <rect x="9" y="17.25" width="12" height="1.5" rx="0.75" fill="currentColor"/>
+                  </svg>
+                  <span class="toolbar-caret">▾</span>
+                </button>
+                <div class="toolbar-dropdown" id="listDropdown">
+                  <button class="tool-btn list-style-btn" type="button" data-list="disc" data-tip-key="fmtListBullet">
+                    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="5" cy="8" r="1.8" fill="currentColor"/>
+                      <rect x="9" y="7" width="12" height="2" rx="1" fill="currentColor"/>
+                      <circle cx="5" cy="16" r="1.8" fill="currentColor"/>
+                      <rect x="9" y="15" width="12" height="2" rx="1" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button class="tool-btn list-style-btn" type="button" data-list="square" data-tip-key="fmtListSquare">
+                    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                      <rect x="3.5" y="6.5" width="3" height="3" fill="currentColor"/>
+                      <rect x="9" y="7" width="12" height="2" rx="1" fill="currentColor"/>
+                      <rect x="3.5" y="14.5" width="3" height="3" fill="currentColor"/>
+                      <rect x="9" y="15" width="12" height="2" rx="1" fill="currentColor"/>
+                    </svg>
+                  </button>
+                  <button class="tool-btn list-style-btn" type="button" data-list="ordered" data-tip-key="fmtListNumber">1.</button>
+                  <button class="tool-btn list-style-btn tool-btn-icon" type="button" data-list="plain" data-tip-key="fmtListPlain">
+                    <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
               <div class="tool-group">
-                <button id="textColorCycleBtn" class="tool-btn" type="button" title="글자색 순환">🅰</button>
-                <button id="highlightCycleBtn" class="tool-btn" type="button" title="형광 순환">🖍</button>
-                <button id="clearAllBtn" class="tool-btn" type="button" title="전체 삭제">🗑</button>
+                <button id="clipImageBtn" class="tool-btn tool-btn-icon" type="button" data-tip-key="fmtInsertImage">
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <circle cx="8.5" cy="10" r="1.5" fill="currentColor"/>
+                    <path d="M3 16l5-4 4 3 4-5 5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                  </svg>
+                </button>
               </div>
             </div>
 
           </div>
+
+          <div id="imageStagingOverlay" class="image-staging-overlay hidden" aria-hidden="true">
+            <div class="image-staging-card">
+              <div class="image-staging-preview-wrap" id="imageStagingPreviewWrap">
+                <img id="imageStagingPreview" alt="이미지 미리보기" />
+                <div class="image-staging-crop-layer hidden" id="imageStagingCropLayer">
+                  <div class="image-staging-crop-frame" id="imageStagingCropFrame"></div>
+                </div>
+              </div>
+              <div class="image-staging-crop-ratios hidden" id="imageStagingCropRatios">
+                <button type="button" data-ratio="free" class="active">자유</button>
+                <button type="button" data-ratio="1:1">1:1</button>
+                <button type="button" data-ratio="3:4">3:4</button>
+                <button type="button" data-ratio="4:3">4:3</button>
+                <button type="button" data-ratio="16:9">16:9</button>
+                <button type="button" data-ratio="9:16">9:16</button>
+              </div>
+              <div class="image-staging-scale-row">
+                <span class="image-staging-scale-label">작게</span>
+                <div class="image-staging-scale-wrap" id="imageStagingSliderWrap">
+                  <input id="imageStagingSlider" class="image-staging-scale" type="range" min="50" max="150" value="100" data-tip-key="fmtImageScale" />
+                </div>
+                <span class="image-staging-scale-label">크게</span>
+              </div>
+              <div class="image-staging-actions">
+                <button id="imageStagingCancelBtn" type="button">취소</button>
+                <button id="imageStagingConfirmBtn" type="button" class="primary">넣기</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="deleteIndexModal" class="memo-modal hidden" role="dialog" aria-modal="true" aria-labelledby="deleteIndexModalTitle">
+            <div class="memo-modal-card">
+              <p id="deleteIndexModalTitle" class="memo-modal-title">인덱스 삭제</p>
+              <p class="memo-modal-desc">현재 인덱스의 메모·제목·색상·이미지가 모두 삭제됩니다. 되돌릴 수 없어요.</p>
+              <div class="memo-modal-actions">
+                <button id="deleteIndexCancelBtn" type="button">취소</button>
+                <button id="deleteIndexConfirmBtn" type="button" class="danger">삭제</button>
+              </div>
+            </div>
+          </div>
         </article>
+
+        <div id="handleContextMenu" class="handle-context-menu hidden" role="menu"></div>
 
         <div id="saveIndicator" class="save-indicator">저장됨</div>
       </section>
     </main>
 
     <script>
-      const { ipcRenderer } = require("electron");
-      let marked;
-      try {
-        ({ marked } = require("marked"));
-      } catch (e) {
-        marked = (text) => text;
+      const ipcRenderer = {
+        invoke: (channel, ...args) => window.peekom.invoke(channel, ...args),
+        send: (channel, ...args) => window.peekom.send(channel, ...args),
+        sendSync: (channel, ...args) => window.peekom.sendSync(channel, ...args),
+        on(channel, listener) {
+          return window.peekom.on(channel, (...args) => listener(null, ...args));
+        }
+      };
+
+      let marked = window.peekom?.marked ?? null;
+
+      function parseMarkdownInline(text) {
+        if (marked && typeof marked.parseInline === "function") {
+          return marked.parseInline(text);
+        }
+        return String(text || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function ti(key, vars) {
+        if (typeof PeekomI18n === "undefined") return key;
+        let text = PeekomI18n.t(key, PeekomI18n.getCurrentLang());
+        if (vars) {
+          Object.keys(vars).forEach((k) => {
+            text = text.replace(new RegExp("\\{" + k + "\\}", "g"), vars[k]);
+          });
+        }
+        return text;
+      }
+
+      function sanitizeMemoHtml(html) {
+        if (typeof PeekomMemoSanitize !== "undefined" && PeekomMemoSanitize.sanitizeMemoHtml) {
+          return PeekomMemoSanitize.sanitizeMemoHtml(html);
+        }
+        return html || "";
+      }
+
+      function notifySettingsChanged(fields) {
+        ipcRenderer
+          .invoke("settings:notify-changed", {
+            skipMainReload: true,
+            skipSettingsReload: false,
+            partial: true,
+            fields: Array.isArray(fields) ? fields : ["slots"],
+            language: appState.global?.language
+          })
+          .catch(() => {});
+      }
+
+      function applyMainUiLabels() {
+        const firstRunTip = document.getElementById("firstRunTip");
+        if (firstRunTip) firstRunTip.innerHTML = ti("firstRunTipHtml");
+        if (saveIndicator) saveIndicator.textContent = ti("saveIndicatorSaved");
+        const deleteTitle = document.getElementById("deleteIndexModalTitle");
+        if (deleteTitle) deleteTitle.textContent = ti("deleteIndexModalTitle");
+        const deleteDesc = document.querySelector("#deleteIndexModal .memo-modal-desc");
+        if (deleteDesc) deleteDesc.textContent = ti("deleteIndexModalDesc");
+        if (deleteIndexCancelBtn) deleteIndexCancelBtn.textContent = ti("deleteIndexCancel");
+        if (deleteIndexConfirmBtn) deleteIndexConfirmBtn.textContent = ti("deleteIndexConfirm");
+        if (imageStagingCancelBtn) imageStagingCancelBtn.textContent = ti("imageStagingCancel");
+        if (imageStagingConfirmBtn) imageStagingConfirmBtn.textContent = ti("imageStagingInsert");
+        if (imageStagingPreview) imageStagingPreview.alt = ti("imagePreviewAlt");
+        const cropFreeBtn = imageStagingCropRatios?.querySelector('[data-ratio="free"]');
+        if (cropFreeBtn) cropFreeBtn.textContent = ti("imageCropFree");
+        setPinned(isPinned);
+        applyFormatBarTooltips();
       }
 
       const STATE_KEY = "ppaekkom-plus-state-v5";
+      const STATE_KEY_BACKUP = "ppaekkom-plus-state-v5-backup";
       const STATE_KEY_V4 = "ppaekkom-plus-state-v4";
       const LEGACY_V3_KEY = "ppaekkom-app-state-v3";
       const FIRST_RUN_KEY = "ppaekkom-first-run-seen";
       const LEGACY_SETTINGS_KEY = "ppaekkom-app-settings-v2";
       const LEGACY_MEMO_KEY = "ppaekkom-memo-html-v2";
 
-      const DEFAULT_HOVER_DELAY = 250;
+      ipcRenderer.on("shared-state:read-request", (_event, replyChannel) => {
+        try {
+          ipcRenderer.send(replyChannel, {
+            raw: localStorage.getItem(STATE_KEY),
+            backup: localStorage.getItem(STATE_KEY_BACKUP)
+          });
+        } catch (err) {
+          ipcRenderer.send(replyChannel, { raw: null, backup: null, error: String(err?.message || err) });
+        }
+      });
+
+      ipcRenderer.on("shared-state:write-request", (_event, payload = {}) => {
+        const replyChannel = payload.replyChannel;
+        try {
+          const json = payload.json;
+          if (typeof json !== "string" || json.length === 0) {
+            ipcRenderer.send(replyChannel, { ok: false, reason: "INVALID_PAYLOAD" });
+            return;
+          }
+          const prev = localStorage.getItem(STATE_KEY);
+          if (prev) localStorage.setItem(STATE_KEY_BACKUP, prev);
+          localStorage.setItem(STATE_KEY, json);
+          ipcRenderer.send(replyChannel, { ok: true });
+        } catch (err) {
+          ipcRenderer.send(replyChannel, { ok: false, reason: String(err?.message || err) });
+        }
+      });
+
+      const DEFAULT_HOVER_DELAY = 300;
       const LABEL_MAX = 6;
       const MAX_SLOTS = 10;
+      const FREE_MAX_SLOTS = 3;
+      const FREE_MAX_IMAGES_PER_MEMO = 1;
+      const PLUS_MAX_IMAGES_PER_MEMO = 5;
+      let isPremium = false;
+
+      function getMaxEnabledSlots() {
+        return isPremium ? MAX_SLOTS : FREE_MAX_SLOTS;
+      }
+
+      function enforceSlotLimits() {
+        const max = getMaxEnabledSlots();
+        if (appState.enabledCount > max) {
+          appState.enabledCount = max;
+          appState.order = normalizeOrder(appState.order, max);
+          appState.activeSlot = clampSlotIndex(appState.activeSlot, max);
+        }
+      }
       const MAX_Y_SLOTS = 10;
       const PANEL_CONTENT_WIDTH = 420;
       const COLLAPSED_WIDTH = 32;
@@ -454,14 +1119,21 @@
           lengthMode: "long",
           triggerMode: "hover",
           shortcut: "CommandOrControl+Shift+M",
+          shortcutSlotPrev: "CommandOrControl+Shift+Up",
+          shortcutSlotNext: "CommandOrControl+Shift+Down",
           hoverDelayMs: DEFAULT_HOVER_DELAY,
           manualYOffset: 0,
           openAtLogin: false,
           language: null,
           monitorMode: "auto",
           monitorTargetId: null,
-          pinToggleMode: "chip",
-          setupCompleted: false
+          pinToggleMode: "dblclick",
+          setupCompleted: false,
+          showTrayIcon: true,
+          memoAspectRatio: "3:4",
+          imageLayout: "below",
+          lastOpenedSlotIndex: 0,
+          memoDefaultOpacity: 100
         };
       }
 
@@ -471,15 +1143,63 @@
           theme: "yellow",
           memoHtml: "",
           ySlot: clamp(index, 0, MAX_Y_SLOTS - 1),
+          ySlotUpdatedAt: 0,
           fontSize: DEFAULT_FONT_SIZE,
           customBg: "#FFF4B8",
-          customText: "#2F3750"
+          customText: "#2F3750",
+          imageData: null,
+          imageScale: 100,
+          images: [],
+          fontFamily: null
         };
+      }
+
+      function normalizeSlotImageEntry(raw) {
+        if (!raw || typeof raw !== "object") return null;
+        const dataUrl =
+          typeof raw.dataUrl === "string" && raw.dataUrl.startsWith("data:image/") ? raw.dataUrl : null;
+        if (!dataUrl) return null;
+        return {
+          id: typeof raw.id === "string" && raw.id ? raw.id : crypto.randomUUID(),
+          sourcePath: typeof raw.sourcePath === "string" ? raw.sourcePath : null,
+          dataUrl,
+          scale:
+            typeof raw.scale === "number" && Number.isFinite(raw.scale)
+              ? clamp(Math.round(raw.scale), 50, 150)
+              : 100,
+          insertedAt: typeof raw.insertedAt === "string" ? raw.insertedAt : new Date().toISOString()
+        };
+      }
+
+      function migrateLegacySlotImage(slot) {
+        if (!slot || typeof slot !== "object") return slot;
+        if (!Array.isArray(slot.images)) slot.images = [];
+        if (slot.imageData && String(slot.imageData).startsWith("data:image/")) {
+          const id = crypto.randomUUID();
+          const scale = slot.imageScale ?? 100;
+          const imgTag = `<p><img class="peekom-memo-image" data-peekom-id="${id}" src="${slot.imageData}" style="width:${scale}%;max-width:100%;" alt=""></p>`;
+          if (!String(slot.memoHtml || "").includes("peekom-memo-image")) {
+            slot.memoHtml = (slot.memoHtml || "") + imgTag;
+          }
+          slot.images.push({
+            id,
+            sourcePath: null,
+            dataUrl: slot.imageData,
+            scale,
+            insertedAt: new Date().toISOString()
+          });
+          slot.imageData = null;
+          slot.imageScale = 100;
+        }
+        if (slot.theme === "custom" && !isPremium) {
+          slot.theme = "yellow";
+        }
+        return slot;
       }
 
       function normalizeSlot(raw, index) {
         const base = defaultSlot(index);
-        return {
+        const slot = {
           label: typeof raw?.label === "string" ? raw.label.slice(0, LABEL_MAX) : "",
           theme: THEME_NAMES.includes(raw?.theme) ? raw.theme : "yellow",
           memoHtml: typeof raw?.memoHtml === "string" ? raw.memoHtml : "",
@@ -490,6 +1210,10 @@
             0,
             MAX_Y_SLOTS - 1
           ),
+          ySlotUpdatedAt:
+            typeof raw?.ySlotUpdatedAt === "number" && Number.isFinite(raw.ySlotUpdatedAt)
+              ? raw.ySlotUpdatedAt
+              : 0,
           fontSize: clamp(
             typeof raw?.fontSize === "number" && Number.isFinite(raw.fontSize)
               ? Math.round(raw.fontSize)
@@ -504,8 +1228,29 @@
           customText:
             typeof raw?.customText === "string" && /^#[0-9A-Fa-f]{6}$/.test(raw.customText)
               ? raw.customText
-              : base.customText
+              : base.customText,
+          imageData: null,
+          imageScale: 100,
+          images: Array.isArray(raw?.images)
+            ? raw.images.map(normalizeSlotImageEntry).filter(Boolean)
+            : [],
+          fontFamily:
+            typeof raw?.fontFamily === "string" && raw.fontFamily.trim().length > 0
+              ? raw.fontFamily.trim()
+              : null
         };
+        if (
+          typeof raw?.imageData === "string" &&
+          raw.imageData.startsWith("data:image/") &&
+          !slot.images.length
+        ) {
+          slot.imageData = raw.imageData;
+          slot.imageScale =
+            typeof raw?.imageScale === "number" && Number.isFinite(raw.imageScale)
+              ? clamp(Math.round(raw.imageScale), 50, 150)
+              : 100;
+        }
+        return migrateLegacySlotImage(slot);
       }
 
       function createFreshState() {
@@ -519,10 +1264,17 @@
         };
       }
 
+      function normalizeMemoAspectRatio(ratio) {
+        return ratio === "1:1" ? "1:1" : "3:4";
+      }
+
       function migrateFromV4(v4) {
+        const global = { ...defaultGlobal(), ...v4.global };
+        delete global.panelEdge;
+        global.memoAspectRatio = normalizeMemoAspectRatio(global.memoAspectRatio);
         return {
           version: 5,
-          global: { ...defaultGlobal(), ...v4.global },
+          global,
           enabledCount: clamp(Math.round(v4.enabledCount) || 1, 1, MAX_SLOTS),
           slots: v4.slots.map((sl, i) => normalizeSlot(sl, i)),
           order: normalizeOrder(v4.order, clamp(Math.round(v4.enabledCount) || 1, 1, MAX_SLOTS)),
@@ -586,21 +1338,60 @@
         return state;
       }
 
+      function tryParseV5State(raw) {
+        if (!raw) return null;
+        try {
+          const s = JSON.parse(raw);
+          if (!s || s.version !== 5 || !Array.isArray(s.slots) || s.slots.length !== MAX_SLOTS) return null;
+          s.global = { ...defaultGlobal(), ...s.global };
+          delete s.global.imageSize;
+          delete s.global.panelEdge;
+          s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
+          if (!s.global.setupCompleted && s.enabledCount > 1) {
+            s.enabledCount = 1;
+            s.order = [0];
+            s.activeSlot = 0;
+          }
+          s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
+          s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
+          s.order = normalizeOrder(s.order, s.enabledCount);
+          s.activeSlot = clampSlotIndex(s.activeSlot, s.enabledCount);
+          return ensureMinimumOneSlot(s);
+        } catch {
+          return null;
+        }
+      }
+
+      async function reloadAppStateFromDisk() {
+        try {
+          const res = await ipcRenderer.invoke("shared-state:get");
+          if (res?.ok) {
+            const parsed =
+              tryParseV5State(res.raw) || tryParseV5State(res.backup);
+            if (parsed) return parsed;
+          }
+        } catch (err) {
+          console.error(err);
+        }
+        return loadState();
+      }
+
       function loadState() {
         try {
-          const rawV5 = localStorage.getItem(STATE_KEY);
-          if (rawV5) {
-            const s = JSON.parse(rawV5);
-            if (s && s.version === 5 && Array.isArray(s.slots) && s.slots.length === MAX_SLOTS) {
-              s.global = { ...defaultGlobal(), ...s.global };
-              s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
-              s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
-              s.order = normalizeOrder(s.order, s.enabledCount);
-              s.activeSlot = clampSlotIndex(s.activeSlot, s.enabledCount);
-              return ensureMinimumOneSlot(s);
-            }
-          }
+          const parsed = tryParseV5State(localStorage.getItem(STATE_KEY));
+          if (parsed) return parsed;
+        } catch {
+          /* try backup */
+        }
 
+        try {
+          const parsedBackup = tryParseV5State(localStorage.getItem(STATE_KEY_BACKUP));
+          if (parsedBackup) return parsedBackup;
+        } catch {
+          /* fallthrough */
+        }
+
+        try {
           const rawV4 = localStorage.getItem(STATE_KEY_V4);
           if (rawV4) {
             const v4 = JSON.parse(rawV4);
@@ -623,6 +1414,12 @@
       }
 
       function saveState(state) {
+        try {
+          const prev = localStorage.getItem(STATE_KEY);
+          if (prev) localStorage.setItem(STATE_KEY_BACKUP, prev);
+        } catch {
+          /* ignore */
+        }
         localStorage.setItem(STATE_KEY, JSON.stringify(state));
       }
 
@@ -653,18 +1450,27 @@
       const panel = document.getElementById("panel");
       const handleColumn = document.getElementById("handleColumn");
       const noteShell = document.getElementById("noteShell");
+      const noteBacking = document.getElementById("noteBacking");
       const memoEditor = document.getElementById("memoEditor");
       const modeChip = document.getElementById("modeChip");
       const firstRunTip = document.getElementById("firstRunTip");
-      const settingsIconBtn = document.getElementById("settingsIconBtn");
-      const alignCycleBtn = document.getElementById("alignCycleBtn");
-      const listCycleBtn = document.getElementById("listCycleBtn");
-      const textColorCycleBtn = document.getElementById("textColorCycleBtn");
-      const highlightCycleBtn = document.getElementById("highlightCycleBtn");
-      const clearAllBtn = document.getElementById("clearAllBtn");
-      const fontDecreaseBtn = document.getElementById("fontDecreaseBtn");
-      const fontIncreaseBtn = document.getElementById("fontIncreaseBtn");
+      const listMenuBtn = document.getElementById("listMenuBtn");
+      const clipImageBtn = document.getElementById("clipImageBtn");
       const saveIndicator = document.getElementById("saveIndicator");
+      const handleContextMenu = document.getElementById("handleContextMenu");
+      const imageStagingOverlay = document.getElementById("imageStagingOverlay");
+      const imageStagingPreview = document.getElementById("imageStagingPreview");
+      const imageStagingPreviewWrap = document.getElementById("imageStagingPreviewWrap");
+      const imageStagingCropLayer = document.getElementById("imageStagingCropLayer");
+      const imageStagingCropFrame = document.getElementById("imageStagingCropFrame");
+      const imageStagingCropRatios = document.getElementById("imageStagingCropRatios");
+      const imageStagingSlider = document.getElementById("imageStagingSlider");
+      const imageStagingSliderWrap = document.getElementById("imageStagingSliderWrap");
+      const imageStagingCancelBtn = document.getElementById("imageStagingCancelBtn");
+      const imageStagingConfirmBtn = document.getElementById("imageStagingConfirmBtn");
+      const deleteIndexModal = document.getElementById("deleteIndexModal");
+      const deleteIndexCancelBtn = document.getElementById("deleteIndexCancelBtn");
+      const deleteIndexConfirmBtn = document.getElementById("deleteIndexConfirmBtn");
 
       let isExpanded = false;
       let isPinned = false;
@@ -672,9 +1478,9 @@
       let settingsRevealTimer = null;
       let hoverDelayMs = DEFAULT_HOVER_DELAY;
       let saveIndicatorTimer = null;
-      let pendingClearAll = false;
-      let pendingClearAllTimer = null;
       let urlScanTimer = null;
+      let markdownInputRaf = null;
+      let peekCollapseDelayTimer = null;
 
       let draggingHandle = false;
       let dragMoved = false;
@@ -691,16 +1497,18 @@
       /** @type {HTMLElement | null} */
       let pointerCaptureEl = null;
 
-      const alignCycle = ["justifyLeft", "justifyCenter", "justifyRight"];
-      const alignCycleLabel = ["☰", "☷", "☲"];
-      const listCycle = ["bullet", "check", "clear"];
-      const listCycleLabel = ["•", "☐", "∅"];
-      const textColorCycle = ["#2F3750", "#C13A3A", "#2D6CDF", "#2D8A42"];
-      const highlightCycle = ["#FFF59D", "#FFD9E8", "#DDEBFF", "transparent"];
-      let alignCycleIndex = -1;
-      let listCycleIndex = -1;
-      let textColorCycleIndex = -1;
-      let highlightCycleIndex = -1;
+      /** @type {{ dataUrl: string, filePath: string | null, scale: number } | null} */
+      let imageStaging = null;
+      let memoEditorFocused = false;
+      let toolbarDropdownOpen = false;
+      let handleContextMenuOpen = false;
+
+      function clearPeekCollapseDelayTimer() {
+        if (peekCollapseDelayTimer) {
+          clearTimeout(peekCollapseDelayTimer);
+          peekCollapseDelayTimer = null;
+        }
+      }
 
       function clearHoverTimer() {
         if (hoverTimer) {
@@ -735,20 +1543,136 @@
 
       function persistActiveMemo() {
         const slot = appState.activeSlot;
-        appState.slots[slot].memoHtml = memoEditor.innerHTML;
+        syncSlotImagesFromMemo(slot);
+        appState.slots[slot].memoHtml = sanitizeMemoHtml(memoEditor.innerHTML);
+        try {
+          const raw = localStorage.getItem(STATE_KEY);
+          if (raw) {
+            const disk = JSON.parse(raw);
+            if (disk && disk.version === 5 && Array.isArray(disk.slots) && disk.slots.length === MAX_SLOTS) {
+              disk.slots[slot].memoHtml = appState.slots[slot].memoHtml;
+              disk.slots[slot].imageScale = appState.slots[slot].imageScale;
+              const src = appState.slots[slot];
+              const dst = disk.slots[slot];
+              dst.theme = src.theme;
+              dst.customBg = src.customBg;
+              dst.customText = src.customText;
+              dst.fontSize = src.fontSize;
+              dst.fontFamily = src.fontFamily;
+              dst.label = src.label;
+              dst.ySlot = src.ySlot;
+              dst.ySlotUpdatedAt = src.ySlotUpdatedAt;
+              appState.global = { ...defaultGlobal(), ...disk.global };
+              saveState(disk);
+              showSaveIndicator();
+              notifySettingsChanged(["memoHtml", "images"]);
+              return;
+            }
+          }
+        } catch {
+          /* fallthrough */
+        }
         saveState(appState);
         showSaveIndicator();
+        notifySettingsChanged(["memoHtml", "images"]);
+      }
+
+      function resolveYSlotConflicts(slots, enabledCount) {
+        const entries = [];
+        for (let i = 0; i < enabledCount; i++) {
+          entries.push({
+            slot: i,
+            ySlot: clamp(slots[i].ySlot ?? i, 0, MAX_Y_SLOTS - 1),
+            at: slots[i].ySlotUpdatedAt ?? 0
+          });
+        }
+        entries.sort((a, b) => b.at - a.at);
+        const occupied = new Set();
+        const displaced = [];
+        for (const e of entries) {
+          if (!occupied.has(e.ySlot)) {
+            occupied.add(e.ySlot);
+            slots[e.slot].ySlot = e.ySlot;
+          } else {
+            displaced.push(e.slot);
+          }
+        }
+        for (const slot of displaced) {
+          let free = 0;
+          while (occupied.has(free) && free < MAX_Y_SLOTS) free++;
+          if (free < MAX_Y_SLOTS) {
+            occupied.add(free);
+            slots[slot].ySlot = free;
+          }
+        }
+      }
+
+      function getMemoDimensions() {
+        const handleUnit = window.innerHeight / MAX_Y_SLOTS;
+        const ratio = normalizeMemoAspectRatio(appState.global.memoAspectRatio);
+        let widthPx = 3 * handleUnit;
+        let heightPx = ratio === "1:1" ? 3 * handleUnit : 4 * handleUnit;
+        const maxW = window.innerWidth - COLLAPSED_WIDTH - 8;
+        widthPx = Math.min(widthPx, maxW);
+        return { widthPx, heightPx, handleUnit };
       }
 
       function loadMemoForActiveSlot() {
-        memoEditor.innerHTML = appState.slots[appState.activeSlot].memoHtml || "";
-        applyFontSizeForSlot(appState.activeSlot);
+        const slotIndex = appState.activeSlot;
+        memoEditor.innerHTML = sanitizeMemoHtml(appState.slots[slotIndex].memoHtml || "");
+        syncSlotImagesFromMemo(slotIndex);
+        normalizeMemoTypography(slotIndex);
         scanAndLinkifyEditor(true);
       }
 
       function applyFontSizeForSlot(slotIndex) {
         const size = appState.slots[slotIndex]?.fontSize ?? DEFAULT_FONT_SIZE;
+        document.documentElement.style.setProperty("--memo-base-font-size", `${size}px`);
         memoEditor.style.fontSize = `${size}px`;
+      }
+
+      function isMemoBlockEmpty(el) {
+        if (!el) return true;
+        const text = (el.textContent || "").trim();
+        return !text && !el.querySelector("img.peekom-memo-image");
+      }
+
+      function unwrapMemoFontTags(root) {
+        root.querySelectorAll("font").forEach((font) => {
+          const parent = font.parentNode;
+          if (!parent) return;
+          while (font.firstChild) parent.insertBefore(font.firstChild, font);
+          parent.removeChild(font);
+        });
+      }
+
+      function stripMemoInlineFontSizes(root) {
+        root.querySelectorAll("*").forEach((el) => {
+          if (el === root) return;
+          if (el.style?.fontSize) el.style.removeProperty("font-size");
+          if (el.tagName === "FONT" && el.hasAttribute("size")) el.removeAttribute("size");
+        });
+      }
+
+      function demoteEmptyMarkdownBlocks(root) {
+        root.querySelectorAll("h1, h2, h3, ul, ol").forEach((block) => {
+          if (!isMemoBlockEmpty(block)) return;
+          const div = document.createElement("div");
+          div.appendChild(document.createElement("br"));
+          block.parentNode?.replaceChild(div, block);
+        });
+      }
+
+      function normalizeMemoTypography(slotIndex, options = {}) {
+        const { preserveCaret = false } = options;
+        const caret = preserveCaret ? getCaretCharOffset(memoEditor) : null;
+        applyFontSizeForSlot(slotIndex);
+        unwrapMemoFontTags(memoEditor);
+        stripMemoInlineFontSizes(memoEditor);
+        demoteEmptyMarkdownBlocks(memoEditor);
+        if (preserveCaret && caret !== null) {
+          setCaretByCharOffset(memoEditor, caret);
+        }
       }
 
       function adjustFontSize(delta) {
@@ -759,21 +1683,54 @@
           FONT_SIZE_MAX
         );
         appState.slots[slot].fontSize = next;
-        memoEditor.style.fontSize = `${next}px`;
+        applyFontSizeForSlot(slot);
+        normalizeMemoTypography(slot, { preserveCaret: true });
         saveState(appState);
+        notifySettingsChanged(["fontSize"]);
+      }
+
+      function withAlpha(hex, alpha) {
+        const h = String(hex || "#FFF4B8").replace("#", "");
+        if (h.length !== 6) return hex;
+        const r = parseInt(h.slice(0, 2), 16);
+        const g = parseInt(h.slice(2, 4), 16);
+        const b = parseInt(h.slice(4, 6), 16);
+        return `rgba(${r},${g},${b},${alpha})`;
+      }
+
+      function parseHexRgb(hex) {
+        const h = String(hex || "#FFF4B8").replace("#", "");
+        if (h.length !== 6) return [255, 244, 184];
+        return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+      }
+
+      function blendHexColors(primary, secondary, primaryWeight) {
+        const [r1, g1, b1] = parseHexRgb(primary);
+        const [r2, g2, b2] = parseHexRgb(secondary);
+        const w = primaryWeight;
+        const r = Math.round(r1 * w + r2 * (1 - w));
+        const g = Math.round(g1 * w + g2 * (1 - w));
+        const b = Math.round(b1 * w + b2 * (1 - w));
+        return `rgb(${r}, ${g}, ${b})`;
       }
 
       function applyThemeForSlot(slotIndex) {
         const slot = appState.slots[slotIndex];
-        const themeName = slot.theme;
+        let themeName = slot.theme;
         let bg;
         let text;
         let accent;
 
-        if (themeName === "custom") {
+        if (themeName === "custom" && isPremium) {
           bg = slot.customBg || "#FFF4B8";
           text = slot.customText || "#2F3750";
           accent = "#4A79FF";
+        } else if (themeName === "custom") {
+          themeName = "yellow";
+          const theme = THEME_MAP.yellow;
+          bg = theme.bg;
+          text = theme.text;
+          accent = theme.accent;
         } else {
           const safeTheme = THEME_MAP[themeName] ? themeName : "yellow";
           const theme = THEME_MAP[safeTheme];
@@ -782,39 +1739,61 @@
           accent = theme.accent;
         }
 
-        document.documentElement.style.setProperty("--note-bg", bg);
+        const opacityPct = isPremium
+          ? clamp(Number(appState.global.memoDefaultOpacity) || 100, 30, 100)
+          : 100;
+        document.documentElement.style.setProperty("--note-bg", withAlpha(bg, opacityPct / 100));
         document.documentElement.style.setProperty("--note-text", text);
         document.documentElement.style.setProperty("--accent", accent);
+        const ff = isPremium && slot.fontFamily ? slot.fontFamily : "";
+        document.documentElement.style.setProperty(
+          "--note-font-family",
+          ff
+            ? `"${ff.replace(/"/g, "")}", "Segoe UI", sans-serif`
+            : '"Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif'
+        );
+        refreshAllHandleThemes();
       }
+
+      let lastPanelLayoutKey = "";
 
       function updatePanelPosition() {
         const ySlot = appState.slots[appState.activeSlot]?.ySlot ?? 0;
-        document.documentElement.style.setProperty("--active-y-slot", String(ySlot));
-
+        const { widthPx, heightPx, handleUnit } = getMemoDimensions();
         const totalH = window.innerHeight;
-        const slotH = totalH / MAX_Y_SLOTS;
-        const preferredH = totalH * 0.40;          // 40vh
-        const handleTopPx = ySlot * slotH;
-        // 메모가 화면 밖으로 나가지 않도록: 아래쪽 공간이 부족하면 위로 밀어올림
+        const handleTopPx = ySlot * handleUnit;
         const availableBelow = totalH - handleTopPx;
         let topPx;
-        if (availableBelow >= preferredH) {
+        if (availableBelow >= heightPx) {
           topPx = handleTopPx;
         } else {
-          // 손잡이 위쪽으로 정렬 (메모 하단 = 손잡이 하단)
-          topPx = Math.max(0, handleTopPx + slotH - preferredH);
+          topPx = Math.max(0, handleTopPx + handleUnit - heightPx);
         }
-        const heightPx = Math.min(preferredH, totalH - topPx);
+        const finalHeight = Math.min(heightPx, totalH - topPx);
+        const layoutKey = `${ySlot}|${widthPx}|${finalHeight}|${topPx}`;
+        if (layoutKey === lastPanelLayoutKey) return;
+        lastPanelLayoutKey = layoutKey;
 
+        document.documentElement.style.setProperty("--active-y-slot", String(ySlot));
         noteShell.style.top = `${topPx}px`;
-        noteShell.style.height = `${heightPx}px`;
-        noteShell.style.maxHeight = `${heightPx}px`;
-        // CSS 변수도 업데이트 (전환에 사용)
-        document.documentElement.style.setProperty("--note-shell-height", `${heightPx}px`);
-        document.documentElement.style.setProperty("--note-shell-maxh", `${heightPx}px`);
+        noteShell.style.right = "0";
+        noteShell.style.left = "auto";
+        noteShell.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
+        noteShell.style.height = `${finalHeight}px`;
+        noteShell.style.maxHeight = `${finalHeight}px`;
+        noteShell.style.paddingRight = `calc(${COLLAPSED_WIDTH}px + 8px)`;
+        if (noteBacking) {
+          noteBacking.style.top = `${topPx}px`;
+          noteBacking.style.right = "0";
+          noteBacking.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
+          noteBacking.style.height = `${finalHeight}px`;
+        }
+        document.documentElement.style.setProperty("--note-shell-height", `${finalHeight}px`);
+        document.documentElement.style.setProperty("--note-shell-maxh", `${finalHeight}px`);
 
-        const tipTop = `${topPx + 14}px`;
-        firstRunTip.style.top = tipTop;
+        firstRunTip.style.top = `${topPx + 14}px`;
+        firstRunTip.style.bottom = "auto";
+        firstRunTip.style.left = "";
       }
 
       function getSlotHeightPx() {
@@ -829,13 +1808,18 @@
 
       /** 손잡이·메모·설정버튼 등 실제 인터랙션이 있는 영역 */
       const HIT_TARGET_SELECTOR =
-        ".edge-handle, .floating-panel.expanded .note-shell, .first-run-tip:not(.hidden), .settings-icon-btn:not(.hidden)";
+        ".edge-handle, .floating-panel.expanded .note-shell, .first-run-tip:not(.hidden), #handleContextMenu, #handleContextMenu *, #peekomPremiumModal, #peekomPremiumModal *";
       /** OS 폴링이 연속으로 "바깥" 판정할 때만 접기 (창 리사이즈 false-positive 방지) */
       const COLLAPSE_CONFIRM_POLLS = 2;
 
       let hitTestRafId = null;
       /** 연속으로 인덱스 바깥에 있는 폴링 횟수 카운터 */
       let consecutiveOutsidePollCount = 0;
+
+      function isPremiumModalOpen() {
+        const el = document.getElementById("peekomPremiumModal");
+        return Boolean(el && !el.classList.contains("hidden"));
+      }
 
       function isInteractiveHitTarget(el) {
         return Boolean(el && el.closest(HIT_TARGET_SELECTOR));
@@ -846,8 +1830,15 @@
           isExpanded &&
           !isPinned &&
           appState.global.triggerMode === "hover" &&
-          !draggingHandle
+          !draggingHandle &&
+          !imageStaging &&
+          !handleContextMenuOpen &&
+          !toolbarDropdownOpen
         );
+      }
+
+      function refreshAutoCollapsePolicy() {
+        syncPeekAutoCollapseToMain();
       }
 
       async function syncWindowInteraction(partial = {}) {
@@ -869,6 +1860,7 @@
       function collapseIfOutsideIndexFromPoll(payload = {}) {
         if (!shouldAutoCollapseOnHoverOutside()) {
           consecutiveOutsidePollCount = 0;
+          clearPeekCollapseDelayTimer();
           return;
         }
 
@@ -887,12 +1879,18 @@
 
         if (isOutside) {
           consecutiveOutsidePollCount++;
-          if (consecutiveOutsidePollCount >= COLLAPSE_CONFIRM_POLLS) {
+          if (consecutiveOutsidePollCount >= COLLAPSE_CONFIRM_POLLS && !peekCollapseDelayTimer) {
             consecutiveOutsidePollCount = 0;
-            setExpanded(false);
+            peekCollapseDelayTimer = setTimeout(() => {
+              peekCollapseDelayTimer = null;
+              if (shouldAutoCollapseOnHoverOutside()) {
+                setExpanded(false);
+              }
+            }, hoverDelayMs);
           }
         } else {
           consecutiveOutsidePollCount = 0;
+          clearPeekCollapseDelayTimer();
         }
       }
 
@@ -914,6 +1912,11 @@
         hitTestRafId = requestAnimationFrame(() => {
           hitTestRafId = null;
 
+          if (isPremiumModalOpen()) {
+            syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
+            return;
+          }
+
           if (!isExpanded) {
             const x = typeof event.clientX === "number" ? event.clientX : -1;
             const y = typeof event.clientY === "number" ? event.clientY : -1;
@@ -930,7 +1933,16 @@
           const x = typeof event.clientX === "number" ? event.clientX : -1;
           const y = typeof event.clientY === "number" ? event.clientY : -1;
           const hasValidCoords = x >= 0 && y >= 0;
-          const el = hasValidCoords ? document.elementFromPoint(x, y) : null;
+
+          if (!hasValidCoords) {
+            syncWindowInteraction({
+              ignoreMouse: false,
+              pointerOver: true
+            });
+            return;
+          }
+
+          const el = document.elementFromPoint(x, y);
           const interactive = isInteractiveHitTarget(el);
 
           // 클릭 통과 제어만 담당. 접힘은 OS 폴링(collapseIfOutsideIndexFromPoll)만 담당.
@@ -951,31 +1963,46 @@
 
         if (!nextExpanded) {
           clearRevealTimer();
-          settingsIconBtn.classList.add("hidden");
+          clearPeekCollapseDelayTimer();
+          hideHandleContextMenu();
         } else {
-          clearRevealTimer();
-          settingsRevealTimer = setTimeout(() => {
-            if (isExpanded) settingsIconBtn.classList.remove("hidden");
-          }, 1000);
+          clearPeekCollapseDelayTimer();
+          if (noteBacking) {
+            noteBacking.setAttribute("aria-hidden", "false");
+          }
+        }
+
+        if (!nextExpanded && noteBacking) {
+          noteBacking.setAttribute("aria-hidden", "true");
         }
 
         syncPanelLayoutToMain();
         syncPeekAutoCollapseToMain();
-        updatePanelPosition();
+        refreshAllHandleThemes();
+        if (nextExpanded) {
+          syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
+          requestAnimationFrame(() => {
+            updatePanelPosition();
+            memoEditor?.focus();
+          });
+        } else {
+          requestAnimationFrame(() => updatePanelPosition());
+        }
       }
 
       function setPinned(nextPinned) {
         isPinned = nextPinned;
-        const lang = (typeof PeekomI18n !== "undefined") ? PeekomI18n.getCurrentLang() : "ko";
-        const ti = (k) => (typeof PeekomI18n !== "undefined") ? PeekomI18n.t(k, lang) : (k === "modePeek" ? "빼꼼" : "얼음");
         modeChip.textContent = nextPinned ? ti("modeIce") : ti("modePeek");
-        modeChip.title = nextPinned ? ti("modeChipTipIce") : ti("modeChipTipPeek");
+        modeChip.removeAttribute("title");
         modeChip.classList.toggle("ice", nextPinned);
         modeChip.classList.toggle("peek", !nextPinned);
         syncPeekAutoCollapseToMain();
       }
 
       function handleLabelDisplay(slotIndex) {
+        if (typeof PeekomI18n !== "undefined" && PeekomI18n.resolveSlotLabel) {
+          return PeekomI18n.resolveSlotLabel(appState.slots[slotIndex].label, slotIndex, LABEL_MAX);
+        }
         const raw = appState.slots[slotIndex].label.trim();
         if (raw.length > 0) return raw.slice(0, LABEL_MAX);
         return String(slotIndex + 1);
@@ -983,11 +2010,157 @@
 
       function getThemeColorsForSlot(slotIndex) {
         const slot = appState.slots[slotIndex];
-        if (slot.theme === "custom") {
+        if (slot.theme === "custom" && isPremium) {
           return { bg: slot.customBg || "#FFF4B8", text: slot.customText || "#2F3750" };
         }
-        const theme = THEME_MAP[slot.theme] || THEME_MAP.yellow;
+        const theme = THEME_MAP[slot.theme === "custom" ? "yellow" : slot.theme] || THEME_MAP.yellow;
         return { bg: theme.bg, text: theme.text };
+      }
+
+      function getMemoOpacityAlpha() {
+        return isPremium
+          ? clamp(Number(appState.global.memoDefaultOpacity) || 100, 30, 100) / 100
+          : 1;
+      }
+
+      function rgbaFromRgb(rgbStr, alpha) {
+        const m = String(rgbStr || "").match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+        if (!m) return rgbStr;
+        return `rgba(${m[1]},${m[2]},${m[3]},${alpha})`;
+      }
+
+      function applyHandleThemeStyles(btn, slotIndex) {
+        const themeColors = getThemeColorsForSlot(slotIndex);
+        const alpha = getMemoOpacityAlpha();
+        const isActiveExpanded = isExpanded && slotIndex === appState.activeSlot;
+        btn.style.setProperty("--handle-bg", withAlpha(themeColors.bg, alpha));
+        btn.style.setProperty("--handle-text", themeColors.text);
+        if (isActiveExpanded) {
+          btn.style.background = "";
+          btn.style.color = "";
+        } else {
+          const mixWeight = slotIndex === appState.activeSlot ? 0.78 : 0.9;
+          const blended = blendHexColors(themeColors.bg, themeColors.text, mixWeight);
+          btn.style.background = alpha < 1 ? rgbaFromRgb(blended, alpha) : blended;
+          btn.style.color = themeColors.text;
+        }
+      }
+
+      function refreshAllHandleThemes() {
+        handleColumn.querySelectorAll(".edge-handle").forEach((btn) => {
+          const slotIndex = Number(btn.dataset.slotIndex);
+          if (Number.isFinite(slotIndex)) applyHandleThemeStyles(btn, slotIndex);
+        });
+      }
+
+      function hideHandleContextMenu() {
+        handleContextMenuOpen = false;
+        handleContextMenu?.classList.add("hidden");
+        handleContextMenu.innerHTML = "";
+        refreshPointerHitTest();
+        refreshAutoCollapsePolicy();
+      }
+
+      function showHandleContextMenu(clientX, clientY, items) {
+        if (!handleContextMenu || !items.length) return;
+        handleContextMenu.innerHTML = "";
+        items.forEach((item) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.textContent = item.label;
+          btn.disabled = Boolean(item.disabled);
+          if (item.danger) btn.classList.add("danger");
+          btn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            hideHandleContextMenu();
+            item.action?.();
+          });
+          handleContextMenu.appendChild(btn);
+        });
+        handleContextMenu.classList.remove("hidden");
+        handleContextMenuOpen = true;
+        handleContextMenu.style.left = `${clientX}px`;
+        handleContextMenu.style.top = `${clientY}px`;
+        requestAnimationFrame(() => {
+          const rect = handleContextMenu.getBoundingClientRect();
+          let left = clientX;
+          let top = clientY;
+          if (left + rect.width > window.innerWidth - 8) {
+            left = Math.max(8, window.innerWidth - rect.width - 8);
+          }
+          if (top + rect.height > window.innerHeight - 8) {
+            top = Math.max(8, window.innerHeight - rect.height - 8);
+          }
+          handleContextMenu.style.left = `${left}px`;
+          handleContextMenu.style.top = `${top}px`;
+          refreshPointerHitTest();
+        });
+      }
+
+      function onHandleContextMenu(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (draggingHandle) return;
+        const btn = event.currentTarget;
+        const slot = Number(btn.dataset.slotIndex);
+        const items = [];
+
+        const max = getMaxEnabledSlots();
+        if (appState.enabledCount < max) {
+          items.push({
+            label: ti("handleAddIndex"),
+            action: () => addIndexAtBottom()
+          });
+        } else if (!isPremium) {
+          items.push({
+            label: ti("handleUpgradePlus"),
+            action: () => window.PeekomPremiumUI?.showPremiumModal()
+          });
+        }
+
+        items.push({
+          label: ti("handleDeleteIndex"),
+          danger: true,
+          disabled: appState.enabledCount <= 1,
+          action: () => {
+            if (appState.enabledCount <= 1) return;
+            if (appState.activeSlot !== slot) {
+              persistActiveMemo();
+              appState.activeSlot = slot;
+              applyThemeForSlot(slot);
+              loadMemoForActiveSlot();
+              updateActiveHandle(slot);
+            }
+            deleteCurrentIndexWithConfirm();
+          }
+        });
+
+        showHandleContextMenu(event.clientX, event.clientY, items);
+      }
+
+      function onHandleColumnContextMenu(event) {
+        if (event.target.closest(".edge-handle")) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (draggingHandle) return;
+        const max = getMaxEnabledSlots();
+        if (appState.enabledCount >= max) {
+          if (!isPremium) {
+            showHandleContextMenu(event.clientX, event.clientY, [
+              {
+                label: ti("handleUpgradePlus"),
+                action: () => window.PeekomPremiumUI?.showPremiumModal()
+              }
+            ]);
+          }
+          return;
+        }
+        showHandleContextMenu(event.clientX, event.clientY, [
+          {
+            label: ti("handleAddIndex"),
+            action: () => addIndexAtBottom()
+          }
+        ]);
       }
 
       function renderHandleStack() {
@@ -1004,9 +2177,7 @@
           btn.style.top = `calc(var(--handle-height) * ${ySlot})`;
           if (slotIndex === appState.activeSlot) btn.classList.add("is-active");
 
-          const themeColors = getThemeColorsForSlot(slotIndex);
-          btn.style.setProperty("--handle-bg", themeColors.bg);
-          btn.style.setProperty("--handle-text", themeColors.text);
+          applyHandleThemeStyles(btn, slotIndex);
 
           const labelEl = document.createElement("span");
           labelEl.className = "handle-label-text";
@@ -1016,16 +2187,22 @@
           btn.appendChild(labelEl);
           btn.setAttribute(
             "aria-label",
-            `인덱스 ${slotIndex + 1}, ${handleLabelDisplay(slotIndex)}. 열기·위치 이동·순서 바꾸기`
+            ti("handleAriaLabel", { n: slotIndex + 1, label: handleLabelDisplay(slotIndex) })
           );
 
           btn.addEventListener("mouseenter", onHandleMouseEnter);
           btn.addEventListener("mouseleave", onHandleMouseLeave);
           btn.addEventListener("pointerdown", onHandlePointerDown);
           btn.addEventListener("click", onHandleClick);
+          btn.addEventListener("contextmenu", onHandleContextMenu);
 
           handleColumn.appendChild(btn);
         });
+
+        if (!handleColumn.dataset.contextMenuBound) {
+          handleColumn.addEventListener("contextmenu", onHandleColumnContextMenu);
+          handleColumn.dataset.contextMenuBound = "1";
+        }
 
         updatePanelPosition();
       }
@@ -1043,6 +2220,7 @@
           const si = Number(btn.dataset.slotIndex);
           btn.classList.toggle("is-active", si === newActiveSlot);
         });
+        refreshAllHandleThemes();
         updatePanelPosition();
       }
 
@@ -1096,8 +2274,18 @@
 
         const slot = Number(btn.dataset.slotIndex);
         if (appState.activeSlot !== slot) {
+          if (imageStaging) {
+            const ok = confirm(ti("imageSwitchIndexConfirm"));
+            if (!ok) {
+              event.preventDefault();
+              event.stopPropagation();
+              return;
+            }
+            hideImageStaging();
+          }
           persistActiveMemo();
           appState.activeSlot = slot;
+          appState.global.lastOpenedSlotIndex = slot;
           applyThemeForSlot(slot);
           loadMemoForActiveSlot();
           saveState(appState);
@@ -1123,13 +2311,13 @@
         const dist = Math.hypot(dx, dy);
 
         if (!dragMode && dist >= DRAG_THRESHOLD) {
-          if (Math.abs(dx) >= Math.abs(dy)) {
+          if (Math.abs(dy) >= Math.abs(dx)) {
+            dragMode = "moveSlot";
+          } else {
             dragMode = "reorder";
             clearHoverTimer();
             const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
             if (btn) btn.classList.add("is-dragging-reorder");
-          } else {
-            dragMode = "moveSlot";
           }
         }
 
@@ -1143,21 +2331,29 @@
             const currentSlot = appState.slots[reorderSlot].ySlot;
 
             if (newSlot !== currentSlot) {
-              const occupant = findSlotAtYSlot(newSlot, reorderSlot);
-              if (occupant !== null) {
-                if (swapTargetSlot !== occupant) {
-                  clearSwapTimer();
-                  swapTargetSlot = occupant;
-                  const targetSlot = occupant;
-                  swapTimer = setTimeout(() => {
-                    swapYSlots(reorderSlot, targetSlot);
-                  }, SWAP_HOLD_MS);
-                }
-              } else {
+              if (!isPremium && appState.enabledCount > 1) {
+                const delta = newSlot - currentSlot;
                 clearSwapTimer();
-                appState.slots[reorderSlot].ySlot = newSlot;
-                repositionHandle(reorderSlot);
+                applyGroupYSlotDelta(delta);
                 if (reorderSlot === appState.activeSlot) updatePanelPosition();
+              } else {
+                const occupant = findSlotAtYSlot(newSlot, reorderSlot);
+                if (occupant !== null) {
+                  if (swapTargetSlot !== occupant) {
+                    clearSwapTimer();
+                    swapTargetSlot = occupant;
+                    const targetSlot = occupant;
+                    swapTimer = setTimeout(() => {
+                      swapYSlots(reorderSlot, targetSlot);
+                    }, SWAP_HOLD_MS);
+                  }
+                } else {
+                  clearSwapTimer();
+                  appState.slots[reorderSlot].ySlot = newSlot;
+                  appState.slots[reorderSlot].ySlotUpdatedAt = Date.now();
+                  repositionHandle(reorderSlot);
+                  if (reorderSlot === appState.activeSlot) updatePanelPosition();
+                }
               }
             } else {
               clearSwapTimer();
@@ -1217,11 +2413,27 @@
         return null;
       }
 
+      function applyGroupYSlotDelta(delta) {
+        if (!delta) return;
+        const ec = appState.enabledCount;
+        const ord = appState.order.slice(0, ec);
+        const now = Date.now();
+        for (const si of ord) {
+          appState.slots[si].ySlot = clamp(appState.slots[si].ySlot + delta, 0, MAX_Y_SLOTS - 1);
+          appState.slots[si].ySlotUpdatedAt = now;
+          repositionHandle(si);
+        }
+        saveState(appState);
+      }
+
       function swapYSlots(a, b) {
         const ya = appState.slots[a].ySlot;
         const yb = appState.slots[b].ySlot;
+        const now = Date.now();
         appState.slots[a].ySlot = yb;
         appState.slots[b].ySlot = ya;
+        appState.slots[a].ySlotUpdatedAt = now;
+        appState.slots[b].ySlotUpdatedAt = now;
         saveState(appState);
         repositionHandle(a);
         repositionHandle(b);
@@ -1257,6 +2469,7 @@
         if (!draggingHandle || dragPointerId !== event.pointerId) return;
 
         const wasMoveSlot = dragMode === "moveSlot";
+        const movedSlot = reorderSlot;
         draggingHandle = false;
         dragPointerId = null;
 
@@ -1283,7 +2496,13 @@
         syncPeekAutoCollapseToMain();
 
         if (wasMoveSlot) {
+          resolveYSlotConflicts(appState.slots, appState.enabledCount);
+          for (let i = 0; i < appState.enabledCount; i++) repositionHandle(i);
+          if (movedSlot === appState.activeSlot) {
+            updatePanelPosition();
+          }
           saveState(appState);
+          notifySettingsChanged(["ySlot"]);
         }
       }
 
@@ -1313,9 +2532,9 @@
 
       noteShell.addEventListener("click", (event) => {
         // 칩 클릭은 위에서 처리, 서식바/입력/링크는 무시
-        if (event.target.closest("button, select, input, .format-bar, a")) return;
+        if (event.target.closest("button, select, input, .format-bar, .image-staging-overlay, a")) return;
         if (!isExpanded) return;
-        const mode = appState.global.pinToggleMode || "chip";
+        const mode = appState.global.pinToggleMode || "dblclick";
         if (mode === "click") {
           setPinned(!isPinned);
         }
@@ -1323,56 +2542,73 @@
       });
 
       noteShell.addEventListener("dblclick", (event) => {
-        if (event.target.closest("button, select, input, .format-bar, a")) return;
+        if (event.target.closest("button, select, input, .format-bar, .image-staging-overlay, a")) return;
         if (!isExpanded) return;
-        const mode = appState.global.pinToggleMode || "chip";
+        const mode = appState.global.pinToggleMode || "dblclick";
         if (mode === "dblclick") {
           setPinned(!isPinned);
         }
       });
 
-      noteShell.addEventListener("mouseenter", () => {
-        if (!isExpanded) return;
-        clearRevealTimer();
-        settingsRevealTimer = setTimeout(() => {
-          if (isExpanded) settingsIconBtn.classList.remove("hidden");
-        }, 1000);
+      // 설정 아이콘 호버 노출 기능 제거: 펼침 상태에서 고정 표시
+
+      memoEditor.addEventListener("focus", () => {
+        memoEditorFocused = true;
+        refreshAutoCollapsePolicy();
       });
 
-      noteShell.addEventListener("mouseleave", () => {
-        clearRevealTimer();
-        if (!settingsIconBtn.matches(":hover")) {
-          settingsIconBtn.classList.add("hidden");
+      memoEditor.addEventListener("blur", () => {
+        memoEditorFocused = false;
+        normalizeMemoTypography(appState.activeSlot, { preserveCaret: false });
+        persistActiveMemo();
+        refreshAutoCollapsePolicy();
+      });
+
+      memoEditor.addEventListener("input", (event) => {
+        const lineEl = getCurrentLineElement();
+        if (lineEl && lineMayHaveInlineMarkdown(lineEl)) {
+          if (markdownInputRaf) cancelAnimationFrame(markdownInputRaf);
+          markdownInputRaf = requestAnimationFrame(() => {
+            markdownInputRaf = null;
+            processMarkdownInput();
+          });
         }
-      });
-
-      settingsIconBtn.addEventListener("mouseenter", () => {
-        clearRevealTimer();
-        settingsIconBtn.classList.remove("hidden");
-      });
-
-      settingsIconBtn.addEventListener("mouseleave", () => {
-        if (!noteShell.matches(":hover")) {
-          settingsIconBtn.classList.add("hidden");
-        }
-      });
-
-      memoEditor.addEventListener("input", () => {
-        processMarkdownInput();
         persistActiveMemo();
         scheduleUrlScan();
+        updateToolbarActiveState();
       });
 
       memoEditor.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") {
-          setTimeout(() => processMarkdownLineOnEnter(), 0);
+        if (event.key === "Backspace" || event.key === "Delete") {
+          const sel = window.getSelection();
+          if (sel && sel.rangeCount > 0) {
+            const range = sel.getRangeAt(0);
+            const img =
+              range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+                ? range.commonAncestorContainer.closest?.(".peekom-memo-image")
+                : range.commonAncestorContainer.parentElement?.closest?.(".peekom-memo-image");
+            if (img && memoEditor.contains(img)) {
+              event.preventDefault();
+              const wrap = img.closest(".peekom-image-wrap");
+              (wrap || img).remove();
+              persistActiveMemo();
+              return;
+            }
+          }
         }
+        if (event.key !== "Enter" || event.shiftKey) return;
+        handleMarkdownEnter(event);
       });
 
       memoEditor.addEventListener(
         "wheel",
         (event) => {
           if (!event.ctrlKey && !event.metaKey) return;
+          if (!isPremium) {
+            event.preventDefault();
+            window.PeekomPremiumUI?.showPremiumModal();
+            return;
+          }
           event.preventDefault();
           adjustFontSize(event.deltaY < 0 ? 1 : -1);
         },
@@ -1381,12 +2617,27 @@
 
       memoEditor.addEventListener("paste", () => {
         setTimeout(() => {
+          normalizeMemoTypography(appState.activeSlot, { preserveCaret: true });
           scanAndLinkifyEditor();
           persistActiveMemo();
         }, 0);
       });
 
       memoEditor.addEventListener("click", (event) => {
+        const check = event.target.closest(".peekom-task-check");
+        if (check && memoEditor.contains(check)) {
+          event.preventDefault();
+          const li = check.closest("li");
+          if (li) {
+            const checked = li.getAttribute("data-checked") === "true";
+            const next = !checked;
+            li.setAttribute("data-checked", String(next));
+            check.setAttribute("aria-checked", String(next));
+            persistActiveMemo();
+            showSaveIndicator();
+          }
+          return;
+        }
         const link = event.target.closest("a[data-external]");
         if (!link) return;
         event.preventDefault();
@@ -1401,42 +2652,807 @@
         button.addEventListener("click", (event) => {
           event.stopPropagation();
           executeCmd(button.dataset.cmd);
+          updateToolbarActiveState();
         });
       });
 
-      alignCycleBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
-        cycleAlignment();
+      document.querySelectorAll("[data-align]").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          executeCmd(btn.dataset.align);
+          closeToolbarDropdowns();
+          updateToolbarActiveState();
+        });
       });
 
-      listCycleBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
-        cycleListMode();
+      function getSelectionNodeInEditor() {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return null;
+        let node = sel.anchorNode;
+        if (!node) return null;
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+        if (!node || !memoEditor.contains(node)) return null;
+        return node;
+      }
+
+      function removeListFormatting() {
+        const node = getSelectionNodeInEditor();
+        if (!node) return;
+        const list = node.closest("ul, ol");
+        if (!list || !memoEditor.contains(list)) return;
+        const items = Array.from(list.querySelectorAll(":scope > li"));
+        const frag = document.createDocumentFragment();
+        items.forEach((li) => {
+          const p = document.createElement("p");
+          while (li.firstChild) p.appendChild(li.firstChild);
+          if (!p.textContent.trim() && !p.querySelector("img, br")) p.appendChild(document.createElement("br"));
+          frag.appendChild(p);
+        });
+        list.parentNode?.replaceChild(frag, list);
+      }
+
+      function applyListStyle(style) {
+        memoEditor.focus();
+        if (style === "plain") {
+          removeListFormatting();
+          return;
+        }
+
+        const node = getSelectionNodeInEditor();
+        const ul = node?.closest("ul:not(.peekom-task-list)");
+        const ol = node?.closest("ol");
+
+        if (style === "ordered") {
+          if (ol) return;
+          if (ul) {
+            document.execCommand("insertOrderedList", false, null);
+            return;
+          }
+          document.execCommand("insertOrderedList", false, null);
+          return;
+        }
+
+        const wantSquare = style === "square";
+        if (ul) {
+          ul.classList.toggle("peekom-list-square", wantSquare);
+          return;
+        }
+        if (ol) {
+          document.execCommand("insertOrderedList", false, null);
+        }
+        document.execCommand("insertUnorderedList", false, null);
+        const list = getSelectionNodeInEditor()?.closest("ul:not(.peekom-task-list)");
+        if (list) {
+          list.classList.toggle("peekom-list-square", wantSquare);
+        }
+      }
+
+      document.querySelectorAll("[data-list]").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          applyListStyle(btn.dataset.list);
+          closeToolbarDropdowns();
+          updateToolbarActiveState();
+        });
       });
 
-      textColorCycleBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
-        cycleTextColor();
+
+      document.querySelectorAll(".color-swatch-btn").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const color = btn.dataset.color === "theme"
+            ? getComputedStyle(document.documentElement).getPropertyValue("--note-text").trim() || "#2F3750"
+            : btn.dataset.color;
+          executeCmd("foreColor", color);
+          closeToolbarDropdowns();
+          updateToolbarActiveState();
+        });
       });
 
-      highlightCycleBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
-        cycleHighlightColor();
+      function isSelectionInMemoEditor() {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return false;
+        let node = sel.anchorNode;
+        if (!node) return false;
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+        return Boolean(node && memoEditor.contains(node));
+      }
+
+      function updateToolbarActiveState() {
+        if (!memoEditor || !isSelectionInMemoEditor()) {
+          toolbarButtons.forEach((button) => button.classList.remove("active"));
+          listMenuBtn?.classList.remove("active");
+          document.querySelectorAll("[data-align]").forEach((b) => b.classList.remove("active"));
+          document.querySelectorAll("[data-list]").forEach((b) => b.classList.remove("active"));
+          return;
+        }
+
+        const cmdMap = {
+          bold: "bold",
+          italic: "italic",
+          underline: "underline",
+          strikeThrough: "strikeThrough"
+        };
+
+        toolbarButtons.forEach((button) => {
+          const cmd = button.dataset.cmd;
+          const stateCmd = cmdMap[cmd];
+          if (!stateCmd) return;
+          let active = false;
+          try {
+            active = document.queryCommandState(stateCmd);
+          } catch {
+            active = false;
+          }
+          button.classList.toggle("active", active);
+        });
+
+        const node = getSelectionNodeInEditor();
+        const ul = node?.closest("ul");
+        const ol = node?.closest("ol");
+        let listStyle = null;
+        if (ul && !ul.classList.contains("peekom-task-list")) {
+          listStyle = ul.classList.contains("peekom-list-square") ? "square" : "disc";
+        } else if (ol) {
+          listStyle = "ordered";
+        }
+        listMenuBtn?.classList.toggle("active", Boolean(listStyle));
+        document.querySelectorAll("[data-list]").forEach((b) => {
+          b.classList.toggle("active", b.dataset.list === listStyle);
+        });
+
+        let alignValue = "justifyLeft";
+        try {
+          alignValue = document.queryCommandValue("justify") || "justifyLeft";
+        } catch {
+          alignValue = "justifyLeft";
+        }
+        document.querySelectorAll("[data-align]").forEach((b) => {
+          b.classList.toggle("active", b.dataset.align === alignValue);
+        });
+      }
+
+      document.addEventListener("selectionchange", () => {
+        if (!isExpanded) return;
+        updateToolbarActiveState();
       });
 
-      clearAllBtn.addEventListener("click", (event) => {
-        event.stopPropagation();
-        onClearAllClick();
+      memoEditor.addEventListener("keyup", updateToolbarActiveState);
+      memoEditor.addEventListener("mouseup", updateToolbarActiveState);
+      memoEditor.addEventListener("click", updateToolbarActiveState);
+      memoEditor.addEventListener("focus", updateToolbarActiveState);
+
+      function closeToolbarDropdowns() {
+        document.querySelectorAll(".toolbar-dropdown.open").forEach((el) => el.classList.remove("open"));
+        toolbarDropdownOpen = false;
+        refreshAutoCollapsePolicy();
+      }
+
+      function bindToolbarDropdown(wrapId, dropdownId) {
+        const wrap = document.getElementById(wrapId);
+        const dropdown = document.getElementById(dropdownId);
+        if (!wrap || !dropdown) return;
+        const trigger = wrap.querySelector(".tool-btn");
+        trigger?.addEventListener("click", (event) => {
+          event.stopPropagation();
+          const willOpen = !dropdown.classList.contains("open");
+          closeToolbarDropdowns();
+          if (willOpen) {
+            dropdown.classList.add("open");
+            toolbarDropdownOpen = true;
+            refreshAutoCollapsePolicy();
+          }
+        });
+      }
+
+      bindToolbarDropdown("alignDropdownWrap", "alignDropdown");
+      bindToolbarDropdown("colorDropdownWrap", "colorDropdown");
+      bindToolbarDropdown("listDropdownWrap", "listDropdown");
+
+      function applyFormatBarTooltips() {
+        const lang = (typeof PeekomI18n !== "undefined") ? PeekomI18n.getCurrentLang() : "ko";
+        const tip = (key) => {
+          if (typeof PeekomI18n !== "undefined") return PeekomI18n.t(key, lang);
+          return key;
+        };
+        document.querySelectorAll(".format-bar [data-tip-key], .toolbar-dropdown [data-tip-key]").forEach((btn) => {
+          const key = btn.dataset.tipKey;
+          if (!key) return;
+          const text = tip(key);
+          btn.dataset.tip = text;
+          btn.setAttribute("aria-label", text);
+          btn.removeAttribute("title");
+        });
+      }
+      applyFormatBarTooltips();
+
+      window.peekomSyncWindowInteraction = syncWindowInteraction;
+      window.peekomRefreshPointerHitTest = refreshPointerHitTest;
+
+      document.addEventListener("click", (event) => {
+        closeToolbarDropdowns();
+        if (!event.target.closest("#handleContextMenu")) {
+          hideHandleContextMenu();
+        }
       });
 
-      fontDecreaseBtn.addEventListener("click", (event) => {
+      function getMaxImagesPerMemo() {
+        return isPremium ? PLUS_MAX_IMAGES_PER_MEMO : FREE_MAX_IMAGES_PER_MEMO;
+      }
+
+      function countActiveMemoImages() {
+        return memoEditor?.querySelectorAll("img.peekom-memo-image").length ?? 0;
+      }
+
+      function syncSlotImagesFromMemo(slotIndex = appState.activeSlot) {
+        const slot = appState.slots[slotIndex];
+        if (!slot || !memoEditor) return;
+        const liveImages = Array.from(memoEditor.querySelectorAll("img.peekom-memo-image"));
+        const liveIds = new Set();
+        liveImages.forEach((img) => {
+          const id = img.getAttribute("data-peekom-id");
+          if (id) liveIds.add(id);
+        });
+        if (!Array.isArray(slot.images)) slot.images = [];
+        slot.images = slot.images.filter((entry) => liveIds.has(entry.id));
+        liveImages.forEach((img) => {
+          const id = img.getAttribute("data-peekom-id");
+          if (!id || slot.images.some((entry) => entry.id === id)) return;
+          const widthStyle = String(img.style.width || "");
+          const widthPx = parseInt(widthStyle, 10);
+          slot.images.push({
+            id,
+            sourcePath: null,
+            dataUrl: img.getAttribute("src") || "",
+            widthPx: Number.isFinite(widthPx) ? widthPx : undefined,
+            scale: Number.isFinite(widthPx) ? widthPx : 100,
+            insertedAt: new Date().toISOString()
+          });
+        });
+      }
+
+      function guardMemoImageLimit() {
+        syncSlotImagesFromMemo();
+        const max = getMaxImagesPerMemo();
+        if (countActiveMemoImages() >= max) {
+          if (!isPremium) {
+            window.PeekomPremiumUI?.showPremiumModal();
+            syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
+          } else {
+            alert(ti("indexMaxImagesAlert", { max }));
+          }
+          return false;
+        }
+        return true;
+      }
+
+      const CROP_RATIO_MAP = {
+        free: null,
+        "1:1": 1,
+        "3:4": 3 / 4,
+        "4:3": 4 / 3,
+        "16:9": 16 / 9,
+        "9:16": 9 / 16
+      };
+
+      let cropDrag = null;
+
+      function syncStagingPreviewWrapSize() {
+        if (!imageStagingPreviewWrap) return;
+        const maxW = Math.max(160, Math.min(300, (memoEditor?.clientWidth || 300) - 24));
+        imageStagingPreviewWrap.style.width = `${maxW}px`;
+        imageStagingPreviewWrap.style.height = "160px";
+      }
+
+      function getStagingZoomRange(layout) {
+        if (!layout) return { minZoom: 1, maxZoom: 1 };
+        const { wrapW, wrapH, baseDispW, baseDispH } = layout;
+        const minZoom = baseDispH > 0 ? wrapH / baseDispH : 1;
+        const maxZoom = baseDispW > 0 ? wrapW / baseDispW : 1;
+        return {
+          minZoom: Math.min(minZoom, maxZoom),
+          maxZoom: Math.max(minZoom, maxZoom)
+        };
+      }
+
+      function syncStagingSliderRange(preserveZoom = true) {
+        if (!imageStagingSlider || !isPremium) return;
+        const layout = getStagingImageLayout();
+        if (!layout) return;
+        const { minZoom, maxZoom } = getStagingZoomRange(layout);
+        const minPct = Math.max(1, Math.round(minZoom * 100));
+        const maxPct = Math.max(minPct, Math.round(maxZoom * 100));
+        imageStagingSlider.min = String(minPct);
+        imageStagingSlider.max = String(maxPct);
+        const curZoom = preserveZoom ? (Number(imageStagingSlider.value) || 100) / 100 : 1;
+        const clamped = clamp(curZoom, minZoom, maxZoom);
+        imageStagingSlider.value = String(Math.round(clamped * 100));
+      }
+
+      function getImageBounds(layout) {
+        if (!layout) return null;
+        const { offsetX, offsetY, dispW, dispH } = layout;
+        return {
+          minX: offsetX,
+          minY: offsetY,
+          maxX: offsetX + dispW,
+          maxY: offsetY + dispH
+        };
+      }
+
+      function clampCropRectToImage(rect, layout) {
+        const b = getImageBounds(layout);
+        if (!b || !rect) return rect;
+        let { x, y, w, h } = rect;
+        w = Math.min(w, b.maxX - b.minX);
+        h = Math.min(h, b.maxY - b.minY);
+        x = clamp(x, b.minX, Math.max(b.minX, b.maxX - w));
+        y = clamp(y, b.minY, Math.max(b.minY, b.maxY - h));
+        return { x, y, w, h };
+      }
+
+      function getStagingImageLayout() {
+        const wrap = imageStagingPreviewWrap;
+        const img = imageStagingPreview;
+        if (!wrap || !img || !img.naturalWidth) return null;
+        const wrapW = wrap.clientWidth;
+        const wrapH = wrap.clientHeight || 160;
+        const natW = img.naturalWidth;
+        const natH = img.naturalHeight;
+        const zoom = (Number(imageStagingSlider?.value) || 100) / 100;
+        const fit = Math.min(wrapW / natW, wrapH / natH);
+        const baseDispW = natW * fit;
+        const baseDispH = natH * fit;
+        const dispW = baseDispW * zoom;
+        const dispH = baseDispH * zoom;
+        const offsetX = (wrapW - dispW) / 2;
+        const offsetY = (wrapH - dispH) / 2;
+        return { wrapW, wrapH, dispW, dispH, offsetX, offsetY, natW, natH, baseDispW, baseDispH };
+      }
+
+      function saveCropNorm() {
+        const layout = getStagingImageLayout();
+        if (!layout || !imageStaging?.cropRect) return;
+        const { offsetX, offsetY, dispW, dispH } = layout;
+        const r = imageStaging.cropRect;
+        if (dispW <= 0 || dispH <= 0) return;
+        imageStaging.cropNorm = {
+          x: clamp((r.x - offsetX) / dispW, 0, 1),
+          y: clamp((r.y - offsetY) / dispH, 0, 1),
+          w: clamp(r.w / dispW, 0.05, 1),
+          h: clamp(r.h / dispH, 0.05, 1)
+        };
+      }
+
+      function syncCropRectFromNorm() {
+        if (!imageStaging?.cropNorm) return;
+        const layout = getStagingImageLayout();
+        if (!layout) return;
+        const { offsetX, offsetY, dispW, dispH } = layout;
+        const n = imageStaging.cropNorm;
+        let w = n.w * dispW;
+        let h = n.h * dispH;
+        let x = offsetX + n.x * dispW;
+        let y = offsetY + n.y * dispH;
+        imageStaging.cropRect = clampCropRectToImage({ x, y, w, h }, layout);
+      }
+
+      function initCropRect() {
+        const layout = getStagingImageLayout();
+        if (!layout || !imageStaging) return;
+        const { offsetX, offsetY, dispW, dispH } = layout;
+        const ratio = CROP_RATIO_MAP[imageStaging.cropRatio || "free"];
+        let w = dispW;
+        let h = dispH;
+        let x = offsetX;
+        let y = offsetY;
+        if (ratio) {
+          if (w / h > ratio) w = h * ratio;
+          else h = w / ratio;
+          x = offsetX + (dispW - w) / 2;
+          y = offsetY + (dispH - h) / 2;
+        }
+        imageStaging.cropRect = clampCropRectToImage({ x, y, w, h }, layout);
+        saveCropNorm();
+      }
+
+      function applyCropRatioConstraint() {
+        const ratio = CROP_RATIO_MAP[imageStaging?.cropRatio || "free"];
+        if (!ratio || !imageStaging?.cropRect) return;
+        const layout = getStagingImageLayout();
+        if (!layout) return;
+        const { offsetX, offsetY, dispW, dispH } = layout;
+        const minX = offsetX;
+        const minY = offsetY;
+        const maxX = offsetX + dispW;
+        const maxY = offsetY + dispH;
+        let w = imageStaging.cropRect.w;
+        let h = w / ratio;
+        if (h > dispH) {
+          h = dispH;
+          w = h * ratio;
+        }
+        if (w > dispW) {
+          w = dispW;
+          h = w / ratio;
+        }
+        const cx = imageStaging.cropRect.x + imageStaging.cropRect.w / 2;
+        const cy = imageStaging.cropRect.y + imageStaging.cropRect.h / 2;
+        let x = cx - w / 2;
+        let y = cy - h / 2;
+        x = clamp(x, minX, maxX - w);
+        y = clamp(y, minY, maxY - h);
+        imageStaging.cropRect = { x, y, w, h };
+        saveCropNorm();
+      }
+
+      function renderCropFrame() {
+        if (!imageStagingCropFrame || !imageStaging?.cropRect) return;
+        const r = imageStaging.cropRect;
+        imageStagingCropFrame.style.left = `${r.x}px`;
+        imageStagingCropFrame.style.top = `${r.y}px`;
+        imageStagingCropFrame.style.width = `${r.w}px`;
+        imageStagingCropFrame.style.height = `${r.h}px`;
+      }
+
+      function updateCropUiVisibility() {
+        const show = isPremium;
+        imageStagingCropLayer?.classList.toggle("hidden", !show);
+        imageStagingCropRatios?.classList.toggle("hidden", !show);
+        if (show && imageStaging) {
+          if (!imageStaging.cropRect) initCropRect();
+          else syncCropRectFromNorm();
+          applyCropRatioConstraint();
+          renderCropFrame();
+        }
+      }
+
+      function loadImageElement(src) {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = reject;
+          img.src = src;
+        });
+      }
+
+      async function exportStagedImage() {
+        const src = imageStaging.dataUrl;
+        const img = await loadImageElement(src);
+        const layout = getStagingImageLayout();
+        const crop = imageStaging.cropRect;
+        const natW = img.naturalWidth;
+        const natH = img.naturalHeight;
+
+        if (isPremium && layout && crop) {
+          const { offsetX, offsetY, dispW, dispH } = layout;
+          const relX = (crop.x - offsetX) / dispW;
+          const relY = (crop.y - offsetY) / dispH;
+          const relW = crop.w / dispW;
+          const relH = crop.h / dispH;
+          const sx = clamp(relX * natW, 0, natW - 1);
+          const sy = clamp(relY * natH, 0, natH - 1);
+          const sw = clamp(relW * natW, 1, natW - sx);
+          const sh = clamp(relH * natH, 1, natH - sy);
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.round(sw);
+          canvas.height = Math.round(sh);
+          canvas.getContext("2d").drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+          return {
+            dataUrl: canvas.toDataURL("image/png"),
+            widthPx: canvas.width,
+            heightPx: canvas.height
+          };
+        }
+
+        if (isPremium && layout) {
+          const displayW = Math.max(1, Math.round(layout.dispW));
+          const displayH = Math.max(1, Math.round(layout.dispH));
+          const canvas = document.createElement("canvas");
+          canvas.width = displayW;
+          canvas.height = displayH;
+          canvas.getContext("2d").drawImage(img, 0, 0, natW, natH, 0, 0, displayW, displayH);
+          return {
+            dataUrl: canvas.toDataURL("image/png"),
+            widthPx: displayW,
+            heightPx: displayH
+          };
+        }
+
+        const memoMaxW = Math.max(120, memoEditor?.clientWidth || 300);
+        if (natW <= memoMaxW) {
+          return { dataUrl: src, widthPx: natW, heightPx: natH };
+        }
+        const ratio = memoMaxW / natW;
+        const canvas = document.createElement("canvas");
+        canvas.width = memoMaxW;
+        canvas.height = Math.round(natH * ratio);
+        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        return {
+          dataUrl: canvas.toDataURL("image/png"),
+          widthPx: canvas.width,
+          heightPx: canvas.height
+        };
+      }
+
+      function applyImageStagingSliderState() {
+        if (!imageStagingSlider) return;
+        if (!isPremium) {
+          imageStagingSlider.value = "100";
+          imageStagingSlider.disabled = true;
+          if (imageStaging) imageStaging.scale = 100;
+        } else {
+          imageStagingSlider.disabled = false;
+        }
+        updateStagingPreviewWidth();
+      }
+
+      function showImageStaging(dataUrl, filePath = null, scale = 100) {
+        const safeScale = isPremium ? scale : 100;
+        imageStaging = {
+          dataUrl,
+          filePath,
+          scale: safeScale,
+          cropRatio: "free",
+          cropRect: null,
+          cropNorm: null
+        };
+        imageStagingCropRatios?.querySelectorAll("button[data-ratio]").forEach((btn) => {
+          btn.classList.toggle("active", btn.dataset.ratio === "free");
+        });
+        if (imageStagingPreview) {
+          imageStagingPreview.onload = () => {
+            syncStagingPreviewWrapSize();
+            syncStagingSliderRange(false);
+            updateStagingPreviewWidth();
+          };
+          imageStagingPreview.src = dataUrl;
+          if (imageStagingPreview.complete) {
+            syncStagingPreviewWrapSize();
+            syncStagingSliderRange(false);
+            updateStagingPreviewWidth();
+          }
+        }
+        if (imageStagingSlider) imageStagingSlider.value = String(safeScale);
+        applyImageStagingSliderState();
+        syncStagingPreviewWrapSize();
+        imageStagingOverlay?.classList.remove("hidden");
+        imageStagingOverlay?.setAttribute("aria-hidden", "false");
+        refreshAutoCollapsePolicy();
+      }
+
+      function hideImageStaging() {
+        imageStaging = null;
+        cropDrag = null;
+        if (imageStagingPreview) {
+          imageStagingPreview.onload = null;
+          imageStagingPreview.removeAttribute("src");
+          imageStagingPreview.style.width = "";
+          imageStagingPreview.style.height = "";
+        }
+        imageStagingCropLayer?.classList.add("hidden");
+        imageStagingCropRatios?.classList.add("hidden");
+        imageStagingOverlay?.classList.add("hidden");
+        imageStagingOverlay?.setAttribute("aria-hidden", "true");
+        refreshAutoCollapsePolicy();
+      }
+
+      function updateStagingPreviewWidth() {
+        if (!imageStagingPreview || !imageStagingSlider || !imageStaging) return;
+        syncStagingSliderRange();
+        const scale = Number(imageStagingSlider.value) || 100;
+        imageStaging.scale = scale;
+        if (isPremium && imageStaging.cropRect) {
+          saveCropNorm();
+        }
+        syncStagingPreviewWrapSize();
+        const layout = getStagingImageLayout();
+        if (layout) {
+          imageStagingPreview.style.width = `${layout.dispW}px`;
+          imageStagingPreview.style.height = `${layout.dispH}px`;
+        }
+        if (isPremium) {
+          if (imageStaging.cropNorm) syncCropRectFromNorm();
+          else if (!imageStaging.cropRect) initCropRect();
+          applyCropRatioConstraint();
+        }
+        updateCropUiVisibility();
+      }
+
+      async function pickMemoImage() {
+        if (!guardMemoImageLimit()) return;
+        try {
+          const result = await ipcRenderer.invoke("image:pick");
+          if (!result?.ok) return;
+          showImageStaging(result.dataUrl, result.filePath || null, 100);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      function insertInlineMemoImage(dataUrl, widthPx, imageId) {
+        const w = Math.max(1, Math.round(widthPx));
+        const imgHtml = `<span class="peekom-image-wrap"><img class="peekom-memo-image" data-peekom-id="${imageId}" src="${dataUrl}" style="width:${w}px;max-width:100%;height:auto;" alt=""></span>`;
+        memoEditor.focus();
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0 && memoEditor.contains(sel.anchorNode)) {
+          const range = sel.getRangeAt(0);
+          range.collapse(false);
+          const temp = document.createElement("div");
+          temp.innerHTML = imgHtml;
+          const imgNode = temp.firstChild;
+          if (imgNode) {
+            range.insertNode(imgNode);
+            range.setStartAfter(imgNode);
+            range.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(range);
+          }
+        } else {
+          memoEditor.insertAdjacentHTML("beforeend", `<p>${imgHtml}</p>`);
+        }
+      }
+
+      async function commitImageStaging() {
+        if (!imageStaging) return;
+        if (!guardMemoImageLimit()) return;
+        const slot = appState.activeSlot;
+        const { dataUrl, widthPx, heightPx } = await exportStagedImage();
+        const id = crypto.randomUUID();
+        if (!Array.isArray(appState.slots[slot].images)) {
+          appState.slots[slot].images = [];
+        }
+        appState.slots[slot].images.push({
+          id,
+          sourcePath: imageStaging.filePath || null,
+          dataUrl,
+          widthPx,
+          heightPx,
+          scale: widthPx,
+          insertedAt: new Date().toISOString()
+        });
+        insertInlineMemoImage(dataUrl, widthPx, id);
+        hideImageStaging();
+        persistActiveMemo();
+        saveState(appState);
+        showSaveIndicator();
+      }
+
+      clipImageBtn?.addEventListener("click", (event) => {
         event.stopPropagation();
-        adjustFontSize(-1);
+        pickMemoImage();
       });
 
-      fontIncreaseBtn.addEventListener("click", (event) => {
+      imageStagingCancelBtn?.addEventListener("click", (event) => {
         event.stopPropagation();
-        adjustFontSize(1);
+        hideImageStaging();
+      });
+
+      imageStagingConfirmBtn?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        commitImageStaging();
+      });
+
+      imageStagingSlider?.addEventListener("input", () => {
+        if (!isPremium) return;
+        updateStagingPreviewWidth();
+      });
+
+      imageStagingSliderWrap?.addEventListener("click", (event) => {
+        if (isPremium || !imageStaging) return;
+        if (!event.target.closest("#imageStagingSlider")) return;
+        event.preventDefault();
+        event.stopPropagation();
+        window.PeekomPremiumUI?.showPremiumModal();
+      });
+
+      imageStagingCropRatios?.querySelectorAll("button[data-ratio]").forEach((btn) => {
+        btn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          imageStagingCropRatios.querySelectorAll("button[data-ratio]").forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          if (!imageStaging) return;
+          imageStaging.cropRatio = btn.dataset.ratio || "free";
+          initCropRect();
+          applyCropRatioConstraint();
+          renderCropFrame();
+        });
+      });
+
+      imageStagingCropFrame?.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!imageStaging?.cropRect) return;
+        cropDrag = {
+          startX: event.clientX,
+          startY: event.clientY,
+          rect: { ...imageStaging.cropRect }
+        };
+      });
+
+      document.addEventListener("mousemove", (event) => {
+        if (!cropDrag || !imageStaging?.cropRect) return;
+        const layout = getStagingImageLayout();
+        if (!layout) return;
+        const dx = event.clientX - cropDrag.startX;
+        const dy = event.clientY - cropDrag.startY;
+        let x = cropDrag.rect.x + dx;
+        let y = cropDrag.rect.y + dy;
+        imageStaging.cropRect = clampCropRectToImage({ ...cropDrag.rect, x, y }, layout);
+        saveCropNorm();
+        renderCropFrame();
+      });
+
+      document.addEventListener("mouseup", () => {
+        if (cropDrag) saveCropNorm();
+        cropDrag = null;
+      });
+
+      function addIndexAtBottom() {
+        const max = getMaxEnabledSlots();
+        if (appState.enabledCount >= max) {
+          if (!isPremium && max === FREE_MAX_SLOTS) {
+            window.PeekomPremiumUI?.showPremiumModal();
+            return;
+          }
+          alert(ti("indexMaxSlotsAlert", { max }));
+          return;
+        }
+        persistActiveMemo();
+        const newSlot = appState.enabledCount;
+        appState.slots[newSlot] = defaultSlot(newSlot);
+        appState.enabledCount += 1;
+        appState.order = normalizeOrder(appState.order, appState.enabledCount);
+        appState.activeSlot = newSlot;
+        saveState(appState);
+        applyThemeForSlot(newSlot);
+        loadMemoForActiveSlot();
+        renderHandleStack();
+        setExpanded(true);
+        ipcRenderer.invoke("settings:notify-applied", {
+          skipSettingsReload: false,
+          stateJson: JSON.stringify(appState)
+        }).catch(() => {});
+      }
+
+      function deleteCurrentIndexWithConfirm() {
+        if (appState.enabledCount <= 1) {
+          alert(ti("indexMinOneAlert"));
+          return;
+        }
+        deleteIndexModal?.classList.remove("hidden");
+      }
+
+      function performDeleteCurrentIndex() {
+        if (appState.enabledCount <= 1) return;
+        deleteIndexModal?.classList.add("hidden");
+        const del = appState.activeSlot;
+        persistActiveMemo();
+        for (let i = del; i < MAX_SLOTS - 1; i++) {
+          appState.slots[i] = appState.slots[i + 1];
+        }
+        appState.slots[MAX_SLOTS - 1] = defaultSlot(MAX_SLOTS - 1);
+        appState.enabledCount -= 1;
+        appState.order = normalizeOrder(appState.order, appState.enabledCount);
+        appState.activeSlot = clampSlotIndex(Math.max(0, del - 1), appState.enabledCount);
+        saveState(appState);
+        applyThemeForSlot(appState.activeSlot);
+        loadMemoForActiveSlot();
+        renderHandleStack();
+        ipcRenderer.invoke("settings:notify-applied", {
+          skipSettingsReload: false,
+          stateJson: JSON.stringify(appState)
+        }).catch(() => {});
+      }
+
+      deleteIndexCancelBtn?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        deleteIndexModal?.classList.add("hidden");
+      });
+
+      deleteIndexConfirmBtn?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        performDeleteCurrentIndex();
       });
 
       function executeCmd(command, value = null) {
@@ -1444,82 +3460,44 @@
         document.execCommand(command, false, value);
       }
 
-      function insertChecklist() {
-        memoEditor.focus();
-        document.execCommand("insertHTML", false, "<div>☐ </div>");
-      }
-
-      function cycleAlignment() {
-        alignCycleIndex = (alignCycleIndex + 1) % alignCycle.length;
-        executeCmd(alignCycle[alignCycleIndex]);
-        alignCycleBtn.textContent = alignCycleLabel[alignCycleIndex];
-      }
-
-      function cycleListMode() {
-        listCycleIndex = (listCycleIndex + 1) % listCycle.length;
-        const mode = listCycle[listCycleIndex];
-
-        if (mode === "bullet") {
-          executeCmd("insertUnorderedList");
-        } else if (mode === "check") {
-          insertChecklist();
-        } else {
-          executeCmd("insertParagraph");
-        }
-
-        listCycleBtn.textContent = listCycleLabel[listCycleIndex];
-      }
-
-      function cycleTextColor() {
-        textColorCycleIndex = (textColorCycleIndex + 1) % textColorCycle.length;
-        const color = textColorCycle[textColorCycleIndex];
-        executeCmd("foreColor", color);
-        textColorCycleBtn.style.color = color;
-      }
-
-      function cycleHighlightColor() {
-        highlightCycleIndex = (highlightCycleIndex + 1) % highlightCycle.length;
-        const color = highlightCycle[highlightCycleIndex];
-        executeCmd("hiliteColor", color);
-        highlightCycleBtn.style.color = color === "transparent" ? "#34405a" : color;
-      }
-
-      function onClearAllClick() {
-        if (pendingClearAll) {
-          memoEditor.innerHTML = "";
-          persistActiveMemo();
-          resetPendingClearAll();
-          return;
-        }
-
-        pendingClearAll = true;
-        clearAllBtn.style.color = "#d04646";
-        clearAllBtn.title = "다시 누르면 전체 삭제됩니다";
-        if (pendingClearAllTimer) clearTimeout(pendingClearAllTimer);
-        pendingClearAllTimer = setTimeout(resetPendingClearAll, 3500);
-      }
-
-      function resetPendingClearAll() {
-        pendingClearAll = false;
-        clearAllBtn.style.color = "";
-        clearAllBtn.title = "전체 삭제";
-        if (pendingClearAllTimer) {
-          clearTimeout(pendingClearAllTimer);
-          pendingClearAllTimer = null;
-        }
-      }
-
       function getCurrentLineElement() {
         const sel = window.getSelection();
         if (!sel || sel.rangeCount === 0) return null;
         let node = sel.anchorNode;
-        if (!node) return null;
-        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
         if (!node || !memoEditor.contains(node)) return null;
-        while (node && node.parentElement !== memoEditor) {
+
+        if (node === memoEditor) {
+          const range = sel.getRangeAt(0);
+          if (range.endContainer === memoEditor && range.endOffset > 0) {
+            const child = memoEditor.childNodes[range.endOffset - 1];
+            if (child?.nodeType === Node.ELEMENT_NODE) return child;
+          }
+          if (!memoEditor.childNodes.length) {
+            return ensureBlockLine(memoEditor);
+          }
+          return null;
+        }
+
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+        if (!node) return null;
+        while (node && node !== memoEditor) {
+          if (node.parentElement === memoEditor) return node;
           node = node.parentElement;
         }
-        return node;
+        return null;
+      }
+
+      function ensureBlockLine(lineEl) {
+        if (lineEl !== memoEditor) return lineEl;
+        const div = document.createElement("div");
+        while (memoEditor.firstChild) {
+          div.appendChild(memoEditor.firstChild);
+        }
+        if (!div.childNodes.length) {
+          div.appendChild(document.createElement("br"));
+        }
+        memoEditor.appendChild(div);
+        return div;
       }
 
       function getLinePlainText(lineEl) {
@@ -1527,65 +3505,145 @@
         return lineEl.textContent || "";
       }
 
-      function replaceLineElement(lineEl, html) {
-        if (!lineEl || !lineEl.parentNode) return;
-        const caret = getCaretCharOffset(memoEditor);
-        const newEl = document.createElement("div");
-        newEl.innerHTML = html;
+      function htmlToFragment(html) {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = html;
         const frag = document.createDocumentFragment();
-        while (newEl.firstChild) frag.appendChild(newEl.firstChild);
-        lineEl.parentNode.replaceChild(frag, lineEl);
-        if (caret !== null) setCaretByCharOffset(memoEditor, caret);
+        while (wrapper.firstChild) frag.appendChild(wrapper.firstChild);
+        return frag;
       }
 
-      function processMarkdownLineOnEnter() {
-        const lineEl = getCurrentLineElement();
-        if (!lineEl) return;
-        const text = getLinePlainText(lineEl).trimStart();
-        let html = null;
+      function replaceLineElement(lineEl, html, options = {}) {
+        const block = ensureBlockLine(lineEl);
+        if (!block || !block.parentNode) return null;
+        const caret = options.preserveCaret ? getCaretCharOffset(memoEditor) : null;
+        const frag = htmlToFragment(html);
+        const inserted = Array.from(frag.childNodes);
+        block.parentNode.replaceChild(frag, block);
+        if (caret !== null) setCaretByCharOffset(memoEditor, caret);
+        return inserted[inserted.length - 1] || null;
+      }
 
-        if (text.startsWith("### ")) {
-          html = `<h3>${marked.parseInline(text.slice(4))}</h3>`;
-        } else if (text.startsWith("## ")) {
-          html = `<h2>${marked.parseInline(text.slice(3))}</h2>`;
-        } else if (text.startsWith("# ")) {
-          html = `<h1>${marked.parseInline(text.slice(2))}</h1>`;
-        } else if (text.startsWith("- ")) {
-          html = `<ul><li>${marked.parseInline(text.slice(2))}</li></ul>`;
+      function placeCaretInEmptyLine(lineEl) {
+        const line = lineEl && lineEl.nodeType === Node.ELEMENT_NODE ? lineEl : null;
+        if (!line) return;
+        if (!line.querySelector("br") && !line.textContent) {
+          line.appendChild(document.createElement("br"));
         }
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(line);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
 
-        if (html) replaceLineElement(lineEl, html);
+      function insertEmptyLineAfter(node) {
+        const parent = node?.parentNode || memoEditor;
+        const line = document.createElement("div");
+        line.appendChild(document.createElement("br"));
+        if (node && node.parentNode === parent) {
+          parent.insertBefore(line, node.nextSibling);
+        } else {
+          parent.appendChild(line);
+        }
+        placeCaretInEmptyLine(line);
+        return line;
+      }
+
+      function buildBlockMarkdownHtml(text) {
+        const trimmed = String(text || "").trimStart();
+        if (!trimmed) return null;
+
+        if (trimmed.startsWith("### ")) {
+          return `<h3>${parseMarkdownInline(trimmed.slice(4))}</h3>`;
+        }
+        if (trimmed.startsWith("## ")) {
+          return `<h2>${parseMarkdownInline(trimmed.slice(3))}</h2>`;
+        }
+        if (trimmed.startsWith("# ")) {
+          return `<h1>${parseMarkdownInline(trimmed.slice(2))}</h1>`;
+        }
+        if (/^(-\s*)?\[[ xX]\]\s+/.test(trimmed)) {
+          const taskMatch = trimmed.match(/^(-\s*)?\[([ xX])\]\s+(.*)$/);
+          if (taskMatch) {
+            const checked = taskMatch[2].toLowerCase() === "x";
+            const content = parseMarkdownInline(taskMatch[3]);
+            return `<ul class="peekom-task-list"><li data-checked="${checked}"><span class="peekom-task-check" contenteditable="false" role="checkbox" aria-checked="${checked}" tabindex="-1"></span>${content}</li></ul>`;
+          }
+        }
+        if (trimmed.startsWith("- ")) {
+          return `<ul><li>${parseMarkdownInline(trimmed.slice(2))}</li></ul>`;
+        }
+        if (/^\d+\.\s+/.test(trimmed)) {
+          const item = trimmed.replace(/^\d+\.\s+/, "");
+          return `<ol><li>${parseMarkdownInline(item)}</li></ol>`;
+        }
+        return null;
       }
 
       function processInlineMarkdownInLine(lineEl) {
-        if (!lineEl || lineEl.closest("h1,h2,h3,ul,ol")) return false;
+        if (!lineEl || lineEl === memoEditor) return false;
         const text = getLinePlainText(lineEl);
+        if (!/\*\*(.+?)\*\*/.test(text) && !/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/.test(text)) {
+          return false;
+        }
+
+        const block = ensureBlockLine(lineEl);
+        if (!block || block.closest("h1,h2,h3,ul,ol,li")) return false;
         let html = text;
         let changed = false;
 
-        const boldMatch = text.match(/\*\*(.+?)\*\*/);
-        if (boldMatch) {
+        if (/\*\*(.+?)\*\*/.test(text)) {
           html = html.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
           changed = true;
         }
 
-        const italicMatch = text.match(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/);
-        if (italicMatch) {
+        if (/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/.test(text)) {
           html = html.replace(/(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)/g, "<em>$1</em>");
           changed = true;
         }
 
         if (changed && html !== text) {
-          replaceLineElement(lineEl, html);
+          replaceLineElement(block, html, { preserveCaret: true });
           return true;
         }
         return false;
+      }
+
+      function handleMarkdownEnter(event) {
+        const lineEl = getCurrentLineElement();
+        if (!lineEl) return;
+        const block = ensureBlockLine(lineEl);
+        const text = getLinePlainText(block);
+        const blockHtml = buildBlockMarkdownHtml(text);
+
+        if (blockHtml) {
+          event.preventDefault();
+          const converted = replaceLineElement(block, blockHtml);
+          insertEmptyLineAfter(converted);
+          normalizeMemoTypography(appState.activeSlot, { preserveCaret: true });
+          persistActiveMemo();
+          updateToolbarActiveState();
+          return;
+        }
+
+        if (processInlineMarkdownInLine(block)) {
+          normalizeMemoTypography(appState.activeSlot, { preserveCaret: true });
+          persistActiveMemo();
+          updateToolbarActiveState();
+        }
       }
 
       function processMarkdownInput() {
         const lineEl = getCurrentLineElement();
         if (!lineEl) return;
         processInlineMarkdownInLine(lineEl);
+      }
+
+      function lineMayHaveInlineMarkdown(lineEl) {
+        if (!lineEl) return false;
+        return /[*_]/.test(getLinePlainText(lineEl));
       }
 
       function scheduleUrlScan() {
@@ -1601,10 +3659,71 @@
         if (!sel || sel.rangeCount === 0) return null;
         const range = sel.getRangeAt(0);
         if (!parent.contains(range.endContainer)) return null;
-        const pre = range.cloneRange();
-        pre.selectNodeContents(parent);
-        pre.setEnd(range.endContainer, range.endOffset);
-        return pre.toString().length;
+
+        let offset = 0;
+        let found = false;
+
+        function walk(node) {
+          if (found) return;
+
+          if (node.nodeType === Node.TEXT_NODE) {
+            if (node === range.endContainer) {
+              offset += range.endOffset;
+              found = true;
+              return;
+            }
+            offset += node.nodeValue.length;
+            return;
+          }
+
+          if (node.nodeName === "BR") {
+            if (node === range.endContainer) {
+              found = true;
+              return;
+            }
+            offset += 1;
+            return;
+          }
+
+          if (node.nodeType === Node.ELEMENT_NODE) {
+            if (
+              node.classList?.contains("peekom-memo-image") ||
+              node.classList?.contains("peekom-image-wrap")
+            ) {
+              offset += 1;
+              return;
+            }
+
+            if (node === range.endContainer) {
+              for (let i = 0; i < range.endOffset; i++) {
+                walk(node.childNodes[i]);
+                if (found) return;
+              }
+              found = true;
+              return;
+            }
+
+            for (const child of node.childNodes) {
+              walk(child);
+              if (found) return;
+            }
+          }
+        }
+
+        if (range.endContainer === parent) {
+          for (let i = 0; i < range.endOffset; i++) {
+            walk(parent.childNodes[i]);
+            if (found) return offset;
+          }
+          return offset;
+        }
+
+        for (const child of parent.childNodes) {
+          walk(child);
+          if (found) return offset;
+        }
+
+        return found ? offset : null;
       }
 
       function setCaretByCharOffset(parent, offset) {
@@ -1625,7 +3744,28 @@
               return;
             }
             remaining -= len;
-          } else {
+          } else if (node.nodeName === "BR") {
+            if (remaining <= 0) {
+              range.setStartBefore(node);
+              range.setEndBefore(node);
+              nodeFound = true;
+              return;
+            }
+            remaining -= 1;
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            if (
+              node.classList?.contains("peekom-memo-image") ||
+              node.classList?.contains("peekom-image-wrap")
+            ) {
+              if (remaining <= 0) {
+                range.setStartAfter(node);
+                range.setEndAfter(node);
+                nodeFound = true;
+                return;
+              }
+              remaining -= 1;
+              return;
+            }
             for (const child of node.childNodes) {
               walk(child);
               if (nodeFound) return;
@@ -1633,7 +3773,10 @@
           }
         }
 
-        walk(parent);
+        for (const child of parent.childNodes) {
+          walk(child);
+          if (nodeFound) break;
+        }
         if (!nodeFound) {
           range.selectNodeContents(parent);
           range.collapse(false);
@@ -1701,6 +3844,8 @@
           lengthMode: appState.global.lengthMode,
           triggerMode: appState.global.triggerMode,
           shortcut: appState.global.shortcut,
+          shortcutSlotPrev: appState.global.shortcutSlotPrev,
+          shortcutSlotNext: appState.global.shortcutSlotNext,
           manualYOffset: appState.global.manualYOffset
         };
         const result = await ipcRenderer.invoke("settings:update", payload);
@@ -1708,64 +3853,160 @@
           appSettings = { ...appSettings, ...result.windowState.settings };
           appState.global = { ...appState.global, ...result.windowState.settings };
           hoverDelayMs = appState.global.hoverDelayMs;
+          saveState(appState);
         }
-        saveState(appState);
         return result;
       }
 
-      settingsIconBtn.addEventListener("click", async () => {
-        try {
-          await ipcRenderer.invoke("settings:open-window");
-        } catch (e) {
-          console.error(e);
-        }
-      });
-
-      ipcRenderer.on("settings:applied", () => {
-        const fresh = loadState();
+      function applyLoadedAppState(fresh, options = {}) {
+        const { preserveMemoHtml = null, preserveSlotIndex = null } = options;
         appState = fresh;
         appSettings = { ...defaultGlobal(), ...appState.global };
+        delete appSettings.imageSize;
         hoverDelayMs = appState.global.hoverDelayMs;
-        // 언어 변경 동기화
+
         if (typeof PeekomI18n !== "undefined" && appState.global.language) {
           PeekomI18n.setLang(appState.global.language);
           document.documentElement.lang = PeekomI18n.getCurrentLang();
         }
+        applyFormatBarTooltips();
+        applyMainUiLabels();
 
         if (appState.activeSlot >= appState.enabledCount) {
           appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
-          saveState(appState);
         }
 
+        resolveYSlotConflicts(appState.slots, appState.enabledCount);
         applyThemeForSlot(appState.activeSlot);
-        loadMemoForActiveSlot();
+        if (preserveMemoHtml != null && preserveSlotIndex != null && appState.slots[preserveSlotIndex]) {
+          const safeHtml = sanitizeMemoHtml(preserveMemoHtml);
+          appState.slots[preserveSlotIndex].memoHtml = safeHtml;
+          if (appState.activeSlot === preserveSlotIndex) {
+            memoEditor.innerHTML = safeHtml;
+            syncSlotImagesFromMemo(preserveSlotIndex);
+            normalizeMemoTypography(preserveSlotIndex);
+            scanAndLinkifyEditor(true);
+          }
+        } else {
+          loadMemoForActiveSlot();
+        }
         renderHandleStack();
+        refreshAllHandleThemes();
+        lastPanelLayoutKey = "";
         updatePanelPosition();
-        setPinned(isPinned);  // 언어 변경 시 칩 텍스트 갱신
+        if (isExpanded) {
+          syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
+        }
+        setPinned(isPinned);
         syncPeekAutoCollapseToMain();
+      }
+
+      ipcRenderer.on("settings:applied", async (_event, payload = {}) => {
+        const wasExpanded = isExpanded;
+        const editingSlot = appState.activeSlot;
+        if (wasExpanded) {
+          persistActiveMemo();
+        }
+        const editingHtml = wasExpanded
+          ? appState.slots[editingSlot]?.memoHtml || memoEditor.innerHTML
+          : null;
+
+        setPinned(false);
+        setExpanded(false);
+
+        await syncPremiumState();
+
+        let fresh = await reloadAppStateFromDisk();
+        if (!fresh && payload && typeof payload.stateJson === "string") {
+          fresh = tryParseV5State(payload.stateJson);
+        }
+        if (!fresh) return;
+
+        applyLoadedAppState(fresh, {
+          preserveMemoHtml: editingHtml,
+          preserveSlotIndex: editingSlot
+        });
+        saveState(appState);
+
+        try {
+          await syncSettingsToMain();
+        } catch (err) {
+          console.error(err);
+        }
       });
 
       ipcRenderer.on("shortcut:toggle-expand", () => {
-        if (isExpanded) {
+        const ec = appState.enabledCount;
+        let idx = typeof appState.global.lastOpenedSlotIndex === "number"
+          ? appState.global.lastOpenedSlotIndex
+          : appState.activeSlot;
+        idx = clampSlotIndex(idx, ec);
+
+        if (isExpanded && appState.activeSlot === idx) {
           setPinned(false);
           setExpanded(false);
-        } else {
-          applyThemeForSlot(appState.activeSlot);
-          loadMemoForActiveSlot();
-          setExpanded(true);
-          setPinned(true);
-        }
-      });
-
-      window.addEventListener("keydown", (event) => {
-        if (!event.ctrlKey && !event.metaKey) return;
-        const key = event.key;
-
-        if (key === "-" || key === "_" || key === "=" || key === "+") {
-          event.preventDefault();
-          adjustFontSize(key === "-" || key === "_" ? -1 : 1);
           return;
         }
+
+        if (appState.activeSlot !== idx) {
+          persistActiveMemo();
+          appState.activeSlot = idx;
+          applyThemeForSlot(idx);
+          loadMemoForActiveSlot();
+          saveState(appState);
+          updateActiveHandle(idx);
+        }
+        appState.global.lastOpenedSlotIndex = idx;
+        saveState(appState);
+        setExpanded(true);
+      });
+
+      ipcRenderer.on("shortcut:slot-prev", () => {
+        switchSlotByOffset(-1);
+      });
+
+      ipcRenderer.on("shortcut:slot-next", () => {
+        switchSlotByOffset(1);
+      });
+
+      ipcRenderer.on("tray:add-index", () => {
+        addIndexAtBottom();
+      });
+
+      ipcRenderer.on("premium:changed", (_, payload) => {
+        isPremium = Boolean(payload?.isPremium);
+        enforceSlotLimits();
+        renderHandleStack();
+        applyThemeForSlot(appState.activeSlot);
+        applyImageStagingSliderState();
+      });
+
+      window.onPremiumActivated = async () => {
+        const p = await ipcRenderer.invoke("premium:get");
+        isPremium = Boolean(p.isPremium);
+        enforceSlotLimits();
+        renderHandleStack();
+        applyThemeForSlot(appState.activeSlot);
+        applyImageStagingSliderState();
+      };
+
+      window.addEventListener("keydown", (event) => {
+        if (
+          isExpanded &&
+          appSettings.triggerMode === "hover" &&
+          (event.key === "ArrowUp" || event.key === "ArrowDown")
+        ) {
+          const t = event.target;
+          if (t && (t.isContentEditable || t.tagName === "INPUT" || t.tagName === "TEXTAREA")) {
+            return;
+          }
+          event.preventDefault();
+          switchSlotByOffset(event.key === "ArrowUp" ? -1 : 1);
+          return;
+        }
+
+        if (!event.ctrlKey && !event.metaKey) return;
+        const key = event.key;
 
         if (key === "0") {
           event.preventDefault();
@@ -1782,17 +4023,43 @@
         switchToSlot(idx);
       });
 
+      function switchSlotByOffset(offset) {
+        const ec = appState.enabledCount;
+        const ord = appState.order.slice(0, ec);
+        const pos = ord.indexOf(appState.activeSlot);
+        const currentPos = pos >= 0 ? pos : 0;
+        const nextPos =
+          offset < 0
+            ? (currentPos <= 0 ? ec - 1 : currentPos - 1)
+            : (currentPos >= ec - 1 ? 0 : currentPos + 1);
+        switchToSlot(ord[nextPos]);
+      }
+
       function switchToSlot(idx) {
+        if (imageStaging) {
+          const ok = confirm(ti("imageSwitchIndexConfirm"));
+          if (!ok) return;
+          hideImageStaging();
+        }
         if (appState.activeSlot !== idx) {
           persistActiveMemo();
           appState.activeSlot = idx;
           applyThemeForSlot(idx);
           loadMemoForActiveSlot();
+          appState.global.lastOpenedSlotIndex = idx;
           saveState(appState);
           updateActiveHandle(idx);
         }
         setExpanded(true);
-        setPinned(true);
+      }
+
+      async function syncPremiumState() {
+        try {
+          const p = await ipcRenderer.invoke("premium:get");
+          isPremium = Boolean(p.isPremium);
+        } catch {
+          isPremium = false;
+        }
       }
 
       function initializeFirstRunTip() {
@@ -1802,6 +4069,8 @@
 
       async function initialize() {
         appState = loadState();
+        await syncPremiumState();
+        enforceSlotLimits();
 
         // 최소 1개 인덱스 보장
         if (!appState.enabledCount || appState.enabledCount < 1) {
@@ -1834,6 +4103,7 @@
         initializeFirstRunTip();
         setPinned(false);
         renderHandleStack();
+        applyMainUiLabels();
 
         window.addEventListener("pointermove", onWindowPointerMove);
         window.addEventListener("pointerup", onWindowPointerUp);

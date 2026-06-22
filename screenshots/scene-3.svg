@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400" viewBox="0 0 640 400">
+  <rect width="640" height="400" fill="#1a1a1a"/>
+  <rect x="24" y="24" width="280" height="352" rx="8" fill="#252525" stroke="#333"/>
+  <rect x="336" y="24" width="280" height="352" rx="8" fill="#222" stroke="#f1c40f" stroke-width="2"/>
+  <rect x="588" y="140" width="28" height="80" rx="10 0 0 10" fill="#fff4b8" stroke="#f1c40f" stroke-width="2"/>
+  <rect x="348" y="100" width="256" height="180" rx="6" fill="#fff4b8" stroke="#8e44ad" stroke-width="2"/>
+  <text x="48" y="72" fill="#666" font-family="Segoe UI,sans-serif" font-size="14">Scene 3  Dual monitor / Pin (replace with screenshot)</text>
+  <text x="48" y="200" fill="#555" font-family="Segoe UI,sans-serif" font-size="16">Monitor 1</text>
+  <text x="360" y="72" fill="#f1c40f" font-family="Segoe UI,sans-serif" font-size="16">Monitor 2 � Pin</text>
+</svg>

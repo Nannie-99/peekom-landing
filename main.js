@@ -1,32 +1,168 @@
-const { app, BrowserWindow, dialog, globalShortcut, ipcMain, nativeImage, screen, shell } = require("electron");
+require("dotenv").config();
+const { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, nativeImage, screen, shell, Tray } = require("electron");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
+const license = require("./license");
+const { initAutoUpdater } = require("./updater");
+const { trayT, resolveTrayLang } = require("./assets/tray-i18n");
 
-function resolveAppIcon() {
+const PRELOAD_PATH = path.join(__dirname, "preload.js");
+const IMAGE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg"]);
+const EXTERNAL_URL_ALLOWLIST = [
+  "peekom.com",
+  "www.peekom.com",
+  "lemonsqueezy.com",
+  "peekom.lemonsqueezy.com"
+];
+
+let appUiLanguage = "ko";
+
+function isTrustedRenderer(event) {
+  const wc = event?.sender;
+  if (!wc || (typeof wc.isDestroyed === "function" && wc.isDestroyed())) return false;
+  if (mainWindow && !mainWindow.isDestroyed() && wc.id === mainWindow.webContents.id) return true;
+  if (settingsWindow && !settingsWindow.isDestroyed() && wc.id === settingsWindow.webContents.id) return true;
+  return false;
+}
+
+function requirePremiumAccess() {
+  if (!license.isPremiumActive()) {
+    return { ok: false, reason: "PREMIUM_REQUIRED" };
+  }
+  return null;
+}
+
+function isSafeExternalUrl(rawUrl) {
+  try {
+    const safe = /^(https?:|mailto:)/i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
+    const parsed = new URL(safe);
+    if (parsed.protocol === "mailto:") return safe;
+    const host = parsed.hostname.toLowerCase();
+    const allowed = EXTERNAL_URL_ALLOWLIST.some(
+      (entry) => host === entry || host.endsWith(`.${entry}`)
+    );
+    return allowed ? safe : null;
+  } catch {
+    return null;
+  }
+}
+
+function looksLikeImage(buf, ext) {
+  if (!buf || buf.length < 4) return false;
+  if (ext === "png" && buf[0] === 0x89 && buf[1] === 0x50) return true;
+  if ((ext === "jpg" || ext === "jpeg") && buf[0] === 0xff && buf[1] === 0xd8) return true;
+  if (ext === "gif" && buf[0] === 0x47 && buf[1] === 0x49) return true;
+  if (ext === "webp" && buf[0] === 0x52 && buf[1] === 0x49) return true;
+  if (ext === "bmp" && buf[0] === 0x42 && buf[1] === 0x4d) return true;
+  if (ext === "svg") {
+    const text = buf.toString("utf8", 0, Math.min(buf.length, 256)).trim();
+    return text.includes("<svg") || text.startsWith("<?xml");
+  }
+  return false;
+}
+
+function isAllowedImagePath(filePath) {
+  if (typeof filePath !== "string" || !filePath.trim()) return false;
+  let resolved;
+  try {
+    resolved = path.resolve(filePath.trim());
+  } catch {
+    return false;
+  }
+  const ext = path.extname(resolved).slice(1).toLowerCase();
+  if (!IMAGE_EXTENSIONS.has(ext)) return false;
+  if (!fs.existsSync(resolved)) return false;
+  const stat = fs.statSync(resolved);
+  if (!stat.isFile() || stat.size > 15 * 1024 * 1024) return false;
+  const header = fs.readFileSync(resolved).subarray(0, 32);
+  return looksLikeImage(header, ext);
+}
+
+const MAX_STATE_JSON_BYTES = 20 * 1024 * 1024;
+
+function isValidStatePayload(jsonPayload) {
+  if (typeof jsonPayload !== "string" || jsonPayload.length === 0) return false;
+  if (Buffer.byteLength(jsonPayload, "utf8") > MAX_STATE_JSON_BYTES) return false;
+  try {
+    const parsed = JSON.parse(jsonPayload);
+    return Boolean(parsed && parsed.version === 5 && Array.isArray(parsed.slots));
+  } catch {
+    return false;
+  }
+}
+
+const MIN_WINDOWS_MAJOR = 10;
+const SHARED_STATE_KEY = "ppaekkom-plus-state-v5";
+const SHARED_STATE_BACKUP_KEY = "ppaekkom-plus-state-v5-backup";
+const APP_ID = "com.peekom.app";
+const DOCS_HELP_URL = "https://www.peekom.com/#help";
+const LEMON_BUY_URL = "https://peekom.lemonsqueezy.com/buy";
+
+function resolveIconPath(isPremium) {
+  const name = isPremium ? "plus.png" : "index.png";
   const candidates = app.isPackaged
     ? [
-        path.join(process.resourcesPath, "icon.ico"),
-        path.join(process.resourcesPath, "plus.png"),
-        path.join(process.resourcesPath, "build", "icon.ico"),
-        path.join(process.resourcesPath, "build", "plus.png"),
-        path.join(__dirname, "build", "icon.ico"),
-        path.join(__dirname, "build", "plus.png")
+        path.join(process.resourcesPath, name),
+        path.join(process.resourcesPath, "build", name),
+        path.join(__dirname, "build", name)
       ]
-    : [
-        path.join(__dirname, "build", "icon.ico"),
-        path.join(__dirname, "build", "plus.png")
-      ];
-
-  for (const iconPath of candidates) {
-    if (!fs.existsSync(iconPath)) continue;
-    const image = nativeImage.createFromPath(iconPath);
-    if (!image.isEmpty()) return image;
+    : [path.join(__dirname, "build", name), path.join(__dirname, "build", "icon.ico")];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
   }
-  return undefined;
+  return path.join(__dirname, "build", "icon.ico");
+}
+
+function loadAppIcon(isPremium) {
+  const iconPath = resolveIconPath(isPremium);
+  if (!fs.existsSync(iconPath)) return undefined;
+  const image = nativeImage.createFromPath(iconPath);
+  return image.isEmpty() ? undefined : image;
 }
 
 /** @type {import("electron").NativeImage | undefined} */
 let APP_ICON;
+let premiumActive = false;
+
+function getAppDisplayName() {
+  return premiumActive ? "Peekom Plus" : "Peekom";
+}
+
+function applyBranding() {
+  premiumActive = license.isPremiumActive();
+  APP_ICON = loadAppIcon(premiumActive);
+  const name = getAppDisplayName();
+  app.setName(name);
+  if (process.platform === "win32") {
+    app.setAppUserModelId(APP_ID);
+  }
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.setTitle(name);
+    if (APP_ICON) mainWindow.setIcon(APP_ICON);
+  }
+  if (settingsWindow && !settingsWindow.isDestroyed()) {
+    settingsWindow.setTitle(`${name} 설정`);
+    if (APP_ICON) settingsWindow.setIcon(APP_ICON);
+  }
+  if (trayIcon && APP_ICON) {
+    trayIcon.setImage(APP_ICON);
+    trayIcon.setToolTip(name);
+  }
+  if (trayIcon) {
+    trayIcon.setContextMenu(buildTrayMenu());
+  }
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send("premium:changed", { isPremium: premiumActive });
+  }
+  if (settingsWindow && !settingsWindow.isDestroyed()) {
+    settingsWindow.webContents.send("premium:changed", { isPremium: premiumActive });
+  }
+}
+
+function broadcastPremiumChanged() {
+  applyBranding();
+}
 
 const BASE_NOTE_HEIGHT = 460;
 const MIN_NOTE_HEIGHT = 160;
@@ -45,6 +181,8 @@ const DEFAULT_SETTINGS = {
   lengthMode: "long",
   triggerMode: "hover",
   shortcut: "CommandOrControl+Shift+M",
+  shortcutSlotPrev: "CommandOrControl+Shift+Up",
+  shortcutSlotNext: "CommandOrControl+Shift+Down",
   manualYOffset: 0
 };
 
@@ -52,6 +190,7 @@ const DEFAULT_SETTINGS = {
 let mainWindow = null;
 /** @type {BrowserWindow | null} */
 let settingsWindow = null;
+let settingsAllowClose = false;
 let followCursorDisplayInterval = null;
 let followCursorMode = true;
 let targetDisplayId = null;
@@ -69,12 +208,63 @@ const EXPAND_GRACE_MS = 350;
 let panelExpandedAt = 0;
 let isDraggingWindow = false;
 let appSettings = { ...DEFAULT_SETTINGS };
-let registeredShortcut = null;
+let registeredShortcuts = [];
 let lastNudgeRefreshAt = 0;
 let pendingNudgeRefresh = null;
+/** @type {Tray | null} */
+let trayIcon = null;
+let trayVisible = true;
 
 function clamp(num, min, max) {
   return Math.max(min, Math.min(num, max));
+}
+
+function isWindowsVersionSupported() {
+  if (process.platform !== "win32") return true;
+  const major = parseInt(String(os.release()).split(".")[0], 10);
+  return Number.isFinite(major) && major >= MIN_WINDOWS_MAJOR;
+}
+
+function assertOsSupported() {
+  if (isWindowsVersionSupported()) return true;
+  dialog.showErrorBox(
+    "지원되지 않는 Windows 버전",
+    "이 앱은 Windows 10 및 Windows 11 (64-bit)에서만 실행됩니다.\n\nWindows 7 / 8 / 8.1은 지원되지 않습니다."
+  );
+  app.quit();
+  return false;
+}
+
+function getStartupLoginOptions() {
+  return process.platform === "darwin" ? {} : { path: process.execPath, args: [] };
+}
+
+function readStartupLoginState() {
+  return app.getLoginItemSettings(getStartupLoginOptions());
+}
+
+function setStartupLoginState(openAtLogin) {
+  if (process.platform === "darwin") {
+    app.setLoginItemSettings({ openAtLogin: Boolean(openAtLogin) });
+    return;
+  }
+  app.setLoginItemSettings({
+    openAtLogin: Boolean(openAtLogin),
+    path: process.execPath,
+    args: []
+  });
+}
+
+/** 제거 후 남는 고아 시작 항목 방지: 실행 파일이 없으면 등록 해제 */
+function healOrphanedStartupRegistration() {
+  if (process.platform !== "win32" || !app.isPackaged) return;
+  try {
+    if (!fs.existsSync(process.execPath)) {
+      setStartupLoginState(false);
+    }
+  } catch {
+    /* ignore */
+  }
 }
 
 function normalizeSettings(partialSettings = {}) {
@@ -97,6 +287,16 @@ function normalizeSettings(partialSettings = {}) {
       ? merged.shortcut.trim()
       : DEFAULT_SETTINGS.shortcut;
 
+  const safeShortcutSlotPrev =
+    typeof merged.shortcutSlotPrev === "string" && merged.shortcutSlotPrev.trim().length > 0
+      ? merged.shortcutSlotPrev.trim()
+      : DEFAULT_SETTINGS.shortcutSlotPrev;
+
+  const safeShortcutSlotNext =
+    typeof merged.shortcutSlotNext === "string" && merged.shortcutSlotNext.trim().length > 0
+      ? merged.shortcutSlotNext.trim()
+      : DEFAULT_SETTINGS.shortcutSlotNext;
+
   const safeManualYOffset =
     typeof merged.manualYOffset === "number" && Number.isFinite(merged.manualYOffset)
       ? Math.round(merged.manualYOffset)
@@ -107,35 +307,53 @@ function normalizeSettings(partialSettings = {}) {
     lengthMode: safeLengthMode,
     triggerMode: safeTriggerMode,
     shortcut: safeShortcut,
+    shortcutSlotPrev: safeShortcutSlotPrev,
+    shortcutSlotNext: safeShortcutSlotNext,
     manualYOffset: safeManualYOffset
   };
 }
 
+function unregisterAllShortcuts() {
+  registeredShortcuts.forEach((accelerator) => {
+    try {
+      globalShortcut.unregister(accelerator);
+    } catch {
+      /* ignore */
+    }
+  });
+  registeredShortcuts = [];
+}
+
 function updateShortcutRegistration() {
-  if (registeredShortcut) {
-    globalShortcut.unregister(registeredShortcut);
-    registeredShortcut = null;
-  }
+  unregisterAllShortcuts();
 
   if (appSettings.triggerMode !== "shortcut") {
     return { ok: true, registered: false };
   }
 
-  const accelerator = appSettings.shortcut;
-  const registered = globalShortcut.register(accelerator, () => {
-    if (!mainWindow || mainWindow.isDestroyed()) return;
-    mainWindow.webContents.send("shortcut:toggle-expand");
-  });
+  const bindings = [
+    { accelerator: appSettings.shortcut, channel: "shortcut:toggle-expand" },
+    { accelerator: appSettings.shortcutSlotPrev, channel: "shortcut:slot-prev" },
+    { accelerator: appSettings.shortcutSlotNext, channel: "shortcut:slot-next" }
+  ];
 
-  if (!registered) {
-    return {
-      ok: false,
-      registered: false,
-      message: `단축키 등록 실패: ${accelerator}`
-    };
+  for (const { accelerator, channel } of bindings) {
+    if (!accelerator) continue;
+    const registered = globalShortcut.register(accelerator, () => {
+      if (!mainWindow || mainWindow.isDestroyed()) return;
+      mainWindow.webContents.send(channel);
+    });
+    if (!registered) {
+      unregisterAllShortcuts();
+      return {
+        ok: false,
+        registered: false,
+        message: `단축키 등록 실패: ${accelerator}`
+      };
+    }
+    registeredShortcuts.push(accelerator);
   }
 
-  registeredShortcut = accelerator;
   return { ok: true, registered: true };
 }
 
@@ -172,7 +390,7 @@ function resolveTargetDisplay() {
 }
 
 function getCurrentPanelWidth() {
-  return panelExpanded ? EXPANDED_PANEL_WIDTH : COLLAPSED_WIDTH;
+  return EXPANDED_PANEL_WIDTH;
 }
 
 function applyAlwaysOnTopPolicy() {
@@ -258,9 +476,8 @@ function setPanelExpandedState(expanded) {
   panelExpanded = Boolean(expanded);
   if (panelExpanded) {
     panelExpandedAt = Date.now();
+    applyMouseIgnorePolicy(false);
   }
-  lastAttachedSignature = null;
-  refreshWindowPosition(true);
   if (!panelExpanded) {
     applyMouseIgnorePolicy(true);
   }
@@ -303,7 +520,6 @@ function getAttachedSignature(display) {
     bounds.y,
     bounds.width,
     bounds.height,
-    panelExpanded ? "expanded" : "collapsed",
     appSettings.anchor,
     appSettings.lengthMode,
     appSettings.manualYOffset
@@ -365,9 +581,16 @@ function createMainWindow() {
     minimizable: true,
     fullscreenable: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      preload: PRELOAD_PATH,
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: false
     }
+  });
+
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+  mainWindow.webContents.on("will-navigate", (event) => {
+    event.preventDefault();
   });
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
@@ -429,7 +652,7 @@ function createSettingsWindow() {
     x,
     y,
     ...(APP_ICON ? { icon: APP_ICON } : {}),
-    title: "빼꼼 플러스 설정",
+    title: `${getAppDisplayName()} 설정`,
     parent: mainWindow || undefined,
     modal: false,
     resizable: false,
@@ -439,9 +662,16 @@ function createSettingsWindow() {
     skipTaskbar: false,
     autoHideMenuBar: true,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      preload: PRELOAD_PATH,
+      nodeIntegration: false,
+      contextIsolation: true,
+      sandbox: false
     }
+  });
+
+  settingsWindow.webContents.setWindowOpenHandler(() => ({ action: "deny" }));
+  settingsWindow.webContents.on("will-navigate", (event) => {
+    event.preventDefault();
   });
 
   settingsWindow.setMenuBarVisibility(false);
@@ -459,27 +689,258 @@ function createSettingsWindow() {
     applyAlwaysOnTopPolicy();
   });
 
+  settingsWindow.on("close", (e) => {
+    if (settingsAllowClose) {
+      settingsAllowClose = false;
+      return;
+    }
+    e.preventDefault();
+    if (settingsWindow && !settingsWindow.isDestroyed()) {
+      settingsWindow.webContents.send("settings:request-close");
+    }
+  });
+
   settingsWindow.on("closed", () => {
     settingsWindow = null;
     applyAlwaysOnTopPolicy();
   });
 }
 
-function broadcastSettingsApplied() {
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send("settings:applied");
+function updateAppUiLanguageFromStateJson(stateJson) {
+  if (typeof stateJson !== "string" || !stateJson) return;
+  try {
+    const parsed = JSON.parse(stateJson);
+    const lang = parsed?.global?.language;
+    if (typeof lang === "string" && lang.trim()) {
+      appUiLanguage = resolveTrayLang(lang.trim());
+      if (trayIcon) trayIcon.setContextMenu(buildTrayMenu());
+    }
+  } catch {
+    /* ignore */
   }
 }
 
-app.whenReady().then(() => {
-  APP_ICON = resolveAppIcon();
+function broadcastStateChanged(options = {}) {
+  const {
+    skipSettingsReload = false,
+    skipMainReload = false,
+    stateJson = null,
+    partial = false,
+    fields = null
+  } = options;
 
-  if (process.platform === "win32") {
-    app.setAppUserModelId("com.ppaekkom.plus");
+  if (typeof stateJson === "string" && stateJson.length > 0) {
+    updateAppUiLanguageFromStateJson(stateJson);
   }
+
+  if (!skipMainReload && mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send("settings:applied", {
+      stateJson: typeof stateJson === "string" && stateJson.length > 0 ? stateJson : null
+    });
+  }
+
+  if (!skipSettingsReload && settingsWindow && !settingsWindow.isDestroyed()) {
+    if (partial) {
+      settingsWindow.webContents.send("state:partial-changed", {
+        fields: Array.isArray(fields) ? fields : ["slots"]
+      });
+    } else {
+      settingsWindow.webContents.send("state:changed");
+    }
+  }
+}
+
+function broadcastSettingsApplied() {
+  broadcastStateChanged();
+}
+
+function buildTrayMenu() {
+  const lang = appUiLanguage || "ko";
+  const shortcutLabel =
+    appSettings.triggerMode === "shortcut" && appSettings.shortcut
+      ? `\t${appSettings.shortcut.replace("CommandOrControl", "Ctrl")}`
+      : "";
+  const items = [
+    {
+      label: `${trayT("toggleMemo", lang)}${shortcutLabel}`,
+      click: () => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.send("shortcut:toggle-expand");
+        }
+      }
+    },
+    {
+      label: trayT("addIndex", lang),
+      click: () => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.send("tray:add-index");
+        }
+      }
+    },
+    { type: "separator" },
+    {
+      label: trayT("settings", lang),
+      click: () => createSettingsWindow()
+    },
+    {
+      label: trayT("help", lang),
+      click: () => shell.openExternal(DOCS_HELP_URL)
+    }
+  ];
+  if (!premiumActive) {
+    items.push({
+      label: trayT("upgradePlus", lang),
+      click: () => {
+        if (settingsWindow && !settingsWindow.isDestroyed()) {
+          settingsWindow.focus();
+          settingsWindow.webContents.send("premium:show-modal");
+        } else {
+          createSettingsWindow();
+          settingsWindow?.webContents.once("did-finish-load", () => {
+            settingsWindow.webContents.send("premium:show-modal");
+          });
+        }
+      }
+    });
+  }
+  items.push(
+    { type: "separator" },
+    {
+      label: trayT("restart", lang),
+      click: () => {
+        app.relaunch();
+        app.exit(0);
+      }
+    },
+    {
+      label: trayT("quit", lang),
+      click: () => app.quit()
+    }
+  );
+  return Menu.buildFromTemplate(items);
+}
+
+function ensureTrayIcon() {
+  if (trayIcon || !APP_ICON) return;
+  trayIcon = new Tray(APP_ICON);
+  trayIcon.setToolTip(getAppDisplayName());
+  trayIcon.setContextMenu(buildTrayMenu());
+  trayIcon.on("double-click", () => {
+    createSettingsWindow();
+  });
+}
+
+function setTrayVisibility(visible) {
+  trayVisible = Boolean(visible);
+  if (trayVisible) {
+    ensureTrayIcon();
+  } else if (trayIcon) {
+    trayIcon.destroy();
+    trayIcon = null;
+  }
+}
+
+app.whenReady().then(async () => {
+  if (!assertOsSupported()) return;
+
+  await license.verifyStoredLicense().catch(() => {});
+
+  premiumActive = license.isPremiumActive();
+  APP_ICON = loadAppIcon(premiumActive);
+  applyBranding();
+  healOrphanedStartupRegistration();
 
   appSettings = normalizeSettings();
   updateShortcutRegistration();
+  ensureTrayIcon();
+
+  ipcMain.handle("premium:get", () => ({
+    ok: true,
+    isPremium: license.isPremiumActive(),
+    buyUrl: LEMON_BUY_URL,
+    ...license.getLicenseDebugInfo()
+  }));
+
+  ipcMain.handle("premium:activate", async (_, licenseKey) => {
+    const result = await license.activateLicenseKey(licenseKey);
+    if (result.ok) {
+      broadcastPremiumChanged();
+    }
+    return result;
+  });
+
+  ipcMain.handle("premium:open-buy", async () => {
+    await shell.openExternal(LEMON_BUY_URL);
+    return { ok: true };
+  });
+
+  function sanitizeFontFamilyName(name) {
+    if (typeof name !== "string") return null;
+    const trimmed = name.trim();
+    if (!trimmed) return null;
+    if (trimmed.includes("\uFFFD")) return null;
+    if (/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(trimmed)) return null;
+    if (/^(Regular|Bold|Light|Medium|Semilight|Semibold|Black|Heavy|Thin|Italic)$/i.test(trimmed)) {
+      return null;
+    }
+    const chars = Array.from(trimmed);
+    if (chars.length < 1 || chars.length > 64) return null;
+    return trimmed;
+  }
+
+  function normalizeFontList(fonts) {
+    const seen = new Set();
+    const out = [];
+    for (const raw of fonts) {
+      const name = sanitizeFontFamilyName(raw);
+      if (!name) continue;
+      const key = name.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(name);
+    }
+    return out.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+  }
+
+  let cachedSystemFonts = null;
+
+  ipcMain.handle("system:list-fonts", async () => {
+    if (cachedSystemFonts) {
+      return { ok: true, fonts: cachedSystemFonts };
+    }
+    try {
+      const { execFile } = require("child_process");
+      const { promisify } = require("util");
+      const execFileAsync = promisify(execFile);
+      if (process.platform === "win32") {
+        const ps = [
+          "[Console]::OutputEncoding = [System.Text.Encoding]::UTF8",
+          "$OutputEncoding = [System.Text.Encoding]::UTF8",
+          "[System.Reflection.Assembly]::LoadWithPartialName('System.Drawing') | Out-Null",
+          "[System.Drawing.FontFamily]::Families | ForEach-Object { $_.Name }"
+        ].join("; ");
+        const { stdout } = await execFileAsync(
+          "powershell.exe",
+          ["-NoProfile", "-Command", ps],
+          { encoding: "utf8", maxBuffer: 10 * 1024 * 1024 }
+        );
+        const fonts = normalizeFontList(
+          stdout
+            .split(/\r?\n/)
+            .map((s) => s.trim())
+            .filter(Boolean)
+        );
+        cachedSystemFonts = fonts.length
+          ? fonts
+          : ["Segoe UI", "Malgun Gothic", "Arial", "Consolas"];
+        return { ok: true, fonts: cachedSystemFonts };
+      }
+      cachedSystemFonts = ["Segoe UI", "Malgun Gothic", "Arial", "Consolas"];
+      return { ok: true, fonts: cachedSystemFonts };
+    } catch (err) {
+      return { ok: false, message: String(err?.message || err), fonts: [] };
+    }
+  });
 
   ipcMain.handle("display:list", () => {
     const cursorDisplay = getCursorDisplay();
@@ -586,6 +1047,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle("settings:close-window", () => {
     if (settingsWindow && !settingsWindow.isDestroyed()) {
+      settingsAllowClose = true;
       settingsWindow.close();
     }
     return { ok: true };
@@ -598,23 +1060,75 @@ app.whenReady().then(() => {
     }
 
     const shortcutStatus = updateShortcutRegistration();
+    if (trayIcon) {
+      trayIcon.setContextMenu(buildTrayMenu());
+    }
     lastAttachedSignature = null;
     refreshWindowPosition(true);
 
     return { ok: true, shortcutStatus, windowState: getWindowState() };
   });
 
-  ipcMain.handle("settings:notify-applied", () => {
-    broadcastSettingsApplied();
+  ipcMain.handle("settings:notify-applied", (_, options = {}) => {
+    if (typeof options.language === "string" && options.language.trim()) {
+      appUiLanguage = resolveTrayLang(options.language.trim());
+      if (trayIcon) trayIcon.setContextMenu(buildTrayMenu());
+    }
+    broadcastStateChanged({
+      skipSettingsReload: Boolean(options.skipSettingsReload),
+      skipMainReload: Boolean(options.skipMainReload),
+      stateJson: typeof options.stateJson === "string" ? options.stateJson : null,
+      partial: Boolean(options.partial),
+      fields: Array.isArray(options.fields) ? options.fields : null
+    });
     return { ok: true };
   });
 
-  ipcMain.handle("shell:open-external", async (_, url) => {
+  ipcMain.handle("settings:notify-changed", (_, options = {}) => {
+    if (typeof options.language === "string" && options.language.trim()) {
+      appUiLanguage = resolveTrayLang(options.language.trim());
+      if (trayIcon) trayIcon.setContextMenu(buildTrayMenu());
+    }
+    broadcastStateChanged({
+      skipSettingsReload: Boolean(options.skipSettingsReload),
+      skipMainReload:
+        options.skipMainReload !== undefined ? Boolean(options.skipMainReload) : true,
+      stateJson: typeof options.stateJson === "string" ? options.stateJson : null,
+      partial: Boolean(options.partial),
+      fields: Array.isArray(options.fields) ? options.fields : null
+    });
+    return { ok: true };
+  });
+
+  ipcMain.on("color:prepare-advanced-picker", () => {
+    if (settingsWindow && !settingsWindow.isDestroyed()) {
+      settingsWindow.setParentWindow(null);
+    }
+  });
+
+  ipcMain.handle("color:restore-advanced-picker", () => {
+    if (!settingsWindow || settingsWindow.isDestroyed()) {
+      return { ok: false };
+    }
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      settingsWindow.setParentWindow(mainWindow);
+    }
+    applyAlwaysOnTopPolicy();
+    return { ok: true };
+  });
+
+  ipcMain.handle("shell:open-external", async (event, url) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, message: "UNTRUSTED_SENDER" };
+    }
     if (typeof url !== "string" || url.length === 0) {
       return { ok: false, message: "INVALID_URL" };
     }
     try {
-      const safe = /^(https?:|mailto:)/i.test(url) ? url : `https://${url}`;
+      const safe = isSafeExternalUrl(url);
+      if (!safe) {
+        return { ok: false, message: "BLOCKED_URL" };
+      }
       await shell.openExternal(safe);
       return { ok: true };
     } catch (err) {
@@ -624,7 +1138,87 @@ app.whenReady().then(() => {
 
   ipcMain.handle("settings:get", () => ({ ok: true, settings: appSettings }));
 
-  ipcMain.handle("export:save", async (_, payload = {}) => {
+  function readSharedStateFromMain(timeoutMs = 5000) {
+    return new Promise((resolve) => {
+      if (!mainWindow || mainWindow.isDestroyed()) {
+        resolve({ ok: false, reason: "NO_MAIN_WINDOW" });
+        return;
+      }
+      const replyChannel = `shared-state:read-response:${Date.now()}:${Math.random()}`;
+      const timer = setTimeout(() => {
+        ipcMain.removeAllListeners(replyChannel);
+        resolve({ ok: false, reason: "TIMEOUT" });
+      }, timeoutMs);
+
+      ipcMain.once(replyChannel, (_event, payload = {}) => {
+        clearTimeout(timer);
+        resolve({
+          ok: true,
+          raw: typeof payload.raw === "string" ? payload.raw : null,
+          backup: typeof payload.backup === "string" ? payload.backup : null
+        });
+      });
+
+      mainWindow.webContents.send("shared-state:read-request", replyChannel);
+    });
+  }
+
+  function writeSharedStateToMain(jsonPayload, timeoutMs = 10000) {
+    return new Promise((resolve) => {
+      if (!mainWindow || mainWindow.isDestroyed()) {
+        resolve({ ok: false, reason: "NO_MAIN_WINDOW" });
+        return;
+      }
+      if (typeof jsonPayload !== "string" || jsonPayload.length === 0) {
+        resolve({ ok: false, reason: "INVALID_PAYLOAD" });
+        return;
+      }
+      const replyChannel = `shared-state:write-response:${Date.now()}:${Math.random()}`;
+      const timer = setTimeout(() => {
+        ipcMain.removeAllListeners(replyChannel);
+        resolve({ ok: false, reason: "TIMEOUT" });
+      }, timeoutMs);
+
+      ipcMain.once(replyChannel, (_event, payload = {}) => {
+        clearTimeout(timer);
+        resolve(payload?.ok ? { ok: true } : { ok: false, reason: payload?.reason || "WRITE_FAILED" });
+      });
+
+      mainWindow.webContents.send("shared-state:write-request", {
+        replyChannel,
+        json: jsonPayload
+      });
+    });
+  }
+
+  ipcMain.handle("shared-state:get", async () => {
+    const payload = await readSharedStateFromMain();
+    if (!payload.ok) return payload;
+    return { ok: true, raw: payload.raw, backup: payload.backup };
+  });
+
+  ipcMain.handle("shared-state:set", async (event, jsonPayload) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, reason: "UNTRUSTED_SENDER" };
+    }
+    if (!isValidStatePayload(jsonPayload)) {
+      return { ok: false, reason: "INVALID_PAYLOAD" };
+    }
+    return writeSharedStateToMain(jsonPayload);
+  });
+
+  ipcMain.handle("tray:set-visible", (_, visible) => {
+    setTrayVisibility(visible);
+    return { ok: true, visible: trayVisible };
+  });
+
+  ipcMain.handle("export:save", async (event, payload = {}) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, message: "UNTRUSTED_SENDER" };
+    }
+    const premiumBlock = requirePremiumAccess();
+    if (premiumBlock) return premiumBlock;
+
     const { format, content, defaultName } = payload;
     if (typeof content !== "string") {
       return { ok: false, message: "INVALID_CONTENT" };
@@ -638,7 +1232,7 @@ app.whenReady().then(() => {
         : `ppaekkom-export.${ext}`;
 
     const { canceled, filePath } = await dialog.showSaveDialog({
-      title: "내보내기",
+      title: trayT("exportTitle", appUiLanguage),
       defaultPath: baseName.endsWith(`.${ext}`) ? baseName : `${baseName}.${ext}`,
       filters: [{ name: ext.toUpperCase(), extensions: [ext] }]
     });
@@ -656,9 +1250,15 @@ app.whenReady().then(() => {
   });
 
   // 백업 파일 가져오기 (올리기)
-  ipcMain.handle("import:load", async () => {
+  ipcMain.handle("import:load", async (event) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, message: "UNTRUSTED_SENDER" };
+    }
+    const premiumBlock = requirePremiumAccess();
+    if (premiumBlock) return premiumBlock;
+
     const { canceled, filePaths } = await dialog.showOpenDialog({
-      title: "백업 파일 불러오기",
+      title: trayT("importTitle", appUiLanguage),
       filters: [{ name: "JSON 백업", extensions: ["json"] }],
       properties: ["openFile"]
     });
@@ -667,8 +1267,84 @@ app.whenReady().then(() => {
     }
     try {
       const raw = fs.readFileSync(filePaths[0], "utf8");
+      if (Buffer.byteLength(raw, "utf8") > MAX_STATE_JSON_BYTES) {
+        return { ok: false, message: "FILE_TOO_LARGE" };
+      }
       const parsed = JSON.parse(raw);
+      if (!parsed || parsed.version !== 5 || !Array.isArray(parsed.slots)) {
+        return { ok: false, message: "INVALID_BACKUP" };
+      }
       return { ok: true, data: parsed };
+    } catch (err) {
+      return { ok: false, message: String(err?.message || err) };
+    }
+  });
+
+  ipcMain.handle("image:pick", async (event) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, message: "UNTRUSTED_SENDER" };
+    }
+    const premiumBlock = requirePremiumAccess();
+    if (premiumBlock) return premiumBlock;
+
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      title: trayT("imagePickTitle", appUiLanguage),
+      filters: [
+        {
+          name: "Images",
+          extensions: ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg"]
+        }
+      ],
+      properties: ["openFile"]
+    });
+    if (canceled || !filePaths || filePaths.length === 0) {
+      return { ok: false, canceled: true };
+    }
+    try {
+      const filePath = filePaths[0];
+      const buf = fs.readFileSync(filePath);
+      const ext = path.extname(filePath).slice(1).toLowerCase();
+      const mimeExt = ext === "jpg" ? "jpeg" : ext;
+      const dataUrl = `data:image/${mimeExt};base64,${buf.toString("base64")}`;
+      return { ok: true, dataUrl, filePath };
+    } catch (err) {
+      return { ok: false, message: String(err?.message || err) };
+    }
+  });
+
+  ipcMain.handle("image:file-exists", async (event, filePath) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, exists: false, message: "UNTRUSTED_SENDER" };
+    }
+    const premiumBlock = requirePremiumAccess();
+    if (premiumBlock) return { ok: false, exists: false, message: premiumBlock.reason };
+    if (typeof filePath !== "string" || !filePath.trim()) {
+      return { ok: false, exists: false };
+    }
+    try {
+      return { ok: true, exists: fs.existsSync(filePath) };
+    } catch (err) {
+      return { ok: false, exists: false, message: String(err?.message || err) };
+    }
+  });
+
+  ipcMain.handle("image:read-file", async (event, filePath) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, message: "UNTRUSTED_SENDER" };
+    }
+    const premiumBlock = requirePremiumAccess();
+    if (premiumBlock) return premiumBlock;
+
+    if (!isAllowedImagePath(filePath)) {
+      return { ok: false, message: "INVALID_IMAGE_PATH" };
+    }
+    try {
+      const resolved = path.resolve(filePath.trim());
+      const buf = fs.readFileSync(resolved);
+      const ext = path.extname(resolved).slice(1).toLowerCase();
+      const mimeExt = ext === "jpg" ? "jpeg" : ext;
+      const dataUrl = `data:image/${mimeExt};base64,${buf.toString("base64")}`;
+      return { ok: true, dataUrl, filePath: resolved };
     } catch (err) {
       return { ok: false, message: String(err?.message || err) };
     }
@@ -676,8 +1352,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle("startup:get", () => {
     try {
-      const opts = process.platform === "darwin" ? {} : { path: process.execPath, args: [] };
-      const login = app.getLoginItemSettings(opts);
+      const login = readStartupLoginState();
       return { ok: true, openAtLogin: Boolean(login.openAtLogin) };
     } catch (err) {
       return { ok: false, openAtLogin: false, message: String(err?.message || err) };
@@ -686,29 +1361,31 @@ app.whenReady().then(() => {
 
   ipcMain.handle("startup:set", (_, enabled) => {
     try {
-      const openAtLogin = Boolean(enabled);
-      if (process.platform === "darwin") {
-        app.setLoginItemSettings({ openAtLogin });
-      } else {
-        app.setLoginItemSettings({
-          openAtLogin,
-          path: process.execPath,
-          args: []
-        });
+      const requested = Boolean(enabled);
+      setStartupLoginState(requested);
+      const login = readStartupLoginState();
+      const actual = Boolean(login.openAtLogin);
+      if (actual !== requested) {
+        return {
+          ok: false,
+          openAtLogin: actual,
+          message: "시작 프로그램 등록이 반영되지 않았습니다. 관리자 권한 또는 보안 프로그램을 확인해 주세요."
+        };
       }
-      return { ok: true };
+      return { ok: true, openAtLogin: actual };
     } catch (err) {
       return { ok: false, message: String(err?.message || err) };
     }
   });
 
   createMainWindow();
+  initAutoUpdater();
+
+  const shouldOpenSettings = process.argv.includes("--open-settings");
 
   // 첫 실행(v5 상태 없음)이거나 setupCompleted가 false면 설정창 자동 오픈
   mainWindow.webContents.once("did-finish-load", () => {
     try {
-      const { session } = mainWindow.webContents;
-      // localStorage는 렌더러에서만 접근 가능하므로 렌더러에 확인 요청
       mainWindow.webContents.executeJavaScript(`
         (function() {
           const v5 = localStorage.getItem("ppaekkom-plus-state-v5");
@@ -716,14 +1393,20 @@ app.whenReady().then(() => {
           try { const s = JSON.parse(v5); return !s?.global?.setupCompleted; } catch(e) { return true; }
         })()
       `).then((isFirstRun) => {
-        if (isFirstRun) {
+        if (isFirstRun || shouldOpenSettings) {
           setTimeout(() => {
             createSettingsWindow();
           }, 400);
         }
-      }).catch(() => {});
+      }).catch(() => {
+        if (shouldOpenSettings) {
+          setTimeout(() => createSettingsWindow(), 400);
+        }
+      });
     } catch (e) {
-      // ignore
+      if (shouldOpenSettings) {
+        setTimeout(() => createSettingsWindow(), 400);
+      }
     }
   });
 
@@ -751,5 +1434,9 @@ app.on("window-all-closed", () => {
 });
 
 app.on("will-quit", () => {
+  if (trayIcon) {
+    trayIcon.destroy();
+    trayIcon = null;
+  }
   globalShortcut.unregisterAll();
 });

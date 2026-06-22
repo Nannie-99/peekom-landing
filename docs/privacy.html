@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Peekom 개인정보 처리방침 — 로컬 저장 원칙, 수집 항목, 이용자 권리 안내.">
+    <title>Peekom — 개인정보 처리방침</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/theme.js"></script>
+</head>
+<body data-page="privacy">
+
+    <header class="topbar">
+        <div class="topbar__brand">
+            <a href="index.html">
+                <img src="images/index.png" alt="Peekom" id="brandIcon">
+                <span>Peekom</span>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="navbar__links">
+                <li><a href="index.html" data-nav="home" id="navHome">홈</a></li>
+                <li><a href="features.html" data-nav="features" id="navFeatures">기능</a></li>
+                <li><a href="download.html" data-nav="download" id="navDownload">다운로드</a></li>
+                <li><a href="help.html" data-nav="help" id="navHelp">가이드</a></li>
+                <li><a href="faq.html" data-nav="faq" id="navFaq">자주 묻는 질문</a></li>
+                <li><a href="contact.html" data-nav="contact" id="navContact">연락</a></li>
+            </ul>
+            <div class="navbar__right">
+                <div class="search-wrap">
+                    <input type="search" class="search-input" id="searchInput" placeholder="검색..." autocomplete="off">
+                    <span class="search-icon">&#128269;</span>
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+                <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
+                    <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="dark" aria-pressed="false" id="themeDarkBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="auto" aria-pressed="false" id="themeAutoBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M7 10h4M13 10h4M7 13h10"/></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section class="section privacy-doc" id="privacy">
+            <h2 class="section-title" id="privacyTitle">Peekom 개인정보 처리방침</h2>
+            <p class="section-sub" id="privacyUpdated">시행일: 2026년 6월 19일 · 최종 개정일: 2026년 6월 19일</p>
+
+            <div class="help-block privacy-doc__block">
+                <h3>1. 총칙</h3>
+                <p>Peekom(이하 “서비스” 또는 “앱”)은 이용자의 개인정보를 소중히 여기며, 대한민국 「개인정보 보호법」 등 관련 법령과 2026년 6월 기준 국제 개인정보 보호 모범 사례(투명성·최소 수집·목적 제한·안전 조치)를 준수하기 위해 본 개인정보 처리방침(이하 “본 방침”)을 수립·공개합니다.</p>
+                <p>본 방침은 <strong>데스크톱 애플리케이션(Peekom / Peekom Plus)</strong>, <strong>공식 웹사이트</strong>(peekom.com), <strong>유료 라이선스(Plus) 구매·인증</strong> 과정에 적용됩니다.</p>
+                <p class="privacy-doc__note">본 문서는 일반적인 안내를 제공합니다. 특정 상황에서의 법률 자문을 대체하지 않습니다. 중요한 권리 행사나 분쟁이 있는 경우 전문가 상담을 권장합니다.</p>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>2. 운영자 및 연락처</h3>
+                <ul class="guide-example-list">
+                    <li><strong>서비스명:</strong> Peekom</li>
+                    <li><strong>개인정보 보호 문의:</strong> <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a></li>
+                    <li><strong>처리방침·보안 관련 문의 응답:</strong> 영업일 기준 10일 이내 답변을 목표로 합니다(법령상 기한이 있는 경우 해당 기한을 따릅니다).</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>3. 핵심 원칙 — 로컬 우선(Local-first) 구조</h3>
+                <p>Peekom은 <strong>가장자리 메모를 이용자 기기에 저장하는 로컬 데스크톱 앱</strong>입니다. 메모 본문·이미지·테마·슬롯 위치·대부분의 설정은 <strong>이용자 컴퓨터의 사용자 프로필 폴더</strong>에만 저장되며, Peekom이 운영하는 <strong>메모 내용을 보관하는 클라우드 서버는 없습니다</strong>.</p>
+                <p>이 구조로 인해 다음과 같은 보안·프라이버시 특성이 있습니다.</p>
+                <ul class="guide-example-list">
+                    <li>메모 데이터가 Peekom 서버로 <strong>자동 업로드·동기화되지 않습니다</strong>.</li>
+                    <li>네트워크가 차단된 환경에서도 무료 기능은 <strong>오프라인으로 동작</strong>합니다.</li>
+                    <li>데이터 접근 권한은 <strong>해당 기기에 로그인한 운영체제 계정·설치된 다른 프로그램·물리적 접근</strong> 수준에서 관리됩니다. Peekom은 OS가 제공하는 사용자 격리 범위 내에 파일을 저장합니다.</li>
+                    <li>클라우드 유출·중앙 DB 침해와 같은 <strong>서버 측 대규모 유출 위험은 원칙적으로 해당되지 않습니다</strong>. 다만 이용자 기기 자체의 분실·악성코드·백업 미설정 등 <strong>로컬 환경 위험</strong>은 이용자·OS 보안 설정으로 관리해야 합니다.</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>4. 수집하는 개인정보 항목</h3>
+                <p>Peekom은 서비스 제공에 필요한 범위에서만 정보를 처리합니다.</p>
+
+                <h4 class="privacy-doc__h4">4.1 앱(무료·Plus 공통) — 기기 내 로컬 저장</h4>
+                <p>다음 정보는 <strong>이용자 기기에만</strong> 저장되며, Peekom이 이를 서버로 수집·전송하지 않습니다.</p>
+                <ul class="guide-example-list">
+                    <li>✔️ 메모 텍스트, 첨부 이미지, 마크다운·서식 정보</li>
+                    <li>✔️ 인덱스(슬롯) 제목·색상·위치·비율 등 UI 설정</li>
+                    <li>✔️ 앱 테마·글꼴·불투명도 등 표시 설정</li>
+                    <li>✔️ 단축키·표시 모니터 등 환경설정</li>
+                    <li>✔️ JSON 백업·복원 파일(이용자가 직접보내기·가져오기를 선택한 경우)</li>
+                </ul>
+
+                <h4 class="privacy-doc__h4">4.2 Plus 라이선스 인증 시</h4>
+                <p>Plus 활성화 시 앱은 라이선스 검증을 위해 <strong>최소한의 정보</strong>를 Lemon Squeezy API에 전송할 수 있습니다.</p>
+                <ul class="guide-example-list">
+                    <li>라이선스 키(이용자가 입력)</li>
+                    <li>기기 식별용 내부 instance ID(앱이 생성·저장하는 UUID, 개인을 직접 식별하지 않도록 설계)</li>
+                    <li>검증 요청 시각 등 Lemon Squeezy API 응답에 포함되는 메타데이터</li>
+                </ul>
+                <p>결제 카드 정보·청구 주소 등 <strong>결제 정보는 Lemon Squeezy 결제 페이지에서 직접 처리</strong>되며, Peekom 앱이 저장하지 않습니다. 자세한 내용은 <a href="https://www.lemonsqueezy.com/privacy" target="_blank" rel="noopener">Lemon Squeezy 개인정보 처리방침</a>을 참고하세요.</p>
+
+                <h4 class="privacy-doc__h4">4.3 공식 웹사이트</h4>
+                <ul class="guide-example-list">
+                    <li>기본적으로 이용자가 입력하는 개인정보를 별도로 수집하는 회원가입·문의 양식은 운영하지 않습니다.</li>
+                    <li>이메일로 문의하시는 경우, <strong>이용자가 보내주신 이메일 주소·문의 내용</strong>을 문의 처리 목적으로 보관할 수 있습니다.</li>
+                    <li>웹 호스팅·CDN 제공자는 접속 로그(IP 주소, 브라우저 종류, 접속 시각 등)를 기술적 운영 목적으로 생성할 수 있습니다. Peekom은 기본적으로 별도의 마케팅·행동 분석(Analytics) 쿠키를 심지 않습니다.</li>
+                </ul>
+
+                <h4 class="privacy-doc__h4">4.4 자동 업데이트(선택)</h4>
+                <p>앱이 업데이트를 확인할 때 GitHub Releases 등 공식 배포 채널과 통신할 수 있습니다. 이 과정에서 <strong>앱 버전·운영체제 정보</strong> 수준의 기술 정보가 전송될 수 있으나, 메모 내용은 포함되지 않습니다.</p>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>5. 개인정보의 수집 방법</h3>
+                <ul class="guide-example-list">
+                    <li><strong>이용자 입력:</strong> 메모 작성, 설정 변경, 라이선스 키 입력, 이메일 문의</li>
+                    <li><strong>자동 생성:</strong> 기기 내 instance ID, 로컬 설정 파일</li>
+                    <li><strong>제3자 연동:</strong> Plus 구매·라이선스 검증(Lemon Squeezy), 앱 업데이트 확인(GitHub 등)</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>6. 개인정보의 이용 목적</h3>
+                <ul class="guide-example-list">
+                    <li>가장자리 메모·설정 기능 제공 및 로컬 저장</li>
+                    <li>Plus 유료 기능 잠금 해제 및 라이선스 부정 사용 방지</li>
+                    <li>앱 안정성·보안·업데이트 제공</li>
+                    <li>이용자 문의·분쟁·환불 요청 처리</li>
+                    <li>법령상 의무 이행 및 권리 보호</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>7. 보유 및 이용 기간</h3>
+                <ul class="guide-example-list">
+                    <li><strong>로컬 메모·설정:</strong> 이용자가 삭제하거나 앱을 제거할 때까지 기기에 보관됩니다.</li>
+                    <li><strong>라이선스 정보(기기 내):</strong> Plus 사용 기간 동안 기기에 보관되며, 비활성화·앱 삭제 시 삭제됩니다.</li>
+                    <li><strong>이메일 문의:</strong> 처리 완료 후 <strong>최대 3년</strong> 보관 후 파기를 원칙으로 합니다(분쟁·법적 보존 의무가 있는 경우 해당 기간까지 보관).</li>
+                    <li><strong>Lemon Squeezy:</strong> 결제·라이선스 관련 기록은 해당 사업자의 정책·법적 보존 기간을 따릅니다.</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>8. 로컬 저장 보안 및 이용자 책임</h3>
+                <p>Peekom은 로컬 앱 특성상 다음과 같은 보안 조치를 적용합니다.</p>
+                <ul class="guide-example-list">
+                    <li>메모 데이터를 Peekom 자체 서버로 전송하지 않음(Plus 라이선스 검증·업데이트 확인 등 <strong>필수 통신만 예외</strong>)</li>
+                    <li>앱 패키지(asar) 및 배포 파일 무결성 관리</li>
+                    <li>라이선스 키는 기기 내 설정 파일에 저장(운영체제 계정 권한으로 보호)</li>
+                </ul>
+                <p>이용자께서는 다음을 권장합니다.</p>
+                <ul class="guide-example-list">
+                    <li>운영체제 로그인 비밀번호·디스크 암호화(BitLocker, FileVault 등) 사용</li>
+                    <li>신뢰할 수 없는 프로그램 설치 자제 및 백신·보안 업데이트 유지</li>
+                    <li>중요 메모는 설정의 <strong>JSON 백업</strong> 기능으로 주기적 백업</li>
+                    <li>공용 PC에서는 사용 후 로그아웃 및 앱 데이터 삭제</li>
+                </ul>
+                <p>인터넷을 통한 데이터 전송 구간(라이선스 API 등)은 TLS(HTTPS)를 사용합니다. 로컬 파일에 대한 무단 접근은 <strong>OS·물리적 보안</strong> 영역이므로 Peekom이 원격으로 차단할 수 없습니다.</p>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>9. 개인정보의 제3자 제공</h3>
+                <p>Peekom은 원칙적으로 이용자 개인정보를 외부에 판매·임대하지 않습니다. 다음의 경우에만 제공·연동될 수 있습니다.</p>
+                <ul class="guide-example-list">
+                    <li><strong>이용자 동의 또는 요청:</strong> Plus 구매·라이선스 활성화 시 Lemon Squeezy 연동</li>
+                    <li><strong>법령에 따른 요청:</strong> 수사기관·법원 등 적법한 절차에 따른 요구</li>
+                    <li><strong>생명·신체 긴급:</strong> 관련 법령이 허용하는 범위</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>10. 개인정보 처리 위탁 및 국외 이전</h3>
+                <p>Peekom은 직접 메모 데이터를 처리·보관하는 위탁 사업자를 두지 않습니다. 다만 Plus 결제·라이선스, 웹사이트 호스팅, 소프트웨어 배포를 위해 아래와 같은 <strong>해외 사업자</strong>의 서비스를 이용할 수 있습니다.</p>
+                <ul class="guide-example-list">
+                    <li><strong>Lemon Squeezy</strong> (미국 등) — 결제·라이선스 관리</li>
+                    <li><strong>GitHub</strong> (Microsoft) — 릴리스·업데이트 배포</li>
+                    <li><strong>웹 호스팅·CDN 제공자</strong> — 공식 사이트 제공(이용 시)</li>
+                </ul>
+                <p>국외 이전 시 해당 사업자의 개인정보 보호 정책·표준계약조항(SCC) 등 적용 법령에 따른 보호 조치가 적용될 수 있습니다. EU·영국·스위스 거주자는 GDPR 등에 따른 권리(접근·삭제·이전·처리 제한·이의 제기 등)를 해당 사업자 또는 Peekom에 행사할 수 있습니다.</p>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>11. 이용자 및 법정대리인의 권리</h3>
+                <p>대한민국 「개인정보 보호법」에 따라 이용자는 다음 권리를 행사할 수 있습니다.</p>
+                <ul class="guide-example-list">
+                    <li>개인정보 열람·정정·삭제·처리 정지 요구</li>
+                    <li>개인정보 처리에 관한 동의 철회(동의를 전제로 처리하는 항목에 한함)</li>
+                </ul>
+                <p>로컬에 저장된 메모·설정은 앱 내에서 직접 수정·삭제하거나, 앱 제거를 통해 삭제할 수 있습니다. Plus 라이선스·이메일 문의 기록에 대한 권리 행사는 <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>으로 요청해 주세요.</p>
+                <p>권리 행사 시 본인 확인을 위해 추가 정보를 요청할 수 있으며, 법령에 따라 제한될 수 있습니다.</p>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>12. 쿠키 및 유사 기술(웹사이트)</h3>
+                <p>공식 랜딩 페이지는 기본적으로 <strong>필수 기능 쿠키 외 마케팅·광고 목적 쿠키를 사용하지 않습니다</strong>. 브라우저의 <code>localStorage</code>에 언어·테마 선택(예: <code>ppaekkom-lang</code>, <code>peekom-theme</code>)을 저장하여 방문 환경을 기억할 수 있습니다. 브라우저 설정에서 저장 데이터를 삭제할 수 있습니다.</p>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>13. 국제 이용자를 위한 추가 안내</h3>
+                <ul class="guide-example-list">
+                    <li><strong>유럽경제지역(EEA)·영국:</strong> GDPR에 따른 처리 근거는 계약 이행, 정당한 이익(보안·부정 사용 방지), 법적 의무 등에 해당할 수 있습니다.</li>
+                    <li><strong>캘리포니아(미국):</strong> CCPA/CPRA에 따라 Peekom은 이용자 개인정보를 <strong>판매·공유하지 않습니다</strong>. 특정 권리 요청은 이메일로 접수합니다.</li>
+                    <li><strong>기타 지역:</strong> 거주 지역의 개인정보 법령에 따른 권리가 인정되는 경우 동등한 범위에서 대응합니다.</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>14. 개인정보의 파기</h3>
+                <ul class="guide-example-list">
+                    <li><strong>로컬 데이터:</strong> 앱 내 삭제·앱 제거·백업 파일 삭제로 파기</li>
+                    <li><strong>이메일 문의:</strong> 보유 기간 경과 후 안전한 방법으로 삭제</li>
+                    <li><strong>전자적 파일:</strong> 복구 불가능한 방식으로 삭제</li>
+                </ul>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>15. 개인정보 처리방침의 변경</h3>
+                <p>법령·서비스 변경 시 본 방침을 개정할 수 있으며, 중요한 변경은 웹사이트 공지 또는 앱 내 안내로 알립니다. 개정 방침은 게시한 날부터 효력이 발생합니다.</p>
+            </div>
+
+            <div class="help-block privacy-doc__block">
+                <h3>16. 문의</h3>
+                <p>개인정보 처리와 관련한 문의·불만·권리 행사는 아래로 연락해 주세요.</p>
+                <p><strong>이메일:</strong> <a href="mailto:hello.peekom@gmail.com" id="privacyContactEmail">hello.peekom@gmail.com</a></p>
+                <p>또한 대한민국 거주자는 개인정보침해신고센터(privacy.kisa.or.kr), 개인정보 분쟁조정위원회(www.kopico.go.kr) 등 관계 기관에 상담·신고할 수 있습니다.</p>
+            </div>
+
+            <p class="privacy-doc__back"><a href="index.html">← Peekom 홈으로</a></p>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer__bar">
+            <p class="footer__copy">
+                <span id="footerCopy">&copy; 2026. Peekom All rights reserved.</span>
+                &nbsp;&middot;&nbsp;
+                <a href="privacy.html" id="footerPrivacy">개인정보 처리방침</a>
+            </p>
+            <div class="footer__controls">
+                <label class="footer__lang-label" for="langSelect" id="footerLangLabel">언어</label>
+                <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/compare.js"></script>
+    <script src="js/site.js"></script>
+</body>
+</html>

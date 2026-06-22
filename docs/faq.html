@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Peekom 자주 묻는 질문 — 무료 vs Plus, 라이선스, SmartScreen.">
+    <title>Peekom — 자주 묻는 질문</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/theme.js"></script>
+</head>
+<body data-page="faq">
+    <header class="topbar">
+        <div class="topbar__brand">
+            <a href="index.html">
+                <img src="images/index.png" alt="Peekom" id="brandIcon">
+                <span>Peekom</span>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="navbar__links">
+                <li><a href="index.html" data-nav="home" id="navHome">홈</a></li>
+                <li><a href="features.html" data-nav="features" id="navFeatures">기능</a></li>
+                <li><a href="download.html" data-nav="download" id="navDownload">다운로드</a></li>
+                <li><a href="help.html" data-nav="help" id="navHelp">가이드</a></li>
+                <li><a href="faq.html" data-nav="faq" id="navFaq">자주 묻는 질문</a></li>
+                <li><a href="contact.html" data-nav="contact" id="navContact">연락</a></li>
+            </ul>
+            <div class="navbar__right">
+                <div class="search-wrap">
+                    <input type="search" class="search-input" id="searchInput" placeholder="검색..." autocomplete="off">
+                    <span class="search-icon">&#128269;</span>
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+                <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
+                    <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="dark" aria-pressed="false" id="themeDarkBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="auto" aria-pressed="false" id="themeAutoBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M7 10h4M13 10h4M7 13h10"/></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="section" id="faq">
+            <h2 class="section-title" id="faqTitle">자주 묻는 질문</h2>
+            <p class="section-sub" id="faqSub">Peekom 사용 중 자주 묻는 내용입니다.</p>
+            <div class="faq-accordion" data-search="index free difference plus peekom markdown toolbar">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq1q">Peekom과 Peekom Plus의 차이는 무엇인가요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq1a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="dual monitor display">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq2q">듀얼 모니터에서 어떻게 동작하나요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq2a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="edge right side monitor screen border position">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq8q">Peekom은 모니터 오른쪽 가장자리에서만 사용 가능한가요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq8a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="license lemon squeezy purchase">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq3q">Peekom Plus 라이선스는 어떻게 인증하나요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq3a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="license devices two computers work personal pc activation limit">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq3bq">한 라이선스 키로 여러 대의 PC에서 사용할 수 있나요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq3ba" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="smartscreen windows warning install">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq4q">Windows 설치 시 파란 경고창이 뜹니다.</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq4a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="windows 10 requirement os electron">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq5q">Windows 몇부터 사용할 수 있나요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq5a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="index missing settings sync">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq6q">인덱스를 추가했는데 설정창에 안 보여요.</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq6a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="uninstall startup ghost error text">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faq7q">삭제 후에도 부팅할 때 이상한 글자가 남아요.</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faq7a" hidden></div>
+            </div>
+            <div class="page-cta-strip" id="pageCtaStrip"></div>
+        </section>
+    </main>
+    <footer class="footer">
+        <div class="footer__bar">
+            <p class="footer__copy">
+                <span id="footerCopy">&copy; 2026. Peekom All rights reserved.</span>
+                &nbsp;&middot;&nbsp;
+                <a href="privacy.html" id="footerPrivacy">개인정보 처리방침</a>
+            </p>
+            <div class="footer__controls">
+                <label class="footer__lang-label" for="langSelect" id="footerLangLabel">언어</label>
+                <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
+            </div>
+        </div>
+    </footer>
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModalOnBackdrop(event)">
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="guideTitle">
+            <div class="modal__head">
+                <h3 class="modal__title" id="guideTitle">윈도우 SmartScreen 설치가이드</h3>
+                <button class="modal__close" onclick="closeModal()" aria-label="Close">&times;</button>
+            </div>
+            <ol class="guide-list">
+                <li id="step1"></li>
+                <li id="step2"></li>
+                <li id="step3"></li>
+            </ol>
+        </div>
+    </div>
+    <script src="js/compare.js"></script>
+    <script src="js/site.js"></script>
+</body>
+</html>

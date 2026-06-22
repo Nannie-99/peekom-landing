@@ -1,34 +1,59 @@
 {
-  "name": "ppaekkom-index",
-  "version": "1.0.1",
-  "description": "Floating index app for presentation hosts",
+  "name": "peekom",
+  "version": "1.2.0",
+  "description": "Peekom — edge memo app with optional Plus upgrade",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "dev": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder",
+    "dist": "electron-builder --win nsis",
     "dist:win": "electron-builder --win nsis",
     "dist:win:unsigned": "set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder --win nsis",
-    "dist:plus": "electron-builder --config electron-builder-plus.json --win nsis"
+    "dist:publish": "electron-builder --win nsis --publish always"
   },
   "keywords": [
     "electron",
     "presentation",
-    "floating-index"
+    "peekom",
+    "memo"
   ],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peekom/peekom.git"
+  },
   "build": {
-    "appId": "com.ppaekkom.index",
-    "productName": "빼꼼 인덱스",
+    "appId": "com.peekom.app",
+    "productName": "Peekom",
     "asar": true,
     "files": [
       "main.js",
+      "preload.js",
+      "license.js",
+      "updater.js",
       "index.html",
       "settings.html",
       "assets/**/*",
       "build/icon.ico",
-      "package.json"
+      "build/index.png",
+      "build/plus.png",
+      "package.json",
+      "node_modules/marked/**/*",
+      "node_modules/electron-updater/**/*",
+      "node_modules/builder-util-runtime/**/*",
+      "node_modules/fs-extra/**/*",
+      "node_modules/graceful-fs/**/*",
+      "node_modules/jsonfile/**/*",
+      "node_modules/universalify/**/*",
+      "node_modules/js-yaml/**/*",
+      "node_modules/argparse/**/*",
+      "node_modules/lazy-val/**/*",
+      "node_modules/lodash.escaperegexp/**/*",
+      "node_modules/lodash.isequal/**/*",
+      "node_modules/semver/**/*",
+      "node_modules/tiny-typed-emitter/**/*"
     ],
     "directories": {
       "output": "dist",
@@ -38,6 +63,14 @@
       {
         "from": "build/icon.ico",
         "to": "icon.ico"
+      },
+      {
+        "from": "build/index.png",
+        "to": "index.png"
+      },
+      {
+        "from": "build/plus.png",
+        "to": "plus.png"
       }
     ],
     "icon": "build/icon.ico",
@@ -53,17 +86,25 @@
           ]
         }
       ],
-      "artifactName": "빼꼼 인덱스-Setup.${ext}"
+      "artifactName": "Peekom-Setup.${ext}"
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "shortcutName": "빼꼼 인덱스",
+      "shortcutName": "Peekom",
       "installerIcon": "build/icon.ico",
       "uninstallerIcon": "build/icon.ico",
-      "installerHeaderIcon": "build/icon.ico"
-    }
+      "installerHeaderIcon": "build/icon.ico",
+      "include": "build/installer.nsh"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "peekom",
+        "repo": "peekom"
+      }
+    ]
   },
   "devDependencies": {
     "electron": "^36.0.0",
@@ -72,6 +113,8 @@
     "rcedit": "^4.0.1"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
+    "electron-updater": "^6.8.9",
     "marked": "^18.0.5"
   }
 }
