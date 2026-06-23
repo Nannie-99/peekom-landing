@@ -349,6 +349,16 @@ const i18n = {
         comparePricing: '<span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> <span class="pricing-now">$' + PRICING.sale.toFixed(2) + ' USD</span> <span class="pricing-vat">(VAT 별도)</span> · <span class="pricing-launch">출시 기념 가격</span> · 1회 구매 · 최대 2대 기기 · 소버전 업데이트 포함 · 7일 환불 (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
         guidePlusP: "1) Lemon Squeezy에서 출시 기념 $9.99 구매 → 2) 이메일 라이선스 키 수신 → 3) Peekom 실행 → 잠금 UI 또는 설정에서 키 입력 → 4) Peekom Plus + plus.png로 전환. 7일 환불: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
         dlSub: "Peekom 하나만 설치하시면 됩니다. Plus는 앱 안에서 업그레이드합니다.",
+        purchaseSuccessTitle: "Peekom Plus 구매가 완료되었습니다!",
+        purchaseSuccessLead: "아래 라이선스 키를 복사한 뒤, Peekom 앱에서 Plus를 활성화해 주세요.",
+        purchaseSuccessKeyLabel: "라이선스 키",
+        purchaseSuccessCopyBtn: "복사",
+        purchaseSuccessCopied: "복사됨",
+        purchaseSuccessStep1: "아래 <strong>Windows 다운로드</strong> 버튼으로 Peekom을 설치합니다.",
+        purchaseSuccessStep2: "앱을 실행한 뒤 <strong>설정(⚙)</strong> 또는 Plus 잠금 화면에서 키를 붙여넣고 <strong>인증</strong>합니다.",
+        purchaseSuccessStep3: "인증이 완료되면 앱 이름이 <strong>Peekom Plus</strong>로 바뀌고 유료 기능이 열립니다.",
+        purchaseSuccessDownloadBtn: "Windows 앱 다운로드",
+        purchaseSuccessEmailNote: "이 키는 구매 영수증 이메일에도 포함되어 있습니다.",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
         dlPlusHint: 'Peekom Plus: 정가 <span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> → 출시 기념 <strong>$' + PRICING.sale.toFixed(2) + '</strong> (VAT 별도) · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Lemon Squeezy에서 구입</a> → 앱에서 라이선스 키 입력',
         featureGifPending: "데모 GIF 예정",
@@ -813,7 +823,17 @@ const i18n = {
         contactCtaTitle: "Haven't tried Peekom yet?",
         contactCtaDesc: "Install for free and start right away.",
         downloadCtaTitle: "Need Plus?",
-        downloadCtaDesc: "Enter your license key in the same app to activate Plus."
+        downloadCtaDesc: "Enter your license key in the same app to activate Plus.",
+        purchaseSuccessTitle: "Thank you for purchasing Peekom Plus!",
+        purchaseSuccessLead: "Copy your license key below and activate Plus inside the Peekom app.",
+        purchaseSuccessKeyLabel: "License key",
+        purchaseSuccessCopyBtn: "Copy",
+        purchaseSuccessCopied: "Copied",
+        purchaseSuccessStep1: "Install Peekom using the <strong>Windows download</strong> button below.",
+        purchaseSuccessStep2: "Open the app, go to <strong>Settings (⚙)</strong> or the Plus lock screen, paste your key, and tap <strong>Activate</strong>.",
+        purchaseSuccessStep3: "Once verified, the app becomes <strong>Peekom Plus</strong> and premium features unlock.",
+        purchaseSuccessDownloadBtn: "Download for Windows",
+        purchaseSuccessEmailNote: "This key is also included in your Lemon Squeezy receipt email."
     }
 };
 if (window.PeekomI18nLocales) Object.assign(i18n, window.PeekomI18nLocales);
@@ -933,6 +953,16 @@ function enrichLocaleData(data, lang) {
     next.dlPlusHint = next.dlPlusHint || en.dlPlusHint;
     next.dlTitle = next.dlTitle || en.dlTitle;
     next.dlSub = next.dlSub || en.dlSub;
+    next.purchaseSuccessTitle = next.purchaseSuccessTitle || en.purchaseSuccessTitle;
+    next.purchaseSuccessLead = next.purchaseSuccessLead || en.purchaseSuccessLead;
+    next.purchaseSuccessKeyLabel = next.purchaseSuccessKeyLabel || en.purchaseSuccessKeyLabel;
+    next.purchaseSuccessCopyBtn = next.purchaseSuccessCopyBtn || en.purchaseSuccessCopyBtn;
+    next.purchaseSuccessCopied = next.purchaseSuccessCopied || en.purchaseSuccessCopied;
+    next.purchaseSuccessStep1 = next.purchaseSuccessStep1 || en.purchaseSuccessStep1;
+    next.purchaseSuccessStep2 = next.purchaseSuccessStep2 || en.purchaseSuccessStep2;
+    next.purchaseSuccessStep3 = next.purchaseSuccessStep3 || en.purchaseSuccessStep3;
+    next.purchaseSuccessDownloadBtn = next.purchaseSuccessDownloadBtn || en.purchaseSuccessDownloadBtn;
+    next.purchaseSuccessEmailNote = next.purchaseSuccessEmailNote || en.purchaseSuccessEmailNote;
     next.faqTitle = next.faqTitle || en.faqTitle;
     next.faqSub = next.faqSub || en.faqSub;
     next.faq1q = next.faq1q || en.faq1q;
@@ -1141,6 +1171,131 @@ function triggerWinSetupDownload() {
     document.body.appendChild(a);
     a.click();
     a.remove();
+}
+
+let purchaseSuccessLicenseKey = "";
+
+function sanitizePurchaseLicenseKey(raw) {
+    const text = String(raw || "").trim();
+    if (!text) return "";
+    if (/^\[license_key\]$/i.test(text)) return "";
+    if (text.length < 8 || text.length > 80) return "";
+    if (!/^[A-Za-z0-9-]+$/.test(text)) return "";
+    return text;
+}
+
+function parsePurchaseLicenseKeyFromUrl() {
+    try {
+        const params = new URLSearchParams(window.location.search);
+        return sanitizePurchaseLicenseKey(params.get("key"));
+    } catch (e) {
+        return "";
+    }
+}
+
+function stripPurchaseKeyFromUrl() {
+    try {
+        const url = new URL(window.location.href);
+        if (!url.searchParams.has("key")) return;
+        url.searchParams.delete("key");
+        const next = url.pathname + (url.searchParams.toString() ? "?" + url.searchParams.toString() : "") + url.hash;
+        window.history.replaceState({}, "", next);
+    } catch (e) {
+        /* ignore */
+    }
+}
+
+function renderPurchaseSuccessBanner(d, licenseKey) {
+    const host = document.getElementById("purchaseSuccessHost");
+    if (!host || !licenseKey) {
+        if (host) {
+            host.hidden = true;
+            host.innerHTML = "";
+        }
+        return;
+    }
+
+    const esc = function (s) {
+        return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;");
+    };
+
+    host.hidden = false;
+    host.innerHTML =
+        '<section class="purchase-success" id="purchaseSuccessPanel">' +
+            '<div class="purchase-success__aurora" aria-hidden="true"></div>' +
+            '<div class="purchase-success__card">' +
+                '<div class="purchase-success__hero">' +
+                    '<img class="purchase-success__icon" src="images/plus.png" alt="" width="72" height="72">' +
+                    '<span class="purchase-success__badge" aria-hidden="true">' +
+                        '<svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>' +
+                    "</span>" +
+                "</div>" +
+                '<h2 class="purchase-success__title">' + esc(d.purchaseSuccessTitle) + "</h2>" +
+                '<p class="purchase-success__lead">' + esc(d.purchaseSuccessLead) + "</p>" +
+                '<div class="purchase-success__key-wrap">' +
+                    '<label class="purchase-success__key-label" for="purchaseLicenseKeyValue">' + esc(d.purchaseSuccessKeyLabel) + "</label>" +
+                    '<div class="purchase-success__key-row">' +
+                        '<code class="purchase-success__key" id="purchaseLicenseKeyValue">' + esc(licenseKey) + "</code>" +
+                        '<button type="button" class="purchase-success__copy" id="purchaseLicenseCopyBtn">' + esc(d.purchaseSuccessCopyBtn) + "</button>" +
+                    "</div>" +
+                "</div>" +
+                '<ol class="purchase-success__steps">' +
+                    "<li>" + (d.purchaseSuccessStep1 || "") + "</li>" +
+                    "<li>" + (d.purchaseSuccessStep2 || "") + "</li>" +
+                    "<li>" + (d.purchaseSuccessStep3 || "") + "</li>" +
+                "</ol>" +
+                '<p class="purchase-success__email-note">' + esc(d.purchaseSuccessEmailNote) + "</p>" +
+                '<div class="purchase-success__actions">' +
+                    '<a href="' + LINKS.win + '" class="btn btn--buy btn--plus purchase-success__dl" download="' + WIN_SETUP_FILENAME + '">' + esc(d.purchaseSuccessDownloadBtn) + "</a>" +
+                "</div>" +
+            "</div>" +
+        "</section>";
+
+    const copyBtn = document.getElementById("purchaseLicenseCopyBtn");
+    const keyEl = document.getElementById("purchaseLicenseKeyValue");
+    if (copyBtn && keyEl) {
+        copyBtn.addEventListener("click", function () {
+            const keyText = keyEl.textContent || "";
+            const copiedLabel = d.purchaseSuccessCopied || "Copied";
+            const defaultLabel = d.purchaseSuccessCopyBtn || "Copy";
+            function markCopied() {
+                copyBtn.textContent = copiedLabel;
+                copyBtn.classList.add("purchase-success__copy--done");
+                setTimeout(function () {
+                    copyBtn.textContent = defaultLabel;
+                    copyBtn.classList.remove("purchase-success__copy--done");
+                }, 2000);
+            }
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(keyText).then(markCopied).catch(function () {
+                    window.prompt(d.purchaseSuccessKeyLabel || "License key", keyText);
+                });
+            } else {
+                window.prompt(d.purchaseSuccessKeyLabel || "License key", keyText);
+                markCopied();
+            }
+        });
+    }
+
+    const panel = document.getElementById("purchaseSuccessPanel");
+    if (panel && panel.scrollIntoView) {
+        requestAnimationFrame(function () {
+            panel.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+    }
+}
+
+function initPurchaseSuccess(d) {
+    if (document.body.getAttribute("data-page") !== "download") return;
+    if (!purchaseSuccessLicenseKey) {
+        purchaseSuccessLicenseKey = parsePurchaseLicenseKeyFromUrl();
+        if (purchaseSuccessLicenseKey) stripPurchaseKeyFromUrl();
+    }
+    renderPurchaseSuccessBanner(d, purchaseSuccessLicenseKey);
 }
 
 function restoreModalGuideView() {
@@ -1449,6 +1604,7 @@ function updateUI() {
     renderChangelog(d);
     renderFeatureBlocks(d);
     renderPageCtaStrip(d);
+    initPurchaseSuccess(d);
     initFaqAccordion();
 
     setText('contactTitle', d.contactTitle);

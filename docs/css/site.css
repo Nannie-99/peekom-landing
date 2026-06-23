@@ -2495,3 +2495,248 @@
             .promo-tag__card { flex-direction: column; }
             .promo-tag__label { min-width: 0; padding: 10px 16px; }
         }
+
+        /* ── Purchase success (Lemon Squeezy redirect) ── */
+        .purchase-success-host {
+            margin: 0 0 28px;
+        }
+
+        .purchase-success {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            animation: purchaseSuccessIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes purchaseSuccessIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .purchase-success__aurora {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 0%, rgba(209, 179, 226, 0.55), transparent 55%),
+                radial-gradient(ellipse 70% 50% at 90% 100%, rgba(142, 68, 173, 0.22), transparent 50%),
+                linear-gradient(135deg, rgba(142, 68, 173, 0.12), rgba(255, 242, 158, 0.15));
+            pointer-events: none;
+        }
+
+        [data-theme="dark"] .purchase-success__aurora {
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 0%, rgba(142, 68, 173, 0.35), transparent 55%),
+                radial-gradient(ellipse 70% 50% at 90% 100%, rgba(125, 60, 152, 0.25), transparent 50%),
+                linear-gradient(135deg, rgba(49, 27, 95, 0.5), rgba(142, 68, 173, 0.15));
+        }
+
+        .purchase-success__card {
+            position: relative;
+            border: 2px solid rgba(142, 68, 173, 0.35);
+            border-radius: 16px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, rgba(247, 240, 252, 0.95) 100%);
+            box-shadow:
+                0 4px 24px rgba(142, 68, 173, 0.12),
+                0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+            padding: 28px 28px 24px;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .purchase-success__card {
+            background: linear-gradient(180deg, rgba(36, 28, 48, 0.95) 0%, rgba(28, 22, 38, 0.98) 100%);
+            border-color: rgba(184, 154, 232, 0.35);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        .purchase-success__hero {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .purchase-success__icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 14px;
+            display: block;
+            box-shadow: 0 6px 20px rgba(142, 68, 173, 0.25);
+            animation: purchaseIconPop 0.6s 0.15s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes purchaseIconPop {
+            from { transform: scale(0.6); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .purchase-success__badge {
+            position: absolute;
+            right: -8px;
+            bottom: -6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--purple);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 8px rgba(142, 68, 173, 0.4);
+            animation: purchaseBadgePop 0.5s 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        [data-theme="dark"] .purchase-success__badge {
+            border-color: #2a2235;
+        }
+
+        @keyframes purchaseBadgePop {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .purchase-success__title {
+            margin: 0 0 8px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.35;
+        }
+
+        .purchase-success__lead {
+            margin: 0 0 20px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .purchase-success__key-wrap {
+            text-align: left;
+            max-width: 480px;
+            margin: 0 auto 20px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: rgba(142, 68, 173, 0.08);
+            border: 1px dashed rgba(142, 68, 173, 0.35);
+        }
+
+        [data-theme="dark"] .purchase-success__key-wrap {
+            background: rgba(142, 68, 173, 0.15);
+        }
+
+        .purchase-success__key-label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--purple);
+            margin-bottom: 8px;
+        }
+
+        .purchase-success__key-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .purchase-success__key {
+            flex: 1;
+            min-width: 0;
+            font-family: ui-monospace, "Cascadia Code", "Segoe UI Mono", Consolas, monospace;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: #fff;
+            color: #311b5f;
+            border: 1px solid rgba(142, 68, 173, 0.25);
+            word-break: break-all;
+            user-select: all;
+        }
+
+        [data-theme="dark"] .purchase-success__key {
+            background: #1a1424;
+            color: #e8d4f8;
+            border-color: rgba(184, 154, 232, 0.3);
+        }
+
+        .purchase-success__copy {
+            flex-shrink: 0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--purple);
+            background: var(--purple);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: filter 0.15s, transform 0.15s;
+        }
+
+        .purchase-success__copy:hover {
+            filter: brightness(1.08);
+        }
+
+        .purchase-success__copy--done {
+            background: #2d8a4e;
+            border-color: #2d8a4e;
+        }
+
+        .purchase-success__steps {
+            text-align: left;
+            max-width: 520px;
+            margin: 0 auto 14px;
+            padding-left: 1.25rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .purchase-success__steps li {
+            margin-bottom: 8px;
+        }
+
+        .purchase-success__steps li:last-child {
+            margin-bottom: 0;
+        }
+
+        .purchase-success__email-note {
+            margin: 0 0 18px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            opacity: 0.85;
+        }
+
+        .purchase-success__actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .purchase-success__dl {
+            min-width: 200px;
+        }
+
+        @media (max-width: 640px) {
+            .purchase-success__card {
+                padding: 22px 18px 20px;
+            }
+            .purchase-success__key-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .purchase-success__copy {
+                width: 100%;
+            }
+        }
