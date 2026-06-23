@@ -1501,8 +1501,6 @@ function updateUI() {
     setText('heroUpgradeNote', d.heroUpgradeNote);
 
     setText('carouselCap1', d.carouselCap1);
-    setText('carouselCap2', d.carouselCap2);
-    setText('carouselCap3', d.carouselCap3);
 
     const detectedOsEl = document.getElementById('detectedOs');
     const winGuideBtnEl = document.getElementById('winGuideBtn');

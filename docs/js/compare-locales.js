@@ -24,7 +24,7 @@
                 rows: [
                     { feature: "단일 / 듀얼 모니터", free: "✓", plus: "✓" },
                     { feature: "표시 모니터 선택", free: "✓", plus: "✓" },
-                    { feature: "표시 위치 (왼쪽/오른쪽)", free: "오른쪽만", plus: "✓" },
+                    { feature: "표시 위치 (왼쪽/오른쪽)", free: "오른쪽", plus: "왼쪽 / 오른쪽" },
                     { feature: "메모 비율 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "단축키 — 최근 메모 토글", free: "✓", plus: "✓" },
                     { feature: "단축키 — 위/아래 인덱스 열기", free: "✓", plus: "✓" },
@@ -83,7 +83,7 @@
                 rows: [
                     { feature: "Single / dual monitor", free: "✓", plus: "✓" },
                     { feature: "Target display", free: "✓", plus: "✓" },
-                    { feature: "Panel side (left/right)", free: "Right only", plus: "✓" },
+                    { feature: "Panel side (left/right)", free: "Right", plus: "Left / Right" },
                     { feature: "Memo aspect 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Shortcut — recent memo toggle", free: "✓", plus: "✓" },
                     { feature: "Shortcut — open prev/next index", free: "✓", plus: "✓" },
@@ -142,7 +142,7 @@
                 rows: [
                     { feature: "シングル / デュアルモニター", free: "✓", plus: "✓" },
                     { feature: "表示モニター選択", free: "✓", plus: "✓" },
-                    { feature: "表示位置（左/右）", free: "右のみ", plus: "✓" },
+                    { feature: "表示位置（左/右）", free: "右", plus: "左 / 右" },
                     { feature: "メモ比率 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "ショートカット — 直近メモの切り替え", free: "✓", plus: "✓" },
                     { feature: "ショートカット — 前後インデックスを開く", free: "✓", plus: "✓" },
@@ -201,7 +201,7 @@
                 rows: [
                     { feature: "单 / 双显示器", free: "✓", plus: "✓" },
                     { feature: "目标显示器选择", free: "✓", plus: "✓" },
-                    { feature: "显示位置（左/右）", free: "仅右侧", plus: "✓" },
+                    { feature: "显示位置（左/右）", free: "右侧", plus: "左 / 右" },
                     { feature: "备忘比例 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "快捷键 — 最近备忘开关", free: "✓", plus: "✓" },
                     { feature: "快捷键 — 打开上/下索引", free: "✓", plus: "✓" },
@@ -260,7 +260,7 @@
                 rows: [
                     { feature: "單 / 雙顯示器", free: "✓", plus: "✓" },
                     { feature: "目標顯示器選擇", free: "✓", plus: "✓" },
-                    { feature: "顯示位置（左/右）", free: "僅右側", plus: "✓" },
+                    { feature: "顯示位置（左/右）", free: "右側", plus: "左 / 右" },
                     { feature: "備忘比例 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "快捷鍵 — 最近備忘開關", free: "✓", plus: "✓" },
                     { feature: "快捷鍵 — 開啟上/下索引", free: "✓", plus: "✓" },
@@ -319,7 +319,7 @@
                 rows: [
                     { feature: "Monitor único / dual", free: "✓", plus: "✓" },
                     { feature: "Pantalla de destino", free: "✓", plus: "✓" },
-                    { feature: "Posición del panel (izq./der.)", free: "Solo derecha", plus: "✓" },
+                    { feature: "Posición del panel (izq./der.)", free: "Derecha", plus: "Izq. / Der." },
                     { feature: "Proporción de nota 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Atajo — alternar nota reciente", free: "✓", plus: "✓" },
                     { feature: "Atajo — abrir índice ant./sig.", free: "✓", plus: "✓" },
@@ -378,7 +378,7 @@
                 rows: [
                     { feature: "Moniteur simple / double", free: "✓", plus: "✓" },
                     { feature: "Écran cible", free: "✓", plus: "✓" },
-                    { feature: "Côté du panneau (gauche/droite)", free: "Droite seule", plus: "✓" },
+                    { feature: "Côté du panneau (gauche/droite)", free: "Droite", plus: "Gauche / Droite" },
                     { feature: "Format de note 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Raccourci — basculer note récente", free: "✓", plus: "✓" },
                     { feature: "Raccourci — index préc./suiv.", free: "✓", plus: "✓" },
@@ -437,7 +437,7 @@
                 rows: [
                     { feature: "Einzel- / Dualmonitor", free: "✓", plus: "✓" },
                     { feature: "Zielmonitor", free: "✓", plus: "✓" },
-                    { feature: "Panel-Seite (links/rechts)", free: "Nur rechts", plus: "✓" },
+                    { feature: "Panel-Seite (links/rechts)", free: "Rechts", plus: "Links / Rechts" },
                     { feature: "Notizformat 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Tastenkürzel — letzte Notiz umschalten", free: "✓", plus: "✓" },
                     { feature: "Tastenkürzel — vorher./nächst. Index", free: "✓", plus: "✓" },
@@ -496,7 +496,7 @@
                 rows: [
                     { feature: "Monitor único / duplo", free: "✓", plus: "✓" },
                     { feature: "Monitor de destino", free: "✓", plus: "✓" },
-                    { feature: "Lado do painel (esq./dir.)", free: "Somente direita", plus: "✓" },
+                    { feature: "Lado do painel (esq./dir.)", free: "Direita", plus: "Esq. / Dir." },
                     { feature: "Proporção da nota 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Atalho — alternar nota recente", free: "✓", plus: "✓" },
                     { feature: "Atalho — abrir índice ant./próx.", free: "✓", plus: "✓" },
@@ -555,7 +555,7 @@
                 rows: [
                     { feature: "Monitor singolo / doppio", free: "✓", plus: "✓" },
                     { feature: "Schermo di destinazione", free: "✓", plus: "✓" },
-                    { feature: "Lato pannello (sin./des.)", free: "Solo destra", plus: "✓" },
+                    { feature: "Lato pannello (sin./des.)", free: "Destra", plus: "Sin. / Des." },
                     { feature: "Proporzione nota 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Scorciatoia — alterna nota recente", free: "✓", plus: "✓" },
                     { feature: "Scorciatoia — indice prec./succ.", free: "✓", plus: "✓" },
@@ -614,7 +614,7 @@
                 rows: [
                     { feature: "Один / два монитора", free: "✓", plus: "✓" },
                     { feature: "Целевой монитор", free: "✓", plus: "✓" },
-                    { feature: "Сторона панели (лево/право)", free: "Только справа", plus: "✓" },
+                    { feature: "Сторона панели (лево/право)", free: "Справа", plus: "Слева / Справа" },
                     { feature: "Соотношение заметки 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Горячая клавиша — переключить последнюю", free: "✓", plus: "✓" },
                     { feature: "Горячая клавиша — пред./след. индекс", free: "✓", plus: "✓" },
@@ -673,7 +673,7 @@
                 rows: [
                     { feature: "Một / hai màn hình", free: "✓", plus: "✓" },
                     { feature: "Chọn màn hình hiển thị", free: "✓", plus: "✓" },
-                    { feature: "Vị trí panel (trái/phải)", free: "Chỉ bên phải", plus: "✓" },
+                    { feature: "Vị trí panel (trái/phải)", free: "Bên phải", plus: "Trái / Phải" },
                     { feature: "Tỷ lệ ghi chú 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Phím tắt — bật/tắt ghi chú gần nhất", free: "✓", plus: "✓" },
                     { feature: "Phím tắt — mở chỉ mục trước/sau", free: "✓", plus: "✓" },
@@ -732,7 +732,7 @@
                 rows: [
                     { feature: "จอเดียว / สองจอ", free: "✓", plus: "✓" },
                     { feature: "เลือกจอแสดงผล", free: "✓", plus: "✓" },
-                    { feature: "ตำแหน่งแผง (ซ้าย/ขวา)", free: "ขวาเท่านั้น", plus: "✓" },
+                    { feature: "ตำแหน่งแผง (ซ้าย/ขวา)", free: "ขวา", plus: "ซ้าย / ขวา" },
                     { feature: "สัดส่วนบันทึก 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "ทางลัด — สลับบันทึกล่าสุด", free: "✓", plus: "✓" },
                     { feature: "ทางลัด — เปิดดัชนีก่อนหน้า/ถัดไป", free: "✓", plus: "✓" },
@@ -791,7 +791,7 @@
                 rows: [
                     { feature: "Monitor tunggal / ganda", free: "✓", plus: "✓" },
                     { feature: "Pilih monitor tampilan", free: "✓", plus: "✓" },
-                    { feature: "Sisi panel (kiri/kanan)", free: "Hanya kanan", plus: "✓" },
+                    { feature: "Sisi panel (kiri/kanan)", free: "Kanan", plus: "Kiri / Kanan" },
                     { feature: "Rasio memo 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Pintasan — alih memo terbaru", free: "✓", plus: "✓" },
                     { feature: "Pintasan — buka indeks sebelum/sesudah", free: "✓", plus: "✓" },
@@ -850,7 +850,7 @@
                 rows: [
                     { feature: "एकल / दोहरा मॉनिटर", free: "✓", plus: "✓" },
                     { feature: "लक्ष्य डिस्प्ले चयन", free: "✓", plus: "✓" },
-                    { feature: "पैनल स्थिति (बाएँ/दाएँ)", free: "केवल दाएँ", plus: "✓" },
+                    { feature: "पैनल स्थिति (बाएँ/दाएँ)", free: "दाएँ", plus: "बाएँ / दाएँ" },
                     { feature: "मेमो अनुपात 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "शॉर्टकट — हाल का मेमो टॉगल", free: "✓", plus: "✓" },
                     { feature: "शॉर्टकट — पिछला/अगला इंडेक्स खोलें", free: "✓", plus: "✓" },
@@ -909,7 +909,7 @@
                 rows: [
                     { feature: "شاشة واحدة / مزدوجة", free: "✓", plus: "✓" },
                     { feature: "اختيار الشاشة المعروضة", free: "✓", plus: "✓" },
-                    { feature: "موضع اللوحة (يسار/يمين)", free: "اليمين فقط", plus: "✓" },
+                    { feature: "موضع اللوحة (يسار/يمين)", free: "اليمين", plus: "يسار / يمين" },
                     { feature: "نسبة الملاحظة 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "اختصار — تبديل آخر ملاحظة", free: "✓", plus: "✓" },
                     { feature: "اختصار — فتح الفهرس السابق/التالي", free: "✓", plus: "✓" },
