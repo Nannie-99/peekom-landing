@@ -9,7 +9,7 @@
                 { feature: "가장자리 손잡이·메모", free: "✓", plus: "✓" },
                 { feature: "인덱스(슬롯) 개수", free: "3개", plus: "10개" },
                 { feature: "손잡이 위치", free: "3개 묶음 이동", plus: "슬롯별 독립" },
-                { feature: "빼꼼 / 얼음 모드", free: "✓", plus: "✓" },
+                { feature: "PEEK / ICE 모드", free: "✓", plus: "✓" },
                 { feature: "자동 접힘 딜레이 (0.25초)", free: "✓", plus: "✓" }
             ]
         },
@@ -222,6 +222,10 @@
         EXTENDED_COMPARE_KO: SECTIONS_KO,
         flattenCompareRows: flattenCompareRows,
         buildCompareSections: buildCompareSections,
-        buildCompareTable: buildCompareTable
+        buildCompareTable: buildCompareTable,
+        getCompareSections: function (lang) {
+            if (lang === "ko") return SECTIONS_KO;
+            return SECTIONS_EN;
+        }
     };
 })();

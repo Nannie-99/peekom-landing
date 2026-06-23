@@ -12,7 +12,7 @@
   const PREMIUM_MAX_SLOTS = 10;
   const LEMON_SQUEEZY_BUY_URL =
     "https://peekom.lemonsqueezy.com/buy"; /* replace with real checkout URL */
-  const GITHUB_RELEASES_URL = "https://github.com/peekom/peekom/releases/latest";
+  const GITHUB_RELEASES_URL = "https://github.com/Nannie-99/peekom-landing/releases/latest";
   const PRIVACY_URL = "https://www.peekom.com/privacy.html";
   const DOCS_URL = "https://www.peekom.com/";
   const CONTACT_EMAIL = "hello.peekom@gmail.com";

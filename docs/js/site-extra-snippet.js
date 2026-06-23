@@ -3,8 +3,8 @@ const RELEASE_HISTORY = [
         version: "1.2.0",
         date: "2026/06/19",
         latest: true,
-        winUrl: "https://github.com/peekom/peekom/releases/download/v1.2.0/Peekom-Setup.exe",
-        macUrl: "https://github.com/peekom/peekom/releases/download/v1.2.0/Peekom-macOS.dmg"
+        winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-Setup.exe",
+        macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-macOS.dmg"
     }
 ];
 
