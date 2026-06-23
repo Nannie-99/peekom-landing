@@ -4,7 +4,7 @@ window.PeekomI18nLocales = window.PeekomI18nLocales || {};
 
 const PRICING = { list: 12.99, sale: 9.99 };
 const CONTACT_EMAIL = "hello.peekom@gmail.com";
-const LINKS = { buy: "https://peekom.lemonsqueezy.com/buy" };
+const LINKS = { buy: "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" };
 
 Object.assign(window.PeekomI18nLocales, {
     id: {
@@ -88,6 +88,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "Di Pengaturan → Monitor tampilan, pilih otomatis (ikuti mouse) atau monitor tetap. Tersedia di Gratis dan Plus.",
         faq8q: "Apakah Peekom hanya bisa dipakai di tepi kanan monitor?",
         faq8a: "Saat ini, Peekom hanya bekerja di tepi kanan. Kami berencana menambahkan dukungan untuk tepi kiri, atas, dan bawah di pembaruan mendatang.",
+        faq9q: "Saya tidak sengaja menghapus Peekom Plus. Bagaimana dengan fitur berbayar?",
+        faq9a:
+            "<p>Menghapus aplikasi tidak membatalkan lisensi Lemon Squeezy Anda. Ikuti langkah berikut untuk memulihkan Peekom Plus dan semua fitur berbayar.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Instal ulang Peekom</strong> — Unduh versi gratis (<code>Peekom-Setup.exe</code>) dari <a href=\"download.html\">peekom.com</a> dan instal.</li>" +
+            "<li><strong>2. Temukan kunci lisensi</strong> — Buka email tanda terima Lemon Squeezy saat pembelian dan salin <strong>[License Key]</strong>. Jika email hilang, masuk ke riwayat pesanan Lemon Squeezy dengan email yang sama untuk melihatnya lagi.</li>" +
+            "<li><strong>3. Aktifkan ulang Plus</strong> — Buka Pengaturan (ikon roda gigi kanan atas), tempel kunci di <strong>Aktivasi Plus</strong>, lalu konfirmasi. Aplikasi berubah menjadi Peekom Plus dan memulihkan 10 slot, tema kustom, dan fitur berbayar lainnya.</li>" +
+            "</ul>" +
+            "<p><strong>Batas perangkat (hingga 2)</strong> — Instal ulang di PC yang sama dianggap perangkat yang sama, tanpa masalah aktivasi. Saat pindah komputer, setiap lisensi mengizinkan hingga dua perangkat (mis. PC kerja + PC pribadi).</p>",
         faq3q: "Bagaimana cara mengaktifkan Plus?",
         faq3a: "Beli di Lemon Squeezy, lalu masukkan kunci lisensi di aplikasi untuk membuka Peekom Plus (tanpa instal ulang).",
         faq3bq: "Bisakah satu kunci lisensi dipakai di lebih dari satu PC?",
@@ -305,6 +314,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "सेटिंग्स → डिस्प्ले मॉनिटर में, ऑटो (माउस का अनुसरण) या फ़िक्स्ड मॉनिटर चुनें। मुफ़्त और Plus दोनों में उपलब्ध।",
         faq8q: "क्या Peekom केवल मॉनिटर के दाएँ किनारे पर उपयोग किया जा सकता है?",
         faq8a: "वर्तमान में, Peekom केवल दाएँ किनारे पर काम करता है। हम भविष्य के अपडेट में बाएँ, ऊपर और नीचे किनारों का समर्थन जोड़ने की योजना बना रहे हैं।",
+        faq9q: "मैंने गलती से Peekom Plus हटा दिया। भुगतान वाली सुविधाओं का क्या होगा?",
+        faq9a:
+            "<p>ऐप हटाने से आपका Lemon Squeezy लाइसेंस रद्द नहीं होता। Peekom Plus और सभी भुगतान सुविधाएँ पुनर्स्थापित करने के लिए ये चरण अपनाएँ।</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Peekom पुनः इंस्टॉल करें</strong> — <a href=\"download.html\">peekom.com</a> से मुफ़्त संस्करण (<code>Peekom-Setup.exe</code>) डाउनलोड करके इंस्टॉल करें।</li>" +
+            "<li><strong>2. लाइसेंस कुंजी खोजें</strong> — खरीद पर Lemon Squeezy की रसीद ईमेल खोलें और <strong>[License Key]</strong> कॉपी करें। ईमेल खो गई हो तो उसी ईमेल से Lemon Squeezy ऑर्डर इतिहास में लॉग इन करके देखें।</li>" +
+            "<li><strong>3. Plus पुनः सक्रिय करें</strong> — सेटिंग्स (ऊपर दाएँ गियर आइकन) खोलें, <strong>Plus सक्रियण</strong> में कुंजी चिपकाएँ और पुष्टि करें। ऐप Peekom Plus बन जाएगा और 10 स्लॉट, कस्टम थीम आदि पुनर्स्थापित होंगे।</li>" +
+            "</ul>" +
+            "<p><strong>डिवाइस सीमा (अधिकतम 2)</strong> — उसी PC पर पुनः इंस्टॉल करने से वही डिवाइस माना जाता है, सक्रियण प्रभावित नहीं होता। नया कंप्यूटर लेने पर प्रति लाइसेंस अधिकतम दो डिवाइस (जैसे कार्य + व्यक्तिगत PC) अनुमत हैं।</p>",
         faq3q: "Plus कैसे सक्रिय होता है?",
         faq3a: "Lemon Squeezy पर खरीदें, फिर ऐप में लाइसेंस कुंजी दर्ज करके Peekom Plus अनलॉक करें (पुनः इंस्टॉल नहीं)।",
         faq3bq: "क्या एक लाइसेंस कुंजी कई PC पर उपयोग की जा सकती है?",
@@ -522,6 +540,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "في الإعدادات → شاشة العرض، اختر تلقائي (يتبع الماوس) أو شاشة ثابتة. متاح في المجاني وPlus.",
         faq8q: "هل يمكن استخدام Peekom على الحافة اليمنى فقط؟",
         faq8a: "حاليًا، يعمل Peekom على الحافة اليمنى فقط. نخطط لإضافة دعم الحواف اليسرى والعلوية والسفلية في تحديث مستقبلي.",
+        faq9q: "حذفت Peekom Plus بالخطأ. ماذا يحدث للميزات المدفوعة؟",
+        faq9a:
+            "<p>إلغاء تثبيت التطبيق لا يلغي ترخيص Lemon Squeezy. اتبع الخطوات التالية لاستعادة Peekom Plus وجميع الميزات المدفوعة.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. إعادة تثبيت Peekom</strong> — حمّل النسخة المجانية (<code>Peekom-Setup.exe</code>) من <a href=\"download.html\">peekom.com</a> وثبّتها.</li>" +
+            "<li><strong>2. العثور على مفتاح الترخيص</strong> — افتح بريد إيصال Lemon Squeezy عند الشراء وانسخ <strong>[License Key]</strong>. إذا فقدت البريد، سجّل الدخول إلى سجل الطلبات في Lemon Squeezy بنفس البريد لعرضه مجددًا.</li>" +
+            "<li><strong>3. إعادة تفعيل Plus</strong> — افتح الإعدادات (أيقونة الترس أعلى اليمين)، الصق المفتاح في <strong>تفعيل Plus</strong> وأكّد. يتحول التطبيق إلى Peekom Plus ويستعيد 10 فتحات والسمات المخصصة وغيرها من الميزات المدفوعة.</li>" +
+            "</ul>" +
+            "<p><strong>حد الأجهزة (حتى 2)</strong> — إعادة التثبيت على نفس الجهاز تُحسب كجهاز واحد دون التأثير على التفعيل. عند تغيير الكمبيوتر، يسمح كل ترخيص بجهازين كحد أقصى (مثل جهاز العمل + الشخصي).</p>",
         faq3q: "كيف يُفعَّل Plus؟",
         faq3a: "اشترِ على Lemon Squeezy، ثم أدخل مفتاح الترخيص في التطبيق لتفعيل Peekom Plus (دون إعادة تثبيت).",
         faq3bq: "هل يمكن استخدام مفتاح ترخيص واحد على أكثر من جهاز؟",

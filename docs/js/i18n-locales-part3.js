@@ -45,7 +45,7 @@ Object.assign(window.PeekomI18nLocales, {
         dlSub: "Installa Peekom una volta. Passa a Peekom Plus nell'app.",
         dlWin: "Peekom Setup (Windows)",
         dlMac: "Peekom Setup (macOS)",
-        dlPlusHint: "Peekom Plus: Era <span class=\"pricing-was\">$12.99</span> → Lancio <strong>$9.99</strong> (IVA esclusa) · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">Acquista su Lemon Squeezy</a> → inserisci la chiave nell'app",
+        dlPlusHint: "Peekom Plus: Era <span class=\"pricing-was\">$12.99</span> → Lancio <strong>$9.99</strong> (IVA esclusa) · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">Acquista su Lemon Squeezy</a> → inserisci la chiave nell'app",
         featureGifPending: "GIF demo in arrivo",
         compareNoLabel: "Non supportato",
         faqSub: "Domande frequenti su Peekom.",
@@ -83,6 +83,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "In Impostazioni → Monitor display, scegli auto (segui mouse) o un monitor fisso. Disponibile su Gratuito e Plus.",
         faq8q: "Peekom può essere usato solo sul bordo destro del monitor?",
         faq8a: "Attualmente Peekom funziona solo sul bordo destro. Prevediamo di aggiungere supporto per i bordi sinistro, superiore e inferiore in un aggiornamento futuro.",
+        faq9q: "Ho disinstallato Peekom Plus per errore. Cosa succede alle funzioni a pagamento?",
+        faq9a:
+            "<p>La disinstallazione dell'app non elimina la licenza Lemon Squeezy. Segui questi passaggi per ripristinare Peekom Plus e tutte le funzioni a pagamento.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Reinstalla Peekom</strong> — Scarica la versione gratuita (<code>Peekom-Setup.exe</code>) da <a href=\"download.html\">peekom.com</a> e installala.</li>" +
+            "<li><strong>2. Trova la chiave di licenza</strong> — Apri l'e-mail di ricevuta Lemon Squeezy dell'acquisto e copia la <strong>[License Key]</strong>. Se hai perso l'e-mail, accedi allo storico ordini Lemon Squeezy con la stessa email per rivederla.</li>" +
+            "<li><strong>3. Riattiva Plus</strong> — Apri Impostazioni (icona ingranaggio in alto a destra), incolla la chiave in <strong>Attivazione Plus</strong> e conferma. L'app diventa Peekom Plus e ripristina 10 slot, temi personalizzati e altre funzioni a pagamento.</li>" +
+            "</ul>" +
+            "<p><strong>Limite dispositivi (fino a 2)</strong> — Reinstallare sullo stesso PC conta come lo stesso dispositivo, senza problemi di attivazione. Se cambi computer, ogni licenza consente fino a due dispositivi (es. PC lavoro + PC personale).</p>",
         faq3q: "Come si attiva Plus?",
         faq3a: "Acquista su Lemon Squeezy, poi inserisci la chiave di licenza nell'app per sbloccare Peekom Plus (nessuna reinstallazione).",
         faq3bq: "Posso usare una chiave di licenza su più PC?",
@@ -114,7 +123,7 @@ Object.assign(window.PeekomI18nLocales, {
         promoVat: "(IVA esclusa)",
         promoLaunchLabel: "Promo di lancio\nprezzo\napplicato",
         comparePricingExtra: " · pagamento unico · fino a 2 dispositivi · aggiornamenti minori inclusi · rimborso 7 giorni (<a href=\"mailto:hello.peekom@gmail.com\">hello.peekom@gmail.com</a>)",
-        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">Acquista su Lemon Squeezy</a> → inserisci la chiave nell'app",
+        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">Acquista su Lemon Squeezy</a> → inserisci la chiave nell'app",
         markdownGuideTitle: "Note con Markdown",
         markdownGuideBody: "<p class=\"guide-table-intro\">Scrivi naturalmente—premi <strong>Invio</strong> e la formattazione si applica automaticamente.</p><table class=\"compare-table guide-table\"><thead><tr><th>Formato input</th><th>Dopo Invio</th></tr></thead><tbody><tr><td><code># Ordine del giorno</code></td><td class=\"guide-md-result\"><h1 class=\"guide-md-h1\">Ordine del giorno</h1></td></tr><tr><td><code>## Note</code></td><td class=\"guide-md-result\"><h2 class=\"guide-md-h2\">Note</h2></td></tr><tr><td><code>### Riferimento</code></td><td class=\"guide-md-result\"><h3 class=\"guide-md-h3\">Riferimento</h3></td></tr><tr><td><code>- Da fare</code></td><td class=\"guide-md-result\"><ul class=\"guide-md-ul\"><li>Da fare</li></ul></td></tr><tr><td><code>- [ ] Da fare</code></td><td class=\"guide-md-result\"><label class=\"guide-md-task\"><input type=\"checkbox\" disabled> Da fare</label></td></tr><tr><td><code>**Importante**</code></td><td class=\"guide-md-result\"><strong>Importante</strong></td></tr><tr><td><code>*Enfasi*</code></td><td class=\"guide-md-result\"><em>Enfasi</em></td></tr></tbody></table>",
         formatBarGuideTitle: "Note con barra strumenti",
@@ -268,7 +277,7 @@ Object.assign(window.PeekomI18nLocales, {
         dlSub: "Установите Peekom один раз. Перейдите на Peekom Plus в приложении.",
         dlWin: "Peekom Setup (Windows)",
         dlMac: "Peekom Setup (macOS)",
-        dlPlusHint: "Peekom Plus: Было <span class=\"pricing-was\">$12.99</span> → Запуск <strong>$9.99</strong> (без НДС) · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">Купить на Lemon Squeezy</a> → введите ключ в приложении",
+        dlPlusHint: "Peekom Plus: Было <span class=\"pricing-was\">$12.99</span> → Запуск <strong>$9.99</strong> (без НДС) · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">Купить на Lemon Squeezy</a> → введите ключ в приложении",
         featureGifPending: "Демо GIF скоро",
         compareNoLabel: "Не поддерживается",
         faqSub: "Частые вопросы о Peekom.",
@@ -306,6 +315,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "В Настройках → Монитор выберите авто (следовать мыши) или фиксированный. Доступно в бесплатной и Plus.",
         faq8q: "Peekom можно использовать только у правого края монитора?",
         faq8a: "Сейчас Peekom работает только у правого края. Планируем добавить левый, верхний и нижний края в будущем обновлении.",
+        faq9q: "Я случайно удалил Peekom Plus. Что будет с платными функциями?",
+        faq9a:
+            "<p>Удаление приложения не отменяет лицензию Lemon Squeezy. Выполните следующие шаги, чтобы восстановить Peekom Plus и все платные функции.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Переустановите Peekom</strong> — Скачайте бесплатную версию (<code>Peekom-Setup.exe</code>) с <a href=\"download.html\">peekom.com</a> и установите.</li>" +
+            "<li><strong>2. Найдите ключ лицензии</strong> — Откройте письмо с чеком Lemon Squeezy после покупки и скопируйте <strong>[License Key]</strong>. Если письмо потеряно, войдите в историю заказов Lemon Squeezy с тем же email.</li>" +
+            "<li><strong>3. Повторная активация</strong> — Откройте Настройки (шестерёнка справа вверху), вставьте ключ в <strong>Активация Plus</strong> и подтвердите. Приложение станет Peekom Plus и восстановит 10 слотов, пользовательские темы и другие платные функции.</li>" +
+            "</ul>" +
+            "<p><strong>Лимит устройств (до 2)</strong> — Переустановка на том же ПК считается тем же устройством и не влияет на активацию. При смене компьютера одна лицензия позволяет до двух устройств (например, рабочий + личный ПК).</p>",
         faq3q: "Как активировать Plus?",
         faq3a: "Купите на Lemon Squeezy, затем введите ключ в приложении для разблокировки Peekom Plus (переустановка не нужна).",
         faq3bq: "Можно ли использовать один ключ на нескольких ПК?",
@@ -337,7 +355,7 @@ Object.assign(window.PeekomI18nLocales, {
         promoVat: "(без НДС)",
         promoLaunchLabel: "Акция\nзапуска\nприменена",
         comparePricingExtra: " · разовая оплата · до 2 устройств · минорные обновления включены · возврат за 7 дней (<a href=\"mailto:hello.peekom@gmail.com\">hello.peekom@gmail.com</a>)",
-        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">Купить на Lemon Squeezy</a> → введите ключ в приложении",
+        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">Купить на Lemon Squeezy</a> → введите ключ в приложении",
         markdownGuideTitle: "Заметки с Markdown",
         markdownGuideBody: "<p class=\"guide-table-intro\">Пишите естественно—нажмите <strong>Enter</strong> и форматирование применится автоматически.</p><table class=\"compare-table guide-table\"><thead><tr><th>Формат ввода</th><th>После Enter</th></tr></thead><tbody><tr><td><code># Повестка</code></td><td class=\"guide-md-result\"><h1 class=\"guide-md-h1\">Повестка</h1></td></tr><tr><td><code>## Заметки</code></td><td class=\"guide-md-result\"><h2 class=\"guide-md-h2\">Заметки</h2></td></tr><tr><td><code>### Справка</code></td><td class=\"guide-md-result\"><h3 class=\"guide-md-h3\">Справка</h3></td></tr><tr><td><code>- Задача</code></td><td class=\"guide-md-result\"><ul class=\"guide-md-ul\"><li>Задача</li></ul></td></tr><tr><td><code>- [ ] Задача</code></td><td class=\"guide-md-result\"><label class=\"guide-md-task\"><input type=\"checkbox\" disabled> Задача</label></td></tr><tr><td><code>**Важно**</code></td><td class=\"guide-md-result\"><strong>Важно</strong></td></tr><tr><td><code>*Акцент*</code></td><td class=\"guide-md-result\"><em>Акцент</em></td></tr></tbody></table>",
         formatBarGuideTitle: "Заметки с панелью",
@@ -471,7 +489,7 @@ Object.assign(window.PeekomI18nLocales, {
         dlSub: "Cài Peekom một lần. Nâng cấp Peekom Plus trong app.",
         dlWin: "Peekom Setup (Windows)",
         dlMac: "Peekom Setup (macOS)",
-        dlPlusHint: "Peekom Plus: Trước <span class=\"pricing-was\">$12.99</span> → Ra mắt <strong>$9.99</strong> (chưa gồm VAT) · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">Mua trên Lemon Squeezy</a> → nhập khóa trong app",
+        dlPlusHint: "Peekom Plus: Trước <span class=\"pricing-was\">$12.99</span> → Ra mắt <strong>$9.99</strong> (chưa gồm VAT) · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">Mua trên Lemon Squeezy</a> → nhập khóa trong app",
         featureGifPending: "GIF demo sắp có",
         compareNoLabel: "Không hỗ trợ",
         faqSub: "Câu hỏi thường gặp về Peekom.",
@@ -509,6 +527,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "Trong Cài đặt → Màn hình hiển thị, chọn tự động (theo chuột) hoặc cố định. Có trên Miễn phí và Plus.",
         faq8q: "Peekom chỉ dùng được ở mép phải màn hình?",
         faq8a: "Hiện tại Peekom chỉ hoạt động ở mép phải. Chúng tôi dự định hỗ trợ mép trái, trên và dưới trong bản cập nhật sau.",
+        faq9q: "Tôi vô tình gỡ Peekom Plus. Tính năng trả phí sẽ ra sao?",
+        faq9a:
+            "<p>Gỡ ứng dụng không hủy giấy phép Lemon Squeezy của bạn. Làm theo các bước sau để khôi phục Peekom Plus và mọi tính năng trả phí.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Cài lại Peekom</strong> — Tải bản miễn phí (<code>Peekom-Setup.exe</code>) từ <a href=\"download.html\">peekom.com</a> và cài đặt.</li>" +
+            "<li><strong>2. Tìm khóa giấy phép</strong> — Mở email biên nhận Lemon Squeezy khi mua và sao chép <strong>[License Key]</strong>. Nếu mất email, đăng nhập lịch sử đơn hàng Lemon Squeezy bằng cùng email để xem lại.</li>" +
+            "<li><strong>3. Kích hoạt lại Plus</strong> — Mở Cài đặt (biểu tượng bánh răng góc trên phải), dán khóa vào <strong>Kích hoạt Plus</strong> và xác nhận. Ứng dụng chuyển thành Peekom Plus và khôi phục 10 slot, chủ đề tùy chỉnh và các tính năng trả phí khác.</li>" +
+            "</ul>" +
+            "<p><strong>Giới hạn thiết bị (tối đa 2)</strong> — Cài lại trên cùng PC được tính là cùng thiết bị, không ảnh hưởng kích hoạt. Khi đổi máy, mỗi giấy phép cho phép tối đa hai thiết bị (ví dụ: PC công việc + PC cá nhân).</p>",
         faq3q: "Kích hoạt Plus thế nào?",
         faq3a: "Mua trên Lemon Squeezy, rồi nhập khóa trong app để mở Peekom Plus (không cần cài lại).",
         faq3bq: "Dùng một khóa trên nhiều PC được không?",
@@ -540,7 +567,7 @@ Object.assign(window.PeekomI18nLocales, {
         promoVat: "(chưa gồm VAT)",
         promoLaunchLabel: "Khuyến mãi\nra mắt\nđang áp dụng",
         comparePricingExtra: " · thanh toán một lần · tối đa 2 thiết bị · cập nhật nhỏ bao gồm · hoàn tiền 7 ngày (<a href=\"mailto:hello.peekom@gmail.com\">hello.peekom@gmail.com</a>)",
-        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">Mua trên Lemon Squeezy</a> → nhập khóa trong app",
+        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">Mua trên Lemon Squeezy</a> → nhập khóa trong app",
         markdownGuideTitle: "Ghi chú với Markdown",
         markdownGuideBody: "<p class=\"guide-table-intro\">Gõ tự nhiên—nhấn <strong>Enter</strong> và định dạng áp dụng tự động.</p><table class=\"compare-table guide-table\"><thead><tr><th>Định dạng nhập</th><th>Sau Enter</th></tr></thead><tbody><tr><td><code># Chương trình họp</code></td><td class=\"guide-md-result\"><h1 class=\"guide-md-h1\">Chương trình họp</h1></td></tr><tr><td><code>## Ghi chú</code></td><td class=\"guide-md-result\"><h2 class=\"guide-md-h2\">Ghi chú</h2></td></tr><tr><td><code>### Tham khảo</code></td><td class=\"guide-md-result\"><h3 class=\"guide-md-h3\">Tham khảo</h3></td></tr><tr><td><code>- Việc cần làm</code></td><td class=\"guide-md-result\"><ul class=\"guide-md-ul\"><li>Việc cần làm</li></ul></td></tr><tr><td><code>- [ ] Việc cần làm</code></td><td class=\"guide-md-result\"><label class=\"guide-md-task\"><input type=\"checkbox\" disabled> Việc cần làm</label></td></tr><tr><td><code>**Quan trọng**</code></td><td class=\"guide-md-result\"><strong>Quan trọng</strong></td></tr><tr><td><code>*Nhấn mạnh*</code></td><td class=\"guide-md-result\"><em>Nhấn mạnh</em></td></tr></tbody></table>",
         formatBarGuideTitle: "Ghi chú với thanh công cụ",
@@ -674,7 +701,7 @@ Object.assign(window.PeekomI18nLocales, {
         dlSub: "ติดตั้ง Peekom ครั้งเดียว อัปเกรด Peekom Plus ในแอป",
         dlWin: "Peekom Setup (Windows)",
         dlMac: "Peekom Setup (macOS)",
-        dlPlusHint: "Peekom Plus: เดิม <span class=\"pricing-was\">$12.99</span> → เปิดตัว <strong>$9.99</strong> (ไม่รวม VAT) · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">ซื้อที่ Lemon Squeezy</a> → ใส่คีย์ในแอป",
+        dlPlusHint: "Peekom Plus: เดิม <span class=\"pricing-was\">$12.99</span> → เปิดตัว <strong>$9.99</strong> (ไม่รวม VAT) · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">ซื้อที่ Lemon Squeezy</a> → ใส่คีย์ในแอป",
         featureGifPending: "GIF ตัวอย่างเร็วๆ นี้",
         compareNoLabel: "ไม่รองรับ",
         faqSub: "คำถามเกี่ยวกับ Peekom",
@@ -712,6 +739,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "ในการตั้งค่า → จอแสดงผล เลือกอัตโนมัติ (ตามเมาส์) หรือจอคงที่ ใช้ได้ทั้งฟรีและ Plus",
         faq8q: "Peekom ใช้ได้แค่ขอบขวาจอหรือไม่?",
         faq8a: "ปัจจุบัน Peekom ทำงานที่ขอบขวาเท่านั้น เราวางแผนรองรับขอบซ้าย บน และล่างในอัปเดตถัดไป",
+        faq9q: "ฉันลบ Peekom Plus โดยไม่ตั้งใจ ฟีเจอร์ที่จ่ายเงินจะเป็นอย่างไร?",
+        faq9a:
+            "<p>การถอนการติดตั้งแอปไม่ได้ลบใบอนุญาต Lemon Squeezy ของคุณ ทำตามขั้นตอนนี้เพื่อกู้คืน Peekom Plus และฟีเจอร์ที่จ่ายเงินทั้งหมด</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. ติดตั้ง Peekom ใหม่</strong> — ดาวน์โหลดเวอร์ชันฟรี (<code>Peekom-Setup.exe</code>) จาก <a href=\"download.html\">peekom.com</a> แล้วติดตั้ง</li>" +
+            "<li><strong>2. หาคีย์ใบอนุญาต</strong> — เปิดอีเมลใบเสร็จ Lemon Squeezy ตอนซื้อ แล้วคัดลอก <strong>[License Key]</strong> หากอีเมลหาย ให้เข้าสู่ระบบประวัติคำสั่งซื้อ Lemon Squeezy ด้วยอีเมลเดิมเพื่อดูอีกครั้ง</li>" +
+            "<li><strong>3. เปิดใช้ Plus อีกครั้ง</strong> — เปิดการตั้งค่า (ไอคอนเฟืองมุมขวาบน) วางคีย์ใน <strong>การเปิดใช้ Plus</strong> แล้วยืนยัน แอปจะเปลี่ยนเป็น Peekom Plus และกู้คืน 10 สล็อต ธีมกำหนดเอง และฟีเจอร์ที่จ่ายเงินอื่นๆ</li>" +
+            "</ul>" +
+            "<p><strong>จำกัดอุปกรณ์ (สูงสุด 2 เครื่อง)</strong> — ติดตั้งใหม่บน PC เดิมถือเป็นอุปกรณ์เดิม ไม่กระทบการเปิดใช้งาน หากเปลี่ยนเครื่อง ใบอนุญาตหนึ่งใบใช้ได้สูงสุดสองเครื่อง (เช่น PC งาน + PC ส่วนตัว)</p>",
         faq3q: "เปิดใช้ Plus อย่างไร?",
         faq3a: "ซื้อที่ Lemon Squeezy แล้วใส่คีย์ในแอปเพื่อปลด Peekom Plus (ไม่ต้องติดตั้งใหม่)",
         faq3bq: "ใช้คีย์เดียวบนหลาย PC ได้ไหม?",
@@ -743,7 +779,7 @@ Object.assign(window.PeekomI18nLocales, {
         promoVat: "(ไม่รวม VAT)",
         promoLaunchLabel: "โปรเปิดตัว\nราคา\nใช้แล้ว",
         comparePricingExtra: " · จ่ายครั้งเดียว · สูงสุด 2 อุปกรณ์ · อัปเดตย่อยรวม · คืนเงิน 7 วัน (<a href=\"mailto:hello.peekom@gmail.com\">hello.peekom@gmail.com</a>)",
-        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/buy\" id=\"dlBuyLinkInner\">ซื้อที่ Lemon Squeezy</a> → ใส่คีย์ในแอป",
+        dlPlusHintExtra: " · <a href=\"https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d\" id=\"dlBuyLinkInner\">ซื้อที่ Lemon Squeezy</a> → ใส่คีย์ในแอป",
         markdownGuideTitle: "บันทึกด้วย Markdown",
         markdownGuideBody: "<p class=\"guide-table-intro\">พิมพ์ตามปกติ—กด <strong>Enter</strong> แล้วจัดรูปแบบอัตโนมัติ</p><table class=\"compare-table guide-table\"><thead><tr><th>รูปแบบป้อน</th><th>หลัง Enter</th></tr></thead><tbody><tr><td><code># วาระประชุม</code></td><td class=\"guide-md-result\"><h1 class=\"guide-md-h1\">วาระประชุม</h1></td></tr><tr><td><code>## บันทึก</code></td><td class=\"guide-md-result\"><h2 class=\"guide-md-h2\">บันทึก</h2></td></tr><tr><td><code>### อ้างอิง</code></td><td class=\"guide-md-result\"><h3 class=\"guide-md-h3\">อ้างอิง</h3></td></tr><tr><td><code>- สิ่งที่ต้องทำ</code></td><td class=\"guide-md-result\"><ul class=\"guide-md-ul\"><li>สิ่งที่ต้องทำ</li></ul></td></tr><tr><td><code>- [ ] สิ่งที่ต้องทำ</code></td><td class=\"guide-md-result\"><label class=\"guide-md-task\"><input type=\"checkbox\" disabled> สิ่งที่ต้องทำ</label></td></tr><tr><td><code>**สำคัญ**</code></td><td class=\"guide-md-result\"><strong>สำคัญ</strong></td></tr><tr><td><code>*เน้น*</code></td><td class=\"guide-md-result\"><em>เน้น</em></td></tr></tbody></table>",
         formatBarGuideTitle: "บันทึกด้วยแถบเครื่องมือ",

@@ -4,7 +4,7 @@ window.PeekomI18nLocales = window.PeekomI18nLocales || {};
 
 const PRICING = { list: 12.99, sale: 9.99 };
 const CONTACT_EMAIL = "hello.peekom@gmail.com";
-const LINKS = { buy: "https://peekom.lemonsqueezy.com/buy" };
+const LINKS = { buy: "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" };
 
 Object.assign(window.PeekomI18nLocales, {
     es: {
@@ -110,6 +110,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "En Ajustes → Monitor de visualización, elija auto (seguir el ratón) o un monitor fijo. Disponible en Gratis y Plus.",
         faq8q: "¿Peekom solo se puede usar en el borde derecho del monitor?",
         faq8a: "Actualmente, Peekom funciona solo en el borde derecho. Planeamos añadir soporte para los bordes izquierdo, superior e inferior en una futura actualización.",
+        faq9q: "Desinstalé Peekom Plus por error. ¿Qué pasa con mis funciones de pago?",
+        faq9a:
+            "<p>Desinstalar la app no elimina su licencia en Lemon Squeezy. Siga estos pasos para restaurar Peekom Plus y todas las funciones de pago.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Reinstalar Peekom</strong> — Descargue la versión gratuita (<code>Peekom-Setup.exe</code>) desde <a href=\"download.html\">peekom.com</a> e instálela.</li>" +
+            "<li><strong>2. Encontrar la clave de licencia</strong> — Abra el correo de recibo de Lemon Squeezy de su compra y copie la <strong>[License Key]</strong>. Si perdió el correo, inicie sesión en el historial de pedidos de Lemon Squeezy con el mismo email para verla de nuevo.</li>" +
+            "<li><strong>3. Reactivar Plus</strong> — Abra Ajustes (icono de engranaje, arriba a la derecha), pegue la clave en <strong>Activación Plus</strong> y confirme. La app cambiará a Peekom Plus y restaurará 10 ranuras, temas personalizados y demás funciones de pago.</li>" +
+            "</ul>" +
+            "<p><strong>Límite de dispositivos (hasta 2)</strong> — Reinstalar en el mismo PC cuenta como el mismo dispositivo, sin afectar la activación. Si cambia de ordenador, cada licencia permite hasta dos dispositivos (p. ej., PC de trabajo + PC personal).</p>",
         faq3q: "¿Cómo se activa Plus?",
         faq3a: "Compre en Lemon Squeezy y luego introduzca la clave de licencia en la app para desbloquear Peekom Plus (sin reinstalar).",
         faq3bq: "¿Puedo usar una clave de licencia en más de un PC?",
@@ -348,6 +357,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "Dans Réglages → Moniteur d'affichage, choisissez auto (suivre la souris) ou un moniteur fixe. Disponible en Gratuit et Plus.",
         faq8q: "Peekom ne peut-il être utilisé que sur le bord droit du moniteur ?",
         faq8a: "Actuellement, Peekom fonctionne uniquement sur le bord droit. Nous prévoyons d'ajouter le support des bords gauche, haut et bas dans une future mise à jour.",
+        faq9q: "J'ai désinstallé Peekom Plus par erreur. Que deviennent mes fonctionnalités payantes ?",
+        faq9a:
+            "<p>La désinstallation de l'app ne supprime pas votre licence Lemon Squeezy. Suivez ces étapes pour restaurer Peekom Plus et toutes les fonctionnalités payantes.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Réinstaller Peekom</strong> — Téléchargez la version gratuite (<code>Peekom-Setup.exe</code>) sur <a href=\"download.html\">peekom.com</a> et installez-la.</li>" +
+            "<li><strong>2. Retrouver la clé de licence</strong> — Ouvrez l'e-mail de reçu Lemon Squeezy de votre achat et copiez la <strong>[License Key]</strong>. Si vous avez perdu l'e-mail, connectez-vous à l'historique des commandes Lemon Squeezy avec le même e-mail pour la revoir.</li>" +
+            "<li><strong>3. Réactiver Plus</strong> — Ouvrez Réglages (icône engrenage, en haut à droite), collez la clé dans <strong>Activation Plus</strong> et confirmez. L'app repasse en Peekom Plus et restaure 10 emplacements, thèmes personnalisés et autres fonctions payantes.</li>" +
+            "</ul>" +
+            "<p><strong>Limite d'appareils (jusqu'à 2)</strong> — Réinstaller sur le même PC compte comme le même appareil, sans impact sur l'activation. Si vous changez d'ordinateur, chaque licence permet jusqu'à deux appareils (p. ex. PC professionnel + PC personnel).</p>",
         faq3q: "Comment activer Plus ?",
         faq3a: "Achetez sur Lemon Squeezy, puis saisissez la clé de licence dans l'app pour débloquer Peekom Plus (sans réinstallation).",
         faq3bq: "Puis-je utiliser une clé de licence sur plusieurs PC ?",
@@ -586,6 +604,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "In Einstellungen → Anzeigemonitor wählen Sie auto (Maus folgen) oder einen festen Monitor. Verfügbar in Kostenlos und Plus.",
         faq8q: "Kann Peekom nur am rechten Monitorrand verwendet werden?",
         faq8a: "Derzeit funktioniert Peekom nur am rechten Rand. Wir planen, in einem zukünftigen Update auch links, oben und unten zu unterstützen.",
+        faq9q: "Ich habe Peekom Plus versehentlich deinstalliert. Was passiert mit meinen kostenpflichtigen Funktionen?",
+        faq9a:
+            "<p>Die Deinstallation der App löscht Ihre Lemon-Squeezy-Lizenz nicht. Folgen Sie diesen Schritten, um Peekom Plus und alle kostenpflichtigen Funktionen wiederherzustellen.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Peekom neu installieren</strong> — Laden Sie die kostenlose Version (<code>Peekom-Setup.exe</code>) von <a href=\"download.html\">peekom.com</a> herunter und installieren Sie sie.</li>" +
+            "<li><strong>2. Lizenzschlüssel finden</strong> — Öffnen Sie die Lemon-Squeezy-Beleg-E-Mail Ihres Kaufs und kopieren Sie den <strong>[License Key]</strong>. Bei verlorener E-Mail melden Sie sich mit derselben Adresse in der Lemon-Squeezy-Bestellhistorie an, um den Schlüssel erneut zu sehen.</li>" +
+            "<li><strong>3. Plus erneut aktivieren</strong> — Öffnen Sie Einstellungen (Zahnradsymbol oben rechts), fügen Sie den Schlüssel unter <strong>Plus-Aktivierung</strong> ein und bestätigen Sie. Die App wechselt sofort zu Peekom Plus und stellt 10 Slots, benutzerdefinierte Themes und weitere Plus-Funktionen wieder her.</li>" +
+            "</ul>" +
+            "<p><strong>Gerätelimit (bis zu 2)</strong> — Neuinstallation auf demselben PC gilt als dasselbe Gerät und beeinträchtigt die Aktivierung nicht. Bei einem neuen Computer erlaubt jede Lizenz bis zu zwei Geräte (z. B. Arbeits-PC + Privat-PC).</p>",
         faq3q: "Wie wird Plus aktiviert?",
         faq3a: "Auf Lemon Squeezy kaufen und dann den Lizenzschlüssel in der App eingeben, um Peekom Plus freizuschalten (keine Neuinstallation).",
         faq3bq: "Kann ich einen Lizenzschlüssel auf mehr als einem PC nutzen?",
@@ -824,6 +851,15 @@ Object.assign(window.PeekomI18nLocales, {
         faq2a: "Em Configurações → Monitor de exibição, escolha auto (seguir o mouse) ou um monitor fixo. Disponível no Grátis e Plus.",
         faq8q: "O Peekom só pode ser usado na borda direita do monitor?",
         faq8a: "Atualmente, o Peekom funciona apenas na borda direita. Planejamos adicionar suporte para as bordas esquerda, superior e inferior em uma atualização futura.",
+        faq9q: "Desinstalei o Peekom Plus por engano. O que acontece com os recursos pagos?",
+        faq9a:
+            "<p>Desinstalar o app não remove sua licença no Lemon Squeezy. Siga estes passos para restaurar o Peekom Plus e todos os recursos pagos.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Reinstalar o Peekom</strong> — Baixe a versão gratuita (<code>Peekom-Setup.exe</code>) em <a href=\"download.html\">peekom.com</a> e instale.</li>" +
+            "<li><strong>2. Encontrar a chave de licença</strong> — Abra o e-mail de recibo do Lemon Squeezy da sua compra e copie a <strong>[License Key]</strong>. Se perdeu o e-mail, entre no histórico de pedidos do Lemon Squeezy com o mesmo e-mail para vê-la novamente.</li>" +
+            "<li><strong>3. Reativar o Plus</strong> — Abra Configurações (ícone de engrenagem, canto superior direito), cole a chave em <strong>Ativação Plus</strong> e confirme. O app muda para Peekom Plus e restaura 10 slots, temas personalizados e demais recursos pagos.</li>" +
+            "</ul>" +
+            "<p><strong>Limite de dispositivos (até 2)</strong> — Reinstalar no mesmo PC conta como o mesmo dispositivo, sem afetar a ativação. Ao trocar de computador, cada licença permite até dois dispositivos (ex.: PC de trabalho + PC pessoal).</p>",
         faq3q: "Como o Plus é ativado?",
         faq3a: "Compre no Lemon Squeezy e depois insira a chave de licença no app para desbloquear o Peekom Plus (sem reinstalar).",
         faq3bq: "Posso usar uma chave de licença em mais de um PC?",

@@ -95,19 +95,30 @@ function isValidStatePayload(jsonPayload) {
 const MIN_WINDOWS_MAJOR = 10;
 const SHARED_STATE_KEY = "ppaekkom-plus-state-v5";
 const SHARED_STATE_BACKUP_KEY = "ppaekkom-plus-state-v5-backup";
+const MONITOR_PREFS_FILE = "monitor-prefs.json";
 const APP_ID = "com.peekom.app";
 const DOCS_HELP_URL = "https://www.peekom.com/#help";
-const LEMON_BUY_URL = "https://peekom.lemonsqueezy.com/buy";
+const LEMON_BUY_URL =
+  "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d";
 
 function resolveIconPath(isPremium) {
-  const name = isPremium ? "plus.png" : "index.png";
+  return resolveShellIconPath(isPremium);
+}
+
+function resolveShellIconPath(isPremium) {
+  const icoName = isPremium ? "plus.ico" : "icon.ico";
+  const pngName = isPremium ? "plus.png" : "index.png";
   const candidates = app.isPackaged
     ? [
-        path.join(process.resourcesPath, name),
-        path.join(process.resourcesPath, "build", name),
-        path.join(__dirname, "build", name)
+        path.join(process.resourcesPath, icoName),
+        path.join(process.resourcesPath, "icon.ico"),
+        path.join(process.resourcesPath, pngName)
       ]
-    : [path.join(__dirname, "build", name), path.join(__dirname, "build", "icon.ico")];
+  : [
+      path.join(__dirname, "build", icoName),
+      path.join(__dirname, "build", "icon.ico"),
+      path.join(__dirname, "build", pngName)
+    ];
   for (const p of candidates) {
     if (fs.existsSync(p)) return p;
   }
@@ -127,6 +138,92 @@ let premiumActive = false;
 
 function getAppDisplayName() {
   return premiumActive ? "Peekom Plus" : "Peekom";
+}
+
+function getMonitorPrefsPath() {
+  return path.join(app.getPath("userData"), MONITOR_PREFS_FILE);
+}
+
+function loadMonitorPrefs() {
+  try {
+    const prefs = JSON.parse(fs.readFileSync(getMonitorPrefsPath(), "utf8"));
+    if (prefs?.mode === "fixed" && typeof prefs.displayId === "number") {
+      const display = getDisplayById(prefs.displayId);
+      if (display) {
+        followCursorMode = false;
+        targetDisplayId = prefs.displayId;
+        return;
+      }
+    }
+  } catch {
+    /* ignore */
+  }
+  followCursorMode = true;
+  targetDisplayId = null;
+}
+
+function saveMonitorPrefs() {
+  try {
+    fs.writeFileSync(
+      getMonitorPrefsPath(),
+      JSON.stringify({
+        mode: followCursorMode ? "auto" : "fixed",
+        displayId: followCursorMode ? null : targetDisplayId
+      }),
+      "utf8"
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
+function psEscape(value) {
+  return String(value).replace(/'/g, "''");
+}
+
+function updateWindowsShellBranding(isPremium) {
+  if (process.platform !== "win32" || !app.isPackaged) return;
+
+  const label = isPremium ? "Peekom Plus" : "Peekom";
+  const legacyLabel = isPremium ? "Peekom" : "Peekom Plus";
+  const iconPath = resolveShellIconPath(isPremium);
+  const exePath = process.execPath;
+  const workDir = path.dirname(exePath);
+  const desktop = app.getPath("desktop");
+  const startMenu = path.join(app.getPath("appData"), "Microsoft", "Windows", "Start Menu", "Programs");
+  const targets = [
+    path.join(desktop, `${label}.lnk`),
+    path.join(startMenu, `${label}.lnk`)
+  ];
+  const legacyTargets = [
+    path.join(desktop, `${legacyLabel}.lnk`),
+    path.join(startMenu, `${legacyLabel}.lnk`)
+  ];
+
+  const shortcutLines = targets
+    .map((shortcutPath) => {
+      return [
+        `$s = $shell.CreateShortcut('${psEscape(shortcutPath)}')`,
+        `$s.TargetPath = '${psEscape(exePath)}'`,
+        `$s.WorkingDirectory = '${psEscape(workDir)}'`,
+        `$s.IconLocation = '${psEscape(iconPath)},0'`,
+        `$s.Description = '${psEscape(label)}'`,
+        "$s.Save()"
+      ].join("; ");
+    })
+    .join("; ");
+
+  const removeLines = legacyTargets
+    .filter((legacyPath) => !targets.includes(legacyPath))
+    .map((legacyPath) => `if (Test-Path '${psEscape(legacyPath)}') { Remove-Item -LiteralPath '${psEscape(legacyPath)}' -Force }`)
+    .join("; ");
+
+  const script = `$shell = New-Object -ComObject WScript.Shell; ${shortcutLines}; ${removeLines}`;
+  require("child_process").execFile(
+    "powershell.exe",
+    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
+    () => {}
+  );
 }
 
 function applyBranding() {
@@ -152,6 +249,7 @@ function applyBranding() {
   if (trayIcon) {
     trayIcon.setContextMenu(buildTrayMenu());
   }
+  updateWindowsShellBranding(premiumActive);
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send("premium:changed", { isPremium: premiumActive });
   }
@@ -183,7 +281,8 @@ const DEFAULT_SETTINGS = {
   shortcut: "CommandOrControl+Shift+M",
   shortcutSlotPrev: "CommandOrControl+Shift+Up",
   shortcutSlotNext: "CommandOrControl+Shift+Down",
-  manualYOffset: 0
+  manualYOffset: 0,
+  panelEdge: "right"
 };
 
 /** @type {BrowserWindow | null} */
@@ -267,6 +366,32 @@ function healOrphanedStartupRegistration() {
   }
 }
 
+/** 부팅 시 Windows 시작 프로그램 레지스트리 값을 렌더러에 1회 전달 */
+function pushStartupLoginSync(targetWindow) {
+  if (!targetWindow || targetWindow.isDestroyed()) return;
+  const wc = targetWindow.webContents;
+  if (!wc || wc.isDestroyed()) return;
+  try {
+    const openAtLogin = Boolean(readStartupLoginState().openAtLogin);
+    wc.send("startup:synced", { openAtLogin });
+  } catch {
+    /* ignore */
+  }
+}
+
+/** Windows 레지스트리 시작 프로그램 상태를 렌더러에 1회 전달 */
+function pushStartupLoginSync(targetWindow) {
+  if (!targetWindow || targetWindow.isDestroyed()) return;
+  const wc = targetWindow.webContents;
+  if (!wc || wc.isDestroyed()) return;
+  try {
+    const openAtLogin = Boolean(readStartupLoginState().openAtLogin);
+    wc.send("startup:synced", { openAtLogin });
+  } catch {
+    /* ignore */
+  }
+}
+
 function normalizeSettings(partialSettings = {}) {
   const merged = { ...appSettings, ...partialSettings };
 
@@ -302,6 +427,8 @@ function normalizeSettings(partialSettings = {}) {
       ? Math.round(merged.manualYOffset)
       : 0;
 
+  const safePanelEdge = merged.panelEdge === "left" ? "left" : "right";
+
   return {
     anchor: safeAnchor,
     lengthMode: safeLengthMode,
@@ -309,7 +436,8 @@ function normalizeSettings(partialSettings = {}) {
     shortcut: safeShortcut,
     shortcutSlotPrev: safeShortcutSlotPrev,
     shortcutSlotNext: safeShortcutSlotNext,
-    manualYOffset: safeManualYOffset
+    manualYOffset: safeManualYOffset,
+    panelEdge: safePanelEdge
   };
 }
 
@@ -498,7 +626,8 @@ function computeAnchoredY(displayBounds) {
 function getAttachedBounds(targetDisplay) {
   const { bounds } = targetDisplay;
   const { width, height } = getWindowDimensions(targetDisplay);
-  const x = bounds.x + bounds.width - width;
+  const edge = appSettings.panelEdge === "left" ? "left" : "right";
+  const x = edge === "left" ? bounds.x : bounds.x + bounds.width - width;
   const y = computeAnchoredY(bounds);
   return { x, y, width, height };
 }
@@ -522,7 +651,8 @@ function getAttachedSignature(display) {
     bounds.height,
     appSettings.anchor,
     appSettings.lengthMode,
-    appSettings.manualYOffset
+    appSettings.manualYOffset,
+    appSettings.panelEdge
   ].join(":");
 }
 
@@ -611,6 +741,7 @@ function createMainWindow() {
     applyAlwaysOnTopPolicy();
     applyMouseIgnorePolicy(true);
     mainWindow.webContents.setZoomFactor(1.0);
+    pushStartupLoginSync(mainWindow);
   });
 
   // Ctrl/Cmd +/- 줌 키를 렌더러가 처리하기 전에 차단
@@ -676,6 +807,10 @@ function createSettingsWindow() {
 
   settingsWindow.setMenuBarVisibility(false);
   settingsWindow.loadFile(path.join(__dirname, "settings.html"));
+
+  settingsWindow.webContents.once("did-finish-load", () => {
+    pushStartupLoginSync(settingsWindow);
+  });
 
   settingsWindow.webContents.on("before-input-event", (event, input) => {
     if ((input.control || input.meta) &&
@@ -840,8 +975,39 @@ function setTrayVisibility(visible) {
   }
 }
 
-app.whenReady().then(async () => {
+function focusRunningInstance() {
+  if (settingsWindow && !settingsWindow.isDestroyed()) {
+    if (settingsWindow.isMinimized()) settingsWindow.restore();
+    settingsWindow.show();
+    settingsWindow.focus();
+    return;
+  }
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.show();
+    mainWindow.focus();
+    return;
+  }
+  createSettingsWindow();
+}
+
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on("second-instance", (_event, commandLine) => {
+    const shouldOpenSettings = Array.isArray(commandLine) && commandLine.includes("--open-settings");
+    if (shouldOpenSettings) {
+      createSettingsWindow();
+      return;
+    }
+    focusRunningInstance();
+  });
+
+  app.whenReady().then(async () => {
   if (!assertOsSupported()) return;
+
+  loadMonitorPrefs();
 
   await license.verifyStoredLicense().catch(() => {});
 
@@ -964,6 +1130,7 @@ app.whenReady().then(async () => {
       targetDisplayId = null;
     }
 
+    saveMonitorPrefs();
     lastAttachedSignature = null;
     const activeDisplay = refreshWindowPosition(true);
     return { ok: true, activeDisplayId: activeDisplay?.id ?? null, windowState: getWindowState() };
@@ -1069,6 +1236,21 @@ app.whenReady().then(async () => {
     return { ok: true, shortcutStatus, windowState: getWindowState() };
   });
 
+  ipcMain.handle("memo:flush", async () => {
+    if (!mainWindow || mainWindow.isDestroyed()) {
+      return { ok: false, reason: "NO_MAIN_WINDOW" };
+    }
+    try {
+      const flushed = await mainWindow.webContents.executeJavaScript(
+        "typeof window.__peekomFlushActiveMemo === 'function' ? window.__peekomFlushActiveMemo() : false",
+        true
+      );
+      return { ok: Boolean(flushed) };
+    } catch (err) {
+      return { ok: false, reason: String(err?.message || err) };
+    }
+  });
+
   ipcMain.handle("settings:notify-applied", (_, options = {}) => {
     if (typeof options.language === "string" && options.language.trim()) {
       appUiLanguage = resolveTrayLang(options.language.trim());
@@ -1100,10 +1282,11 @@ app.whenReady().then(async () => {
     return { ok: true };
   });
 
-  ipcMain.on("color:prepare-advanced-picker", () => {
+  ipcMain.handle("color:prepare-advanced-picker", () => {
     if (settingsWindow && !settingsWindow.isDestroyed()) {
       settingsWindow.setParentWindow(null);
     }
+    return { ok: true };
   });
 
   ipcMain.handle("color:restore-advanced-picker", () => {
@@ -1113,6 +1296,7 @@ app.whenReady().then(async () => {
     if (mainWindow && !mainWindow.isDestroyed()) {
       settingsWindow.setParentWindow(mainWindow);
     }
+    settingsWindow.focus();
     applyAlwaysOnTopPolicy();
     return { ok: true };
   });
@@ -1284,8 +1468,6 @@ app.whenReady().then(async () => {
     if (!isTrustedRenderer(event)) {
       return { ok: false, message: "UNTRUSTED_SENDER" };
     }
-    const premiumBlock = requirePremiumAccess();
-    if (premiumBlock) return premiumBlock;
 
     const { canceled, filePaths } = await dialog.showOpenDialog({
       title: trayT("imagePickTitle", appUiLanguage),
@@ -1419,7 +1601,8 @@ app.whenReady().then(async () => {
       createMainWindow();
     }
   });
-});
+  });
+}
 
 app.on("window-all-closed", () => {
   stopPeekCollapseMonitor();

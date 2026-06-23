@@ -6,7 +6,7 @@
 const LINKS = {
     win: "https://github.com/Nannie-99/peekom-landing/releases/latest/download/Peekom-Setup.exe",
     mac: "https://github.com/Nannie-99/peekom-landing/releases/latest",
-    buy: "https://peekom.lemonsqueezy.com/buy"
+    buy: "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d"
 };
 
 const WIN_SETUP_FILENAME = "Peekom-Setup.exe";
@@ -32,11 +32,9 @@ const CHANGELOG = {
         items: [
             "빼꼼 인덱스가 Peekom으로 돌아왔습니다",
             "가장자리 손잡이·얼음 모드·듀얼 모니터 지원",
-            "마크다운 입력·서식바·이미지 삽입 (무료·Plus 공통)",
-            "마크다운 체크박스 (- [ ] / - [x]) 클릭으로 완료 on/off",
             "서식바: 글자색·목록(점/네모/숫자) 드롭다운, 순서 개편",
             "무료 메모당 이미지 1장 · Plus 5장, 크기 조절·비율 자르기",
-            "Peekom Plus: 10슬롯 독립 배치, 커스텀 테마·글꼴·불투명도, 보내기·JSON 백업"
+            "Peekom Plus: 10슬롯 독립 배치, 커스텀 테마·글꼴·불투명도, 왼쪽 패널, 보내기·JSON 백업"
         ]
     }],
     en: [{
@@ -45,11 +43,9 @@ const CHANGELOG = {
         items: [
             "Peekom rebrand from legacy edge memo app",
             "Edge handle, Ice mode, dual monitor support",
-            "Markdown, formatting toolbar, image insert (free & Plus)",
-            "Markdown checkboxes (- [ ] / - [x]) with click toggle",
             "Toolbar: color & list dropdowns, reordered controls",
             "Free: 1 image per memo · Plus: 5, resize & aspect crop",
-            "Peekom Plus: 10 slots, custom theme, export & JSON backup"
+            "Peekom Plus: 10 slots, custom theme, left panel, export & JSON backup"
         ]
     }]
 };
@@ -360,7 +356,7 @@ const i18n = {
         faqSub: "Peekom 사용 중 자주 묻는 내용입니다.",
         faqTitle: "자주 묻는 질문",
         faq1q: "Peekom과 Peekom Plus의 차이는 무엇인가요?",
-        faq1a: '무료는 3개 인덱스·묶음 이동·얼음 모드·자동 접힘 딜레이·모니터 선택·마크다운·서식바·이미지 삽입을 포함합니다. Peekom Plus(출시 기념 $9.99, 정가 $12.99)는 10슬롯 독립 배치, 커스텀 색·글꼴·불투명도, 이미지 크기 조절, 보내기 등을 앱 안에서 잠금 해제합니다. <a href="features.html#compare">상세 비교표</a>를 참고하세요.',
+        faq1a: '무료는 3개 인덱스·묶음 이동·얼음 모드·자동 접힘 딜레이·모니터 선택·서식바·이미지 삽입을 포함합니다. Peekom Plus(출시 기념 $9.99, 정가 $12.99)는 10슬롯 독립 배치, 커스텀 색·글꼴·불투명도, 왼쪽 패널, 이미지 크기 조절, 보내기 등을 앱 안에서 잠금 해제합니다. <a href="features.html#compare">상세 비교표</a>를 참고하세요.',
         compareFreeName: "Peekom (무료)",
         comparePlusName: "Peekom Plus (유료)",
         compareCta: "Peekom Plus 구입",
@@ -368,7 +364,16 @@ const i18n = {
         faq2q: "듀얼 모니터에서 어떻게 동작하나요?",
         faq2a: "설정 → 표시 모니터에서 현재 마우스 모니터(자동) 또는 특정 모니터를 고정할 수 있습니다. 무료·Peekom Plus 모두 사용할 수 있습니다.",
         faq8q: "Peekom은 모니터 오른쪽 가장자리에서만 사용 가능한가요?",
-        faq8a: "현재는 모니터 오른쪽 가장자리에서만 사용할 수 있습니다. 추후 업데이트를 통해 왼쪽, 위쪽, 아래쪽 가장자리도 지원할 예정입니다.",
+        faq8a: "오른쪽 가장자리는 무료로, 왼쪽 가장자리는 Peekom Plus에서 사용할 수 있습니다. 위쪽·아래쪽 가장자리는 추후 업데이트를 통해 지원할 예정입니다.",
+        faq9q: "실수로 Peekom Plus를 삭제하면 유료 기능은 어떻게 되나요?",
+        faq9a:
+            "<p>앱을 삭제해도 Lemon Squeezy에 등록된 라이선스는 그대로 남습니다. 아래 순서대로 진행하면 Peekom Plus와 모든 유료 기능을 다시 사용할 수 있습니다.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Peekom 재설치</strong> — <a href=\"download.html\">peekom.com</a>에서 무료 버전(<code>Peekom-Setup.exe</code>)을 다시 다운로드해 설치합니다.</li>" +
+            "<li><strong>2. 라이선스 키 확인</strong> — 결제 당시 Lemon Squeezy에서 받은 영수증 이메일을 열어 <strong>[License Key]</strong>를 복사합니다. 이메일을 분실했다면 Lemon Squeezy 구매 확인(주문 내역) 페이지에서 동일 이메일로 로그인해 키를 다시 확인할 수 있습니다.</li>" +
+            "<li><strong>3. 라이선스 재인증</strong> — 앱 우측 상단 톱니바퀴(설정)를 연 뒤 <strong>플러스 인증</strong>에 키를 붙여넣고 인증합니다. 즉시 앱 이름이 Peekom Plus로 바뀌고 10개 슬롯·커스텀 테마 등 유료 기능이 복구됩니다.</li>" +
+            "</ul>" +
+            "<p><strong>기기 수 제한(최대 2대)</strong> — 같은 PC에서 삭제 후 재설치하면 동일 기기로 인식되어 인증 횟수에 문제가 없습니다. 컴퓨터를 바꾼 경우에는 라이선스당 최대 2대까지 등록할 수 있으므로(예: 업무 PC 1대 + 개인 PC 1대) 새 PC에서도 정상적으로 인증됩니다.</p>",
         faq3q: "Peekom Plus 라이선스는 어떻게 인증하나요?",
         faq3a: "Lemon Squeezy를 통해 구매한 라이선스 키를 앱 최초 실행 시 입력하면 Peekom Plus가 활성화됩니다.",
         faq3bq: "한 라이선스 키로 여러 대의 PC에서 사용할 수 있나요?",
@@ -414,7 +419,7 @@ const i18n = {
                 '<ul class="guide-step-list">' +
                     "<li><strong>인덱스 위치 조절</strong> — 모니터 가장자리 손잡이를 드래그해 원하는 높이로 옮깁니다.</li>" +
                     "<li><strong>빼꼼 / 얼음 모드</strong> — 메모 상단 칩으로 전환합니다. <em>빼꼼</em>은 클릭·단축키로 열고, <em>얼음</em>은 항상 화면에 고정됩니다.</li>" +
-                    '<li><strong>메모 텍스트 커스텀</strong> — 마크다운·서식바·이미지로 꾸밀 수 있습니다. 아래 <a href="#guide-edit">편집</a> 섹션을 참고하세요.</li>' +
+                    '<li><strong>메모 텍스트 커스텀</strong> — 서식바·이미지로 꾸밀 수 있습니다. 아래 <a href="#guide-edit">편집</a> 섹션을 참고하세요.</li>' +
                 "</ul>" +
             "</div>" +
             '<div class="guide-step guide-step--last">' +
@@ -459,7 +464,7 @@ const i18n = {
         fz2Items: [
             { text: "단축키로 최근 메모 열기" },
             { text: "타겟 모니터 고정" },
-            { text: "마크다운 문법 인식" },
+            { text: "모드 전환 방식 선택" },
             { text: "이미지 삽입" }
         ],
         fz3Title: "나만의 커스텀 메모",
@@ -474,7 +479,8 @@ const i18n = {
             { text: "최대 10개의 독립 인덱스", plus: true },
             { text: "보내기 · JSON 백업", plus: true },
             { text: "메모당 최대 5개의 이미지 삽입", plus: true },
-            { text: "이미지 크기 조절 · 비율 자르기", plus: true }
+            { text: "이미지 크기 조절 · 비율 자르기", plus: true },
+            { text: "모니터 왼쪽 패널 지원", plus: true }
         ],
         fz5Title: "Plus만의 커스터마이즈",
         fz5Items: [
@@ -600,7 +606,7 @@ const i18n = {
         compareNoLabel: "Not supported",
         faqSub: "Common questions about Peekom.",
         faq1q: "What's the difference between free and Plus?",
-        faq1a: 'Free includes 3 indexes, group handle move, Ice mode, hover delay, monitor selection, Markdown, formatting toolbar, and image insert. Peekom Plus (launch $9.99, list $12.99) unlocks 10 slots, custom theme, fonts, opacity, image resize, and export in-app. See the <a href="features.html#compare">comparison table</a>.',
+        faq1a: 'Free includes 3 indexes, group handle move, Ice mode, hover delay, monitor selection, formatting toolbar, and image insert. Peekom Plus (launch $9.99, list $12.99) unlocks 10 slots, custom theme, fonts, opacity, left panel, image resize, and export in-app. See the <a href="features.html#compare">comparison table</a>.',
         compareFreeName: "Peekom (Free)",
         comparePlusName: "Peekom Plus",
         compareCta: "Get Peekom Plus",
@@ -638,7 +644,7 @@ const i18n = {
                 '<ul class="guide-step-list">' +
                     "<li><strong>Reposition</strong> — Drag the edge handle to your preferred height.</li>" +
                     "<li><strong>Peek / Ice</strong> — Toggle at the top of the memo. Peek opens via click or shortcut; Ice stays pinned.</li>" +
-                    '<li><strong>Customize text</strong> — Use Markdown, the toolbar, and images. See <a href="#guide-edit">Editing</a> below.</li>' +
+                    '<li><strong>Customize text</strong> — Use the formatting toolbar and images. See <a href="#guide-edit">Editing</a> below.</li>' +
                 "</ul>" +
             "</div>" +
             '<div class="guide-step guide-step--last">' +
@@ -663,7 +669,16 @@ const i18n = {
         faq2q: "How does dual monitor support work?",
         faq2a: "In Settings → Display monitor, choose auto (follow mouse) or a fixed monitor. Available on Free and Plus.",
         faq8q: "Can Peekom only be used on the right edge of the monitor?",
-        faq8a: "Currently, Peekom works on the right edge only. We plan to add support for the left, top, and bottom edges in a future update.",
+        faq8a: "The right edge is available on the free plan; the left edge requires Peekom Plus. Top and bottom edges are planned for a future update.",
+        faq9q: "I accidentally uninstalled Peekom Plus. What happens to my paid features?",
+        faq9a:
+            "<p>Uninstalling the app does not remove your Lemon Squeezy license. Follow these steps to restore Peekom Plus and all paid features.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>1. Reinstall Peekom</strong> — Download the free version (<code>Peekom-Setup.exe</code>) from <a href=\"download.html\">peekom.com</a> and install it.</li>" +
+            "<li><strong>2. Find your license key</strong> — Open the Lemon Squeezy receipt email from your purchase and copy the <strong>[License Key]</strong>. If you lost the email, sign in to your Lemon Squeezy order history with the same email to view the key again.</li>" +
+            "<li><strong>3. Reactivate Plus</strong> — Open Settings (gear icon, top right), paste the key under <strong>Plus activation</strong>, and confirm. The app switches to Peekom Plus and restores 10 slots, custom themes, and other Plus features.</li>" +
+            "</ul>" +
+            "<p><strong>Device limit (up to 2)</strong> — Reinstalling on the same PC counts as the same device, so activation is unaffected. If you move to a new computer, each license allows up to two devices (e.g. work PC + personal PC).</p>",
         faq3q: "How is Plus activated?",
         faq3a: "Buy on Lemon Squeezy, then enter the license key in-app to unlock Peekom Plus (no reinstall).",
         faq3bq: "Can I use one license key on more than one PC?",
@@ -754,7 +769,7 @@ const i18n = {
         fz2Items: [
             { text: "Shortcut to open recent memo" },
             { text: "Target display pinning" },
-            { text: "Markdown syntax support" },
+            { text: "Peek / Ice toggle mode" },
             { text: "Image insert" }
         ],
         fz3Title: "Your custom memo",
@@ -769,7 +784,8 @@ const i18n = {
             { text: "Up to 10 independent indexes", plus: true },
             { text: "Export · JSON backup", plus: true },
             { text: "Up to 5 images per memo", plus: true },
-            { text: "Image resize · aspect crop", plus: true }
+            { text: "Image resize · aspect crop", plus: true },
+            { text: "Left-edge panel (Plus)", plus: true }
         ],
         fz5Title: "Plus-only customization",
         fz5Items: [
@@ -894,6 +910,8 @@ function enrichLocaleData(data, lang) {
     next.faq7a = next.faq7a || en.faq7a;
     next.faq8q = next.faq8q || en.faq8q;
     next.faq8a = next.faq8a || en.faq8a;
+    next.faq9q = next.faq9q || en.faq9q;
+    next.faq9a = next.faq9a || en.faq9a;
     next.heroTitleMain = next.heroTitleMain || en.heroTitleMain || "Peekom";
     next.heroWinBtn = next.heroWinBtn || en.heroWinBtn;
     next.heroMacBtn = next.heroMacBtn || en.heroMacBtn;
@@ -1102,8 +1120,10 @@ function applyLinks() {
     winPlusBuyIds.forEach(function (id) {
         const el = document.getElementById(id);
         if (!el) return;
-        el.href = "#";
-        el.removeAttribute("target");
+        el.href = LINKS.buy;
+        el.target = "_blank";
+        el.rel = "noopener noreferrer";
+        el.removeAttribute("download");
     });
 
     const buyOnlyIds = ["dlBuyLink"];
@@ -1160,15 +1180,6 @@ function showMacComingSoon(event) {
     openModal({ mode: "info" });
 }
 
-function handleWinPlusBuyClick(event) {
-    if (event) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    triggerWinSetupDownload();
-    window.open(LINKS.buy, "_blank", "noopener,noreferrer");
-}
-
 var heroOfferActionsBound = false;
 
 function initHeroOfferActions() {
@@ -1178,11 +1189,6 @@ function initHeroOfferActions() {
     ["heroMacBtn", "heroMacPlusBuyBtn", "dlMacBtn", "dlMacPlusBuyBtn"].forEach(function (id) {
         const el = document.getElementById(id);
         if (el) el.addEventListener("click", showMacComingSoon);
-    });
-
-    ["heroPlusBuyBtn", "dlPlusBuyBtn"].forEach(function (id) {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener("click", handleWinPlusBuyClick);
     });
 }
 
@@ -1196,7 +1202,7 @@ function setThemeBtnA11y(id, label) {
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el && value != null) {
-        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a') {
+        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq9a') {
             el.innerHTML = value;
         } else {
             el.textContent = value;
@@ -1389,6 +1395,8 @@ function updateUI() {
     setText('faq2a', d.faq2a);
     setText('faq8q', d.faq8q);
     setText('faq8a', d.faq8a);
+    setText('faq9q', d.faq9q);
+    setText('faq9a', d.faq9a);
     setText('faq3q', d.faq3q);
     setText('faq3a', d.faq3a);
     setText('faq3bq', d.faq3bq);
@@ -1420,11 +1428,13 @@ function updateUI() {
     gkTextIds.forEach(function(id) {
         setText(id, d[id]);
     });
-    ['markdownGuideTitle','formatBarGuideTitle'].forEach(function(id) { setText(id, d[id]); });
-    ['markdownGuideBody','formatBarGuideBody'].forEach(function(id) {
-        const el = document.getElementById(id);
-        if (el && d[id]) el.innerHTML = d[id];
-    });
+    setText('formatBarGuideTitle', d.formatBarGuideTitle);
+    const formatBarGuideBody = document.getElementById('formatBarGuideBody');
+    if (formatBarGuideBody && d.formatBarGuideBody) formatBarGuideBody.innerHTML = d.formatBarGuideBody;
+    const markdownGuideTitle = document.getElementById('markdownGuideTitle');
+    const markdownGuideBody = document.getElementById('markdownGuideBody');
+    if (markdownGuideTitle) markdownGuideTitle.hidden = true;
+    if (markdownGuideBody) { markdownGuideBody.hidden = true; markdownGuideBody.innerHTML = ''; }
     const guidePlusEl = document.getElementById('guidePlusBody');
     if (guidePlusEl) guidePlusEl.innerHTML = buildGuidePlusHtml(d);
     ['guidePlusTitle','guideNavStart','guideNavKeys','guideNavEdit','guideNavPlus'].forEach(function(id) {
@@ -1624,8 +1634,7 @@ window.onload = function() {
         closeModal: closeModal,
         closeModalOnBackdrop: closeModalOnBackdrop,
         closeSearch: closeSearch,
-        showMacComingSoon: showMacComingSoon,
-        handleWinPlusBuyClick: handleWinPlusBuyClick
+        showMacComingSoon: showMacComingSoon
     };
     window.setLanguage = setLanguage;
     window.openModal = openModal;

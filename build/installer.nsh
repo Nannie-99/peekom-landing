@@ -11,6 +11,30 @@
   ${EndIf}
 !macroend
 
+!macro customInstall
+  ; 바로가기 아이콘을 exe 대신 resources\icon.ico 로 고정 (Windows 탐색기 호환)
+  StrCpy $9 "$INSTDIR\resources\icon.ico"
+  ${IfNot} ${FileExists} $9
+    Goto peekomShortcutsDone
+  ${EndIf}
+
+  SetShellVarContext current
+  ${If} ${FileExists} "$DESKTOP\Peekom.lnk"
+    Delete "$DESKTOP\Peekom.lnk"
+    CreateShortCut "$DESKTOP\Peekom.lnk" "$INSTDIR\Peekom.exe" "" $9 0
+  ${EndIf}
+  ${If} ${FileExists} "$SMPROGRAMS\Peekom.lnk"
+    Delete "$SMPROGRAMS\Peekom.lnk"
+    CreateShortCut "$SMPROGRAMS\Peekom.lnk" "$INSTDIR\Peekom.exe" "" $9 0
+  ${EndIf}
+  ${If} ${FileExists} "$SMPROGRAMS\Peekom\Peekom.lnk"
+    Delete "$SMPROGRAMS\Peekom\Peekom.lnk"
+    CreateShortCut "$SMPROGRAMS\Peekom\Peekom.lnk" "$INSTDIR\Peekom.exe" "" $9 0
+  ${EndIf}
+
+  peekomShortcutsDone:
+!macroend
+
 !macro customUnInstall
   ; Electron app.setLoginItemSettings() 가 등록하는 시작 프로그램 항목 제거
   DeleteRegValue HKCU "Software\Microsoft\Windows\CurrentVersion\Run" "Peekom Plus"

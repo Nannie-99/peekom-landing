@@ -10,7 +10,7 @@
                 { feature: "인덱스(슬롯) 개수", free: "3개", plus: "10개" },
                 { feature: "손잡이 위치", free: "3개 묶음 이동", plus: "슬롯별 독립" },
                 { feature: "PEEK / ICE 모드", free: "✓", plus: "✓" },
-                { feature: "자동 접힘 딜레이 (0.25초)", free: "✓", plus: "✓" }
+                { feature: "자동 접힘 딜레이", free: "✓", plus: "✓" }
             ]
         },
         {
@@ -21,6 +21,7 @@
             rows: [
                 { feature: "단일 / 듀얼 모니터", free: "✓", plus: "✓" },
                 { feature: "표시 모니터 선택", free: "✓", plus: "✓" },
+                { feature: "표시 위치 (왼쪽/오른쪽)", free: "오른쪽만", plus: "✓" },
                 { feature: "메모 비율 1:1 / 3:4", free: "✓", plus: "✓" },
                 { feature: "단축키 — 최근 메모 토글", free: "✓", plus: "✓" },
                 { feature: "단축키 — 위/아래 인덱스 열기", free: "✓", plus: "✓" },
@@ -33,7 +34,7 @@
             title: "편집·콘텐츠",
             image: "screenshots/scene-2.svg",
             rows: [
-                { feature: "마크다운 · 체크박스", free: "✓", plus: "✓" },
+                { feature: "모드 전환 방식 선택", free: "✓", plus: "✓" },
                 { feature: "서식바", free: "✓", plus: "✓" },
                 { feature: "이미지 삽입", free: "✓", plus: "✓" },
                 { feature: "메모당 이미지", free: "1개", plus: "5개" },
@@ -69,7 +70,7 @@
                 { feature: "Index (slot) count", free: "3", plus: "10" },
                 { feature: "Handle placement", free: "3 move together", plus: "Independent per slot" },
                 { feature: "PEEK / ICE mode", free: "✓", plus: "✓" },
-                { feature: "Hover delay (0.25s)", free: "✓", plus: "✓" }
+                { feature: "Hover delay", free: "✓", plus: "✓" }
             ]
         },
         {
@@ -80,6 +81,7 @@
             rows: [
                 { feature: "Single / dual monitor", free: "✓", plus: "✓" },
                 { feature: "Target display", free: "✓", plus: "✓" },
+                { feature: "Panel side (left/right)", free: "Right only", plus: "✓" },
                 { feature: "Memo aspect 1:1 / 3:4", free: "✓", plus: "✓" },
                 { feature: "Shortcut — recent memo toggle", free: "✓", plus: "✓" },
                 { feature: "Shortcut — open prev/next index", free: "✓", plus: "✓" },
@@ -92,7 +94,7 @@
             title: "Editing & content",
             image: "screenshots/scene-2.svg",
             rows: [
-                { feature: "Markdown · checkboxes", free: "✓", plus: "✓" },
+                { feature: "Peek / Ice toggle mode", free: "✓", plus: "✓" },
                 { feature: "Formatting toolbar", free: "✓", plus: "✓" },
                 { feature: "Image insert", free: "✓", plus: "✓" },
                 { feature: "Images per memo", free: "1", plus: "5" },

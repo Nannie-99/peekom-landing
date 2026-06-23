@@ -36,7 +36,7 @@ window.PeekomI18nLocales.ja = {
     guidePlusP: '1) Lemon Squeezy で発売記念 $9.99 を購入 → 2) メールでライセンスキーを受信 → 3) Peekom を起動 → ロック画面または設定でキーを入力 → 4) Peekom Plus の有効化が完了。7日間返金: <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>',
     dlSub: "Peekom を一度インストールするだけ。Plus はアプリ内でアップグレードします。",
     dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-    dlPlusHint: 'Peekom Plus: 通常 <span class="pricing-was">$12.99</span> → 発売記念 <strong>$9.99</strong> (税別) · <a href="https://peekom.lemonsqueezy.com/buy" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
+    dlPlusHint: 'Peekom Plus: 通常 <span class="pricing-was">$12.99</span> → 発売記念 <strong>$9.99</strong> (税別) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
     featureGifPending: "デモ GIF 準備中",
     compareNoLabel: "非対応",
     faqSub: "Peekom に関するよくある質問です。",
@@ -105,6 +105,15 @@ window.PeekomI18nLocales.ja = {
     faq2a: "設定 → 表示モニターで、マウス追従（自動）または特定モニターを固定できます。無料・Plus どちらでも利用可能です。",
     faq8q: "Peekom はモニター右端でのみ使えますか？",
     faq8a: "現在はモニター右端のみ対応しています。今後のアップデートで左・上・下端にも対応予定です。",
+    faq9q: "誤って Peekom Plus を削除した場合、有料機能はどうなりますか？",
+    faq9a:
+        "<p>アプリを削除しても Lemon Squeezy に登録されたライセンスは残ります。次の手順で Peekom Plus とすべての有料機能を復元できます。</p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>1. Peekom を再インストール</strong> — <a href=\"download.html\">peekom.com</a> から無料版（<code>Peekom-Setup.exe</code>）をダウンロードしてインストールします。</li>" +
+        "<li><strong>2. ライセンスキーを確認</strong> — 購入時に Lemon Squeezy から届いた領収メールを開き、<strong>[License Key]</strong> をコピーします。メールを紛失した場合は、Lemon Squeezy の注文履歴に同じメールでログインしてキーを再確認できます。</li>" +
+        "<li><strong>3. ライセンスを再認証</strong> — アプリ右上の歯車（設定）を開き、<strong>Plus 認証</strong>にキーを貼り付けて認証します。すぐにアプリ名が Peekom Plus に変わり、10 スロット・カスタムテーマなど有料機能が復元されます。</li>" +
+        "</ul>" +
+        "<p><strong>端末数の制限（最大 2 台）</strong> — 同じ PC で削除後に再インストールしても同一端末として扱われ、認証回数に問題はありません。PC を変更する場合は、ライセンスあたり最大 2 台まで登録できます（例：仕事用 PC 1 台＋個人用 PC 1 台）。</p>",
     faq3q: "Peekom Plus はどう有効化しますか？",
     faq3a: "Lemon Squeezy で購入後、アプリ内でライセンスキーを入力すると Peekom Plus がアンロックされます（再インストール不要）。",
     faq3bq: "1つのライセンスキーで複数の PC で使えますか？",
@@ -135,7 +144,7 @@ window.PeekomI18nLocales.ja = {
     promoVat: "(税別)",
     promoLaunchLabel: "発売記念\n価格\n適用中",
     comparePricingExtra: ' · 買い切り · 最大2台 · マイナーアップデート込み · 7日間返金 (<a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>)',
-    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/buy" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
+    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
     markdownGuideTitle: "Markdown でメモする",
     markdownGuideBody:
         '<p class="guide-table-intro">コードを覚える必要はありません。普通に入力して <strong>Enter</strong> を押すと自動で書式が適用されます。</p>' +
@@ -275,7 +284,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     guidePlusP: '1) 在 Lemon Squeezy 以首发价 $9.99 购买 → 2) 通过邮件收到许可证密钥 → 3) 打开 Peekom → 在锁定界面或设置中输入密钥 → 4) Peekom Plus 激活完成。7天退款: <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>',
     dlSub: "只需安装一次 Peekom。Plus 在应用内升级。",
     dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-    dlPlusHint: 'Peekom Plus: 原价 <span class="pricing-was">$12.99</span> → 首发 <strong>$9.99</strong> (不含增值税) · <a href="https://peekom.lemonsqueezy.com/buy" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
+    dlPlusHint: 'Peekom Plus: 原价 <span class="pricing-was">$12.99</span> → 首发 <strong>$9.99</strong> (不含增值税) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
     featureGifPending: "演示 GIF 即将推出",
     compareNoLabel: "不支持",
     faqSub: "关于 Peekom 的常见问题。",
@@ -344,6 +353,15 @@ window.PeekomI18nLocales["zh-CN"] = {
     faq2a: "在 设置 → 显示显示器 中，可选择自动（跟随鼠标）或固定显示器。免费版与 Plus 均可用。",
     faq8q: "Peekom 只能在显示器右边缘使用吗？",
     faq8a: "目前仅支持显示器右边缘。我们计划在后续更新中支持左、上、下边缘。",
+    faq9q: "误删了 Peekom Plus，付费功能会怎样？",
+    faq9a:
+        "<p>卸载应用不会取消您在 Lemon Squeezy 的许可证。按以下步骤可恢复 Peekom Plus 及所有付费功能。</p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>1. 重新安装 Peekom</strong> — 从 <a href=\"download.html\">peekom.com</a> 下载免费版（<code>Peekom-Setup.exe</code>）并安装。</li>" +
+        "<li><strong>2. 查找许可证密钥</strong> — 打开购买时 Lemon Squeezy 发送的收据邮件，复制 <strong>[License Key]</strong>。若邮件丢失，可用同一邮箱登录 Lemon Squeezy 订单记录页面重新查看。</li>" +
+        "<li><strong>3. 重新认证</strong> — 点击应用右上角的齿轮（设置），在 <strong>Plus 认证</strong> 中粘贴密钥并确认。应用将立即变为 Peekom Plus，恢复 10 个槽位、自定义主题等付费功能。</li>" +
+        "</ul>" +
+        "<p><strong>设备数量限制（最多 2 台）</strong> — 在同一台电脑上卸载后重装视为同一设备，不影响认证次数。更换电脑时，每个许可证最多可注册 2 台设备（例如工作电脑 1 台 + 个人电脑 1 台）。</p>",
     faq3q: "如何激活 Plus？",
     faq3a: "在 Lemon Squeezy 购买后，在应用内输入许可证密钥即可解锁 Peekom Plus（无需重新安装）。",
     faq3bq: "一个许可证密钥可以在多台电脑上使用吗？",
@@ -374,7 +392,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     promoVat: "(不含增值税)",
     promoLaunchLabel: "首发优惠\n价格\n已生效",
     comparePricingExtra: ' · 一次性购买 · 最多2台设备 · 含小版本更新 · 7天退款 (<a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>)',
-    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/buy" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
+    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
     markdownGuideTitle: "用 Markdown 编写备忘",
     markdownGuideBody:
         '<p class="guide-table-intro">像平时一样输入——按 <strong>Enter</strong> 后自动应用格式。</p>' +
@@ -514,7 +532,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     guidePlusP: '1) 在 Lemon Squeezy 以首發價 $9.99 購買 → 2) 透過電子郵件收到授權金鑰 → 3) 開啟 Peekom → 在鎖定畫面或設定中輸入金鑰 → 4) Peekom Plus 啟用完成。7天退款: <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>',
     dlSub: "只需安裝一次 Peekom。Plus 在應用程式內升級。",
     dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-    dlPlusHint: 'Peekom Plus: 原價 <span class="pricing-was">$12.99</span> → 首發 <strong>$9.99</strong> (不含增值稅) · <a href="https://peekom.lemonsqueezy.com/buy" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
+    dlPlusHint: 'Peekom Plus: 原價 <span class="pricing-was">$12.99</span> → 首發 <strong>$9.99</strong> (不含增值稅) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
     featureGifPending: "示範 GIF 即將推出",
     compareNoLabel: "不支援",
     faqSub: "關於 Peekom 的常見問題。",
@@ -583,6 +601,15 @@ window.PeekomI18nLocales["zh-TW"] = {
     faq2a: "在 設定 → 顯示螢幕 中，可選擇自動（跟隨滑鼠）或固定螢幕。免費版與 Plus 均可用。",
     faq8q: "Peekom 只能在螢幕右邊緣使用嗎？",
     faq8a: "目前僅支援螢幕右邊緣。我們計劃在後續更新中支援左、上、下邊緣。",
+    faq9q: "誤刪了 Peekom Plus，付費功能會怎樣？",
+    faq9a:
+        "<p>解除安裝應用程式不會取消您在 Lemon Squeezy 的授權。依下列步驟可恢復 Peekom Plus 與所有付費功能。</p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>1. 重新安裝 Peekom</strong> — 從 <a href=\"download.html\">peekom.com</a> 下載免費版（<code>Peekom-Setup.exe</code>）並安裝。</li>" +
+        "<li><strong>2. 查詢授權金鑰</strong> — 開啟購買時 Lemon Squeezy 寄送的收據郵件，複製 <strong>[License Key]</strong>。若郵件遺失，可用相同電子郵件登入 Lemon Squeezy 訂單紀錄頁面重新查看。</li>" +
+        "<li><strong>3. 重新認證</strong> — 點選應用程式右上角的齒輪（設定），在 <strong>Plus 認證</strong> 貼上金鑰並確認。應用程式將立即變為 Peekom Plus，恢復 10 個槽位、自訂主題等付費功能。</li>" +
+        "</ul>" +
+        "<p><strong>裝置數量限制（最多 2 台）</strong> — 在同一台電腦上解除安裝後重装視為同一裝置，不影響認證次數。更換電腦時，每組授權最多可註冊 2 台裝置（例如工作電腦 1 台 + 個人電腦 1 台）。</p>",
     faq3q: "如何啟用 Plus？",
     faq3a: "在 Lemon Squeezy 購買後，在應用程式內輸入授權金鑰即可解鎖 Peekom Plus（無需重新安裝）。",
     faq3bq: "一組授權金鑰可以在多台電腦上使用嗎？",
@@ -613,7 +640,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     promoVat: "(不含增值稅)",
     promoLaunchLabel: "首發優惠\n價格\n已生效",
     comparePricingExtra: ' · 一次性購買 · 最多2台裝置 · 含小版本更新 · 7天退款 (<a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>)',
-    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/buy" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
+    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
     markdownGuideTitle: "用 Markdown 撰寫備忘",
     markdownGuideBody:
         '<p class="guide-table-intro">像平時一樣輸入——按 <strong>Enter</strong> 後自動套用格式。</p>' +

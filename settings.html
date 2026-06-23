@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Peekom Settings</title>
+    <link rel="icon" id="appFavicon" href="build/icon.ico" type="image/x-icon" />
     <script src="assets/i18n.js"></script>
     <script src="assets/i18n-locale-extra.js"></script>
     <script src="assets/memo-sanitize.js"></script>
@@ -1025,7 +1026,7 @@
         min-width: 22px;
       }
 
-      #memoOpacityLabel {
+      #memoOpacityMaxLabel {
         font-size: 11px;
         color: var(--muted);
         flex-shrink: 0;
@@ -1483,7 +1484,8 @@
           memoAspectRatio: "3:4",
           imageLayout: "below",
           lastOpenedSlotIndex: 0,
-          memoDefaultOpacity: 100
+          memoDefaultOpacity: 100,
+          panelEdge: "right"
         };
       }
 
@@ -1580,15 +1582,27 @@
             if (!id || !src.startsWith("data:image/")) return;
             const meta = (slot?.images || []).find((entry) => entry.id === id);
             const widthStyle = img.getAttribute("style") || "";
-            const widthMatch = widthStyle.match(/width:\s*(\d+)%/);
+            const percentMatch = widthStyle.match(/width:\s*(\d+)%/);
+            const pxMatch = widthStyle.match(/width:\s*(\d+)px/);
+            const parsedScale = percentMatch
+              ? Number(percentMatch[1])
+              : pxMatch
+                ? Number(pxMatch[1])
+                : null;
             images.push(
               meta
-                ? { ...meta, dataUrl: src, scale: widthMatch ? Number(widthMatch[1]) : meta.scale }
+                ? {
+                    ...meta,
+                    dataUrl: src,
+                    scale: parsedScale ?? meta.scale,
+                    widthPx: pxMatch ? Number(pxMatch[1]) : meta.widthPx
+                  }
                 : {
                     id,
                     sourcePath: null,
                     dataUrl: src,
-                    scale: widthMatch ? Number(widthMatch[1]) : 100,
+                    scale: parsedScale ?? 100,
+                    widthPx: pxMatch ? Number(pxMatch[1]) : undefined,
                     insertedAt: ""
                   }
             );
@@ -2418,7 +2432,42 @@
         if (lightboxClose) lightboxClose.textContent = ti("settingsClose");
       }
 
+      function packFreeYSlots() {
+        if (isPremium) return false;
+        const ec = appState.enabledCount;
+        if (ec <= 0) return false;
+        const ord = appState.order.slice(0, ec);
+        const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
+        const baseY = clamp(minY, 0, 9 - ec + 1);
+        const now = Date.now();
+        let changed = false;
+        ord.forEach((si, i) => {
+          const next = baseY + i;
+          if (appState.slots[si].ySlot !== next) changed = true;
+          appState.slots[si].ySlot = next;
+          appState.slots[si].ySlotUpdatedAt = now;
+        });
+        return changed;
+      }
+
+      function enforceFreeSlotDefaults() {
+        if (isPremium) return;
+        for (let i = 0; i < appState.enabledCount; i++) {
+          appState.slots[i].fontSize = 18;
+          appState.slots[i].fontFamily = "";
+        }
+        if (appState.global) {
+          appState.global.memoDefaultOpacity = 100;
+          appState.global.panelEdge = "right";
+        }
+        packFreeYSlots();
+      }
+
       function resolveYSlotConflicts(slots, enabledCount) {
+        if (!isPremium) {
+          packFreeYSlots();
+          return;
+        }
         const entries = [];
         for (let i = 0; i < enabledCount; i++) {
           entries.push({
@@ -2493,6 +2542,20 @@
         }
       }
 
+      function updateAppBrandingAssets() {
+        const logo = document.getElementById("aboutLogo");
+        const iconPath = isPremium ? "build/plus.ico" : "build/icon.ico";
+        const appLabel = isPremium ? "Peekom Plus" : "Peekom";
+        if (logo) {
+          logo.src = iconPath;
+          logo.alt = appLabel;
+        }
+        const favicon = document.getElementById("appFavicon");
+        if (favicon) favicon.href = iconPath;
+        const aboutTitle = document.querySelector(".about-title");
+        if (aboutTitle) aboutTitle.textContent = appLabel;
+      }
+
       function updateSettingsTitle() {
         const titleEl = document.getElementById("settingsTitle");
         const lang = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "en");
@@ -2505,6 +2568,7 @@
             prefix + ' <span class="settings-tier-badge" id="settingsTierBadge">' + tier + "</span>";
         }
         document.title = prefix;
+        updateAppBrandingAssets();
         applyPremiumGating();
       }
 
@@ -2522,19 +2586,45 @@
         if (opacityBadge) opacityBadge.hidden = isPremium;
 
         const opacityRange = document.getElementById("memoOpacityRange");
-        const opacityLabel = document.getElementById("memoOpacityLabel");
+        const opacityMaxLabel = document.getElementById("memoOpacityMaxLabel");
         const opacityWrap = document.getElementById("memoOpacityTriggerWrap");
         if (opacityRange) {
           if (!isPremium) {
             opacityRange.value = "100";
             opacityRange.disabled = true;
-            if (opacityLabel) opacityLabel.textContent = "100%";
+            opacityRange.style.pointerEvents = "none";
           } else {
             opacityRange.disabled = false;
+            opacityRange.style.pointerEvents = "";
           }
         }
+        if (opacityMaxLabel) opacityMaxLabel.textContent = "100%";
         if (opacityWrap) {
           opacityWrap.toggleAttribute("data-premium-trigger", !isPremium);
+        }
+
+        const panelEdgeSel = document.getElementById("panelEdgeSelect");
+        const panelEdgeBadge = document.getElementById("panelEdgePremiumBadge");
+        const panelEdgeWrap = document.getElementById("panelEdgeTriggerWrap");
+        if (panelEdgeSel) {
+          panelEdgeSel.classList.toggle("premium-control-locked", !isPremium);
+          panelEdgeSel.style.pointerEvents = isPremium ? "" : "none";
+          if (!isPremium) panelEdgeSel.value = "right";
+        }
+        if (panelEdgeBadge) panelEdgeBadge.hidden = isPremium;
+        if (panelEdgeWrap) panelEdgeWrap.toggleAttribute("data-premium-trigger", !isPremium);
+
+        for (let s = 0; s < (appState?.enabledCount || 0); s++) {
+          const ySlotSel = document.getElementById(`slot${s}YSlot`);
+          const ySlotBadge = document.getElementById(`slot${s}YSlotBadge`);
+          const ySlotWrap = document.getElementById(`slot${s}YSlotWrap`);
+          if (ySlotSel) {
+            ySlotSel.classList.toggle("premium-control-locked", !isPremium);
+            ySlotSel.style.pointerEvents = isPremium ? "" : "none";
+            if (!isPremium) ySlotSel.value = String(appState.slots[s]?.ySlot ?? s);
+          }
+          if (ySlotBadge) ySlotBadge.hidden = isPremium;
+          if (ySlotWrap) ySlotWrap.toggleAttribute("data-premium-trigger", !isPremium);
         }
 
         const backupBody = document.getElementById("backupBody");
@@ -2560,8 +2650,10 @@
         for (let s = 0; s < (appState?.enabledCount || 0); s++) {
           const fontSel = document.getElementById(`slot${s}FontFamily`);
           if (fontSel) {
-            fontSel.disabled = !isPremium;
+            fontSel.classList.toggle("premium-control-locked", !isPremium);
+            fontSel.style.pointerEvents = isPremium ? "" : "none";
             fontSel.toggleAttribute("data-premium-trigger", !isPremium);
+            if (!isPremium) fontSel.value = "";
           }
           const fontDisplay = document.getElementById(`slot${s}FontDisplay`);
           if (fontDisplay) {
@@ -2619,7 +2711,7 @@
       }
 
       function buildCommonPanel() {
-        const logo = isPremium ? "build/plus.png" : "build/index.png";
+        const logo = isPremium ? "build/plus.ico" : "build/icon.ico";
         const appLabel = isPremium ? "Peekom Plus" : "Peekom";
         const div = document.createElement("div");
         div.className = "settings-panel";
@@ -2648,6 +2740,20 @@
               <p class="field-hint-below">${ti("monitorHint")}</p>
             </div>
 
+            <div class="field-stack" id="panelEdgeFieldWrap">
+              <div class="field-inline">
+                <label class="field-label" for="panelEdgeSelect">${ti("panelEdgeLabel")}</label>
+                <span class="premium-trigger-wrap" id="panelEdgeTriggerWrap" data-premium-trigger="panelEdge">
+                  <select id="panelEdgeSelect" class="setting-select">
+                    <option value="right">${ti("panelEdgeRight")}</option>
+                    <option value="left">${ti("panelEdgeLeft")}</option>
+                  </select>
+                  <span class="premium-lock-badge" id="panelEdgePremiumBadge" hidden>Plus</span>
+                </span>
+              </div>
+              <p class="field-hint-below">${ti("panelEdgeHint")}</p>
+            </div>
+
             <div class="field-stack">
               <div class="field-inline">
                 <label class="field-label" for="memoAspectSelect">${ti("memoAspectLabel")}</label>
@@ -2665,7 +2771,7 @@
                 <span class="premium-trigger-wrap" id="memoOpacityTriggerWrap" data-premium-trigger="opacity">
                   <span class="opacity-range-min">40%</span>
                   <input id="memoOpacityRange" type="range" min="40" max="100" step="5" class="setting-range" />
-                  <span id="memoOpacityLabel">100%</span>
+                  <span id="memoOpacityMaxLabel">100%</span>
                   <span class="premium-lock-badge" id="opacityPremiumBadge" hidden>Plus</span>
                 </span>
               </div>
@@ -2796,9 +2902,10 @@
             <div class="field-stack">
               <div class="field-inline">
                 <label class="field-label" for="slot${slotIndex}YSlot">${ti("handlePositionLabel")}</label>
-                <select id="slot${slotIndex}YSlot" class="setting-select" data-yslot="${slotIndex}">
-                  ${ySlotOptions}
-                </select>
+                <span class="premium-trigger-wrap" id="slot${slotIndex}YSlotWrap">
+                  <select id="slot${slotIndex}YSlot" class="setting-select" data-yslot="${slotIndex}"></select>
+                  <span class="premium-lock-badge" id="slot${slotIndex}YSlotBadge" hidden>Plus</span>
+                </span>
               </div>
               <p class="field-hint-below">${ti("handlePositionHint")}</p>
             </div>
@@ -2881,6 +2988,8 @@
             </div>
           </div>
         `;
+        const ySlotSel = div.querySelector(`#slot${slotIndex}YSlot`);
+        if (ySlotSel) ySlotSel.innerHTML = ySlotOptions;
         return div;
       }
 
@@ -3399,14 +3508,13 @@
           const key = btn.dataset.colorAdvanced;
           const isBg = key.startsWith("bg-");
           const slotIndex = Number(key.split("-")[1]);
-          btn.addEventListener("click", (e) => {
+          btn.addEventListener("click", async (e) => {
             e.stopPropagation();
             if (showPremiumModalIfFree()) return;
             const inp = panelHost.querySelector(
               isBg ? `[data-custom-bg="${slotIndex}"]` : `[data-custom-text="${slotIndex}"]`
             );
             if (!inp) return;
-            ipcRenderer.sendSync("color:prepare-advanced-picker");
             const popoverId = isBg ? `bgPopover${slotIndex}` : `textPopover${slotIndex}`;
             const finishRestore = () => {
               ipcRenderer.invoke("color:restore-advanced-picker").catch(() => {});
@@ -3415,11 +3523,18 @@
               applyCustomColor(slotIndex, isBg, inp.value);
               document.getElementById(popoverId)?.classList.remove("visible");
             };
-            if (typeof inp.showPicker === "function") {
-              inp.showPicker().then(onPicked).catch(() => {}).finally(finishRestore);
-            } else {
-              inp.click();
-              onPicked();
+            try {
+              await ipcRenderer.invoke("color:prepare-advanced-picker");
+              if (typeof inp.showPicker === "function") {
+                await inp.showPicker();
+                onPicked();
+              } else {
+                inp.click();
+                onPicked();
+              }
+            } catch {
+              /* user cancelled or picker unavailable */
+            } finally {
               finishRestore();
             }
           });
@@ -3449,8 +3564,16 @@
 
       function bindPanelEvents() {
         const monitorSelect = document.getElementById("monitorSelect");
-        if (monitorSelect && !monitorSelect.dataset.bound) {
-          monitorSelect.dataset.bound = "1";
+        if (monitorSelect && !monitorSelect.dataset.changeBound) {
+          monitorSelect.dataset.changeBound = "1";
+          monitorSelect.addEventListener("change", (event) => {
+            const selected = event.target.value === "auto" ? null : Number(event.target.value);
+            draftMonitorTarget = selected;
+            refreshApplyButton();
+          });
+        }
+        if (monitorSelect && !monitorSelect.dataset.loadBound) {
+          monitorSelect.dataset.loadBound = "1";
           loadDisplays();
         }
 
@@ -3469,6 +3592,7 @@
             applySettingsForm();
             refreshApplyButton();
             loadDisplays();
+            window.PeekomPremiumUI?.refreshPremiumModalI18n?.();
           });
         }
 
@@ -3547,12 +3671,28 @@
         if (opacityRange && !opacityRange.dataset.bound) {
           opacityRange.dataset.bound = "1";
           opacityRange.addEventListener("input", () => {
-            const label = document.getElementById("memoOpacityLabel");
-            if (label) label.textContent = opacityRange.value + "%";
             refreshApplyButton();
           });
           opacityRange.addEventListener("mousedown", (e) => {
             if (isPremium) return;
+            e.preventDefault();
+            e.stopPropagation();
+            showPremiumModalIfFree();
+          });
+          opacityRange.addEventListener("click", (e) => {
+            if (isPremium) return;
+            e.preventDefault();
+            e.stopPropagation();
+            showPremiumModalIfFree();
+          });
+        }
+
+        const opacityWrap = document.getElementById("memoOpacityTriggerWrap");
+        if (opacityWrap && !opacityWrap.dataset.premiumClickBound) {
+          opacityWrap.dataset.premiumClickBound = "1";
+          opacityWrap.addEventListener("click", (e) => {
+            if (isPremium) return;
+            if (!e.target.closest("#memoOpacityTriggerWrap")) return;
             e.preventDefault();
             e.stopPropagation();
             showPremiumModalIfFree();
@@ -3618,10 +3758,40 @@
         });
 
         panelHost.querySelectorAll("[data-yslot]").forEach((sel) => {
+          if (sel.dataset.yslotBound) return;
+          sel.dataset.yslotBound = "1";
           const slotIndex = Number(sel.dataset.yslot);
+          sel.addEventListener("mousedown", (e) => {
+            if (isPremium) return;
+            e.preventDefault();
+            showPremiumModalIfFree();
+          });
           sel.addEventListener("change", () => {
+            if (showPremiumModalIfFree()) {
+              sel.value = String(appState.slots[slotIndex].ySlot ?? slotIndex);
+              return;
+            }
             appState.slots[slotIndex].ySlot = Number(sel.value);
             appState.slots[slotIndex].ySlotUpdatedAt = Date.now();
+            refreshApplyButton();
+          });
+        });
+
+        panelHost.querySelectorAll("[data-font-family]").forEach((sel) => {
+          if (sel.dataset.fontFamilyBound) return;
+          sel.dataset.fontFamilyBound = "1";
+          const slotIndex = Number(sel.dataset.fontFamily);
+          sel.addEventListener("mousedown", (e) => {
+            if (isPremium) return;
+            e.preventDefault();
+            showPremiumModalIfFree();
+          });
+          sel.addEventListener("change", () => {
+            if (showPremiumModalIfFree()) {
+              sel.value = appState.slots[slotIndex].fontFamily || "";
+              return;
+            }
+            appState.slots[slotIndex].fontFamily = sel.value;
             refreshApplyButton();
           });
         });
@@ -3796,16 +3966,20 @@
         if (runZoomitOnStartupCheckbox) runZoomitOnStartupCheckbox.checked = Boolean(appState.global.openAtLogin);
         if (showTrayIconCheckbox) showTrayIconCheckbox.checked = appState.global.showTrayIcon !== false;
         if (pinToggleSelect) pinToggleSelect.value = appState.global.pinToggleMode || "dblclick";
+        const panelEdgeSelect = document.getElementById("panelEdgeSelect");
+        if (panelEdgeSelect) {
+          panelEdgeSelect.value = appState.global.panelEdge === "left" ? "left" : "right";
+        }
         if (memoAspectSelect) {
           memoAspectSelect.value = normalizeMemoAspectRatio(appState.global.memoAspectRatio);
         }
         if (langSelect) langSelect.value = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "ko");
 
         const opacityRange = document.getElementById("memoOpacityRange");
-        const opacityLabel = document.getElementById("memoOpacityLabel");
         const opacityVal = clamp(Math.round(appState.global.memoDefaultOpacity ?? 100), 40, 100);
         if (opacityRange) opacityRange.value = String(opacityVal);
-        if (opacityLabel) opacityLabel.textContent = opacityVal + "%";
+        const opacityMaxLabel = document.getElementById("memoOpacityMaxLabel");
+        if (opacityMaxLabel) opacityMaxLabel.textContent = "100%";
 
         updateSettingsTitle();
         syncShortcutRowVisibility();
@@ -3856,6 +4030,11 @@
           }
         }
         if (pinToggleSelect) appState.global.pinToggleMode = pinToggleSelect.value;
+        const panelEdgeSelect = document.getElementById("panelEdgeSelect");
+        if (panelEdgeSelect) {
+          const nextEdge = panelEdgeSelect.value === "left" ? "left" : "right";
+          appState.global.panelEdge = isPremium ? nextEdge : "right";
+        }
         if (memoAspectSelect) {
           appState.global.memoAspectRatio = normalizeMemoAspectRatio(memoAspectSelect.value);
         }
@@ -3879,7 +4058,7 @@
           }
 
           const ySlotSel = document.getElementById(`slot${s}YSlot`);
-          if (ySlotSel) {
+          if (ySlotSel && isPremium) {
             const nextY = Number(ySlotSel.value);
             if (nextY !== appState.slots[s].ySlot) {
               appState.slots[s].ySlot = nextY;
@@ -3945,7 +4124,14 @@
             sel.appendChild(opt);
           });
           sel.value = current;
-          sel.addEventListener("change", () => refreshApplyButton());
+          sel.addEventListener("change", () => {
+            if (!isPremium) {
+              sel.value = "";
+              showPremiumModalIfFree();
+              return;
+            }
+            refreshApplyButton();
+          });
         }
       }
 
@@ -3991,15 +4177,6 @@
             monitorSelect.value = "auto";
             draftMonitorTarget = null;
           }
-
-          if (!monitorSelect.dataset.bound) {
-            monitorSelect.dataset.bound = "1";
-            monitorSelect.addEventListener("change", (event) => {
-              const selected = event.target.value === "auto" ? null : Number(event.target.value);
-              draftMonitorTarget = selected;
-              refreshApplyButton();
-            });
-          }
         } catch (err) {
           console.error(err);
         }
@@ -4007,6 +4184,11 @@
 
       async function applyAndSync() {
         readSettingsForm();
+        try {
+          await ipcRenderer.invoke("memo:flush");
+        } catch {
+          /* ignore */
+        }
         clearAllSlotLabelErrors();
         for (let s = 0; s < appState.enabledCount; s++) {
           const labelVal = (document.getElementById(`slot${s}Label`)?.value || "").trim();
@@ -4023,6 +4205,7 @@
           return;
         }
         syncAllSlotsImagesFromMemo();
+        enforceFreeSlotDefaults();
         resolveYSlotConflicts(appState.slots, appState.enabledCount);
         const pendingMonitor = draftMonitorTarget;
         const pending = JSON.parse(JSON.stringify(appState));
@@ -4036,7 +4219,8 @@
           shortcut: appState.global.shortcut,
           shortcutSlotPrev: appState.global.shortcutSlotPrev,
           shortcutSlotNext: appState.global.shortcutSlotNext,
-          manualYOffset: appState.global.manualYOffset
+          manualYOffset: appState.global.manualYOffset,
+          panelEdge: isPremium && appState.global.panelEdge === "left" ? "left" : "right"
         };
 
         try {
@@ -4104,6 +4288,7 @@
       async function initialize() {
         appState = await loadStateAsync();
         await syncPremiumState();
+        enforceFreeSlotDefaults();
         draftMonitorTarget =
           appState.global.monitorMode === "fixed" ? appState.global.monitorTargetId : null;
         populateLangSelect();
@@ -4142,10 +4327,22 @@
             }
           })
           .catch(() => {});
+
+        ipcRenderer.on("startup:synced", (_event, payload) => {
+          if (!payload || typeof payload.openAtLogin !== "boolean") return;
+          appState.global.openAtLogin = payload.openAtLogin;
+          const cb = document.getElementById("runZoomitOnStartupCheckbox");
+          if (cb) cb.checked = Boolean(payload.openAtLogin);
+          patchBaseline();
+          refreshApplyButton();
+        });
       }
 
         ipcRenderer.on("state:partial-changed", async (_event, payload = {}) => {
-          if (Date.now() < settingsLocalMutationUntil) return;
+          const fields = Array.isArray(payload?.fields) ? payload.fields : [];
+          const isMemoSync =
+            fields.includes("memoHtml") || fields.includes("images") || fields.includes("slots");
+          if (!isMemoSync && Date.now() < settingsLocalMutationUntil) return;
           const diskState = await loadStateAsync();
           if (!diskState) return;
           if (diskState.enabledCount !== appState.enabledCount) {
@@ -4178,6 +4375,7 @@
 
         ipcRenderer.on("premium:changed", async (_e, payload) => {
           isPremium = Boolean(payload?.isPremium);
+          if (!isPremium) enforceFreeSlotDefaults();
           updateSettingsTitle();
           renderTabs();
           renderPanels();

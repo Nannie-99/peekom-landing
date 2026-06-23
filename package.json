@@ -7,7 +7,8 @@
     "start": "electron .",
     "dev": "electron .",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --win nsis",
+    "predist": "node scripts/generate-icon-ico.mjs && node scripts/prepare-dist.js",
+    "dist": "npm run predist && electron-builder --win nsis",
     "dist:win": "electron-builder --win nsis",
     "dist:win:unsigned": "set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder --win nsis",
     "dist:publish": "electron-builder --win nsis --publish always"
@@ -37,6 +38,7 @@
       "settings.html",
       "assets/**/*",
       "build/icon.ico",
+      "build/plus.ico",
       "build/index.png",
       "build/plus.png",
       "package.json",
@@ -71,12 +73,16 @@
       {
         "from": "build/plus.png",
         "to": "plus.png"
+      },
+      {
+        "from": "build/plus.ico",
+        "to": "plus.ico"
       }
     ],
-    "icon": "build/icon.ico",
+    "icon": "icon.ico",
     "afterPack": "scripts/embed-win-icon.js",
     "win": {
-      "icon": "build/icon.ico",
+      "icon": "icon.ico",
       "signAndEditExecutable": false,
       "target": [
         {
@@ -93,9 +99,9 @@
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
       "shortcutName": "Peekom",
-      "installerIcon": "build/icon.ico",
-      "uninstallerIcon": "build/icon.ico",
-      "installerHeaderIcon": "build/icon.ico",
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "installerHeaderIcon": "icon.ico",
       "include": "build/installer.nsh"
     },
     "publish": [

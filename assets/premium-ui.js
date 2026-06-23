@@ -2,18 +2,26 @@
  * Premium lock modal + gating helpers (settings + main window)
  */
 (function () {
-  const BUY_URL = "https://peekom.lemonsqueezy.com/buy";
-
-  const PREMIUM_FEATURES = [
-    "최대 10개의 독립 인덱스",
-    "보내기 · JSON 백업",
-    "메모당 최대 5개의 이미지 삽입",
-    "이미지 크기 조절 · 비율 자르기",
-    "글자 크기 조절",
-    "메모 기본 불투명도 조절",
-    "메모 배경색 / 글자 색 변경",
-    "글꼴 변경"
+  const BUY_URL =
+    "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d";
+  const PREMIUM_FEAT_KEYS = [
+    "premiumFeat1",
+    "premiumFeat2",
+    "premiumFeat3",
+    "premiumFeat4",
+    "premiumFeat5",
+    "premiumFeat6",
+    "premiumFeat7",
+    "premiumFeat8"
   ];
+
+  function t(key, fallback) {
+    if (typeof PeekomI18n !== "undefined" && PeekomI18n.t) {
+      const v = PeekomI18n.t(key);
+      if (v && v !== key) return v;
+    }
+    return fallback || key;
+  }
 
   function ensurePremiumModalStyles() {
     let style = document.getElementById("peekom-premium-modal-styles");
@@ -51,7 +59,6 @@
       }
       .premium-modal__lead {
         margin: 0 0 12px; font-size: 12px; color: #616161; line-height: 1.5;
-        white-space: nowrap;
       }
       .premium-feature-card {
         font-size: 11px; line-height: 1.55; color: #3a3a3a;
@@ -96,11 +103,30 @@
   }
 
   function buildFeatureCardHtml() {
-    const items = PREMIUM_FEATURES.map(
-      (text) =>
-        `<li><span class="premium-feature-list__check" aria-hidden="true">✔️</span><span>${text}</span></li>`
+    const items = PREMIUM_FEAT_KEYS.map(
+      (key) =>
+        `<li><span class="premium-feature-list__check" aria-hidden="true">✔️</span><span data-i18n="${key}">${t(key, key)}</span></li>`
     ).join("");
-    return `<div class="premium-feature-card" aria-label="Plus 기능 목록"><ul class="premium-feature-list">${items}</ul></div>`;
+    return `<div class="premium-feature-card"><ul class="premium-feature-list">${items}</ul></div>`;
+  }
+
+  function refreshPremiumModalI18n() {
+    const title = document.getElementById("premiumModalTitle");
+    const lead = document.querySelector("#peekomPremiumModal .premium-modal__lead");
+    const buyBtn = document.getElementById("premiumBuyBtn");
+    const activateBtn = document.getElementById("premiumActivateBtn");
+    const closeBtn = document.getElementById("premiumModalClose");
+    const label = document.querySelector('label[for="premiumLicenseInput"]');
+    if (title) title.textContent = t("premiumModalTitle", "PLUS 기능 잠금 해제");
+    if (lead) lead.textContent = t("premiumModalLead", "Peekom Plus로 업그레이드하여 아래의 기능을 모두 누리세요.");
+    if (buyBtn) buyBtn.textContent = t("premiumBuyBtn", "Peekom Plus 구매하기");
+    if (activateBtn && !activateBtn.disabled) activateBtn.textContent = t("premiumActivateBtn", "인증");
+    if (closeBtn) closeBtn.textContent = t("premiumCloseBtn", "닫기");
+    if (label) label.textContent = t("premiumLicenseLabel", "라이선스 키");
+    PREMIUM_FEAT_KEYS.forEach((key) => {
+      const el = document.querySelector(`#peekomPremiumModal [data-i18n="${key}"]`);
+      if (el) el.textContent = t(key, el.textContent);
+    });
   }
 
   function createPremiumModal() {
@@ -115,18 +141,18 @@
       <div class="premium-modal" role="dialog" aria-labelledby="premiumModalTitle">
         <div class="premium-modal__layout">
           <div class="premium-modal__aside">
-            <img class="premium-modal__hero-img" src="build/plus.png" alt="" width="72" height="72" />
+            <img class="premium-modal__hero-img" src="build/plus.ico" alt="" width="72" height="72" />
           </div>
           <div class="premium-modal__main">
-            <h3 id="premiumModalTitle">PLUS 기능 잠금 해제</h3>
-            <p class="premium-modal__lead">Peekom Plus로 업그레이드하여 아래의 기능을 모두 누리세요.</p>
+            <h3 id="premiumModalTitle"></h3>
+            <p class="premium-modal__lead"></p>
             ${buildFeatureCardHtml()}
-            <label for="premiumLicenseInput">라이선스 키</label>
+            <label for="premiumLicenseInput"></label>
             <input type="text" id="premiumLicenseInput" placeholder="XXXX-XXXX-XXXX-XXXX" autocomplete="off" />
             <div class="premium-modal__actions">
-              <button type="button" class="premium-modal__btn premium-modal__btn--primary" id="premiumBuyBtn">Peekom Plus 구매하기</button>
-              <button type="button" class="premium-modal__btn" id="premiumActivateBtn">인증</button>
-              <button type="button" class="premium-modal__btn" id="premiumModalClose">닫기</button>
+              <button type="button" class="premium-modal__btn premium-modal__btn--primary" id="premiumBuyBtn"></button>
+              <button type="button" class="premium-modal__btn" id="premiumActivateBtn"></button>
+              <button type="button" class="premium-modal__btn" id="premiumModalClose"></button>
             </div>
             <div class="premium-modal__error" id="premiumModalError"></div>
           </div>
@@ -134,6 +160,7 @@
       </div>
     `;
     document.body.appendChild(backdrop);
+    refreshPremiumModalI18n();
 
     backdrop.addEventListener("click", (e) => {
       if (e.target === backdrop) hidePremiumModal();
@@ -156,7 +183,7 @@
     errEl.textContent = "";
     if (btn) {
       btn.disabled = true;
-      btn.textContent = "확인 중…";
+      btn.textContent = t("premiumActivating", "확인 중…");
     }
     try {
       const result = await window.peekom.invoke("premium:activate", input.value.trim());
@@ -166,12 +193,12 @@
           window.onPremiumActivated();
         }
       } else {
-        errEl.textContent = result.message || "인증에 실패했습니다.";
+        errEl.textContent = result.message || t("premiumActivateFail", "인증에 실패했습니다.");
       }
     } finally {
       if (btn) {
         btn.disabled = false;
-        btn.textContent = "인증";
+        btn.textContent = t("premiumActivateBtn", "인증");
       }
     }
   }
@@ -182,6 +209,7 @@
       existing.remove();
     }
     createPremiumModal();
+    refreshPremiumModalI18n();
     document.getElementById("premiumModalError").textContent = "";
     document.getElementById("peekomPremiumModal").classList.remove("hidden");
     document.getElementById("premiumLicenseInput").focus();
@@ -228,6 +256,7 @@
   window.PeekomPremiumUI = {
     showPremiumModal,
     hidePremiumModal,
+    refreshPremiumModalI18n,
     requirePremium,
     bindPremiumGate,
     BUY_URL

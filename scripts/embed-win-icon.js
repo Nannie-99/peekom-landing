@@ -12,9 +12,17 @@ const execFileAsync = promisify(execFile);
 exports.default = async function embedWinIcon(context) {
   if (context.electronPlatformName !== "win32") return;
 
+  const fs = require("fs");
   const projectDir = context.packager.projectDir;
   const iconPath = path.join(projectDir, "build", "icon.ico");
   const exePath = path.join(context.appOutDir, `${context.packager.appInfo.productFilename}.exe`);
+
+  if (!fs.existsSync(iconPath)) {
+    throw new Error(`[embed-win-icon] missing icon: ${iconPath}`);
+  }
+  if (!fs.existsSync(exePath)) {
+    throw new Error(`[embed-win-icon] missing exe: ${exePath}`);
+  }
 
   const rceditBin = path.join(
     projectDir,
@@ -23,8 +31,18 @@ exports.default = async function embedWinIcon(context) {
     "bin",
     "rcedit-x64.exe"
   );
+  if (!fs.existsSync(rceditBin)) {
+    throw new Error(`[embed-win-icon] missing rcedit: ${rceditBin}`);
+  }
 
-  await execFileAsync(rceditBin, [exePath, "--set-icon", iconPath], {
-    windowsHide: true
-  });
+  try {
+    await execFileAsync(rceditBin, [exePath, "--set-icon", iconPath], {
+      windowsHide: true
+    });
+  } catch (error) {
+    const detail = error?.stderr || error?.message || String(error);
+    throw new Error(`[embed-win-icon] rcedit failed for ${exePath}: ${detail}`);
+  }
+
+  console.log(`[embed-win-icon] ${path.basename(exePath)} ← build/icon.ico`);
 };

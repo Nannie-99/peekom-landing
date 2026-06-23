@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Peekom</title>
+    <link rel="icon" id="appFavicon" href="build/icon.ico" type="image/x-icon" />
     <script src="assets/i18n.js"></script>
     <script src="assets/i18n-locale-extra.js"></script>
     <script src="assets/memo-sanitize.js"></script>
@@ -59,6 +60,43 @@
         height: 100%;
         z-index: 100;
         pointer-events: auto;
+      }
+
+      .panel-edge-left .handle-column {
+        left: 0;
+        right: auto;
+      }
+
+      .panel-edge-left .edge-handle {
+        left: 0;
+        right: auto;
+        border-radius: 0 12px 12px 0;
+        border-left: 0;
+        border-right: 2px solid rgba(79, 84, 95, 0.28);
+        box-shadow: inset -2px 0 0 rgba(255, 255, 255, 0.35);
+      }
+
+      .panel-edge-left .floating-panel.expanded .edge-handle.is-active {
+        border-right: 0;
+      }
+
+      .panel-edge-left .note-backing {
+        left: 0;
+        right: auto;
+        border-radius: 0 12px 12px 0;
+      }
+
+      .panel-edge-left .note-shell {
+        left: 0;
+        right: auto;
+        padding-left: calc(var(--collapsed-width) + 8px);
+        padding-right: 10px;
+        border-radius: 0 12px 12px 0;
+        transform: translateX(-120%);
+      }
+
+      .panel-edge-left.floating-panel.expanded .note-shell {
+        transform: translateX(0);
       }
 
       .edge-handle {
@@ -1036,6 +1074,7 @@
         if (cropFreeBtn) cropFreeBtn.textContent = ti("imageCropFree");
         setPinned(isPinned);
         applyFormatBarTooltips();
+        window.PeekomPremiumUI?.refreshPremiumModalI18n?.();
       }
 
       const STATE_KEY = "ppaekkom-plus-state-v5";
@@ -1094,6 +1133,34 @@
           appState.activeSlot = clampSlotIndex(appState.activeSlot, max);
         }
       }
+
+      function packFreeYSlots() {
+        if (isPremium) return false;
+        const ec = appState.enabledCount;
+        if (ec <= 0) return false;
+        const ord = appState.order.slice(0, ec);
+        const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
+        const baseY = clamp(minY, 0, MAX_Y_SLOTS - ec);
+        const now = Date.now();
+        let changed = false;
+        ord.forEach((si, i) => {
+          const next = baseY + i;
+          if (appState.slots[si].ySlot !== next) changed = true;
+          appState.slots[si].ySlot = next;
+          appState.slots[si].ySlotUpdatedAt = now;
+        });
+        return changed;
+      }
+
+      function enforceFreeTypography() {
+        if (isPremium) return;
+        for (let i = 0; i < appState.enabledCount; i++) {
+          appState.slots[i].fontSize = DEFAULT_FONT_SIZE;
+          appState.slots[i].fontFamily = null;
+        }
+        if (appState.global) appState.global.memoDefaultOpacity = 100;
+        packFreeYSlots();
+      }
       const MAX_Y_SLOTS = 10;
       const PANEL_CONTENT_WIDTH = 420;
       const COLLAPSED_WIDTH = 32;
@@ -1133,7 +1200,8 @@
           memoAspectRatio: "3:4",
           imageLayout: "below",
           lastOpenedSlotIndex: 0,
-          memoDefaultOpacity: 100
+          memoDefaultOpacity: 100,
+          panelEdge: "right"
         };
       }
 
@@ -1545,39 +1613,22 @@
         const slot = appState.activeSlot;
         syncSlotImagesFromMemo(slot);
         appState.slots[slot].memoHtml = sanitizeMemoHtml(memoEditor.innerHTML);
-        try {
-          const raw = localStorage.getItem(STATE_KEY);
-          if (raw) {
-            const disk = JSON.parse(raw);
-            if (disk && disk.version === 5 && Array.isArray(disk.slots) && disk.slots.length === MAX_SLOTS) {
-              disk.slots[slot].memoHtml = appState.slots[slot].memoHtml;
-              disk.slots[slot].imageScale = appState.slots[slot].imageScale;
-              const src = appState.slots[slot];
-              const dst = disk.slots[slot];
-              dst.theme = src.theme;
-              dst.customBg = src.customBg;
-              dst.customText = src.customText;
-              dst.fontSize = src.fontSize;
-              dst.fontFamily = src.fontFamily;
-              dst.label = src.label;
-              dst.ySlot = src.ySlot;
-              dst.ySlotUpdatedAt = src.ySlotUpdatedAt;
-              appState.global = { ...defaultGlobal(), ...disk.global };
-              saveState(disk);
-              showSaveIndicator();
-              notifySettingsChanged(["memoHtml", "images"]);
-              return;
-            }
-          }
-        } catch {
-          /* fallthrough */
-        }
         saveState(appState);
         showSaveIndicator();
         notifySettingsChanged(["memoHtml", "images"]);
       }
 
+      window.__peekomFlushActiveMemo = () => {
+        if (!memoEditor || !appState?.slots) return false;
+        persistActiveMemo();
+        return true;
+      };
+
       function resolveYSlotConflicts(slots, enabledCount) {
+        if (!isPremium) {
+          packFreeYSlots();
+          return;
+        }
         const entries = [];
         for (let i = 0; i < enabledCount; i++) {
           entries.push({
@@ -1626,7 +1677,9 @@
       }
 
       function applyFontSizeForSlot(slotIndex) {
-        const size = appState.slots[slotIndex]?.fontSize ?? DEFAULT_FONT_SIZE;
+        const size = isPremium
+          ? (appState.slots[slotIndex]?.fontSize ?? DEFAULT_FONT_SIZE)
+          : DEFAULT_FONT_SIZE;
         document.documentElement.style.setProperty("--memo-base-font-size", `${size}px`);
         memoEditor.style.fontSize = `${size}px`;
       }
@@ -1641,6 +1694,15 @@
         root.querySelectorAll("font").forEach((font) => {
           const parent = font.parentNode;
           if (!parent) return;
+          const color = font.getAttribute("color") || font.style?.color;
+          if (color) {
+            const span = document.createElement("span");
+            span.style.color = color;
+            while (font.firstChild) span.appendChild(font.firstChild);
+            parent.insertBefore(span, font);
+            parent.removeChild(font);
+            return;
+          }
           while (font.firstChild) parent.insertBefore(font.firstChild, font);
           parent.removeChild(font);
         });
@@ -1676,6 +1738,10 @@
       }
 
       function adjustFontSize(delta) {
+        if (!isPremium) {
+          window.PeekomPremiumUI?.showPremiumModal();
+          return;
+        }
         const slot = appState.activeSlot;
         const next = clamp(
           (appState.slots[slot].fontSize ?? DEFAULT_FONT_SIZE) + delta,
@@ -1757,6 +1823,22 @@
 
       let lastPanelLayoutKey = "";
 
+      function getEffectivePanelEdge() {
+        const edge = appState.global?.panelEdge === "left" ? "left" : "right";
+        if (!isPremium && edge === "left") return "right";
+        return edge;
+      }
+
+      function applyPanelEdgeUI() {
+        const edge = getEffectivePanelEdge();
+        if (appState.global.panelEdge !== edge) {
+          appState.global.panelEdge = edge;
+        }
+        panel.classList.toggle("panel-edge-left", edge === "left");
+        lastPanelLayoutKey = "";
+        updatePanelPosition();
+      }
+
       function updatePanelPosition() {
         const ySlot = appState.slots[appState.activeSlot]?.ySlot ?? 0;
         const { widthPx, heightPx, handleUnit } = getMemoDimensions();
@@ -1770,23 +1852,38 @@
           topPx = Math.max(0, handleTopPx + handleUnit - heightPx);
         }
         const finalHeight = Math.min(heightPx, totalH - topPx);
-        const layoutKey = `${ySlot}|${widthPx}|${finalHeight}|${topPx}`;
+        const edge = getEffectivePanelEdge();
+        const layoutKey = `${edge}|${ySlot}|${widthPx}|${finalHeight}|${topPx}`;
         if (layoutKey === lastPanelLayoutKey) return;
         lastPanelLayoutKey = layoutKey;
 
         document.documentElement.style.setProperty("--active-y-slot", String(ySlot));
         noteShell.style.top = `${topPx}px`;
-        noteShell.style.right = "0";
-        noteShell.style.left = "auto";
         noteShell.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
         noteShell.style.height = `${finalHeight}px`;
         noteShell.style.maxHeight = `${finalHeight}px`;
-        noteShell.style.paddingRight = `calc(${COLLAPSED_WIDTH}px + 8px)`;
+        if (edge === "left") {
+          noteShell.style.left = "0";
+          noteShell.style.right = "auto";
+          noteShell.style.paddingLeft = `calc(${COLLAPSED_WIDTH}px + 8px)`;
+          noteShell.style.paddingRight = "10px";
+        } else {
+          noteShell.style.left = "auto";
+          noteShell.style.right = "0";
+          noteShell.style.paddingRight = `calc(${COLLAPSED_WIDTH}px + 8px)`;
+          noteShell.style.paddingLeft = "10px";
+        }
         if (noteBacking) {
           noteBacking.style.top = `${topPx}px`;
-          noteBacking.style.right = "0";
           noteBacking.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
           noteBacking.style.height = `${finalHeight}px`;
+          if (edge === "left") {
+            noteBacking.style.left = "0";
+            noteBacking.style.right = "auto";
+          } else {
+            noteBacking.style.left = "auto";
+            noteBacking.style.right = "0";
+          }
         }
         document.documentElement.style.setProperty("--note-shell-height", `${finalHeight}px`);
         document.documentElement.style.setProperty("--note-shell-maxh", `${finalHeight}px`);
@@ -2298,6 +2395,7 @@
         }
 
         setPinned(false);
+        persistActiveMemo();
         setExpanded(false);
       }
 
@@ -2332,9 +2430,12 @@
 
             if (newSlot !== currentSlot) {
               if (!isPremium && appState.enabledCount > 1) {
-                const delta = newSlot - currentSlot;
+                const ord = appState.order.slice(0, appState.enabledCount);
+                const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
+                const draggedY = appState.slots[reorderSlot].ySlot ?? 0;
+                const offsetInGroup = draggedY - minY;
                 clearSwapTimer();
-                applyGroupYSlotDelta(delta);
+                applyFreeGroupYSlotBase(newSlot - offsetInGroup);
                 if (reorderSlot === appState.activeSlot) updatePanelPosition();
               } else {
                 const occupant = findSlotAtYSlot(newSlot, reorderSlot);
@@ -2413,17 +2514,33 @@
         return null;
       }
 
+      function applyFreeGroupYSlotBase(baseY) {
+        const ec = appState.enabledCount;
+        if (ec <= 0) return;
+        const ord = appState.order.slice(0, ec);
+        const clampedBase = clamp(baseY, 0, MAX_Y_SLOTS - ec);
+        const currentBase = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
+        let needsUpdate = clampedBase !== currentBase;
+        if (!needsUpdate) {
+          needsUpdate = ord.some((si, i) => appState.slots[si].ySlot !== clampedBase + i);
+        }
+        if (!needsUpdate) return;
+
+        const now = Date.now();
+        ord.forEach((si, i) => {
+          appState.slots[si].ySlot = clampedBase + i;
+          appState.slots[si].ySlotUpdatedAt = now;
+          repositionHandle(si);
+        });
+        saveState(appState);
+      }
+
       function applyGroupYSlotDelta(delta) {
         if (!delta) return;
         const ec = appState.enabledCount;
         const ord = appState.order.slice(0, ec);
-        const now = Date.now();
-        for (const si of ord) {
-          appState.slots[si].ySlot = clamp(appState.slots[si].ySlot + delta, 0, MAX_Y_SLOTS - 1);
-          appState.slots[si].ySlotUpdatedAt = now;
-          repositionHandle(si);
-        }
-        saveState(appState);
+        const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
+        applyFreeGroupYSlotBase(minY + delta);
       }
 
       function swapYSlots(a, b) {
@@ -2564,15 +2681,7 @@
         refreshAutoCollapsePolicy();
       });
 
-      memoEditor.addEventListener("input", (event) => {
-        const lineEl = getCurrentLineElement();
-        if (lineEl && lineMayHaveInlineMarkdown(lineEl)) {
-          if (markdownInputRaf) cancelAnimationFrame(markdownInputRaf);
-          markdownInputRaf = requestAnimationFrame(() => {
-            markdownInputRaf = null;
-            processMarkdownInput();
-          });
-        }
+      memoEditor.addEventListener("input", () => {
         persistActiveMemo();
         scheduleUrlScan();
         updateToolbarActiveState();
@@ -2597,7 +2706,6 @@
           }
         }
         if (event.key !== "Enter" || event.shiftKey) return;
-        handleMarkdownEnter(event);
       });
 
       memoEditor.addEventListener(
@@ -2624,20 +2732,6 @@
       });
 
       memoEditor.addEventListener("click", (event) => {
-        const check = event.target.closest(".peekom-task-check");
-        if (check && memoEditor.contains(check)) {
-          event.preventDefault();
-          const li = check.closest("li");
-          if (li) {
-            const checked = li.getAttribute("data-checked") === "true";
-            const next = !checked;
-            li.setAttribute("data-checked", String(next));
-            check.setAttribute("aria-checked", String(next));
-            persistActiveMemo();
-            showSaveIndicator();
-          }
-          return;
-        }
         const link = event.target.closest("a[data-external]");
         if (!link) return;
         event.preventDefault();
@@ -2915,12 +3009,7 @@
         syncSlotImagesFromMemo();
         const max = getMaxImagesPerMemo();
         if (countActiveMemoImages() >= max) {
-          if (!isPremium) {
-            window.PeekomPremiumUI?.showPremiumModal();
-            syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
-          } else {
-            alert(ti("indexMaxImagesAlert", { max }));
-          }
+          alert(ti("indexMaxImagesAlert", { max }));
           return false;
         }
         return true;
@@ -3314,8 +3403,6 @@
         insertInlineMemoImage(dataUrl, widthPx, id);
         hideImageStaging();
         persistActiveMemo();
-        saveState(appState);
-        showSaveIndicator();
       }
 
       clipImageBtn?.addEventListener("click", (event) => {
@@ -3404,6 +3491,7 @@
         appState.enabledCount += 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
         appState.activeSlot = newSlot;
+        if (!isPremium) packFreeYSlots();
         saveState(appState);
         applyThemeForSlot(newSlot);
         loadMemoForActiveSlot();
@@ -3435,6 +3523,7 @@
         appState.enabledCount -= 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
         appState.activeSlot = clampSlotIndex(Math.max(0, del - 1), appState.enabledCount);
+        if (!isPremium) packFreeYSlots();
         saveState(appState);
         applyThemeForSlot(appState.activeSlot);
         loadMemoForActiveSlot();
@@ -3846,7 +3935,8 @@
           shortcut: appState.global.shortcut,
           shortcutSlotPrev: appState.global.shortcutSlotPrev,
           shortcutSlotNext: appState.global.shortcutSlotNext,
-          manualYOffset: appState.global.manualYOffset
+          manualYOffset: appState.global.manualYOffset,
+          panelEdge: getEffectivePanelEdge()
         };
         const result = await ipcRenderer.invoke("settings:update", payload);
         if (result?.windowState?.settings) {
@@ -3892,6 +3982,7 @@
         }
         renderHandleStack();
         refreshAllHandleThemes();
+        applyPanelEdgeUI();
         lastPanelLayoutKey = "";
         updatePanelPosition();
         if (isExpanded) {
@@ -3975,15 +4066,26 @@
 
       ipcRenderer.on("premium:changed", (_, payload) => {
         isPremium = Boolean(payload?.isPremium);
+        const iconPath = isPremium ? "build/plus.ico" : "build/icon.ico";
+        const appLabel = isPremium ? "Peekom Plus" : "Peekom";
+        document.title = appLabel;
+        const favicon = document.getElementById("appFavicon");
+        if (favicon) favicon.href = iconPath;
+        if (!isPremium) enforceFreeTypography();
         enforceSlotLimits();
+        applyPanelEdgeUI();
         renderHandleStack();
         applyThemeForSlot(appState.activeSlot);
         applyImageStagingSliderState();
+        if (!isPremium) {
+          normalizeMemoTypography(appState.activeSlot, { preserveCaret: true });
+        }
       });
 
       window.onPremiumActivated = async () => {
         const p = await ipcRenderer.invoke("premium:get");
         isPremium = Boolean(p.isPremium);
+        if (!isPremium) enforceFreeTypography();
         enforceSlotLimits();
         renderHandleStack();
         applyThemeForSlot(appState.activeSlot);
@@ -4071,6 +4173,8 @@
         appState = loadState();
         await syncPremiumState();
         enforceSlotLimits();
+        enforceFreeTypography();
+        saveState(appState);
 
         // 최소 1개 인덱스 보장
         if (!appState.enabledCount || appState.enabledCount < 1) {
@@ -4098,6 +4202,7 @@
 
         applyThemeForSlot(appState.activeSlot);
         loadMemoForActiveSlot();
+        applyPanelEdgeUI();
         updatePanelPosition();
 
         initializeFirstRunTip();
@@ -4123,6 +4228,13 @@
         } catch (e) {
           console.error(e);
         }
+
+        ipcRenderer.on("startup:synced", (_event, payload) => {
+          if (!payload || typeof payload.openAtLogin !== "boolean") return;
+          if (appState.global.openAtLogin === payload.openAtLogin) return;
+          appState.global.openAtLogin = payload.openAtLogin;
+          saveState(appState);
+        });
 
         // 저장된 모니터 설정 복원
         try {

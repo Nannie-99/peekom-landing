@@ -13,7 +13,7 @@
                     { feature: "인덱스(슬롯) 개수", free: "3개", plus: "10개" },
                     { feature: "손잡이 위치", free: "3개 묶음 이동", plus: "슬롯별 독립" },
                     { feature: "PEEK / ICE 모드", free: "✓", plus: "✓" },
-                    { feature: "자동 접힘 딜레이 (0.25초)", free: "✓", plus: "✓" }
+                    { feature: "자동 접힘 딜레이", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -24,6 +24,7 @@
                 rows: [
                     { feature: "단일 / 듀얼 모니터", free: "✓", plus: "✓" },
                     { feature: "표시 모니터 선택", free: "✓", plus: "✓" },
+                    { feature: "표시 위치 (왼쪽/오른쪽)", free: "오른쪽만", plus: "✓" },
                     { feature: "메모 비율 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "단축키 — 최근 메모 토글", free: "✓", plus: "✓" },
                     { feature: "단축키 — 위/아래 인덱스 열기", free: "✓", plus: "✓" },
@@ -36,7 +37,7 @@
                 title: "편집·콘텐츠",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "마크다운 · 체크박스", free: "✓", plus: "✓" },
+                    { feature: "모드 전환 방식 선택", free: "✓", plus: "✓" },
                     { feature: "서식바", free: "✓", plus: "✓" },
                     { feature: "이미지 삽입", free: "✓", plus: "✓" },
                     { feature: "메모당 이미지", free: "1개", plus: "5개" },
@@ -71,7 +72,7 @@
                     { feature: "Index (slot) count", free: "3", plus: "10" },
                     { feature: "Handle placement", free: "3 move together", plus: "Independent per slot" },
                     { feature: "PEEK / ICE mode", free: "✓", plus: "✓" },
-                    { feature: "Hover delay (0.25s)", free: "✓", plus: "✓" }
+                    { feature: "Hover delay", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -82,6 +83,7 @@
                 rows: [
                     { feature: "Single / dual monitor", free: "✓", plus: "✓" },
                     { feature: "Target display", free: "✓", plus: "✓" },
+                    { feature: "Panel side (left/right)", free: "Right only", plus: "✓" },
                     { feature: "Memo aspect 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Shortcut — recent memo toggle", free: "✓", plus: "✓" },
                     { feature: "Shortcut — open prev/next index", free: "✓", plus: "✓" },
@@ -94,7 +96,7 @@
                 title: "Editing & content",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · checkboxes", free: "✓", plus: "✓" },
+                    { feature: "Peek / Ice toggle mode", free: "✓", plus: "✓" },
                     { feature: "Formatting toolbar", free: "✓", plus: "✓" },
                     { feature: "Image insert", free: "✓", plus: "✓" },
                     { feature: "Images per memo", free: "1", plus: "5" },
@@ -129,7 +131,7 @@
                     { feature: "インデックス（スロット）数", free: "3", plus: "10" },
                     { feature: "ハンドル位置", free: "3つ一括移動", plus: "スロット別に独立" },
                     { feature: "PEEK / ICE モード", free: "✓", plus: "✓" },
-                    { feature: "自動折りたたみ遅延（0.25秒）", free: "✓", plus: "✓" }
+                    { feature: "自動折りたたみ遅延", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -140,6 +142,7 @@
                 rows: [
                     { feature: "シングル / デュアルモニター", free: "✓", plus: "✓" },
                     { feature: "表示モニター選択", free: "✓", plus: "✓" },
+                    { feature: "表示位置（左/右）", free: "右のみ", plus: "✓" },
                     { feature: "メモ比率 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "ショートカット — 直近メモの切り替え", free: "✓", plus: "✓" },
                     { feature: "ショートカット — 前後インデックスを開く", free: "✓", plus: "✓" },
@@ -152,7 +155,7 @@
                 title: "編集・コンテンツ",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "マークダウン · チェックボックス", free: "✓", plus: "✓" },
+                    { feature: "モード切替方式の選択", free: "✓", plus: "✓" },
                     { feature: "書式バー", free: "✓", plus: "✓" },
                     { feature: "画像挿入", free: "✓", plus: "✓" },
                     { feature: "メモあたりの画像", free: "1", plus: "5" },
@@ -187,7 +190,7 @@
                     { feature: "索引（槽位）数量", free: "3个", plus: "10个" },
                     { feature: "手柄位置", free: "3个成组移动", plus: "各槽位独立" },
                     { feature: "PEEK / ICE 模式", free: "✓", plus: "✓" },
-                    { feature: "自动折叠延迟（0.25秒）", free: "✓", plus: "✓" }
+                    { feature: "自动折叠延迟", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -198,6 +201,7 @@
                 rows: [
                     { feature: "单 / 双显示器", free: "✓", plus: "✓" },
                     { feature: "目标显示器选择", free: "✓", plus: "✓" },
+                    { feature: "显示位置（左/右）", free: "仅右侧", plus: "✓" },
                     { feature: "备忘比例 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "快捷键 — 最近备忘开关", free: "✓", plus: "✓" },
                     { feature: "快捷键 — 打开上/下索引", free: "✓", plus: "✓" },
@@ -210,7 +214,7 @@
                 title: "编辑·内容",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · 复选框", free: "✓", plus: "✓" },
+                    { feature: "模式切换方式选择", free: "✓", plus: "✓" },
                     { feature: "格式工具栏", free: "✓", plus: "✓" },
                     { feature: "插入图片", free: "✓", plus: "✓" },
                     { feature: "每条备忘图片数", free: "1张", plus: "5张" },
@@ -245,7 +249,7 @@
                     { feature: "索引（槽位）數量", free: "3個", plus: "10個" },
                     { feature: "手柄位置", free: "3個成組移動", plus: "各槽位獨立" },
                     { feature: "PEEK / ICE 模式", free: "✓", plus: "✓" },
-                    { feature: "自動摺疊延遲（0.25秒）", free: "✓", plus: "✓" }
+                    { feature: "自動摺疊延遲", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -256,6 +260,7 @@
                 rows: [
                     { feature: "單 / 雙顯示器", free: "✓", plus: "✓" },
                     { feature: "目標顯示器選擇", free: "✓", plus: "✓" },
+                    { feature: "顯示位置（左/右）", free: "僅右側", plus: "✓" },
                     { feature: "備忘比例 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "快捷鍵 — 最近備忘開關", free: "✓", plus: "✓" },
                     { feature: "快捷鍵 — 開啟上/下索引", free: "✓", plus: "✓" },
@@ -268,7 +273,7 @@
                 title: "編輯·內容",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · 核取方塊", free: "✓", plus: "✓" },
+                    { feature: "模式切換方式選擇", free: "✓", plus: "✓" },
                     { feature: "格式工具列", free: "✓", plus: "✓" },
                     { feature: "插入圖片", free: "✓", plus: "✓" },
                     { feature: "每則備忘圖片數", free: "1張", plus: "5張" },
@@ -314,6 +319,7 @@
                 rows: [
                     { feature: "Monitor único / dual", free: "✓", plus: "✓" },
                     { feature: "Pantalla de destino", free: "✓", plus: "✓" },
+                    { feature: "Posición del panel (izq./der.)", free: "Solo derecha", plus: "✓" },
                     { feature: "Proporción de nota 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Atajo — alternar nota reciente", free: "✓", plus: "✓" },
                     { feature: "Atajo — abrir índice ant./sig.", free: "✓", plus: "✓" },
@@ -326,7 +332,7 @@
                 title: "Edición y contenido",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · casillas", free: "✓", plus: "✓" },
+                    { feature: "Modo de cambio Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barra de formato", free: "✓", plus: "✓" },
                     { feature: "Insertar imagen", free: "✓", plus: "✓" },
                     { feature: "Imágenes por nota", free: "1", plus: "5" },
@@ -372,6 +378,7 @@
                 rows: [
                     { feature: "Moniteur simple / double", free: "✓", plus: "✓" },
                     { feature: "Écran cible", free: "✓", plus: "✓" },
+                    { feature: "Côté du panneau (gauche/droite)", free: "Droite seule", plus: "✓" },
                     { feature: "Format de note 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Raccourci — basculer note récente", free: "✓", plus: "✓" },
                     { feature: "Raccourci — index préc./suiv.", free: "✓", plus: "✓" },
@@ -384,7 +391,7 @@
                 title: "Édition et contenu",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · cases à cocher", free: "✓", plus: "✓" },
+                    { feature: "Mode bascule Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barre de formatage", free: "✓", plus: "✓" },
                     { feature: "Insertion d'image", free: "✓", plus: "✓" },
                     { feature: "Images par note", free: "1", plus: "5" },
@@ -430,6 +437,7 @@
                 rows: [
                     { feature: "Einzel- / Dualmonitor", free: "✓", plus: "✓" },
                     { feature: "Zielmonitor", free: "✓", plus: "✓" },
+                    { feature: "Panel-Seite (links/rechts)", free: "Nur rechts", plus: "✓" },
                     { feature: "Notizformat 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Tastenkürzel — letzte Notiz umschalten", free: "✓", plus: "✓" },
                     { feature: "Tastenkürzel — vorher./nächst. Index", free: "✓", plus: "✓" },
@@ -442,7 +450,7 @@
                 title: "Bearbeitung & Inhalt",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · Kontrollkästchen", free: "✓", plus: "✓" },
+                    { feature: "Peek-/Ice-Umschaltmodus", free: "✓", plus: "✓" },
                     { feature: "Formatleiste", free: "✓", plus: "✓" },
                     { feature: "Bild einfügen", free: "✓", plus: "✓" },
                     { feature: "Bilder pro Notiz", free: "1", plus: "5" },
@@ -488,6 +496,7 @@
                 rows: [
                     { feature: "Monitor único / duplo", free: "✓", plus: "✓" },
                     { feature: "Monitor de destino", free: "✓", plus: "✓" },
+                    { feature: "Lado do painel (esq./dir.)", free: "Somente direita", plus: "✓" },
                     { feature: "Proporção da nota 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Atalho — alternar nota recente", free: "✓", plus: "✓" },
                     { feature: "Atalho — abrir índice ant./próx.", free: "✓", plus: "✓" },
@@ -500,7 +509,7 @@
                 title: "Edição e conteúdo",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · caixas de seleção", free: "✓", plus: "✓" },
+                    { feature: "Modo de alternância Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barra de formatação", free: "✓", plus: "✓" },
                     { feature: "Inserir imagem", free: "✓", plus: "✓" },
                     { feature: "Imagens por nota", free: "1", plus: "5" },
@@ -546,6 +555,7 @@
                 rows: [
                     { feature: "Monitor singolo / doppio", free: "✓", plus: "✓" },
                     { feature: "Schermo di destinazione", free: "✓", plus: "✓" },
+                    { feature: "Lato pannello (sin./des.)", free: "Solo destra", plus: "✓" },
                     { feature: "Proporzione nota 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Scorciatoia — alterna nota recente", free: "✓", plus: "✓" },
                     { feature: "Scorciatoia — indice prec./succ.", free: "✓", plus: "✓" },
@@ -558,7 +568,7 @@
                 title: "Modifica e contenuti",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · caselle di spunta", free: "✓", plus: "✓" },
+                    { feature: "Modalità Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barra di formattazione", free: "✓", plus: "✓" },
                     { feature: "Inserimento immagine", free: "✓", plus: "✓" },
                     { feature: "Immagini per nota", free: "1", plus: "5" },
@@ -604,6 +614,7 @@
                 rows: [
                     { feature: "Один / два монитора", free: "✓", plus: "✓" },
                     { feature: "Целевой монитор", free: "✓", plus: "✓" },
+                    { feature: "Сторона панели (лево/право)", free: "Только справа", plus: "✓" },
                     { feature: "Соотношение заметки 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Горячая клавиша — переключить последнюю", free: "✓", plus: "✓" },
                     { feature: "Горячая клавиша — пред./след. индекс", free: "✓", plus: "✓" },
@@ -616,7 +627,7 @@
                 title: "Редактирование и контент",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · флажки", free: "✓", plus: "✓" },
+                    { feature: "Режим переключения Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Панель форматирования", free: "✓", plus: "✓" },
                     { feature: "Вставка изображения", free: "✓", plus: "✓" },
                     { feature: "Изображений на заметку", free: "1", plus: "5" },
@@ -662,6 +673,7 @@
                 rows: [
                     { feature: "Một / hai màn hình", free: "✓", plus: "✓" },
                     { feature: "Chọn màn hình hiển thị", free: "✓", plus: "✓" },
+                    { feature: "Vị trí panel (trái/phải)", free: "Chỉ bên phải", plus: "✓" },
                     { feature: "Tỷ lệ ghi chú 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Phím tắt — bật/tắt ghi chú gần nhất", free: "✓", plus: "✓" },
                     { feature: "Phím tắt — mở chỉ mục trước/sau", free: "✓", plus: "✓" },
@@ -674,7 +686,7 @@
                 title: "Chỉnh sửa & nội dung",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · hộp kiểm", free: "✓", plus: "✓" },
+                    { feature: "Chế độ chuyển Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Thanh định dạng", free: "✓", plus: "✓" },
                     { feature: "Chèn hình ảnh", free: "✓", plus: "✓" },
                     { feature: "Hình ảnh mỗi ghi chú", free: "1", plus: "5" },
@@ -709,7 +721,7 @@
                     { feature: "จำนวนดัชนี (สล็อต)", free: "3", plus: "10" },
                     { feature: "ตำแหน่งที่จับ", free: "3 ตัวเคลื่อนพร้อมกัน", plus: "แยกตามสล็อต" },
                     { feature: "โหมด PEEK / ICE", free: "✓", plus: "✓" },
-                    { feature: "หน่วงเวลาพับ (0.25 วินาที)", free: "✓", plus: "✓" }
+                    { feature: "หน่วงเวลาพับ", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -720,6 +732,7 @@
                 rows: [
                     { feature: "จอเดียว / สองจอ", free: "✓", plus: "✓" },
                     { feature: "เลือกจอแสดงผล", free: "✓", plus: "✓" },
+                    { feature: "ตำแหน่งแผง (ซ้าย/ขวา)", free: "ขวาเท่านั้น", plus: "✓" },
                     { feature: "สัดส่วนบันทึก 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "ทางลัด — สลับบันทึกล่าสุด", free: "✓", plus: "✓" },
                     { feature: "ทางลัด — เปิดดัชนีก่อนหน้า/ถัดไป", free: "✓", plus: "✓" },
@@ -732,7 +745,7 @@
                 title: "แก้ไขและเนื้อหา",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · ช่องทำเครื่องหมาย", free: "✓", plus: "✓" },
+                    { feature: "โหมดสลับ Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "แถบจัดรูปแบบ", free: "✓", plus: "✓" },
                     { feature: "แทรกรูปภาพ", free: "✓", plus: "✓" },
                     { feature: "รูปภาพต่อบันทึก", free: "1", plus: "5" },
@@ -778,6 +791,7 @@
                 rows: [
                     { feature: "Monitor tunggal / ganda", free: "✓", plus: "✓" },
                     { feature: "Pilih monitor tampilan", free: "✓", plus: "✓" },
+                    { feature: "Sisi panel (kiri/kanan)", free: "Hanya kanan", plus: "✓" },
                     { feature: "Rasio memo 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "Pintasan — alih memo terbaru", free: "✓", plus: "✓" },
                     { feature: "Pintasan — buka indeks sebelum/sesudah", free: "✓", plus: "✓" },
@@ -790,7 +804,7 @@
                 title: "Pengeditan & konten",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · kotak centang", free: "✓", plus: "✓" },
+                    { feature: "Mode beralih Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Bilah pemformatan", free: "✓", plus: "✓" },
                     { feature: "Sisipkan gambar", free: "✓", plus: "✓" },
                     { feature: "Gambar per memo", free: "1", plus: "5" },
@@ -825,7 +839,7 @@
                     { feature: "इंडेक्स (स्लॉट) संख्या", free: "3", plus: "10" },
                     { feature: "हैंडल की स्थिति", free: "3 एक साथ चलते हैं", plus: "प्रति स्लॉट स्वतंत्र" },
                     { feature: "PEEK / ICE मोड", free: "✓", plus: "✓" },
-                    { feature: "स्वतः मोड़ने की देरी (0.25 सेकंड)", free: "✓", plus: "✓" }
+                    { feature: "स्वतः मोड़ने की देरी", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -836,6 +850,7 @@
                 rows: [
                     { feature: "एकल / दोहरा मॉनिटर", free: "✓", plus: "✓" },
                     { feature: "लक्ष्य डिस्प्ले चयन", free: "✓", plus: "✓" },
+                    { feature: "पैनल स्थिति (बाएँ/दाएँ)", free: "केवल दाएँ", plus: "✓" },
                     { feature: "मेमो अनुपात 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "शॉर्टकट — हाल का मेमो टॉगल", free: "✓", plus: "✓" },
                     { feature: "शॉर्टकट — पिछला/अगला इंडेक्स खोलें", free: "✓", plus: "✓" },
@@ -848,7 +863,7 @@
                 title: "संपादन और सामग्री",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · चेकबॉक्स", free: "✓", plus: "✓" },
+                    { feature: "पीक / आइस टॉगल मोड", free: "✓", plus: "✓" },
                     { feature: "फ़ॉर्मेटिंग टूलबार", free: "✓", plus: "✓" },
                     { feature: "छवि सम्मिलित करें", free: "✓", plus: "✓" },
                     { feature: "प्रति मेमो छवियाँ", free: "1", plus: "5" },
@@ -883,7 +898,7 @@
                     { feature: "عدد الفهارس (الفتحات)", free: "3", plus: "10" },
                     { feature: "موضع المقبض", free: "3 تتحرك معًا", plus: "مستقل لكل فتحة" },
                     { feature: "وضع PEEK / ICE", free: "✓", plus: "✓" },
-                    { feature: "تأخير الطي (0.25 ثانية)", free: "✓", plus: "✓" }
+                    { feature: "تأخير الطي", free: "✓", plus: "✓" }
                 ]
             },
             {
@@ -894,6 +909,7 @@
                 rows: [
                     { feature: "شاشة واحدة / مزدوجة", free: "✓", plus: "✓" },
                     { feature: "اختيار الشاشة المعروضة", free: "✓", plus: "✓" },
+                    { feature: "موضع اللوحة (يسار/يمين)", free: "اليمين فقط", plus: "✓" },
                     { feature: "نسبة الملاحظة 1:1 / 3:4", free: "✓", plus: "✓" },
                     { feature: "اختصار — تبديل آخر ملاحظة", free: "✓", plus: "✓" },
                     { feature: "اختصار — فتح الفهرس السابق/التالي", free: "✓", plus: "✓" },
@@ -906,7 +922,7 @@
                 title: "التحرير والمحتوى",
                 image: "screenshots/scene-2.svg",
                 rows: [
-                    { feature: "Markdown · مربعات اختيار", free: "✓", plus: "✓" },
+                    { feature: "وضع تبديل لمحة / جليد", free: "✓", plus: "✓" },
                     { feature: "شريط التنسيق", free: "✓", plus: "✓" },
                     { feature: "إدراج صورة", free: "✓", plus: "✓" },
                     { feature: "صور لكل ملاحظة", free: "1", plus: "5" },

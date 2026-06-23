@@ -11,6 +11,7 @@ try {
 const ALLOWED_INVOKE = new Set([
   "shared-state:get",
   "shared-state:set",
+  "memo:flush",
   "settings:update",
   "settings:notify-applied",
   "settings:notify-changed",
@@ -37,12 +38,11 @@ const ALLOWED_INVOKE = new Set([
   "premium:get",
   "premium:activate",
   "premium:open-buy",
-  "color:restore-advanced-picker"
-]);
-
-const ALLOWED_SEND = new Set([
+  "color:restore-advanced-picker",
   "color:prepare-advanced-picker"
 ]);
+
+const ALLOWED_SEND = new Set([]);
 
 const ALLOWED_ON = new Set([
   "shared-state:read-request",
@@ -58,6 +58,7 @@ const ALLOWED_ON = new Set([
   "tray:add-index",
   "premium:changed",
   "premium:show-modal",
+  "startup:synced",
   "peek:auto-collapse-poll"
 ]);
 
