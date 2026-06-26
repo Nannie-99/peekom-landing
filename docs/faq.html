@@ -26,11 +26,6 @@
                 <li><a href="contact.html" data-nav="contact" id="navContact">연락</a></li>
             </ul>
             <div class="navbar__right">
-                <div class="search-wrap">
-                    <input type="search" class="search-input" id="searchInput" placeholder="검색..." autocomplete="off">
-                    <span class="search-icon">&#128269;</span>
-                    <div class="search-results" id="searchResults"></div>
-                </div>
                 <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
                     <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
                         <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -49,6 +44,31 @@
         <section class="section" id="faq">
             <h2 class="section-title" id="faqTitle">자주 묻는 질문</h2>
             <p class="section-sub" id="faqSub">Peekom 사용 중 자주 묻는 내용입니다.</p>
+            <div class="faq-refund-policy" data-search="refund return money back policy 환불 반품 払い戻し 退款 reembolso remboursement возврат hoàn tiền คืนเงิน Lemon Squeezy">
+                <h3 class="faq-refund-policy__title" id="refundPolicyTitle">Peekom Plus 환불 정책</h3>
+                <div class="faq-refund-policy__body" id="refundPolicyBody"></div>
+            </div>
+            <div class="faq-accordion" data-search="refund return money back request order number 환불 신청 절차 주문번호">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faqR1q">Peekom Plus 환불은 어떻게 신청하나요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faqR1a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="refund eligible malfunction duplicate payment change of mind 환불 대상 조건 중복 결제 단순 변심">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faqR2q">어떤 경우에 환불받을 수 있나요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faqR2a" hidden></div>
+            </div>
+            <div class="faq-accordion" data-search="refund license disabled deactivate revert free 환불 라이선스 비활성화 무료 전환">
+                <button type="button" class="faq-accordion__trigger" aria-expanded="false">
+                    <span id="faqR3q">환불 후 라이선스는 어떻게 되나요?</span>
+                    <span class="faq-accordion__icon" aria-hidden="true"></span>
+                </button>
+                <div class="faq-accordion__panel" id="faqR3a" hidden></div>
+            </div>
             <div class="faq-accordion" data-search="index free difference plus peekom markdown toolbar">
                 <button type="button" class="faq-accordion__trigger" aria-expanded="false">
                     <span id="faq1q">Peekom과 Peekom Plus의 차이는 무엇인가요?</span>
@@ -130,7 +150,7 @@
                 <a href="privacy.html" id="footerPrivacy">개인정보 처리방침</a>
             </p>
             <div class="footer__controls">
-                <label class="footer__lang-label" for="langSelect" id="footerLangLabel">언어</label>
+                <svg class="footer__lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
             </div>
         </div>

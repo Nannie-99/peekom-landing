@@ -1,21 +1,152 @@
 const fs = require("fs");
 const path = require("path");
-const { app } = require("electron");
+const { app, net } = require("electron");
 const crypto = require("crypto");
+
+function isOnline() {
+  try {
+    if (net && typeof net.isOnline === "function") return net.isOnline();
+  } catch {
+    /* ignore */
+  }
+  return true;
+}
 
 const LICENSE_FILE = "peekom-license.json";
 const LS_LICENSE_API = "https://api.lemonsqueezy.com/v1/licenses";
+const LICENSE_FORMAT_VERSION = 1;
 
 function getLicensePath() {
   return path.join(app.getPath("userData"), LICENSE_FILE);
 }
 
-function readLicenseRecord() {
+function deriveHmacSecret() {
+  const env = String(process.env.PEEKOM_LICENSE_HMAC_SECRET || "").trim();
+  if (env) return env;
+  return crypto
+    .createHash("sha256")
+    .update(`peekom-license-v1-${app.getName()}`)
+    .digest();
+}
+
+function canonicalJson(obj) {
+  const keys = Object.keys(obj).sort();
+  const sorted = {};
+  for (const k of keys) sorted[k] = obj[k];
+  return JSON.stringify(sorted);
+}
+
+function hashLicenseKey(key) {
+  if (!key) return null;
+  return crypto.createHash("sha256").update(String(key).trim()).digest("hex");
+}
+
+function buildSignedPayload(fields) {
+  return {
+    licenseKeyHash: fields.licenseKeyHash || null,
+    instanceId: fields.instanceId || null,
+    lsInstanceId: fields.lsInstanceId || null,
+    licenseStatus: fields.licenseStatus || null,
+    activatedAt: fields.activatedAt || null,
+    testMode: Boolean(fields.testMode),
+    devMode: Boolean(fields.devMode)
+  };
+}
+
+function signPayload(payload) {
+  return crypto
+    .createHmac("sha256", deriveHmacSecret())
+    .update(canonicalJson(payload))
+    .digest("base64url");
+}
+
+function verifySignedRecord(raw) {
+  if (!raw || raw.v !== LICENSE_FORMAT_VERSION || !raw.payload || !raw.sig) {
+    return false;
+  }
   try {
-    const raw = fs.readFileSync(getLicensePath(), "utf8");
-    return JSON.parse(raw);
+    const expected = signPayload(raw.payload);
+    const a = Buffer.from(String(raw.sig));
+    const b = Buffer.from(expected);
+    if (a.length !== b.length) return false;
+    return crypto.timingSafeEqual(a, b);
   } catch {
-    return { isPremium: false, licenseKey: null, instanceId: null, lsInstanceId: null };
+    return false;
+  }
+}
+
+function isPayloadPremium(payload) {
+  if (!payload) return false;
+  if (payload.devMode && !app.isPackaged) return true;
+  return payload.licenseStatus === "active";
+}
+
+function flattenSignedRecord(raw) {
+  const payload = raw.payload;
+  return {
+    v: LICENSE_FORMAT_VERSION,
+    payload,
+    sig: raw.sig,
+    isPremium: isPayloadPremium(payload),
+    licenseKey: raw.licenseKey || null,
+    licenseKeyHash: payload.licenseKeyHash || null,
+    instanceId: payload.instanceId || null,
+    lsInstanceId: payload.lsInstanceId || null,
+    licenseStatus: payload.licenseStatus || null,
+    activatedAt: payload.activatedAt || null,
+    testMode: Boolean(payload.testMode),
+    devMode: Boolean(payload.devMode)
+  };
+}
+
+function writeSignedLicense(fields) {
+  const payload = buildSignedPayload({
+    licenseKeyHash: hashLicenseKey(fields.licenseKey),
+    instanceId: fields.instanceId || null,
+    lsInstanceId: fields.lsInstanceId || null,
+    licenseStatus: fields.licenseStatus || (fields.isPremium ? "active" : null),
+    activatedAt: fields.activatedAt || new Date().toISOString(),
+    testMode: Boolean(fields.testMode),
+    devMode: Boolean(fields.devMode)
+  });
+  const record = {
+    v: LICENSE_FORMAT_VERSION,
+    payload,
+    sig: signPayload(payload),
+    instanceId: payload.instanceId,
+    isPremium: isPayloadPremium(payload),
+    licenseKey: fields.licenseKey || null,
+    lsInstanceId: payload.lsInstanceId,
+    licenseStatus: payload.licenseStatus,
+    activatedAt: payload.activatedAt,
+    testMode: payload.testMode,
+    devMode: payload.devMode
+  };
+  writeLicenseRecord(record);
+  return record;
+}
+
+function readLicenseRecord() {
+  const empty = {
+    isPremium: false,
+    licenseKey: null,
+    instanceId: null,
+    lsInstanceId: null
+  };
+  try {
+    const raw = JSON.parse(fs.readFileSync(getLicensePath(), "utf8"));
+    if (verifySignedRecord(raw)) {
+      return flattenSignedRecord(raw);
+    }
+    if (raw && raw.isPremium && !raw.sig && app.isPackaged) {
+      return { ...empty, instanceId: raw.instanceId || null, tampered: true };
+    }
+    if (raw && raw.isPremium && !raw.sig && !app.isPackaged) {
+      return raw;
+    }
+    return empty;
+  } catch {
+    return empty;
   }
 }
 
@@ -24,66 +155,38 @@ function writeLicenseRecord(record) {
   fs.writeFileSync(getLicensePath(), JSON.stringify(record, null, 2), "utf8");
 }
 
-function getLsApiKey() {
-  return String(process.env.PEEKOM_LS_API_KEY || "").trim();
-}
-
-function isLsOnlineMode() {
-  return Boolean(getLsApiKey());
-}
-
 function buildLicenseApiHeaders() {
-  const headers = {
+  return {
     Accept: "application/json",
     "Content-Type": "application/x-www-form-urlencoded"
   };
-  const apiKey = getLsApiKey();
-  if (apiKey) {
-    headers.Authorization = `Bearer ${apiKey}`;
-  }
-  return headers;
 }
 
-function isLsTestMode() {
-  if (process.env.PEEKOM_LS_TEST_MODE === "false") return false;
-  return isLsOnlineMode();
+function readLsTestMode(data) {
+  return Boolean(data?.meta?.test_mode);
 }
 
 function getOrCreateInstanceId() {
   const rec = readLicenseRecord();
   if (rec.instanceId) return rec.instanceId;
   const instanceId = crypto.randomUUID();
-  writeLicenseRecord({ ...rec, instanceId });
+  writeSignedLicense({
+    ...rec,
+    instanceId,
+    licenseStatus: rec.licenseStatus || null,
+    isPremium: false
+  });
   return instanceId;
 }
 
-function formatLicenseError(message) {
-  const text = String(message || "").trim();
-  const codes = {
-    EMPTY_KEY: "라이선스 키를 입력해 주세요.",
-    ACTIVATION_FAILED: "라이선스 활성화에 실패했습니다. 키를 확인해 주세요.",
-    VALIDATION_FAILED: "저장된 라이선스를 확인하지 못했습니다.",
-    NEED_API_KEY:
-      "온라인 라이선스 검증이 설정되지 않았습니다. PEEKOM_LS_API_KEY 환경 변수를 확인해 주세요.",
-    NETWORK_ERROR: "Lemon Squeezy 서버에 연결하지 못했습니다. 인터넷 연결을 확인해 주세요."
-  };
-  if (codes[text]) return codes[text];
-
-  const lower = text.toLowerCase();
-  if (lower.includes("invalid") && lower.includes("license")) {
-    return "유효하지 않은 라이선스 키입니다.";
-  }
-  if (lower.includes("activation limit")) {
-    return "이 라이선스 키는 활성화 가능한 기기 수를 초과했습니다.";
-  }
-  if (lower.includes("expired")) {
-    return "만료된 라이선스 키입니다.";
-  }
-  if (lower.includes("disabled")) {
-    return "비활성화된 라이선스 키입니다.";
-  }
-  if (text) return text;
-  return "인증에 실패했습니다. 라이선스 키를 확인해 주세요.";
+function mapApiErrorToCode(message, status) {
+  const lower = String(message || "").toLowerCase();
+  if (lower.includes("invalid") && lower.includes("license")) return "INVALID_LICENSE";
+  if (lower.includes("activation limit")) return "ACTIVATION_LIMIT";
+  if (lower.includes("expired")) return "EXPIRED";
+  if (lower.includes("disabled")) return "DISABLED";
+  if (status === 404) return "INVALID_LICENSE";
+  return "ACTIVATION_FAILED";
 }
 
 async function callLicenseApi(endpoint, params) {
@@ -97,14 +200,28 @@ async function callLicenseApi(endpoint, params) {
 }
 
 function extractLicenseApiError(data, status) {
-  if (data?.error) return String(data.error);
-  if (status === 404) return "유효하지 않은 라이선스 키입니다.";
-  if (status >= 400) return `Lemon Squeezy API 오류 (${status})`;
-  return "ACTIVATION_FAILED";
+  if (data?.error) return mapApiErrorToCode(String(data.error), status);
+  return mapApiErrorToCode("", status);
 }
 
 function isLicenseStatusPremium(status) {
   return status === "active";
+}
+
+function isDevKeyBypass(key) {
+  return !app.isPackaged && /^[A-F0-9-]{20,}$/i.test(key);
+}
+
+function activateDevLicense(key, instanceId) {
+  writeSignedLicense({
+    isPremium: true,
+    licenseKey: key,
+    instanceId,
+    licenseStatus: "active",
+    activatedAt: new Date().toISOString(),
+    devMode: true
+  });
+  return { ok: true, isPremium: true, devMode: true };
 }
 
 async function activateWithLemonSqueezy(key, instanceId) {
@@ -116,90 +233,126 @@ async function activateWithLemonSqueezy(key, instanceId) {
   if (data?.activated === true) {
     const licenseStatus = data.license_key?.status || "active";
     const premium = isLicenseStatusPremium(licenseStatus);
-    writeLicenseRecord({
+    writeSignedLicense({
       isPremium: premium,
       licenseKey: key,
       instanceId,
       lsInstanceId: data.instance?.id || null,
       licenseStatus,
       activatedAt: new Date().toISOString(),
-      testMode: isLsTestMode()
+      testMode: readLsTestMode(data)
     });
     if (!premium) {
       return {
         ok: false,
-        message: formatLicenseError(licenseStatus || "VALIDATION_FAILED")
+        code: mapApiErrorToCode(licenseStatus || "", status)
       };
     }
     return { ok: true, isPremium: true };
   }
 
-  const errMsg = extractLicenseApiError(data, status);
-  return { ok: false, message: formatLicenseError(errMsg) };
+  return { ok: false, code: extractLicenseApiError(data, status) };
+}
+
+/**
+ * 멱등 활성화: 이 기기에서 같은 키로 이미 활성화한 적이 있으면(=lsInstanceId 보유),
+ * 활성화 횟수를 추가로 차감하는 /activate 대신 /validate로만 확인한다.
+ */
+async function tryReuseExistingActivation(key) {
+  const rec = readLicenseRecord();
+  if (!rec.lsInstanceId) return null;
+  if (rec.licenseKeyHash && rec.licenseKeyHash !== hashLicenseKey(key)) return null;
+
+  try {
+    const { data } = await callLicenseApi("validate", {
+      license_key: key,
+      instance_id: rec.lsInstanceId
+    });
+    const status = data?.license_key?.status;
+    if (data?.valid === true && isLicenseStatusPremium(status)) {
+      writeSignedLicense({
+        isPremium: true,
+        licenseKey: key,
+        instanceId: rec.instanceId,
+        lsInstanceId: data?.instance?.id || rec.lsInstanceId,
+        licenseStatus: status,
+        activatedAt: rec.activatedAt || new Date().toISOString(),
+        testMode: readLsTestMode(data) || Boolean(rec.testMode)
+      });
+      return { ok: true, isPremium: true, reused: true };
+    }
+  } catch {
+    /* validate 실패 시 정상 activate 흐름으로 진행 */
+  }
+  return null;
 }
 
 async function activateLicenseKey(licenseKey) {
   const key = String(licenseKey || "").trim();
   if (!key) {
-    return { ok: false, message: formatLicenseError("EMPTY_KEY") };
+    return { ok: false, code: "EMPTY_KEY" };
   }
 
   const instanceId = getOrCreateInstanceId();
 
-  if (isLsOnlineMode()) {
-    try {
-      return await activateWithLemonSqueezy(key, instanceId);
-    } catch (err) {
-      return { ok: false, message: formatLicenseError(String(err?.message || "NETWORK_ERROR")) };
+  if (!isOnline()) {
+    if (isDevKeyBypass(key)) {
+      return activateDevLicense(key, instanceId);
     }
+    return { ok: false, code: "OFFLINE" };
   }
 
-  /* Dev / offline: only in unpackaged dev builds */
-  if (!require("electron").app.isPackaged && /^[A-F0-9-]{20,}$/i.test(key)) {
-    writeLicenseRecord({
-      isPremium: true,
-      licenseKey: key,
-      instanceId,
-      activatedAt: new Date().toISOString(),
-      devMode: true
-    });
-    return { ok: true, isPremium: true, devMode: true };
+  try {
+    const reused = await tryReuseExistingActivation(key);
+    if (reused) return reused;
+    return await activateWithLemonSqueezy(key, instanceId);
+  } catch {
+    return { ok: false, code: "NETWORK" };
   }
+}
 
-  return { ok: false, message: formatLicenseError("NEED_API_KEY") };
+function invalidateLicense(instanceId) {
+  writeSignedLicense({
+    isPremium: false,
+    licenseKey: null,
+    instanceId: instanceId || null,
+    lsInstanceId: null,
+    licenseStatus: null,
+    activatedAt: null,
+    testMode: false,
+    devMode: false
+  });
 }
 
 async function verifyStoredLicense() {
   const rec = readLicenseRecord();
-  if (rec.devMode && require("electron").app.isPackaged) {
-    writeLicenseRecord({
-      isPremium: false,
-      licenseKey: null,
-      instanceId: rec.instanceId || null,
-      lsInstanceId: null,
-      devMode: false
-    });
+  if (rec.tampered) {
+    invalidateLicense(rec.instanceId);
+    return readLicenseRecord();
+  }
+  if (rec.devMode && app.isPackaged) {
+    invalidateLicense(rec.instanceId);
     return readLicenseRecord();
   }
   if (!rec.isPremium || rec.devMode) {
     return rec;
   }
-  if (!rec.licenseKey) {
-    writeLicenseRecord({
-      isPremium: false,
-      licenseKey: null,
-      instanceId: rec.instanceId || null,
-      lsInstanceId: null
-    });
+  if (!rec.licenseKey && !rec.licenseKeyHash) {
+    invalidateLicense(rec.instanceId);
     return readLicenseRecord();
   }
 
-  if (!isLsOnlineMode()) {
+  if (!isOnline()) {
     return rec;
   }
 
   try {
-    const params = { license_key: rec.licenseKey };
+    const stored = JSON.parse(fs.readFileSync(getLicensePath(), "utf8"));
+    const licenseKey = stored.licenseKey;
+    if (!licenseKey) {
+      return rec;
+    }
+    const params = { license_key: licenseKey };
     if (rec.lsInstanceId) {
       params.instance_id = rec.lsInstanceId;
     }
@@ -209,54 +362,50 @@ async function verifyStoredLicense() {
     const valid = data?.valid === true && isLicenseStatusPremium(status);
 
     if (valid) {
-      if (rec.lsInstanceId !== data?.instance?.id && data?.instance?.id) {
-        writeLicenseRecord({
-          ...rec,
-          lsInstanceId: data.instance.id,
-          licenseStatus: status
-        });
-      }
+      writeSignedLicense({
+        isPremium: true,
+        licenseKey,
+        instanceId: rec.instanceId,
+        lsInstanceId: data?.instance?.id || rec.lsInstanceId || null,
+        licenseStatus: status,
+        activatedAt: rec.activatedAt || new Date().toISOString(),
+        testMode: readLsTestMode(data) || Boolean(rec.testMode)
+      });
       return readLicenseRecord();
     }
 
-    if (status === "expired" || status === "disabled" || data?.valid === false) {
-      writeLicenseRecord({
-        isPremium: false,
-        licenseKey: null,
-        instanceId: rec.instanceId || null,
-        lsInstanceId: null,
-        licenseStatus: status || null
-      });
+    if (status === "expired" || status === "disabled") {
+      invalidateLicense(rec.instanceId);
     }
   } catch {
-    /* Keep cached premium if offline; user can retry later */
+    /* 오프라인/일시 오류 시 캐시된 Plus를 유지한다. */
   }
 
   return readLicenseRecord();
 }
 
 function isPremiumActive() {
-  return Boolean(readLicenseRecord().isPremium);
+  const rec = readLicenseRecord();
+  if (rec.tampered) return false;
+  if (rec.v === LICENSE_FORMAT_VERSION && rec.payload && rec.sig) {
+    if (!verifySignedRecord(rec)) return false;
+    return isPayloadPremium(rec.payload);
+  }
+  if (app.isPackaged) return false;
+  return Boolean(rec.isPremium);
 }
 
 function deactivateLicense() {
   const rec = readLicenseRecord();
-  writeLicenseRecord({
-    ...rec,
-    isPremium: false,
-    licenseKey: null,
-    lsInstanceId: null,
-    licenseStatus: null
-  });
+  invalidateLicense(rec.instanceId);
   return { ok: true };
 }
 
 function getLicenseDebugInfo() {
+  const rec = readLicenseRecord();
   return {
-    onlineMode: isLsOnlineMode(),
-    testMode: isLsTestMode(),
-    hasApiKey: Boolean(getLsApiKey()),
-    hasStoreId: Boolean(String(process.env.PEEKOM_LS_STORE_ID || "").trim())
+    testMode: Boolean(rec.testMode),
+    signedFormat: true
   };
 }
 
@@ -268,6 +417,5 @@ module.exports = {
   isPremiumActive,
   deactivateLicense,
   getOrCreateInstanceId,
-  getLicenseDebugInfo,
-  formatLicenseError
+  getLicenseDebugInfo
 };

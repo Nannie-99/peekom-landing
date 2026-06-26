@@ -1,4 +1,3 @@
-require("dotenv").config();
 const { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, nativeImage, screen, shell, Tray } = require("electron");
 const fs = require("fs");
 const os = require("os");
@@ -298,6 +297,7 @@ let panelExpanded = false;
 let pointerOverPanel = false;
 let mainWindowFocused = false;
 let ignoreMouseEventsActive = false;
+let currentAlwaysOnTopLevel = null;
 let peekAutoCollapseEnabled = false;
 let peekCollapseMonitorInterval = null;
 /** 빼꼼 모드: 창 밖 커서는 OS가 이벤트를 안 주므로 화면 좌표로 폴링 */
@@ -316,6 +316,23 @@ let trayVisible = true;
 
 function clamp(num, min, max) {
   return Math.max(min, Math.min(num, max));
+}
+
+/**
+ * 배포(패키징) 빌드에서 개발자 도구를 여는 단축키를 차단한다.
+ * (F12, Ctrl/Cmd+Shift+I/J/C, Ctrl+Shift+K 등)
+ * 무료 사용자가 콘솔을 열어 화면측 유료 플래그를 조작하는 우회를 막기 위함.
+ * @returns {boolean} 차단했으면 true
+ */
+function blockDevtoolsShortcut(input) {
+  if (!app.isPackaged) return false;
+  const key = String(input.key || "");
+  if (key === "F12") return true;
+  if ((input.control || input.meta) && input.shift) {
+    const upper = key.toUpperCase();
+    if (["I", "J", "C", "K"].includes(upper)) return true;
+  }
+  return false;
 }
 
 function isWindowsVersionSupported() {
@@ -526,11 +543,34 @@ function applyAlwaysOnTopPolicy() {
 
   // 손잡이 띠가 다른 창에 가려지지 않도록 항상 최상위 유지.
   // 펼쳐진 상태에서는 한 단계 더 높은 레벨을 사용해 메모 패널이 최전면에 오도록 한다.
-  if (panelExpanded) {
-    mainWindow.setAlwaysOnTop(true, "screen-saver");
-  } else {
-    mainWindow.setAlwaysOnTop(true, "floating");
-  }
+  const desiredLevel = panelExpanded ? "screen-saver" : "floating";
+
+  // 50ms 폴링(window:sync-interaction)마다 setAlwaysOnTop을 재호출하면
+  // z-order가 계속 흔들려, 설정창의 네이티브 <select> 드롭다운이 심하게 깜빡인다.
+  // 실제로 레벨이 바뀔 때만 호출하여 불필요한 z-order 변경을 막는다.
+  if (desiredLevel === currentAlwaysOnTopLevel) return;
+  currentAlwaysOnTopLevel = desiredLevel;
+  mainWindow.setAlwaysOnTop(true, desiredLevel);
+}
+
+function isSettingsWindowOpen() {
+  return Boolean(settingsWindow && !settingsWindow.isDestroyed());
+}
+
+function notifySettingsWindowState() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  mainWindow.webContents.send("settings:window-state", {
+    open: isSettingsWindowOpen()
+  });
+}
+
+function applySettingsWindowLayerPolicy() {
+  if (!isSettingsWindowOpen()) return;
+  settingsWindow.setAlwaysOnTop(true, "screen-saver");
+  // 설정창이 열려 있어도 메인(투명) 창의 빈 영역은 아래 앱으로 통과해야 한다.
+  // 클릭 통과/차단은 렌더러 히트테스트(refreshPointerHitTest)가 전담하므로
+  // 여기서 강제로 통과를 막지 않고, 폴링 모니터도 계속 유지한다.
+  updatePeekCollapseMonitor();
 }
 
 function applyMouseIgnorePolicy(ignore) {
@@ -555,14 +595,8 @@ function stopPeekCollapseMonitor() {
 }
 
 function tickPeekCollapseMonitor() {
-  if (!mainWindow || mainWindow.isDestroyed() || !panelExpanded || !peekAutoCollapseEnabled) {
+  if (!mainWindow || mainWindow.isDestroyed()) {
     stopPeekCollapseMonitor();
-    return;
-  }
-
-  // 창 확장 직후에는 synthetic mouseleave·좌표 불일치로 인한
-  // false-positive 접힘을 막기 위해 유예 시간 동안 폴링을 건너뜀
-  if (Date.now() - panelExpandedAt < EXPAND_GRACE_MS) {
     return;
   }
 
@@ -591,10 +625,11 @@ function tickPeekCollapseMonitor() {
 }
 
 function updatePeekCollapseMonitor() {
-  stopPeekCollapseMonitor();
-  if (!panelExpanded || !peekAutoCollapseEnabled || !mainWindow || mainWindow.isDestroyed()) {
+  if (!mainWindow || mainWindow.isDestroyed()) {
+    stopPeekCollapseMonitor();
     return;
   }
+  if (peekCollapseMonitorInterval) return;
 
   peekCollapseMonitorInterval = setInterval(tickPeekCollapseMonitor, PEEK_COLLAPSE_POLL_MS);
   tickPeekCollapseMonitor();
@@ -604,11 +639,9 @@ function setPanelExpandedState(expanded) {
   panelExpanded = Boolean(expanded);
   if (panelExpanded) {
     panelExpandedAt = Date.now();
-    applyMouseIgnorePolicy(false);
   }
-  if (!panelExpanded) {
-    applyMouseIgnorePolicy(true);
-  }
+  // 클릭 통과는 렌더러 히트테스트가 담당. 펼침 시에도 기본값은 통과(true).
+  applyMouseIgnorePolicy(true);
   applyAlwaysOnTopPolicy();
   updatePeekCollapseMonitor();
 }
@@ -714,7 +747,8 @@ function createMainWindow() {
       preload: PRELOAD_PATH,
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: false
+      sandbox: false,
+      devTools: !app.isPackaged
     }
   });
 
@@ -740,12 +774,17 @@ function createMainWindow() {
   mainWindow.webContents.on("did-finish-load", () => {
     applyAlwaysOnTopPolicy();
     applyMouseIgnorePolicy(true);
+    updatePeekCollapseMonitor();
     mainWindow.webContents.setZoomFactor(1.0);
     pushStartupLoginSync(mainWindow);
   });
 
   // Ctrl/Cmd +/- 줌 키를 렌더러가 처리하기 전에 차단
   mainWindow.webContents.on("before-input-event", (event, input) => {
+    if (blockDevtoolsShortcut(input)) {
+      event.preventDefault();
+      return;
+    }
     if ((input.control || input.meta) &&
         (input.key === "=" || input.key === "+" || input.key === "-" ||
          input.key === "_" || input.key === "0")) {
@@ -762,6 +801,7 @@ function createMainWindow() {
     mainWindowFocused = false;
     pointerOverPanel = false;
     ignoreMouseEventsActive = false;
+    currentAlwaysOnTopLevel = null;
     peekAutoCollapseEnabled = false;
   });
 }
@@ -769,6 +809,7 @@ function createMainWindow() {
 function createSettingsWindow() {
   if (settingsWindow && !settingsWindow.isDestroyed()) {
     settingsWindow.focus();
+    applySettingsWindowLayerPolicy();
     return;
   }
 
@@ -796,7 +837,8 @@ function createSettingsWindow() {
       preload: PRELOAD_PATH,
       nodeIntegration: false,
       contextIsolation: true,
-      sandbox: false
+      sandbox: false,
+      devTools: !app.isPackaged
     }
   });
 
@@ -806,13 +848,20 @@ function createSettingsWindow() {
   });
 
   settingsWindow.setMenuBarVisibility(false);
+  settingsWindow.setAlwaysOnTop(true, "screen-saver");
   settingsWindow.loadFile(path.join(__dirname, "settings.html"));
 
   settingsWindow.webContents.once("did-finish-load", () => {
     pushStartupLoginSync(settingsWindow);
+    applySettingsWindowLayerPolicy();
+    notifySettingsWindowState();
   });
 
   settingsWindow.webContents.on("before-input-event", (event, input) => {
+    if (blockDevtoolsShortcut(input)) {
+      event.preventDefault();
+      return;
+    }
     if ((input.control || input.meta) &&
         (input.key === "=" || input.key === "+" || input.key === "-" ||
          input.key === "_" || input.key === "0")) {
@@ -821,7 +870,11 @@ function createSettingsWindow() {
   });
 
   settingsWindow.on("focus", () => {
-    applyAlwaysOnTopPolicy();
+    applySettingsWindowLayerPolicy();
+  });
+
+  settingsWindow.on("show", () => {
+    applySettingsWindowLayerPolicy();
   });
 
   settingsWindow.on("close", (e) => {
@@ -838,6 +891,9 @@ function createSettingsWindow() {
   settingsWindow.on("closed", () => {
     settingsWindow = null;
     applyAlwaysOnTopPolicy();
+    applyMouseIgnorePolicy(true);
+    updatePeekCollapseMonitor();
+    notifySettingsWindowState();
   });
 }
 
@@ -855,6 +911,28 @@ function updateAppUiLanguageFromStateJson(stateJson) {
   }
 }
 
+function syncPanelEdgeFromStateJson(stateJson) {
+  if (typeof stateJson !== "string" || !stateJson) return;
+  try {
+    const parsed = JSON.parse(stateJson);
+    let edge = parsed?.global?.panelEdge === "left" ? "left" : "right";
+    if (edge === "left" && !premiumActive) edge = "right";
+    const prevEdge = appSettings.panelEdge;
+    appSettings = normalizeSettings({ ...appSettings, panelEdge: edge });
+    if (prevEdge !== appSettings.panelEdge) {
+      lastAttachedSignature = null;
+      refreshWindowPosition(true);
+    }
+  } catch {
+    /* ignore */
+  }
+}
+
+function syncAppStateFromStateJson(stateJson) {
+  updateAppUiLanguageFromStateJson(stateJson);
+  syncPanelEdgeFromStateJson(stateJson);
+}
+
 function broadcastStateChanged(options = {}) {
   const {
     skipSettingsReload = false,
@@ -865,7 +943,7 @@ function broadcastStateChanged(options = {}) {
   } = options;
 
   if (typeof stateJson === "string" && stateJson.length > 0) {
-    updateAppUiLanguageFromStateJson(stateJson);
+    syncAppStateFromStateJson(stateJson);
   }
 
   if (!skipMainReload && mainWindow && !mainWindow.isDestroyed()) {
@@ -980,6 +1058,7 @@ function focusRunningInstance() {
     if (settingsWindow.isMinimized()) settingsWindow.restore();
     settingsWindow.show();
     settingsWindow.focus();
+    applySettingsWindowLayerPolicy();
     return;
   }
   if (mainWindow && !mainWindow.isDestroyed()) {
@@ -1006,6 +1085,11 @@ if (!gotTheLock) {
 
   app.whenReady().then(async () => {
   if (!assertOsSupported()) return;
+
+  // 배포 빌드에서는 기본 애플리케이션 메뉴(개발자 도구 단축키 포함)를 제거한다.
+  if (app.isPackaged) {
+    Menu.setApplicationMenu(null);
+  }
 
   loadMonitorPrefs();
 
@@ -1236,13 +1320,13 @@ if (!gotTheLock) {
     return { ok: true, shortcutStatus, windowState: getWindowState() };
   });
 
-  ipcMain.handle("memo:flush", async () => {
+      ipcMain.handle("memo:flush", async () => {
     if (!mainWindow || mainWindow.isDestroyed()) {
       return { ok: false, reason: "NO_MAIN_WINDOW" };
     }
     try {
       const flushed = await mainWindow.webContents.executeJavaScript(
-        "typeof window.__peekomFlushActiveMemo === 'function' ? window.__peekomFlushActiveMemo() : false",
+        "typeof window.__peekomFlushAllMemos === 'function' ? window.__peekomFlushAllMemos() : (typeof window.__peekomFlushActiveMemo === 'function' ? window.__peekomFlushActiveMemo() : false)",
         true
       );
       return { ok: Boolean(flushed) };
@@ -1614,6 +1698,29 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
+});
+
+let quitFlushDone = false;
+
+async function flushMainWindowMemo() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  try {
+    await mainWindow.webContents.executeJavaScript(
+      "typeof window.__peekomFlushAllMemos === 'function' ? window.__peekomFlushAllMemos() : (typeof window.__peekomFlushActiveMemo === 'function' ? window.__peekomFlushActiveMemo() : false)",
+      true
+    );
+  } catch {
+    /* ignore */
+  }
+}
+
+app.on("before-quit", (event) => {
+  if (quitFlushDone) return;
+  event.preventDefault();
+  quitFlushDone = true;
+  flushMainWindowMemo().finally(() => {
+    app.quit();
+  });
 });
 
 app.on("will-quit", () => {

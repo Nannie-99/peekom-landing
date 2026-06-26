@@ -1,7 +1,7 @@
 module.exports = { buildVi, buildTh, guideStartBodyVi, guideStartBodyTh, markdownBodyVi, markdownBodyTh, formatBarBodyVi, formatBarBodyTh };
 
 function buildVi(E, B, PW, PN, pricingBlock, mailLink, buyLink, sharedFz) {
-    const cpExtra = " · thanh toán một lần · tối đa 2 thiết bị · cập nhật nhỏ bao gồm · hoàn tiền 7 ngày " + mailLink();
+    const cpExtra = " · thanh toán một lần · tối đa 2 thiết bị · cập nhật nhỏ bao gồm · hoàn tiền 30 ngày " + mailLink();
     return Object.assign(sharedFz("vi"), {
         navHome: "Trang chủ", navFeatures: "Tính năng", navDownload: "Tải xuống", navFaq: "Hỏi đáp", navHelp: "Hướng dẫn", navContact: "Liên hệ",
         searchPlaceholder: "Tìm kiếm...",
@@ -25,7 +25,7 @@ function buildVi(E, B, PW, PN, pricingBlock, mailLink, buyLink, sharedFz) {
         featuresTitle: "Tính năng", featuresSub: "Peekom làm gì — tóm tắt.",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "Một app — Peekom Plus mở khóa trong app.",
         comparePricing: pricingBlock("(chưa gồm VAT)", "Giá ra mắt", cpExtra),
-        guidePlusP: "1) Mua giá ra mắt $9.99 trên Lemon Squeezy → 2) Nhận khóa qua email → 3) Mở Peekom → nhập khóa trong giao diện khóa hoặc Cài đặt → 4) Kích hoạt Peekom Plus hoàn tất. Hoàn tiền 7 ngày: <a href=\"mailto:" + E + "\">" + E + "</a>",
+        guidePlusP: "1) Mua giá ra mắt $9.99 trên Lemon Squeezy → 2) Nhận khóa qua email → 3) Mở Peekom → nhập khóa trong giao diện khóa hoặc Cài đặt → 4) Kích hoạt Peekom Plus hoàn tất. Hoàn tiền 30 ngày: <a href=\"mailto:" + E + "\">" + E + "</a>",
         dlSub: "Cài Peekom một lần. Nâng cấp Peekom Plus trong app.",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
         dlPlusHint: 'Peekom Plus: Trước ' + PW + ' → Ra mắt <strong>$9.99</strong> (chưa gồm VAT) · ' + buyLink("Mua trên Lemon Squeezy") + " → nhập khóa trong app",
@@ -95,7 +95,7 @@ function buildVi(E, B, PW, PN, pricingBlock, mailLink, buyLink, sharedFz) {
 }
 
 function buildTh(E, B, PW, PN, pricingBlock, mailLink, buyLink, sharedFz) {
-    const cpExtra = " · จ่ายครั้งเดียว · สูงสุด 2 อุปกรณ์ · อัปเดตย่อยรวม · คืนเงิน 7 วัน " + mailLink();
+    const cpExtra = " · จ่ายครั้งเดียว · สูงสุด 2 อุปกรณ์ · อัปเดตย่อยรวม · คืนเงิน 30 วัน " + mailLink();
     return Object.assign(sharedFz("th"), {
         navHome: "หน้าแรก", navFeatures: "ฟีเจอร์", navDownload: "ดาวน์โหลด", navFaq: "คำถาม", navHelp: "คู่มือ", navContact: "ติดต่อ",
         searchPlaceholder: "ค้นหา...",
@@ -119,7 +119,7 @@ function buildTh(E, B, PW, PN, pricingBlock, mailLink, buyLink, sharedFz) {
         featuresTitle: "ฟีเจอร์", featuresSub: "Peekom ทำอะไรได้ — สรุปสั้นๆ",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "แอปเดียว — Peekom Plus ปลดล็อกในแอป",
         comparePricing: pricingBlock("(ไม่รวม VAT)", "ราคาเปิดตัว", cpExtra),
-        guidePlusP: "1) ซื้อราคาเปิดตัว $9.99 ที่ Lemon Squeezy → 2) รับคีย์ทางอีเมล → 3) เปิด Peekom → ใส่คีย์ใน UI ล็อกหรือการตั้งค่า → 4) เปิดใช้ Peekom Plus สำเร็จ คืนเงิน 7 วัน: <a href=\"mailto:" + E + "\">" + E + "</a>",
+        guidePlusP: "1) ซื้อราคาเปิดตัว $9.99 ที่ Lemon Squeezy → 2) รับคีย์ทางอีเมล → 3) เปิด Peekom → ใส่คีย์ใน UI ล็อกหรือการตั้งค่า → 4) เปิดใช้ Peekom Plus สำเร็จ คืนเงิน 30 วัน: <a href=\"mailto:" + E + "\">" + E + "</a>",
         dlSub: "ติดตั้ง Peekom ครั้งเดียว อัปเกรด Peekom Plus ในแอป",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
         dlPlusHint: 'Peekom Plus: เดิม ' + PW + ' → เปิดตัว <strong>$9.99</strong> (ไม่รวม VAT) · ' + buyLink("ซื้อที่ Lemon Squeezy") + " → ใส่คีย์ในแอป",

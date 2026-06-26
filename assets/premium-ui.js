@@ -23,6 +23,27 @@
     return fallback || key;
   }
 
+  const PREMIUM_ERROR_I18N = {
+    EMPTY_KEY: "premiumErrEmptyKey",
+    ACTIVATION_FAILED: "premiumErrActivationFailed",
+    VALIDATION_FAILED: "premiumErrActivationFailed",
+    INVALID_LICENSE: "premiumErrInvalidLicense",
+    ACTIVATION_LIMIT: "premiumErrActivationLimit",
+    EXPIRED: "premiumErrExpired",
+    DISABLED: "premiumErrDisabled",
+    NETWORK: "premiumErrNetwork",
+    NETWORK_ERROR: "premiumErrNetwork",
+    OFFLINE: "premiumOfflineHint",
+    TAMPERED: "premiumErrTampered"
+  };
+
+  function formatPremiumError(result) {
+    const code = result && result.code;
+    const key = code && PREMIUM_ERROR_I18N[code];
+    if (key) return t(key, t("premiumActivateFail", "인증에 실패했습니다."));
+    return t("premiumActivateFail", "인증에 실패했습니다.");
+  }
+
   function ensurePremiumModalStyles() {
     let style = document.getElementById("peekom-premium-modal-styles");
     if (!style) {
@@ -92,12 +113,48 @@
         background: #8e44ad; color: #fff; border-color: #7d3c98;
       }
       .premium-modal__btn:hover { filter: brightness(0.97); }
+      .premium-modal__btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }
       .premium-modal__error { color: #c42b1c; font-size: 12px; min-height: 18px; margin-top: 6px; }
+      .premium-modal__error--info { color: #8a6d00; }
+      .premium-modal__footer {
+        margin-top: 12px; padding-top: 10px; border-top: 1px solid #ededed;
+        display: flex; align-items: center;
+      }
+      .premium-modal__netstatus {
+        font-size: 11px; color: #8a8a8a;
+        display: inline-flex; align-items: center; gap: 5px;
+      }
+      .premium-modal__netstatus::before {
+        content: ""; width: 7px; height: 7px; border-radius: 50%;
+        background: #c0392b; display: inline-block; flex-shrink: 0;
+      }
+      .premium-modal__netstatus.is-online::before { background: #27ae60; }
+      .premium-modal--success {
+        display: flex; flex-direction: column; align-items: center; text-align: center;
+      }
+      .premium-modal--success .premium-modal__hero-img {
+        width: 84px; height: 84px; margin: 0 auto 14px;
+      }
+      .premium-modal--success h3 {
+        margin: 0 0 10px; font-size: 17px; color: #202020; font-weight: 700;
+      }
+      .premium-modal__success-lead {
+        margin: 0 0 16px; font-size: 13px; color: #3a3a3a; line-height: 1.6;
+        white-space: pre-line;
+      }
+      .premium-modal--success .premium-feature-card {
+        width: 100%; box-sizing: border-box; text-align: left; margin-bottom: 16px;
+      }
+      .premium-modal--success .premium-modal__actions {
+        width: 100%; justify-content: center;
+      }
       .premium-lock-wrap { position: relative; }
       .premium-lock-wrap.is-locked { opacity: 0.72; }
       .premium-lock-badge {
         display: inline-flex; align-items: center; gap: 4px;
-        font-size: 11px; color: #8e44ad; margin-left: 6px;
+        font-size: 11px; font-weight: 500; color: #fff; background: #8e44ad;
+        margin-left: 6px; padding: 1px 6px; border-radius: 4px; line-height: 1.35;
+        white-space: nowrap;
       }
     `;
   }
@@ -111,6 +168,25 @@
   }
 
   function refreshPremiumModalI18n() {
+    const backdrop = document.getElementById("peekomPremiumModal");
+    if (backdrop?.dataset.view === "success") {
+      const title = document.getElementById("premiumModalTitle");
+      const lead = document.getElementById("premiumUpgradeSuccessLead");
+      const btn = document.getElementById("premiumUpgradeSuccessBtn");
+      if (title) title.textContent = t("premiumUpgradeSuccessTitle", "업그레이드 완료!");
+      if (lead) {
+        lead.textContent = t(
+          "premiumUpgradeSuccessLead",
+          "Peekom Plus를 구매해 주셔서 감사합니다. 이제 모든 Plus 기능을 바로 사용할 수 있습니다."
+        );
+      }
+      if (btn) btn.textContent = t("premiumUpgradeSuccessBtn", "시작하기");
+      PREMIUM_FEAT_KEYS.forEach((key) => {
+        const el = document.querySelector(`#peekomPremiumModal [data-i18n="${key}"]`);
+        if (el) el.textContent = t(key, el.textContent);
+      });
+      return;
+    }
     const title = document.getElementById("premiumModalTitle");
     const lead = document.querySelector("#peekomPremiumModal .premium-modal__lead");
     const buyBtn = document.getElementById("premiumBuyBtn");
@@ -127,6 +203,7 @@
       const el = document.querySelector(`#peekomPremiumModal [data-i18n="${key}"]`);
       if (el) el.textContent = t(key, el.textContent);
     });
+    if (document.getElementById("premiumNetStatus")) updateNetStatusUI();
   }
 
   function createPremiumModal() {
@@ -155,12 +232,17 @@
               <button type="button" class="premium-modal__btn" id="premiumModalClose"></button>
             </div>
             <div class="premium-modal__error" id="premiumModalError"></div>
+            <div class="premium-modal__footer">
+              <span class="premium-modal__netstatus" id="premiumNetStatus"></span>
+            </div>
           </div>
         </div>
       </div>
     `;
     document.body.appendChild(backdrop);
     refreshPremiumModalI18n();
+    updateNetStatusUI();
+    ensureNetStatusListeners();
 
     backdrop.addEventListener("click", (e) => {
       if (e.target === backdrop) hidePremiumModal();
@@ -176,42 +258,145 @@
     return backdrop;
   }
 
+  function showPremiumUpgradeSuccess() {
+    const backdrop = document.getElementById("peekomPremiumModal");
+    if (!backdrop) return;
+    backdrop.dataset.view = "success";
+    const dialog = backdrop.querySelector(".premium-modal");
+    if (dialog) dialog.classList.add("premium-modal--success");
+    backdrop.innerHTML = `
+      <div class="premium-modal premium-modal--success" role="dialog" aria-labelledby="premiumModalTitle">
+        <img class="premium-modal__hero-img" src="build/plus.png" alt="" width="84" height="84" />
+        <h3 id="premiumModalTitle"></h3>
+        <p class="premium-modal__success-lead" id="premiumUpgradeSuccessLead"></p>
+        ${buildFeatureCardHtml()}
+        <div class="premium-modal__actions">
+          <button type="button" class="premium-modal__btn premium-modal__btn--primary" id="premiumUpgradeSuccessBtn"></button>
+        </div>
+      </div>
+    `;
+    refreshPremiumModalI18n();
+    backdrop.classList.remove("hidden");
+    document.getElementById("premiumUpgradeSuccessBtn")?.addEventListener("click", hidePremiumModal);
+    if (typeof window.peekomSyncWindowInteraction === "function") {
+      window.peekomSyncWindowInteraction({ ignoreMouse: false, pointerOver: true });
+    }
+    document.getElementById("premiumUpgradeSuccessBtn")?.focus();
+  }
+
+  function isOnline() {
+    return typeof navigator === "undefined" ? true : navigator.onLine !== false;
+  }
+
+  let netStatusListenersBound = false;
+  function ensureNetStatusListeners() {
+    if (netStatusListenersBound || typeof window === "undefined") return;
+    netStatusListenersBound = true;
+    window.addEventListener("online", updateNetStatusUI);
+    window.addEventListener("offline", updateNetStatusUI);
+  }
+
+  /**
+   * 모달 푸터의 인터넷 연결 상태 텍스트를 갱신하고,
+   * 오프라인일 때는 인증 버튼을 막아 라이선스 횟수가 낭비되지 않게 한다.
+   */
+  function updateNetStatusUI() {
+    const statusEl = document.getElementById("premiumNetStatus");
+    const btn = document.getElementById("premiumActivateBtn");
+    const errEl = document.getElementById("premiumModalError");
+    const online = isOnline();
+
+    if (statusEl) {
+      statusEl.classList.toggle("is-online", online);
+      statusEl.textContent = online
+        ? t("premiumNetOnline", "인터넷에 연결됨")
+        : t("premiumNetOffline", "인터넷에 연결되어 있지 않음");
+    }
+
+    // 활성화 진행 중이 아닐 때만 버튼 상태를 제어한다.
+    if (btn && !btn.dataset.activating) {
+      btn.disabled = !online;
+      btn.title = online ? "" : t("premiumOfflineHint", "");
+    }
+
+    if (errEl) {
+      if (!online) {
+        errEl.textContent = t(
+          "premiumOfflineHint",
+          "라이선스 인증은 인터넷에 연결된 상태에서만 가능합니다. 연결 후 다시 시도해 주세요."
+        );
+        errEl.classList.add("premium-modal__error--info");
+      } else if (errEl.classList.contains("premium-modal__error--info")) {
+        errEl.textContent = "";
+        errEl.classList.remove("premium-modal__error--info");
+      }
+    }
+  }
+
   async function activateFromModal() {
     const input = document.getElementById("premiumLicenseInput");
     const errEl = document.getElementById("premiumModalError");
     const btn = document.getElementById("premiumActivateBtn");
-    errEl.textContent = "";
+
+    // 오프라인이면 API를 호출하지 않고 막는다(라이선스 횟수 보호).
+    if (!isOnline()) {
+      updateNetStatusUI();
+      return;
+    }
+
+    if (errEl) {
+      errEl.textContent = "";
+      errEl.classList.remove("premium-modal__error--info");
+    }
     if (btn) {
+      btn.dataset.activating = "1";
       btn.disabled = true;
       btn.textContent = t("premiumActivating", "확인 중…");
     }
     try {
       const result = await window.peekom.invoke("premium:activate", input.value.trim());
-      if (result.ok) {
-        hidePremiumModal();
-        if (typeof window.onPremiumActivated === "function") {
-          window.onPremiumActivated();
+      if (result && result.ok) {
+        // 활성화는 성공했는데 이후 화면 갱신에서 오류가 나도
+        // "인증 실패"처럼 보이지 않도록 보호한다(서버 활성화는 이미 완료됨).
+        try {
+          if (typeof window.onPremiumActivated === "function") {
+            await window.onPremiumActivated();
+          }
+        } catch (err) {
+          console.error("onPremiumActivated failed:", err);
         }
-      } else {
-        errEl.textContent = result.message || t("premiumActivateFail", "인증에 실패했습니다.");
+        showPremiumUpgradeSuccess();
+        return;
       }
+      if (errEl) {
+        errEl.textContent = formatPremiumError(result);
+      }
+    } catch (err) {
+      console.error("premium:activate failed:", err);
+      if (errEl) errEl.textContent = t("premiumActivateFail", "인증에 실패했습니다.");
     } finally {
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = t("premiumActivateBtn", "인증");
+      const liveBtn = document.getElementById("premiumActivateBtn");
+      if (liveBtn) {
+        delete liveBtn.dataset.activating;
+        liveBtn.disabled = !isOnline();
+        liveBtn.textContent = t("premiumActivateBtn", "인증");
       }
     }
   }
 
   function showPremiumModal() {
     const existing = document.getElementById("peekomPremiumModal");
-    if (existing && !existing.querySelector(".premium-feature-list")) {
+    if (existing && (existing.dataset.view === "success" || !existing.querySelector(".premium-feature-list"))) {
       existing.remove();
     }
     createPremiumModal();
+    const backdrop = document.getElementById("peekomPremiumModal");
+    if (backdrop) backdrop.dataset.view = "purchase";
     refreshPremiumModalI18n();
     document.getElementById("premiumModalError").textContent = "";
     document.getElementById("peekomPremiumModal").classList.remove("hidden");
+    ensureNetStatusListeners();
+    updateNetStatusUI();
     document.getElementById("premiumLicenseInput").focus();
     if (typeof window.peekomSyncWindowInteraction === "function") {
       window.peekomSyncWindowInteraction({ ignoreMouse: false, pointerOver: true });
@@ -220,7 +405,10 @@
 
   function hidePremiumModal() {
     const el = document.getElementById("peekomPremiumModal");
-    if (el) el.classList.add("hidden");
+    if (el) {
+      el.classList.add("hidden");
+      delete el.dataset.view;
+    }
     if (typeof window.peekomRefreshPointerHitTest === "function") {
       window.peekomRefreshPointerHitTest({}, true);
     }

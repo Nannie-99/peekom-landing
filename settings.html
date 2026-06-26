@@ -8,6 +8,7 @@
     <script src="assets/i18n.js"></script>
     <script src="assets/i18n-locale-extra.js"></script>
     <script src="assets/memo-sanitize.js"></script>
+    <script src="assets/memo-state-helpers.js"></script>
     <script src="assets/premium-config.js"></script>
     <script src="assets/premium-ui.js"></script>
     <style>
@@ -86,13 +87,18 @@
         color: var(--muted);
       }
 
+      .settings-root .premium-lock-badge,
       .premium-lock-badge {
         display: inline-flex;
         align-items: center;
         font-size: 11px;
-        color: #8e44ad;
+        color: #fff;
+        background: #8e44ad;
         font-weight: 500;
         margin-left: 4px;
+        padding: 1px 6px;
+        border-radius: 4px;
+        line-height: 1.35;
         white-space: nowrap;
       }
 
@@ -241,6 +247,28 @@
 
       .settings-home-link:hover {
         text-decoration: underline;
+      }
+
+      .lang-select-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        flex-shrink: 0;
+      }
+
+      .lang-globe-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        color: var(--muted);
+        line-height: 0;
+      }
+
+      .lang-globe-icon svg {
+        width: 16px;
+        height: 16px;
+        display: block;
       }
 
       .lang-select-compact {
@@ -429,8 +457,16 @@
         overflow-x: hidden;
         display: flex;
         flex-direction: column;
-        gap: 4px;
+        gap: 11px;
         padding: 6px 5px 6px 0;
+      }
+
+      .panel-scope-intro {
+        margin: 0;
+        padding: 0 var(--settings-gutter);
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.45;
       }
 
       .setting-row {
@@ -462,6 +498,7 @@
       .field-inline > .setting-select,
       .field-inline > .setting-input,
       .field-inline > .font-size-row,
+      .field-inline > .hover-delay-stepper,
       .field-inline > .premium-trigger-wrap {
         flex: 0 0 auto;
         width: var(--setting-control-width);
@@ -485,6 +522,33 @@
         font-size: 11px;
         color: var(--muted);
         line-height: 1.3;
+      }
+
+      .font-family-sample {
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 6px 10px;
+        background: #eceef1;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: var(--setting-control-width);
+        height: 60px;
+        overflow: hidden;
+        margin-left: calc(var(--field-label-width) + var(--field-gap));
+        user-select: none;
+        pointer-events: none;
+      }
+
+      .font-family-sample__text {
+        display: block;
+        font-size: 15px;
+        line-height: 1.2;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
       }
 
       .field-error {
@@ -723,6 +787,22 @@
         border-color: var(--accent);
       }
 
+      .setting-input[type="number"] {
+        -moz-appearance: textfield;
+        appearance: textfield;
+      }
+
+      .setting-input[type="number"]::-webkit-inner-spin-button,
+      .setting-input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      #memoOpacityWrap .field-inline {
+        overflow: hidden;
+        isolation: isolate;
+      }
+
       .theme-group {
         display: grid;
         grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -730,14 +810,18 @@
       }
 
       .custom-color-row {
-        display: none;
+        display: grid;
+        visibility: hidden;
+        pointer-events: none;
         grid-template-columns: 1fr 1fr;
         gap: 5px;
         margin-top: 4px;
+        min-height: 32px;
       }
 
       .custom-color-row.visible {
-        display: grid;
+        visibility: visible;
+        pointer-events: auto;
       }
 
       .color-picker-label {
@@ -827,7 +911,6 @@
         border-color: var(--accent);
         outline: 1px solid var(--accent);
         outline-offset: -1px;
-        font-weight: 600;
       }
 
       .delete-row {
@@ -869,13 +952,6 @@
 
       .delete-warning.visible {
         display: block;
-      }
-
-      .settings-actions {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 5px;
       }
 
       .settings-action-btn {
@@ -1007,6 +1083,47 @@
         display: flex;
       }
 
+      .hover-delay-stepper {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        min-width: 0;
+      }
+
+      .hover-delay-step-btn {
+        height: 28px;
+        width: 28px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--surface);
+        font-size: 11px;
+        font-family: inherit;
+        line-height: 1;
+        color: var(--text);
+        cursor: pointer;
+        flex-shrink: 0;
+        padding: 0;
+      }
+
+      .hover-delay-step-btn:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+        background: var(--accent-subtle);
+      }
+
+      .hover-delay-input {
+        flex: 1;
+        min-width: 0;
+        width: auto;
+        text-align: center;
+      }
+
+      .hover-delay-unit {
+        font-size: 12px;
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+
       .shortcut-capture-input {
         cursor: pointer;
         font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
@@ -1044,13 +1161,26 @@
       }
 
       .common-reset-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        text-align: right;
         padding-left: var(--settings-gutter);
-        margin: 8px 0;
       }
 
       .common-reset-section .field-hint-below {
         padding-left: 0;
         margin-top: 4px;
+        text-align: right;
+      }
+
+      #resetCommonDefaultsBtn {
+        border-color: #8e44ad;
+      }
+
+      #resetCommonDefaultsBtn:hover {
+        border-color: #7d3c98;
+        color: #7d3c98;
       }
 
       .font-size-row {
@@ -1130,6 +1260,11 @@
         min-width: 200px;
       }
       .color-popover.visible { display: block; }
+      /* 글자색(오른쪽 열) 팝오버는 설정창 오른쪽 밖으로 넘치지 않도록 오른쪽 기준으로 펼침 */
+      .custom-color-row > .field-inline:nth-child(2) .color-popover {
+        left: auto;
+        right: 0;
+      }
       .recent-colors-title {
         font-size: 11px;
         color: var(--muted);
@@ -1279,9 +1414,38 @@
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        gap: 5px;
+        gap: 8px;
         border-top: 1px solid var(--border);
-        padding-top: 4px;
+        padding: 4px 0 2px;
+        flex-shrink: 0;
+      }
+
+      .settings-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+        flex-shrink: 0;
+      }
+
+      .settings-actions .status-text {
+        margin: 0;
+        min-height: 12px;
+        max-height: 14px;
+        line-height: 1.2;
+        font-size: 11px;
+        text-align: right;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 220px;
+      }
+
+      .settings-action-buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
       }
 
       .bottom-left-checks {
@@ -1305,11 +1469,13 @@
       }
 
       .contrast-warning {
+        grid-column: 1 / -1;
         margin-top: 4px;
         font-size: 11px;
         color: var(--danger);
         line-height: 1.3;
-        white-space: nowrap;
+        white-space: normal;
+        word-break: keep-all;
       }
 
       .unsaved-modal-overlay {
@@ -1370,7 +1536,16 @@
           <p class="settings-meta">© 2026. Peekom All rights reserved.</p>
           <a class="settings-home-link" href="#" data-external-url="https://www.peekom.com/">https://www.peekom.com/</a>
         </div>
-        <select id="langSelect" class="lang-select-compact" aria-label="언어"></select>
+        <div class="lang-select-header">
+          <span class="lang-globe-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M2 12h20"/>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+            </svg>
+          </span>
+          <select id="langSelect" class="lang-select-compact" aria-label="언어"></select>
+        </div>
       </div>
 
       <div id="settingsTabRow" class="settings-tab-row" role="tablist"></div>
@@ -1390,8 +1565,11 @@
           </label>
         </div>
         <div class="settings-actions">
-          <button id="settingsApplyBtn" class="settings-action-btn primary" type="button" disabled>적용</button>
-          <button id="settingsCloseBtn" class="settings-action-btn" type="button">닫기</button>
+          <p id="settingsStatusText" class="status-text" role="status" aria-live="polite"></p>
+          <div class="settings-action-buttons">
+            <button id="settingsApplyBtn" class="settings-action-btn primary" type="button" disabled>적용</button>
+            <button id="settingsCloseBtn" class="settings-action-btn" type="button">닫기</button>
+          </div>
         </div>
       </div>
     </main>
@@ -1440,6 +1618,11 @@
       let isPremium = false;
       const FONT_SIZE_MIN = 8;
       const FONT_SIZE_MAX = 36;
+      const HOVER_DELAY_MIN_SEC = 0.1;
+      const HOVER_DELAY_MAX_SEC = 10;
+      const HOVER_DELAY_STEP_SEC = 0.1;
+      const HOVER_DELAY_MIN_MS = 100;
+      const HOVER_DELAY_MAX_MS = 10000;
       const THEME_NAMES = ["yellow", "pink", "blue", "green", "custom"];
       const THEME_LABELS = {
         yellow: "노랑",
@@ -1743,11 +1926,6 @@
           s.global = { ...defaultGlobal(), ...s.global };
           delete s.global.imageSize;
           s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
-          if (!s.global.setupCompleted && s.enabledCount > 1) {
-            s.enabledCount = 1;
-            s.order = [0];
-            s.activeSlot = 0;
-          }
           s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
           s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
           s.order = normalizeOrder(s.order, s.enabledCount);
@@ -1819,30 +1997,54 @@
 
       function saveStateLocal(state) {
         const next = { ...state, version: 5 };
+        const json = JSON.stringify(next);
+        let prev = null;
         try {
-          const prev = localStorage.getItem(STATE_KEY);
-          if (prev) localStorage.setItem(STATE_KEY_BACKUP, prev);
+          prev = localStorage.getItem(STATE_KEY);
         } catch {
           /* ignore */
         }
-        localStorage.setItem(STATE_KEY, JSON.stringify(next));
+        try {
+          localStorage.setItem(STATE_KEY, json);
+        } catch (err) {
+          try {
+            localStorage.removeItem(STATE_KEY_BACKUP);
+            localStorage.setItem(STATE_KEY, json);
+          } catch (err2) {
+            console.error("saveStateLocal failed (storage quota?)", err2);
+            return;
+          }
+        }
+        if (prev) {
+          try {
+            localStorage.setItem(STATE_KEY_BACKUP, prev);
+          } catch {
+            try {
+              localStorage.removeItem(STATE_KEY_BACKUP);
+            } catch {
+              /* ignore */
+            }
+          }
+        }
       }
 
       async function saveStateAsync(state) {
         const next = { ...state, version: 5 };
         const json = JSON.stringify(next);
         let syncOk = false;
-        try {
-          const res = await ipcRenderer.invoke("shared-state:set", json);
-          syncOk = Boolean(res?.ok);
-          if (!syncOk) {
-            console.error("shared-state:set failed", res);
+        for (let attempt = 0; attempt < 2 && !syncOk; attempt++) {
+          try {
+            const res = await ipcRenderer.invoke("shared-state:set", json);
+            syncOk = Boolean(res?.ok);
+            if (!syncOk) {
+              console.error("shared-state:set failed", res);
+            }
+          } catch (err) {
+            console.error(err);
           }
-        } catch (err) {
-          console.error(err);
         }
         saveStateLocal(next);
-        return { ok: syncOk, json, state: next };
+        return { syncOk, json, state: next };
       }
 
       async function saveState(state) {
@@ -1852,15 +2054,20 @@
       async function saveAndNotifyMain(state, options = {}) {
         const { skipSettingsReload = true } = options;
         const saved = await saveStateAsync(state);
-        if (!saved.ok) {
-          return saved;
+        if (!saved.json) {
+          return { ok: false, state: saved.state };
         }
-        await ipcRenderer.invoke("settings:notify-applied", {
-          skipSettingsReload,
-          stateJson: saved.json,
-          language: state?.global?.language
-        });
-        return saved;
+        try {
+          await ipcRenderer.invoke("settings:notify-applied", {
+            skipSettingsReload,
+            stateJson: saved.json,
+            language: state?.global?.language
+          });
+        } catch (err) {
+          console.error(err);
+          return { ok: false, ...saved };
+        }
+        return { ok: true, json: saved.json, state: saved.state, syncOk: saved.syncOk };
       }
 
       function mergeSettingsFromPending(target, pending) {
@@ -1871,8 +2078,8 @@
         for (let i = 0; i < pending.enabledCount; i++) {
           const src = pending.slots[i];
           const dst = target.slots[i];
-          const preservedMemoHtml = dst.memoHtml;
-          const preservedImages = Array.isArray(dst.images) ? dst.images.slice() : [];
+          const preservedMemoHtml = pickMemoHtml(dst.memoHtml, src.memoHtml);
+          const preservedImages = pickMemoImages(dst.images, src.images);
           dst.label = src.label;
           dst.theme = src.theme;
           dst.ySlot = src.ySlot;
@@ -1909,38 +2116,48 @@
       }
 
       function syncSlotFieldsFromDisk(diskState) {
+        // 사용자가 설정창에서 편집 중(미저장 변경 존재)이면, 설정창이 소유한 필드
+        // (라벨/테마/색/글꼴/ySlot 등)는 디스크 값으로 덮어쓰지 않는다. 그렇지 않으면
+        // 메인 창의 메모 저장 알림이 올 때마다 사용자의 편집이 되돌려진다.
+        // 메모 본문/이미지는 메인 창이 원본이므로 항상 동기화한다.
+        const editing = isDirty();
         const count = Math.min(appState.enabledCount, diskState.enabledCount);
         for (let s = 0; s < count; s++) {
           const src = diskState.slots[s];
           const dst = appState.slots[s];
-          dst.fontSize = src.fontSize;
-          dst.ySlot = src.ySlot;
-          dst.ySlotUpdatedAt = src.ySlotUpdatedAt;
           dst.memoHtml = src.memoHtml;
           dst.images = Array.isArray(src.images) ? src.images.slice() : [];
-          dst.label = src.label;
-          dst.theme = src.theme;
-          dst.customBg = src.customBg;
-          dst.customText = src.customText;
-          dst.fontFamily = src.fontFamily;
 
-          updateFontDisplay(s);
-          const ySlotSel = document.getElementById(`slot${s}YSlot`);
-          if (ySlotSel) ySlotSel.value = String(dst.ySlot ?? s);
-          const inp = document.getElementById(`slot${s}Label`);
-          if (inp) inp.value = getSlotLabelFormValue(s);
-          const tabLabel = tabRow.querySelector(`[data-settings-tab="idx${s}"] span:last-child`);
-          if (tabLabel) tabLabel.textContent = resolveSlotLabel(dst.label, s);
-          const dot = tabRow.querySelector(`[data-settings-tab="idx${s}"] .tab-color-dot`);
-          if (dot) {
-            dot.style.background =
-              dst.theme === "custom" ? dst.customBg || "#fff" : THEME_MAP[dst.theme]?.bg || "#fff";
+          if (!editing) {
+            dst.fontSize = src.fontSize;
+            dst.ySlot = src.ySlot;
+            dst.ySlotUpdatedAt = src.ySlotUpdatedAt;
+            dst.label = src.label;
+            dst.theme = src.theme;
+            dst.customBg = src.customBg;
+            dst.customText = src.customText;
+            dst.fontFamily = src.fontFamily;
+
+            updateFontDisplay(s);
+            const ySlotSel = document.getElementById(`slot${s}YSlot`);
+            if (ySlotSel) ySlotSel.value = String(dst.ySlot ?? s);
+            const inp = document.getElementById(`slot${s}Label`);
+            if (inp) inp.value = getSlotLabelFormValue(s);
+            const tabLabel = tabRow.querySelector(`[data-settings-tab="idx${s}"] span:last-child`);
+            if (tabLabel) tabLabel.textContent = resolveSlotLabel(dst.label, s);
+            const dot = tabRow.querySelector(`[data-settings-tab="idx${s}"] .tab-color-dot`);
+            if (dot) {
+              dot.style.background =
+                dst.theme === "custom" ? dst.customBg || "#fff" : THEME_MAP[dst.theme]?.bg || "#fff";
+            }
+            const fontSel = document.getElementById(`slot${s}FontFamily`);
+            if (fontSel) fontSel.value = dst.fontFamily || "";
           }
-          const fontSel = document.getElementById(`slot${s}FontFamily`);
-          if (fontSel) fontSel.value = dst.fontFamily || "";
         }
-        syncThemeGroupSelection();
-        syncCustomColorVisibility();
+        if (!editing) {
+          syncThemeGroupSelection();
+          syncCustomColorVisibility();
+        }
         renderAllSlotImageThumbs();
       }
 
@@ -2027,6 +2244,7 @@
       }
 
       let pendingCloseAfterApply = false;
+      let pendingTabAfterApply = null;
 
       function updateUnsavedModalText() {
         const title = document.getElementById("unsavedModalTitle");
@@ -2039,14 +2257,16 @@
         if (applyBtn) applyBtn.textContent = ti("unsavedChangesApply");
       }
 
-      function showUnsavedModal(forClose = false) {
+      function showUnsavedModal(forClose = false, pendingTab = null) {
         pendingCloseAfterApply = forClose;
+        pendingTabAfterApply = pendingTab;
         updateUnsavedModalText();
         document.getElementById("unsavedModal")?.classList.add("visible");
       }
 
       function hideUnsavedModal() {
         pendingCloseAfterApply = false;
+        pendingTabAfterApply = null;
         document.getElementById("unsavedModal")?.classList.remove("visible");
       }
 
@@ -2058,8 +2278,23 @@
         await ipcRenderer.invoke("settings:close-window");
       }
 
-      function refreshSlotMemosFromDisk() {
-        reloadStateFromDisk({ force: true });
+      async function refreshSlotMemosFromDisk() {
+        const diskState = await loadStateAsync();
+        if (!diskState || !Array.isArray(diskState.slots)) return;
+        const count = Math.min(appState.enabledCount, diskState.enabledCount, MAX_SLOTS);
+        for (let i = 0; i < count; i++) {
+          if (typeof diskState.slots[i]?.memoHtml === "string") {
+            appState.slots[i].memoHtml = diskState.slots[i].memoHtml;
+          }
+          if (Array.isArray(diskState.slots[i]?.images)) {
+            appState.slots[i].images = diskState.slots[i].images.slice();
+          }
+        }
+      }
+
+      async function persistEditableState() {
+        await refreshSlotMemosFromDisk();
+        return saveStateAsync(appState);
       }
 
       function htmlToPlainText(html) {
@@ -2164,7 +2399,7 @@
 
       async function onExportSelected() {
         if (showPremiumModalIfFree()) return;
-        refreshSlotMemosFromDisk();
+        await refreshSlotMemosFromDisk();
         const format = (document.querySelector('input[name="exportFormat"]:checked') || {}).value || "txt";
         const statusEl = document.getElementById("exportStatusText");
 
@@ -2241,6 +2476,7 @@
       let appState = createFreshState();
       let activeTab = "common";
       let statusFadeTimer = null;
+      let cachedSystemFonts = null;
 
       // 모니터 선택 임시값 (적용 전까지 IPC 전송 안 함)
       let draftMonitorTarget = null;
@@ -2273,7 +2509,7 @@
 
       function buildSnapshotForDirty(state) {
         const slotData = state.slots.slice(0, state.enabledCount).map((sl, i) => ({
-          label: resolveSlotLabel(sl.label, i),
+          label: typeof sl.label === "string" ? sl.label : "",
           theme: sl.theme,
           customBg: sl.customBg,
           customText: sl.customText,
@@ -2289,6 +2525,7 @@
           shortcutSlotNext: state.global.shortcutSlotNext,
           language: state.global.language,
           pinToggleMode: state.global.pinToggleMode,
+          panelEdge: state.global.panelEdge,
           memoAspectRatio: state.global.memoAspectRatio,
           memoDefaultOpacity: state.global.memoDefaultOpacity,
           imageLayout: state.global.imageLayout,
@@ -2314,12 +2551,17 @@
       }
 
       function refreshApplyButton() {
+        if (!applyBtn) return;
         applyBtn.disabled = !isDirty();
       }
 
       // ─────────────────────────────────────────────────────────────────
 
       function setStatus(msg, ms = 2500) {
+        if (!statusText) {
+          console.warn("[settings]", msg);
+          return;
+        }
         statusText.textContent = msg;
         if (statusFadeTimer) {
           clearTimeout(statusFadeTimer);
@@ -2398,6 +2640,131 @@
         }
       }
 
+      function formatHoverDelaySec(sec) {
+        return clamp(sec, HOVER_DELAY_MIN_SEC, HOVER_DELAY_MAX_SEC).toFixed(1);
+      }
+
+      function sanitizeHoverDelayInputString(raw) {
+        let s = String(raw).replace(/[^\d.]/g, "");
+        const dot = s.indexOf(".");
+        if (dot !== -1) {
+          s = s.slice(0, dot + 1) + s.slice(dot + 1).replace(/\./g, "");
+        }
+        const parts = s.split(".");
+        if (parts.length === 2 && parts[1].length > 1) {
+          s = `${parts[0]}.${parts[1].slice(0, 1)}`;
+        }
+        return s;
+      }
+
+      function clearHoverDelayError() {
+        const err = document.getElementById("hoverDelayError");
+        const input = document.getElementById("hoverDelayInput");
+        if (err) err.classList.add("hidden");
+        if (input) {
+          input.classList.remove("input-invalid");
+          input.removeAttribute("aria-invalid");
+        }
+      }
+
+      function showHoverDelayError() {
+        const err = document.getElementById("hoverDelayError");
+        const input = document.getElementById("hoverDelayInput");
+        if (err) {
+          err.textContent = ti("hoverDelayRangeError");
+          err.classList.remove("hidden");
+        }
+        if (input) {
+          input.classList.add("input-invalid");
+          input.setAttribute("aria-invalid", "true");
+        }
+      }
+
+      function normalizeHoverDelayInput() {
+        const input = document.getElementById("hoverDelayInput");
+        if (!input) return HOVER_DELAY_MIN_SEC;
+
+        const sanitized = sanitizeHoverDelayInputString(input.value.trim());
+        if (sanitized !== input.value) input.value = sanitized;
+
+        const parsed = Number(sanitized);
+        if (!sanitized || !Number.isFinite(parsed)) {
+          input.value = formatHoverDelaySec(HOVER_DELAY_MIN_SEC);
+          clearHoverDelayError();
+          return HOVER_DELAY_MIN_SEC;
+        }
+
+        const rounded = Math.round(parsed * 10) / 10;
+        const outOfRange = rounded < HOVER_DELAY_MIN_SEC || rounded > HOVER_DELAY_MAX_SEC;
+        const sec = clamp(rounded, HOVER_DELAY_MIN_SEC, HOVER_DELAY_MAX_SEC);
+        input.value = formatHoverDelaySec(sec);
+        if (outOfRange) showHoverDelayError();
+        else clearHoverDelayError();
+        return sec;
+      }
+
+      function getHoverDelaySecFromInput() {
+        return normalizeHoverDelayInput();
+      }
+
+      function stepHoverDelay(deltaSec) {
+        const input = document.getElementById("hoverDelayInput");
+        if (!input) return;
+        const current = normalizeHoverDelayInput();
+        const next = Math.round((current + deltaSec) * 10) / 10;
+        const clamped = clamp(next, HOVER_DELAY_MIN_SEC, HOVER_DELAY_MAX_SEC);
+        input.value = formatHoverDelaySec(clamped);
+        clearHoverDelayError();
+        refreshApplyButton();
+      }
+
+      function bindHoverDelayControls() {
+        const input = document.getElementById("hoverDelayInput");
+        const decBtn = document.getElementById("hoverDelayDecBtn");
+        const incBtn = document.getElementById("hoverDelayIncBtn");
+        if (!input || input.dataset.bound) return;
+        input.dataset.bound = "1";
+
+        input.addEventListener("input", () => {
+          input.value = sanitizeHoverDelayInputString(input.value);
+          const trimmed = input.value.trim();
+          if (!trimmed || trimmed.endsWith(".")) {
+            clearHoverDelayError();
+            refreshApplyButton();
+            return;
+          }
+          const parsed = Number(trimmed);
+          if (!Number.isFinite(parsed)) {
+            refreshApplyButton();
+            return;
+          }
+          if (parsed > HOVER_DELAY_MAX_SEC) {
+            input.value = formatHoverDelaySec(HOVER_DELAY_MAX_SEC);
+            showHoverDelayError();
+          } else if (parsed < HOVER_DELAY_MIN_SEC) {
+            input.value = formatHoverDelaySec(HOVER_DELAY_MIN_SEC);
+            showHoverDelayError();
+          } else {
+            clearHoverDelayError();
+          }
+          refreshApplyButton();
+        });
+
+        input.addEventListener("blur", () => {
+          normalizeHoverDelayInput();
+          refreshApplyButton();
+        });
+
+        if (decBtn && !decBtn.dataset.bound) {
+          decBtn.dataset.bound = "1";
+          decBtn.addEventListener("click", () => stepHoverDelay(-HOVER_DELAY_STEP_SEC));
+        }
+        if (incBtn && !incBtn.dataset.bound) {
+          incBtn.dataset.bound = "1";
+          incBtn.addEventListener("click", () => stepHoverDelay(HOVER_DELAY_STEP_SEC));
+        }
+      }
+
       function getThemeLabel(name) {
         const map = {
           yellow: "themeYellow",
@@ -2432,6 +2799,221 @@
         if (lightboxClose) lightboxClose.textContent = ti("settingsClose");
       }
 
+      function setLabelFor(forId, key) {
+        const el = document.querySelector(`label[for="${forId}"]`);
+        if (el) el.textContent = ti(key);
+      }
+
+      function setSelectOptionText(selectId, value, key) {
+        const sel = document.getElementById(selectId);
+        if (!sel) return;
+        const opt = sel.querySelector(`option[value="${value}"]`);
+        if (opt) opt.textContent = ti(key);
+      }
+
+      function refreshCommonPanelI18n() {
+        const panel = panelHost.querySelector('[data-settings-panel="common"]');
+        if (!panel) return;
+
+        const aboutDesc = panel.querySelector(".about-desc");
+        if (aboutDesc) aboutDesc.textContent = ti("settingsAboutShort");
+
+        const upgradeBtn = document.getElementById("settingsUpgradeBtn");
+        if (upgradeBtn) upgradeBtn.textContent = ti("upgradePlusBtn");
+
+        const scopeIntro = panel.querySelector(".panel-scope-intro");
+        if (scopeIntro) scopeIntro.textContent = ti("commonSettingsScopeHint");
+
+        setLabelFor("monitorSelect", "monitorLabel");
+        const monitorHint = panel.querySelector("#monitorFieldWrap .field-hint-below");
+        if (monitorHint) monitorHint.textContent = ti("monitorHint");
+
+        setLabelFor("panelEdgeSelect", "panelEdgeLabel");
+        setSelectOptionText("panelEdgeSelect", "right", "panelEdgeRight");
+        setSelectOptionText("panelEdgeSelect", "left", "panelEdgeLeft");
+        const panelEdgeHint = panel.querySelector("#panelEdgeFieldWrap .field-hint-below");
+        if (panelEdgeHint) panelEdgeHint.textContent = ti("panelEdgeHint");
+
+        setLabelFor("memoAspectSelect", "memoAspectLabel");
+        setSelectOptionText("memoAspectSelect", "1:1", "memoAspectSquare");
+        setSelectOptionText("memoAspectSelect", "3:4", "memoAspectPortrait");
+        const memoAspectHint = panel.querySelector('[for="memoAspectSelect"]')?.closest(".field-stack")?.querySelector(".field-hint-below");
+        if (memoAspectHint) memoAspectHint.textContent = ti("memoAspectHint");
+
+        setLabelFor("memoOpacityRange", "memoOpacityLabel");
+        const memoOpacityHint = panel.querySelector("#memoOpacityWrap .field-hint-below");
+        if (memoOpacityHint) memoOpacityHint.textContent = ti("memoOpacityHint");
+
+        setLabelFor("triggerSelect", "triggerLabel");
+        setSelectOptionText("triggerSelect", "hover", "triggerHover");
+        setSelectOptionText("triggerSelect", "shortcut", "triggerShortcut");
+        const triggerHoverHint = document.getElementById("triggerHoverHint");
+        if (triggerHoverHint) triggerHoverHint.textContent = ti("triggerHoverHint");
+
+        setLabelFor("hoverDelayInput", "hoverDelayLabel");
+        const hoverDelayDec = document.getElementById("hoverDelayDecBtn");
+        const hoverDelayInc = document.getElementById("hoverDelayIncBtn");
+        if (hoverDelayDec) hoverDelayDec.setAttribute("aria-label", ti("hoverDelayDecAria"));
+        if (hoverDelayInc) hoverDelayInc.setAttribute("aria-label", ti("hoverDelayIncAria"));
+        const hoverDelayUnit = panel.querySelector(".hover-delay-unit");
+        if (hoverDelayUnit) hoverDelayUnit.textContent = ti("hoverDelayUnit");
+        const hoverDelayHint = panel.querySelector("#hoverDelayRow .field-hint-below");
+        if (hoverDelayHint) hoverDelayHint.textContent = ti("hoverDelayHint");
+
+        setLabelFor("shortcutInput", "shortcutOpenClose");
+        setLabelFor("shortcutSlotPrevInput", "shortcutSlotUp");
+        setLabelFor("shortcutSlotNextInput", "shortcutSlotDown");
+        const shortcutPlaceholder = ti("shortcutCapturePlaceholder");
+        ["shortcutInput", "shortcutSlotPrevInput", "shortcutSlotNextInput"].forEach((id) => {
+          const inp = document.getElementById(id);
+          if (inp) inp.placeholder = shortcutPlaceholder;
+        });
+        const shortcutIndexHint = document.getElementById("shortcutIndexHint");
+        if (shortcutIndexHint) shortcutIndexHint.textContent = ti("shortcutIndexHint");
+
+        setLabelFor("pinToggleSelect", "pinToggleLabel");
+        setSelectOptionText("pinToggleSelect", "dblclick", "pinToggleDblclickDefault");
+        setSelectOptionText("pinToggleSelect", "chip", "pinToggleChipOnly");
+        setSelectOptionText("pinToggleSelect", "click", "pinToggleClickMemo");
+        const pinToggleHint = panel.querySelector('[for="pinToggleSelect"]')?.closest(".field-stack")?.querySelector(".field-hint-below");
+        if (pinToggleHint) pinToggleHint.textContent = ti("pinToggleRecommendHint");
+
+        const resetBtn = document.getElementById("resetCommonDefaultsBtn");
+        if (resetBtn) resetBtn.textContent = ti("resetCommonDefaults");
+        const resetHint = panel.querySelector(".common-reset-section .field-hint-below");
+        if (resetHint) resetHint.textContent = ti("resetCommonDefaultsHint");
+
+        const backupTitle = panel.querySelector(".backup-section-head h4");
+        if (backupTitle) {
+          const badge = backupTitle.querySelector(".premium-lock-badge");
+          backupTitle.textContent = ti("backupManageTitle");
+          if (badge) backupTitle.appendChild(badge);
+        }
+        const backupHeadHint = panel.querySelector(".backup-head-hint");
+        if (backupHeadHint) backupHeadHint.textContent = ti("backupHeadHint");
+
+        document.querySelectorAll("[data-backup-mode]").forEach((btn) => {
+          btn.textContent = btn.dataset.backupMode === "export" ? ti("backupExportTab") : ti("backupImportTab");
+        });
+
+        const exportPanel = document.getElementById("backupExportPanel");
+        if (exportPanel) {
+          const labels = exportPanel.querySelectorAll("label[style]");
+          if (labels[0]) labels[0].textContent = ti("exportIndicesLabel");
+          if (labels[1]) labels[1].textContent = ti("exportFormat");
+          const selectAllStrong = exportPanel.querySelector("#exportSelectAll")?.parentElement?.querySelector("strong");
+          if (selectAllStrong) selectAllStrong.textContent = ti("exportSelectAll");
+          exportPanel.querySelectorAll(".export-format-label").forEach((lbl, i) => {
+            const keys = ["exportFormatTxtShort", "exportFormatMdShort", "exportFormatJsonShort"];
+            if (keys[i]) {
+              const input = lbl.querySelector("input");
+              lbl.textContent = "";
+              if (input) lbl.appendChild(input);
+              lbl.appendChild(document.createTextNode(ti(keys[i])));
+            }
+          });
+        }
+        const exportBtn = document.getElementById("exportSelectedBtn");
+        if (exportBtn) exportBtn.textContent = ti("exportRunBtn");
+
+        const importPanel = document.getElementById("backupImportPanel");
+        if (importPanel) {
+          const importHint = importPanel.querySelector(".field-hint");
+          if (importHint) importHint.textContent = ti("importOverwriteHint");
+          const importBtn = document.getElementById("importBackupBtn");
+          if (importBtn) importBtn.textContent = ti("importBtn");
+        }
+      }
+
+      function refreshIndexPanelI18n(slotIndex) {
+        const panel = panelHost.querySelector(`[data-settings-panel="idx${slotIndex}"]`);
+        if (!panel) return;
+
+        const scopeIntro = panel.querySelector(".panel-scope-intro");
+        if (scopeIntro) scopeIntro.textContent = ti("indexSettingsScopeHint");
+
+        setLabelFor(`slot${slotIndex}Label`, "indexTitleLabel");
+        const titleHint = panel.querySelector(`#slot${slotIndex}Label`)?.closest(".field-stack")?.querySelector(".field-hint-below");
+        if (titleHint && !titleHint.id?.includes("Error")) titleHint.textContent = ti("indexTitleMaxHint");
+
+        setLabelFor(`slot${slotIndex}YSlot`, "handlePositionLabel");
+        const ySlotHint = panel.querySelector(`#slot${slotIndex}YSlotWrap`)?.closest(".field-stack")?.querySelector(".field-hint-below");
+        if (ySlotHint) ySlotHint.textContent = ti("handlePositionHint");
+        const ySlotSel = document.getElementById(`slot${slotIndex}YSlot`);
+        if (ySlotSel) {
+          ySlotSel.querySelectorAll("option").forEach((opt, i) => {
+            opt.textContent = ti("handleSlotOption", { n: i + 1 });
+          });
+        }
+
+        const fontLabel = panel.querySelector(`#slot${slotIndex}FontDisplay`)?.closest(".field-inline")?.querySelector(".field-label");
+        if (fontLabel) fontLabel.textContent = ti("indexFontLabel");
+        const fontHint = document.getElementById(`slot${slotIndex}FontHint`);
+        if (fontHint && !fontHint.classList.contains("font-size-hint-error")) {
+          fontHint.textContent = ti("fontSizePlusHint");
+        }
+
+        setLabelFor(`slot${slotIndex}FontFamily`, "fontFamilyLabel");
+        setSelectOptionText(`slot${slotIndex}FontFamily`, "", "fontSystemDefault");
+        const fontFamilyStack = document.getElementById(`slot${slotIndex}FontFamily`)?.closest(".field-stack");
+        if (fontFamilyStack) {
+          const hints = fontFamilyStack.querySelectorAll(".field-hint-below:not(.font-family-sample)");
+          if (hints[0]) hints[0].textContent = ti("fontFamilyPlusHint");
+          if (hints[1]) hints[1].textContent = ti("fontFamilyLangHint");
+        }
+        updateFontFamilyPreview(slotIndex);
+
+        const themeLabel = panel.querySelector(".field-block .field-label");
+        if (themeLabel && panel.querySelector(`[data-theme-group="${slotIndex}"]`)) {
+          themeLabel.textContent = ti("indexThemeLabel");
+        }
+        panel.querySelectorAll(`[data-theme-group="${slotIndex}"] .theme-btn`).forEach((btn) => {
+          btn.textContent = getThemeLabel(btn.dataset.theme);
+        });
+
+        const customBgLabel = panel.querySelector(`[data-custom-colors="${slotIndex}"] .field-inline:first-child .field-label`);
+        if (customBgLabel) customBgLabel.textContent = ti("customBgLabel");
+        const customTextLabel = panel.querySelector(`[data-custom-colors="${slotIndex}"] .field-inline:last-child .field-label`);
+        if (customTextLabel) customTextLabel.textContent = ti("customTextLabel");
+        panel.querySelectorAll(`#bgPopover${slotIndex} .recent-colors-title, #textPopover${slotIndex} .recent-colors-title`).forEach((el) => {
+          el.textContent = ti("recentColors");
+        });
+        panel.querySelectorAll(`[data-color-advanced="bg-${slotIndex}"], [data-color-advanced="text-${slotIndex}"]`).forEach((btn) => {
+          btn.textContent = ti("colorAdvancedPicker");
+        });
+
+        const imagesBlock = panel.querySelector(`[data-slot-images="${slotIndex}"]`)?.closest(".field-block");
+        const imagesLabel = imagesBlock?.querySelector(".field-label");
+        if (imagesLabel) imagesLabel.textContent = ti("attachedImagesLabel");
+        const imagesHint = imagesBlock?.querySelector(".field-hint-below");
+        if (imagesHint) imagesHint.textContent = ti("attachedImagesHint");
+        const emptyThumb = panel.querySelector(`#slot${slotIndex}ImageThumbs .slot-image-thumb-empty`);
+        if (emptyThumb) emptyThumb.textContent = ti("attachedImagesEmpty");
+      }
+
+      function refreshSettingsTabsI18n() {
+        const commonBtn = tabRow.querySelector(".settings-tab-common");
+        if (commonBtn) commonBtn.setAttribute("aria-label", ti("commonTabAriaLabel"));
+        tabRow.querySelectorAll(".tab-delete-btn").forEach((btn) => {
+          btn.title = ti("indexDeleteBtn");
+          btn.setAttribute("aria-label", ti("indexDeleteBtn"));
+        });
+        const addBtn = tabRow.querySelector(".add-tab-btn");
+        if (addBtn) addBtn.title = ti("indexAddBtn");
+      }
+
+      function refreshSettingsI18n() {
+        applyStaticSettingsLabels();
+        refreshSettingsTabsI18n();
+        refreshCommonPanelI18n();
+        for (let s = 0; s < appState.enabledCount; s++) {
+          refreshIndexPanelI18n(s);
+        }
+        syncShortcutRowVisibility();
+        void loadDisplays();
+        window.PeekomPremiumUI?.refreshPremiumModalI18n?.();
+      }
+
       function packFreeYSlots() {
         if (isPremium) return false;
         const ec = appState.enabledCount;
@@ -2463,6 +3045,24 @@
         packFreeYSlots();
       }
 
+      function assignNextFreeYSlot(slots, enabledCount, slotIndex) {
+        const occupied = new Set();
+        for (let i = 0; i < enabledCount; i++) {
+          if (i === slotIndex) continue;
+          occupied.add(clamp(slots[i].ySlot ?? i, 0, 9));
+        }
+        let free = 0;
+        while (occupied.has(free) && free < 10) free++;
+        slots[slotIndex].ySlot = free < 10 ? free : clamp(slotIndex, 0, 9);
+        slots[slotIndex].ySlotUpdatedAt = Date.now();
+      }
+
+      function prepareSlotRoster() {
+        const ec = appState.enabledCount;
+        appState.order = normalizeOrder(appState.order, ec);
+        resolveYSlotConflicts(appState.slots, ec);
+      }
+
       function resolveYSlotConflicts(slots, enabledCount) {
         if (!isPremium) {
           packFreeYSlots();
@@ -2490,9 +3090,11 @@
         for (const slot of displaced) {
           let free = 0;
           while (occupied.has(free) && free < 10) free++;
-          if (free < 10) {
-            occupied.add(free);
-            slots[slot].ySlot = free;
+          const assigned = free < 10 ? free : clamp(slot, 0, 9);
+          occupied.add(assigned);
+          slots[slot].ySlot = assigned;
+          if (!slots[slot].ySlotUpdatedAt) {
+            slots[slot].ySlotUpdatedAt = Date.now();
           }
         }
       }
@@ -2531,6 +3133,15 @@
 
       function getMaxEnabledSlots() {
         return isPremium ? MAX_SLOTS : FREE_MAX_SLOTS;
+      }
+
+      function enforceSlotLimits() {
+        const max = getMaxEnabledSlots();
+        if (appState.enabledCount > max) {
+          appState.enabledCount = max;
+          appState.order = normalizeOrder(appState.order, max);
+          appState.activeSlot = clampSlotIndex(appState.activeSlot, max);
+        }
       }
 
       async function syncPremiumState() {
@@ -2649,11 +3260,14 @@
         });
         for (let s = 0; s < (appState?.enabledCount || 0); s++) {
           const fontSel = document.getElementById(`slot${s}FontFamily`);
+          const fontFamilyWrap = document.getElementById(`slot${s}FontFamilyWrap`);
           if (fontSel) {
             fontSel.classList.toggle("premium-control-locked", !isPremium);
             fontSel.style.pointerEvents = isPremium ? "" : "none";
-            fontSel.toggleAttribute("data-premium-trigger", !isPremium);
             if (!isPremium) fontSel.value = "";
+          }
+          if (fontFamilyWrap) {
+            fontFamilyWrap.toggleAttribute("data-premium-trigger", !isPremium);
           }
           const fontDisplay = document.getElementById(`slot${s}FontDisplay`);
           if (fontDisplay) {
@@ -2694,6 +3308,9 @@
       window.onPremiumActivated = async () => {
         await syncPremiumState();
         updateSettingsTitle();
+        updateAppBrandingAssets();
+        applyPremiumGating();
+        prepareSlotRoster();
         renderTabs();
         renderPanels();
         applySettingsForm();
@@ -2724,13 +3341,15 @@
                 <h3 class="about-title">${appLabel}</h3>
                 <p class="about-desc">${ti("settingsAboutShort")}</p>
                 <p class="about-dev">
-                  문의: <a href="#" data-external-url="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
-                  · 만든 사람: <strong>난쌤</strong>
+                  ${ti("aboutContactLabel")}: <a href="#" data-external-url="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>
+                  · ${ti("aboutDeveloperLabel")}: <strong>난쌤</strong>
                   · <a href="#" data-external-url="https://instagram.com/hello.nan_ssaem">@hello.nan_ssaem</a>
                 </p>
                 ${isPremium ? "" : `<button type="button" class="settings-action-btn primary" id="settingsUpgradeBtn" style="margin-top:8px;">${ti("upgradePlusBtn")}</button>`}
               </div>
             </section>
+
+            <p class="panel-scope-intro">${ti("commonSettingsScopeHint")}</p>
 
             <div class="field-stack" id="monitorFieldWrap">
               <div class="field-inline">
@@ -2792,9 +3411,14 @@
               <div class="field-stack">
                 <div class="field-inline">
                   <label class="field-label" for="hoverDelayInput">${ti("hoverDelayLabel")}</label>
-                  <input id="hoverDelayInput" class="setting-input" type="number" min="0.1" max="5" step="0.1" />
-                  <span style="font-size:12px;color:var(--muted);flex-shrink:0;">${ti("hoverDelayUnit")}</span>
+                  <div class="hover-delay-stepper">
+                    <button type="button" class="hover-delay-step-btn" id="hoverDelayDecBtn" aria-label="${ti("hoverDelayDecAria")}">▼</button>
+                    <input id="hoverDelayInput" class="setting-input hover-delay-input" type="text" inputmode="decimal" autocomplete="off" />
+                    <button type="button" class="hover-delay-step-btn" id="hoverDelayIncBtn" aria-label="${ti("hoverDelayIncAria")}">▲</button>
+                    <span class="hover-delay-unit">${ti("hoverDelayUnit")}</span>
+                  </div>
                 </div>
+                <p class="field-error hidden" id="hoverDelayError" role="alert"></p>
                 <p class="field-hint-below">${ti("hoverDelayHint")}</p>
               </div>
             </div>
@@ -2890,6 +3514,8 @@
 
         div.innerHTML = `
           <div class="panel-scroll">
+            <p class="panel-scope-intro">${ti("indexSettingsScopeHint")}</p>
+
             <div class="field-stack">
               <div class="field-inline">
                 <label class="field-label" for="slot${slotIndex}Label">${ti("indexTitleLabel")}</label>
@@ -2926,12 +3552,16 @@
             <div class="field-stack">
               <div class="field-inline">
                 <label class="field-label" for="slot${slotIndex}FontFamily">${ti("fontFamilyLabel")}</label>
-                <select id="slot${slotIndex}FontFamily" class="setting-select" data-font-family="${slotIndex}">
-                  <option value="">${ti("fontSystemDefault")}</option>
-                </select>
-                <span class="premium-lock-badge" id="slot${slotIndex}FontFamilyBadge" hidden>Plus</span>
+                <span class="premium-trigger-wrap" id="slot${slotIndex}FontFamilyWrap">
+                  <select id="slot${slotIndex}FontFamily" class="setting-select" data-font-family="${slotIndex}">
+                    <option value="">${ti("fontSystemDefault")}</option>
+                  </select>
+                  <span class="premium-lock-badge" id="slot${slotIndex}FontFamilyBadge" hidden>Plus</span>
+                </span>
               </div>
               <p class="field-hint-below">${ti("fontFamilyPlusHint")}</p>
+              <p class="field-hint-below font-lang-hint">${ti("fontFamilyLangHint")}</p>
+              <div class="field-hint-below font-family-sample" id="slot${slotIndex}FontSample"><span class="font-family-sample__text" id="slot${slotIndex}FontSampleText">${ti("fontFamilySample")}</span></div>
             </div>
 
             <div class="field-block">
@@ -3173,16 +3803,27 @@
         });
       }
 
-      function switchTab(tabId) {
-        if (activeTab === tabId) return;
+      function performSwitchTab(tabId) {
         readSettingsForm();
         activeTab = tabId;
         applyActivePanel();
         applySettingsForm();
       }
 
+      function switchTab(tabId) {
+        if (activeTab === tabId) return;
+        if (isDirty()) {
+          showUnsavedModal(false, tabId);
+          return;
+        }
+        performSwitchTab(tabId);
+      }
+
       function onTabDeleteClick(slotIndex) {
-        if (appState.enabledCount <= 1) return;
+        if (appState.enabledCount <= 1) {
+          alert(ti("indexMinOneAlert"));
+          return;
+        }
         const label = resolveSlotLabel(appState.slots[slotIndex]?.label, slotIndex);
         const ok = confirm(
           `「${label}」 인덱스를 삭제할까요?\n\n메모, 제목, 색상이 모두 사라집니다.`
@@ -3193,20 +3834,16 @@
       }
 
       async function onAddIndex() {
+        if (!isPremium && appState.enabledCount >= FREE_MAX_SLOTS) {
+          showPremiumModalIfFree();
+          return;
+        }
         const max = getMaxEnabledSlots();
         if (appState.enabledCount >= max) {
-          if (!isPremium && typeof PeekomPremiumUI !== "undefined") {
-            PeekomPremiumUI.showPremiumModal();
-          }
           return;
         }
         markSettingsLocalMutation();
         readSettingsForm();
-        const pendingMonitor = draftMonitorTarget;
-        const pending = JSON.parse(JSON.stringify(appState));
-        appState = await loadStateAsync();
-        mergeSettingsFromPending(appState, pending);
-        draftMonitorTarget = pendingMonitor;
         const newSlotIndex = appState.enabledCount;
         appState.slots[newSlotIndex] = {
           ...defaultSlot(newSlotIndex),
@@ -3214,9 +3851,18 @@
         };
         appState.enabledCount += 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
+        appState.global.setupCompleted = true;
+        if (isPremium) {
+          assignNextFreeYSlot(appState.slots, appState.enabledCount, newSlotIndex);
+        } else {
+          packFreeYSlots();
+        }
+        prepareSlotRoster();
         const saved = await saveAndNotifyMain(appState);
         if (!saved.ok) {
           setStatus(ti("indexAddSyncFail"), 5000);
+          await reloadStateFromDisk({ force: true });
+          return;
         }
         patchBaseline();
         activeTab = `idx${newSlotIndex}`;
@@ -3241,11 +3887,14 @@
         if (appState.enabledCount < 1) appState.enabledCount = 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
         appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
+        appState.global.setupCompleted = true;
 
         try {
           const saved = await saveAndNotifyMain(appState, { skipSettingsReload: true });
           if (!saved.ok) {
             setStatus(ti("deleteSyncFail"), 5000);
+            await reloadStateFromDisk({ force: true });
+            return;
           } else {
             setStatus(ti("indexDeleted"), 2500);
             patchBaseline();
@@ -3265,8 +3914,24 @@
 
       function updateFontDisplay(slotIndex) {
         const display = document.getElementById(`slot${slotIndex}FontDisplay`);
-        if (!display) return;
-        display.textContent = `${appState.slots[slotIndex].fontSize ?? 18}px`;
+        if (display) {
+          display.textContent = `${appState.slots[slotIndex].fontSize ?? 18}px`;
+        }
+        updateFontFamilyPreview(slotIndex);
+      }
+
+      function updateFontFamilyPreview(slotIndex) {
+        const textEl = document.getElementById(`slot${slotIndex}FontSampleText`);
+        const name = (appState.slots[slotIndex]?.fontFamily || "").trim();
+        const family = name
+          ? `"${name.replace(/"/g, "")}", "Segoe UI", sans-serif`
+          : "";
+        const size = clamp(appState.slots[slotIndex]?.fontSize ?? 18, FONT_SIZE_MIN, FONT_SIZE_MAX);
+        if (textEl) {
+          textEl.style.fontFamily = family || "";
+          textEl.style.fontSize = `${size}px`;
+          textEl.textContent = ti("fontFamilySample");
+        }
       }
 
       const FONT_HINT_DEFAULT = "Ctrl 키를 누른 채 스크롤 휠로도 크기를 조절할 수 있음";
@@ -3469,15 +4134,17 @@
         }
       }
       function saveRecentColor(key, hex) {
-        const list = loadRecentColors(key).filter(c => c !== hex);
-        list.unshift(hex);
+        const normalized = String(hex || "").trim().toUpperCase();
+        if (!/^#[0-9A-F]{6}$/.test(normalized)) return;
+        const list = loadRecentColors(key).filter((c) => c.toUpperCase() !== normalized);
+        list.unshift(normalized);
         localStorage.setItem(key, JSON.stringify(list.slice(0, 7)));
       }
       function renderRecentColors(gridEl, hex, onPick) {
         const list = loadRecentColors(gridEl.id.includes("bg") ? RECENT_BG_KEY : RECENT_TEXT_KEY);
         gridEl.innerHTML = "";
         if (list.length === 0) {
-          gridEl.innerHTML = `<span style="font-size:11px;color:var(--muted)">없음</span>`;
+          gridEl.innerHTML = `<span style="font-size:11px;color:var(--muted)">${ti("recentColorsEmpty")}</span>`;
           return;
         }
         list.forEach(color => {
@@ -3498,7 +4165,10 @@
           const isBg = inp.hasAttribute("data-custom-bg");
           const slotIndex = Number(isBg ? inp.dataset.customBg : inp.dataset.customText);
           inp.addEventListener("input", () => {
-            applyCustomColor(slotIndex, isBg, inp.value);
+            applyCustomColor(slotIndex, isBg, inp.value, false);
+          });
+          inp.addEventListener("change", () => {
+            applyCustomColor(slotIndex, isBg, inp.value, true);
           });
         });
 
@@ -3516,27 +4186,45 @@
             );
             if (!inp) return;
             const popoverId = isBg ? `bgPopover${slotIndex}` : `textPopover${slotIndex}`;
+            // 현재 색을 picker 초기값으로 맞춤
+            const currentHex = isBg
+              ? (appState.slots[slotIndex].customBg || "#FFF4B8")
+              : (appState.slots[slotIndex].customText || "#2F3750");
+            inp.value = currentHex;
+
+            let restored = false;
             const finishRestore = () => {
+              if (restored) return;
+              restored = true;
               ipcRenderer.invoke("color:restore-advanced-picker").catch(() => {});
             };
-            const onPicked = () => {
+            // 색을 실제로 고르면 input/change 이벤트로 적용 (bindColorScreenInputs의
+            // input 핸들러가 applyCustomColor를 호출). 여기서는 picker가 닫힐 때
+            // 창을 복원하고 HEX 라벨/입력칸을 최신값으로 갱신한다.
+            const onChange = () => {
               applyCustomColor(slotIndex, isBg, inp.value);
-              document.getElementById(popoverId)?.classList.remove("visible");
+              const hexInput = document.getElementById(
+                isBg ? `bgHexInput${slotIndex}` : `textHexInput${slotIndex}`
+              );
+              if (hexInput) hexInput.value = inp.value;
+              finishRestore();
+              inp.removeEventListener("change", onChange);
             };
+            inp.addEventListener("change", onChange);
+
             try {
               await ipcRenderer.invoke("color:prepare-advanced-picker");
               if (typeof inp.showPicker === "function") {
-                await inp.showPicker();
-                onPicked();
+                inp.showPicker();
               } else {
                 inp.click();
-                onPicked();
               }
             } catch {
-              /* user cancelled or picker unavailable */
-            } finally {
               finishRestore();
+              inp.removeEventListener("change", onChange);
             }
+            // picker는 별도 창이므로, 일정 시간 뒤 사용자가 취소했더라도 창 복원 보장
+            setTimeout(finishRestore, 15000);
           });
         });
       }
@@ -3586,13 +4274,8 @@
             if (typeof PeekomI18n !== "undefined") PeekomI18n.setLang(lang);
             appState.global.language = lang;
             readSettingsForm();
-            applyStaticSettingsLabels();
-            renderTabs();
-            renderPanels();
-            applySettingsForm();
+            refreshSettingsI18n();
             refreshApplyButton();
-            loadDisplays();
-            window.PeekomPremiumUI?.refreshPremiumModalI18n?.();
           });
         }
 
@@ -3647,11 +4330,7 @@
           appState.global.shortcutSlotNext = acc;
         });
 
-        const hoverDelayInput = document.getElementById("hoverDelayInput");
-        if (hoverDelayInput && !hoverDelayInput.dataset.bound) {
-          hoverDelayInput.dataset.bound = "1";
-          hoverDelayInput.addEventListener("input", () => refreshApplyButton());
-        }
+        bindHoverDelayControls();
 
         const upgradeBtn = document.getElementById("settingsUpgradeBtn");
         if (upgradeBtn && !upgradeBtn.dataset.bound) {
@@ -3792,6 +4471,7 @@
               return;
             }
             appState.slots[slotIndex].fontFamily = sel.value;
+            updateFontFamilyPreview(slotIndex);
             refreshApplyButton();
           });
         });
@@ -3959,9 +4639,10 @@
         );
         const hoverDelayInput = document.getElementById("hoverDelayInput");
         if (hoverDelayInput) {
-          hoverDelayInput.value = String(
-            clamp((appState.global.hoverDelayMs ?? 300) / 1000, 0.1, 5).toFixed(1)
+          hoverDelayInput.value = formatHoverDelaySec(
+            clamp((appState.global.hoverDelayMs ?? 300) / 1000, HOVER_DELAY_MIN_SEC, HOVER_DELAY_MAX_SEC)
           );
+          clearHoverDelayError();
         }
         if (runZoomitOnStartupCheckbox) runZoomitOnStartupCheckbox.checked = Boolean(appState.global.openAtLogin);
         if (showTrayIconCheckbox) showTrayIconCheckbox.checked = appState.global.showTrayIcon !== false;
@@ -3995,6 +4676,7 @@
 
           const fontSel = document.getElementById(`slot${s}FontFamily`);
           if (fontSel) fontSel.value = appState.slots[s].fontFamily || "";
+          updateFontFamilyPreview(s);
         }
         syncThemeGroupSelection();
         syncCustomColorVisibility();
@@ -4024,10 +4706,12 @@
         }
         const hoverDelayInput = document.getElementById("hoverDelayInput");
         if (hoverDelayInput && appState.global.triggerMode === "hover") {
-          const sec = Number(hoverDelayInput.value);
-          if (Number.isFinite(sec)) {
-            appState.global.hoverDelayMs = clamp(Math.round(sec * 1000), 100, 5000);
-          }
+          const sec = getHoverDelaySecFromInput();
+          appState.global.hoverDelayMs = clamp(
+            Math.round(sec * 1000),
+            HOVER_DELAY_MIN_MS,
+            HOVER_DELAY_MAX_MS
+          );
         }
         if (pinToggleSelect) appState.global.pinToggleMode = pinToggleSelect.value;
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
@@ -4040,9 +4724,6 @@
         }
         if (langSelect) {
           appState.global.language = langSelect.value;
-          if (typeof PeekomI18n !== "undefined") PeekomI18n.setLang(langSelect.value);
-          updateSettingsTitle();
-          renderTabs();
         }
 
         const opacityRange = document.getElementById("memoOpacityRange");
@@ -4101,17 +4782,24 @@
         if (/^(Regular|Bold|Light|Medium|Semilight|Semibold|Black|Heavy|Thin|Italic)$/i.test(trimmed)) {
           return false;
         }
+        if (/(?:^|[\s-])(symbol|symbols|wingdings|webdings|marlett|assets|icons?)(?:$|[\s-])/i.test(trimmed)) {
+          return false;
+        }
         return Array.from(trimmed).length <= 64;
       }
 
       async function populateFontSelects() {
-        let fonts = [];
-        try {
-          const result = await ipcRenderer.invoke("system:list-fonts");
-          fonts = (result?.fonts && Array.isArray(result.fonts)) ? result.fonts.filter(isValidFontOptionName) : [];
-        } catch {
-          fonts = [];
+        if (!cachedSystemFonts) {
+          try {
+            const result = await ipcRenderer.invoke("system:list-fonts");
+            cachedSystemFonts = (result?.fonts && Array.isArray(result.fonts))
+              ? result.fonts.filter(isValidFontOptionName)
+              : [];
+          } catch {
+            cachedSystemFonts = [];
+          }
         }
+        const fonts = cachedSystemFonts;
         for (let s = 0; s < appState.enabledCount; s++) {
           const sel = document.getElementById(`slot${s}FontFamily`);
           if (!sel || sel.dataset.fontsLoaded) continue;
@@ -4124,14 +4812,7 @@
             sel.appendChild(opt);
           });
           sel.value = current;
-          sel.addEventListener("change", () => {
-            if (!isPremium) {
-              sel.value = "";
-              showPremiumModalIfFree();
-              return;
-            }
-            refreshApplyButton();
-          });
+          updateFontFamilyPreview(s);
         }
       }
 
@@ -4183,89 +4864,115 @@
       }
 
       async function applyAndSync() {
-        readSettingsForm();
+        if (!applyBtn) return;
+        applyBtn.disabled = true;
         try {
-          await ipcRenderer.invoke("memo:flush");
-        } catch {
-          /* ignore */
-        }
-        clearAllSlotLabelErrors();
-        for (let s = 0; s < appState.enabledCount; s++) {
-          const labelVal = (document.getElementById(`slot${s}Label`)?.value || "").trim();
-          if (!labelVal) {
-            activeTab = `idx${s}`;
-            applyActivePanel();
-            showSlotLabelError(s);
+          readSettingsForm();
+
+          try {
+            await ipcRenderer.invoke("memo:flush");
+          } catch {
+            /* ignore */
+          }
+
+          clearAllSlotLabelErrors();
+          for (let s = 0; s < appState.enabledCount; s++) {
+            const labelVal = (document.getElementById(`slot${s}Label`)?.value || "").trim();
+            if (!labelVal) {
+              activeTab = `idx${s}`;
+              applyActivePanel();
+              showSlotLabelError(s);
+              setStatus(ti("indexTitleRequired"), 5000);
+              return;
+            }
+            appState.slots[s].label = Array.from(labelVal).slice(0, LABEL_MAX).join("");
+          }
+
+          if (appState.global.triggerMode === "shortcut" && !validateShortcutUniqueness()) {
+            setStatus(ti("shortcutOverlapError"), 5000);
             return;
           }
-          appState.slots[s].label = Array.from(labelVal).slice(0, LABEL_MAX).join("");
-        }
-        if (appState.global.triggerMode === "shortcut" && !validateShortcutUniqueness()) {
-          setStatus(ti("shortcutOverlapError"), 5000);
-          return;
-        }
-        syncAllSlotsImagesFromMemo();
-        enforceFreeSlotDefaults();
-        resolveYSlotConflicts(appState.slots, appState.enabledCount);
-        const pendingMonitor = draftMonitorTarget;
-        const pending = JSON.parse(JSON.stringify(appState));
 
-        appState = await loadStateAsync();
-        mergeSettingsFromPending(appState, pending);
-        draftMonitorTarget = pendingMonitor;
+          enforceFreeSlotDefaults();
+          resolveYSlotConflicts(appState.slots, appState.enabledCount);
 
-        const payload = {
-          triggerMode: appState.global.triggerMode,
-          shortcut: appState.global.shortcut,
-          shortcutSlotPrev: appState.global.shortcutSlotPrev,
-          shortcutSlotNext: appState.global.shortcutSlotNext,
-          manualYOffset: appState.global.manualYOffset,
-          panelEdge: isPremium && appState.global.panelEdge === "left" ? "left" : "right"
-        };
+          const payload = {
+            anchor: appState.global.anchor,
+            lengthMode: appState.global.lengthMode,
+            triggerMode: appState.global.triggerMode,
+            shortcut: appState.global.shortcut,
+            shortcutSlotPrev: appState.global.shortcutSlotPrev,
+            shortcutSlotNext: appState.global.shortcutSlotNext,
+            manualYOffset: appState.global.manualYOffset,
+            panelEdge: isPremium && appState.global.panelEdge === "left" ? "left" : "right"
+          };
 
-        try {
-          const result = await ipcRenderer.invoke("settings:update", payload);
-          if (result?.shortcutStatus?.ok === false) {
-            setStatus(ti("statusShortcutFail"), 5000);
+          try {
+            const result = await ipcRenderer.invoke("settings:update", payload);
+            if (result?.shortcutStatus?.ok === false) {
+              setStatus(ti("statusShortcutFail"), 5000);
+              return;
+            }
+          } catch (err) {
+            console.error(err);
+            setStatus(ti("statusApplyError"), 5000);
             return;
           }
+
+          try {
+            await ipcRenderer.invoke("startup:set", Boolean(appState.global.openAtLogin));
+          } catch (err) {
+            console.error(err);
+          }
+
+          try {
+            await ipcRenderer.invoke("window:set-target-display", draftMonitorTarget);
+          } catch (err) {
+            console.error(err);
+          }
+
+          appState.global.monitorMode = draftMonitorTarget === null ? "auto" : "fixed";
+          appState.global.monitorTargetId = draftMonitorTarget;
+          appState.global.setupCompleted = true;
+
+          await refreshSlotMemosFromDisk();
+          const saved = await saveStateAsync({ ...appState, version: 5 });
+          if (!saved.json) {
+            setStatus(ti("applySyncFail"), 5000);
+            return;
+          }
+
+          try {
+            await ipcRenderer.invoke("settings:notify-applied", {
+              skipSettingsReload: true,
+              stateJson: saved.json,
+              language: appState.global?.language
+            });
+          } catch (err) {
+            console.error(err);
+            setStatus(ti("applySyncFail"), 5000);
+            return;
+          }
+
+          markSettingsLocalMutation();
+          applySettingsForm();
+          renderTabs();
+          syncThemeGroupSelection();
+          syncCustomColorVisibility();
+          renderAllSlotImageThumbs();
+          patchBaseline();
+          setStatus(ti("statusApplied"), 2500);
         } catch (err) {
           console.error(err);
           setStatus(ti("statusApplyError"), 5000);
-          return;
+        } finally {
+          refreshApplyButton();
         }
-
-        try {
-          await ipcRenderer.invoke("window:set-target-display", draftMonitorTarget);
-        } catch (err) {
-          console.error(err);
-        }
-
-        appState.global.monitorMode = draftMonitorTarget === null ? "auto" : "fixed";
-        appState.global.monitorTargetId = draftMonitorTarget;
-        appState.global.setupCompleted = true;
-        if (typeof PeekomI18n !== "undefined" && appState.global.language) {
-          PeekomI18n.setLang(appState.global.language);
-        }
-        updateSettingsTitle();
-
-        const saved = await saveAndNotifyMain(appState, { skipSettingsReload: true });
-        if (!saved.ok) {
-          setStatus(ti("applySyncFail"), 5000);
-          return;
-        }
-        markSettingsLocalMutation();
-        applySettingsForm();
-        renderTabs();
-        syncThemeGroupSelection();
-        syncCustomColorVisibility();
-        renderAllSlotImageThumbs();
-        patchBaseline();
-        refreshApplyButton();
-        setStatus(ti("statusApplied"), 2500);
       }
 
-      applyBtn.addEventListener("click", applyAndSync);
+      applyBtn?.addEventListener("click", () => {
+        void applyAndSync();
+      });
 
       closeBtn.addEventListener("click", () => {
         void requestSettingsClose();
@@ -4278,16 +4985,20 @@
 
       document.getElementById("unsavedModalApplyBtn")?.addEventListener("click", async () => {
         const shouldClose = pendingCloseAfterApply;
+        const targetTab = pendingTabAfterApply;
         hideUnsavedModal();
         await applyAndSync();
         if (shouldClose && !isDirty()) {
           await ipcRenderer.invoke("settings:close-window");
+        } else if (targetTab && !isDirty()) {
+          performSwitchTab(targetTab);
         }
       });
 
       async function initialize() {
         appState = await loadStateAsync();
         await syncPremiumState();
+        enforceSlotLimits();
         enforceFreeSlotDefaults();
         draftMonitorTarget =
           appState.global.monitorMode === "fixed" ? appState.global.monitorTargetId : null;
@@ -4345,7 +5056,10 @@
           if (!isMemoSync && Date.now() < settingsLocalMutationUntil) return;
           const diskState = await loadStateAsync();
           if (!diskState) return;
-          if (diskState.enabledCount !== appState.enabledCount) {
+          const memoOnly =
+            fields.length > 0 &&
+            fields.every((f) => f === "memoHtml" || f === "images");
+          if (!memoOnly && diskState.enabledCount !== appState.enabledCount) {
             await reloadStateFromDisk({ force: true });
             return;
           }
@@ -4375,11 +5089,15 @@
 
         ipcRenderer.on("premium:changed", async (_e, payload) => {
           isPremium = Boolean(payload?.isPremium);
+          enforceSlotLimits();
           if (!isPremium) enforceFreeSlotDefaults();
+          prepareSlotRoster();
           updateSettingsTitle();
+          updateAppBrandingAssets();
           renderTabs();
           renderPanels();
           applySettingsForm();
+          applyPremiumGating();
           patchBaseline();
           refreshApplyButton();
         });

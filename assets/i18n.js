@@ -109,6 +109,7 @@
       customBgLabel: "배경색",
       customTextLabel: "글자색",
       recentColors: "최근 사용한 색",
+      recentColorsEmpty: "없음",
       aboutTitle: "빼꼼 플러스",
       aboutDesc: "화면 오른쪽 가장자리에 메모 손잡이가 살짝 보이다가, 클릭하면 메모장이 펼쳐져요. 강의·발표·업무 중에도 다른 창 위에 떠 있어서, 메모를 확인하고 바로 접을 수 있어요. 무료에서도 마크다운·서식바를 쓸 수 있고, Plus는 인덱스 10개·글 크기 조절·내보내기 등을 지원해요.",
       statusApplied: "설정이 적용되었습니다.",
@@ -132,10 +133,15 @@
       memoAspectSquare: "1:1 (정사각형)",
       memoAspectPortrait: "3:4 (세로형)",
       memoAspectHint: "손잡이 높이 기준으로 메모 크기가 정해짐",
+      commonSettingsScopeHint: "이 페이지의 설정은 모든 메모에 일괄 적용됩니다.",
+      indexSettingsScopeHint: "이 페이지의 설정은 해당 인덱스 메모에 개별 적용됩니다.",
       monitorHint: "현재 마우스가 있는 화면 또는 고정 모니터",
       hoverDelayLabel: "자동 접힘 딜레이",
       hoverDelayHint: "마우스가 멀어진 뒤 메모가 접히기까지 걸리는 시간",
       hoverDelayUnit: "초",
+      hoverDelayRangeError: "0.1초 이상 10초 이하로 입력해 주세요.",
+      hoverDelayDecAria: "0.1초 줄이기",
+      hoverDelayIncAria: "0.1초 늘리기",
       shortcutOpenClose: "열기/닫기",
       shortcutSlotUp: "위쪽 메모 열기",
       shortcutSlotDown: "아래쪽 메모 열기",
@@ -163,12 +169,14 @@
       runAtStartupWin: "Windows 시작 시 Peekom 자동 실행",
       indexTitleMaxHint: "최대 6자까지 입력 가능",
       handlePositionLabel: "손잡이 위치",
-      handlePositionHint: "손잡이를 드래그하여 위치 바꾸기도 가능함",
+      handlePositionHint: "손잡이를 드래그하여 위치 바꾸기도 가능",
       handleSlotOption: "{n}번 칸",
       fontSizePlusHint: "Plus — Ctrl+휠로도 크기 조절",
       fontFamilyLabel: "글꼴",
       fontSystemDefault: "시스템 기본",
       fontFamilyPlusHint: "Plus — OS에 설치된 글꼴 선택",
+      fontFamilyLangHint: "선택한 글꼴이 입력한 문자를 지원하는 경우에만 적용됨",
+      fontFamilySample: "가나다 ABC 123",
       attachedImagesLabel: "첨부 이미지",
       attachedImagesHint: "첨부한 이미지의 썸네일을 클릭하여 크게 보기",
       attachedImagesEmpty: "이미지 없음",
@@ -186,6 +194,7 @@
       exportSelectOneError: "내보낼 인덱스를 하나 이상 선택하세요.",
       importSyncFail: "가져오기는 완료됐지만 메인 화면 반영에 실패했습니다.",
       indexAddSyncFail: "인덱스는 추가됐지만 메인 화면 반영에 실패했습니다.",
+      saveStateQuotaAlert: "메모 저장 공간이 부족합니다. 이미지를 줄이거나 일부 메모를 삭제해 주세요.",
       deleteSyncFail: "삭제는 완료됐지만 메인 화면 반영에 실패했습니다.",
       indexDeleted: "인덱스를 삭제했습니다.",
       imagePreviewAlt: "이미지 미리보기",
@@ -211,6 +220,22 @@
       premiumLicenseLabel: "라이선스 키",
       premiumActivating: "확인 중…",
       premiumActivateFail: "인증에 실패했습니다.",
+      premiumErrEmptyKey: "라이선스 키를 입력해 주세요.",
+      premiumErrActivationFailed: "라이선스 활성화에 실패했습니다. 키를 확인해 주세요.",
+      premiumErrInvalidLicense: "유효하지 않은 라이선스 키입니다.",
+      premiumErrActivationLimit: "이 라이선스 키는 활성화 가능한 기기 수를 초과했습니다.",
+      premiumErrExpired: "만료된 라이선스 키입니다.",
+      premiumErrDisabled: "비활성화된 라이선스 키입니다.",
+      premiumErrNetwork: "Lemon Squeezy 서버에 연결하지 못했습니다. 인터넷 연결을 확인해 주세요.",
+      premiumErrTampered: "라이선스 파일이 변조되었습니다. 라이선스를 다시 활성화해 주세요.",
+      premiumNetOnline: "인터넷에 연결됨",
+      premiumNetOffline: "인터넷에 연결되어 있지 않음",
+      premiumOfflineHint:
+        "라이선스 인증은 인터넷에 연결된 상태에서만 가능합니다. 연결 후 다시 시도해 주세요.",
+      premiumUpgradeSuccessTitle: "업그레이드 완료",
+      premiumUpgradeSuccessLead:
+        "Peekom Plus를 구매해 주셔서 감사합니다.\n이제 모든 Plus 기능을 바로 사용할 수 있습니다.",
+      premiumUpgradeSuccessBtn: "시작하기",
       stateChangedConfirm: "다른 화면에서 설정이 변경되었습니다.\n\n저장하지 않은 변경 내용을 버리고 최신 상태로 새로고침할까요?",
       applySyncFail: "설정을 메인 화면에 반영하지 못했습니다. 앱을 다시 시작해 보세요.",
       fmtTextColor: "글자 색",
@@ -255,7 +280,11 @@
       imageCropFree: "자유",
       imageStagingCancel: "취소",
       imageStagingInsert: "넣기",
-      imagePreviewAlt: "이미지 미리보기"
+      imagePreviewAlt: "이미지 미리보기",
+      imageScaleSmall: "작게",
+      imageScaleLarge: "크게",
+      aboutContactLabel: "문의",
+      aboutDeveloperLabel: "만든 사람"
     },
     en: {
       modePeek: "PEEK",
@@ -343,6 +372,7 @@
       customBgLabel: "Background",
       customTextLabel: "Text color",
       recentColors: "Recently used",
+      recentColorsEmpty: "None",
       aboutTitle: "Peekom Plus",
       aboutDesc: "A slim handle on the right edge of your screen. Click to reveal your memo. It floats above all windows so you can check notes mid-presentation and close it instantly. Up to 10 indices, font-size control, Markdown, and export.",
       statusApplied: "Settings applied.",
@@ -366,10 +396,15 @@
       memoAspectSquare: "1:1 (square)",
       memoAspectPortrait: "3:4 (portrait)",
       memoAspectHint: "Memo size is based on handle height",
+      commonSettingsScopeHint: "Settings on this page apply to all memos at once.",
+      indexSettingsScopeHint: "Settings on this page apply only to this index's memo.",
       monitorHint: "Current mouse display or a fixed monitor",
       hoverDelayLabel: "Auto-collapse delay",
       hoverDelayHint: "Time after the mouse leaves before the memo collapses",
       hoverDelayUnit: "sec",
+      hoverDelayRangeError: "Enter a value between 0.1 and 10 seconds.",
+      hoverDelayDecAria: "Decrease by 0.1 sec",
+      hoverDelayIncAria: "Increase by 0.1 sec",
       shortcutOpenClose: "Open / close",
       shortcutSlotUp: "Open memo above",
       shortcutSlotDown: "Open memo below",
@@ -403,6 +438,8 @@
       fontFamilyLabel: "Font",
       fontSystemDefault: "System default",
       fontFamilyPlusHint: "Plus — choose from installed OS fonts",
+      fontFamilyLangHint: "Applied only when the selected font supports the characters you type",
+      fontFamilySample: "ABC 123",
       attachedImagesLabel: "Attached images",
       attachedImagesHint: "Click a thumbnail to preview larger",
       attachedImagesEmpty: "No images",
@@ -420,6 +457,7 @@
       exportSelectOneError: "Select at least one index to export.",
       importSyncFail: "Import finished but failed to sync the main window.",
       indexAddSyncFail: "Index added but failed to sync the main window.",
+      saveStateQuotaAlert: "Not enough storage to save your memo. Remove some images or shorten your notes.",
       deleteSyncFail: "Deleted but failed to sync the main window.",
       indexDeleted: "Index deleted.",
       imagePreviewAlt: "Image preview",
@@ -445,6 +483,22 @@
       premiumLicenseLabel: "License key",
       premiumActivating: "Verifying…",
       premiumActivateFail: "Activation failed.",
+      premiumErrEmptyKey: "Please enter a license key.",
+      premiumErrActivationFailed: "License activation failed. Please check your key.",
+      premiumErrInvalidLicense: "Invalid license key.",
+      premiumErrActivationLimit: "This license key has reached its activation limit.",
+      premiumErrExpired: "This license key has expired.",
+      premiumErrDisabled: "This license key has been disabled.",
+      premiumErrNetwork: "Could not reach Lemon Squeezy. Please check your internet connection.",
+      premiumErrTampered: "The license file was tampered with. Please activate your license again.",
+      premiumNetOnline: "Connected to the internet",
+      premiumNetOffline: "Not connected to the internet",
+      premiumOfflineHint:
+        "License activation requires an internet connection. Please connect and try again.",
+      premiumUpgradeSuccessTitle: "Upgrade complete!",
+      premiumUpgradeSuccessLead:
+        "Thank you for purchasing Peekom Plus.\nAll Plus features are now available.",
+      premiumUpgradeSuccessBtn: "Get started",
       stateChangedConfirm: "Settings changed elsewhere.\n\nDiscard unsaved changes and refresh?",
       applySyncFail: "Could not sync settings to the main window. Try restarting the app.",
       fmtTextColor: "Text color",
@@ -486,6 +540,10 @@
       indexMaxImagesAlert: "You can add up to {max} images per memo.",
       indexMaxSlotsAlert: "You can add up to {max} indices.",
       indexMinOneAlert: "At least one index must remain.",
+      imageScaleSmall: "Small",
+      imageScaleLarge: "Large",
+      aboutContactLabel: "Contact",
+      aboutDeveloperLabel: "Created by",
       imageCropFree: "Free",
       imageStagingCancel: "Cancel",
       imageStagingInsert: "Insert",
@@ -599,6 +657,10 @@
       premiumLicenseLabel: "ライセンスキー",
       premiumActivating: "確認中…",
       premiumActivateFail: "認証に失敗しました。",
+      premiumUpgradeSuccessTitle: "アップグレード完了",
+      premiumUpgradeSuccessLead:
+        "Peekom Plus をご購入いただきありがとうございます。\nすべての Plus 機能をすぐにご利用いただけます。",
+      premiumUpgradeSuccessBtn: "始める",
       unsavedChangesConfirm: "保存していない変更があります。\n\n保存せずに閉じますか？"
     },
     "zh-CN": {
@@ -688,6 +750,9 @@
       premiumFeat7: "自定义背景色 / 文字颜色", premiumFeat8: "字号 · 字体更改",
       premiumBuyBtn: "购买 Peekom Plus", premiumActivateBtn: "激活", premiumCloseBtn: "关闭",
       premiumLicenseLabel: "许可证密钥", premiumActivating: "验证中…", premiumActivateFail: "激活失败。",
+      premiumUpgradeSuccessTitle: "升级完成",
+      premiumUpgradeSuccessLead: "感谢您购买 Peekom Plus。\n现在即可使用所有 Plus 功能。",
+      premiumUpgradeSuccessBtn: "开始使用",
       unsavedChangesConfirm: "有未保存的更改。\n\n不保存直接关闭？"
     },
     "zh-TW": {
@@ -732,6 +797,9 @@
       premiumFeat7: "自訂背景色 / 文字顏色", premiumFeat8: "字級 · 字型變更",
       premiumBuyBtn: "購買 Peekom Plus", premiumActivateBtn: "啟用", premiumCloseBtn: "關閉",
       premiumLicenseLabel: "授權金鑰", premiumActivating: "驗證中…", premiumActivateFail: "啟用失敗。",
+      premiumUpgradeSuccessTitle: "升級完成",
+      premiumUpgradeSuccessLead: "感謝您購買 Peekom Plus。\n現在即可使用所有 Plus 功能。",
+      premiumUpgradeSuccessBtn: "開始使用",
       unsavedChangesConfirm: "有未儲存的變更。\n\n不儲存直接關閉？"
     },
     es: {
@@ -775,6 +843,9 @@
       premiumFeat7: "Color de fondo / texto personalizado", premiumFeat8: "Tamaño de fuente · familia tipográfica",
       premiumBuyBtn: "Comprar Peekom Plus", premiumActivateBtn: "Activar", premiumCloseBtn: "Cerrar",
       premiumLicenseLabel: "Clave de licencia", premiumActivating: "Verificando…", premiumActivateFail: "Error de activación.",
+      premiumUpgradeSuccessTitle: "Actualización completada",
+      premiumUpgradeSuccessLead: "Gracias por comprar Peekom Plus.\nYa puedes usar todas las funciones Plus.",
+      premiumUpgradeSuccessBtn: "Empezar",
       unsavedChangesConfirm: "Tienes cambios sin guardar.\n\n¿Cerrar sin guardar?"
     },
     fr: {
@@ -818,6 +889,9 @@
       premiumFeat7: "Couleurs de fond / texte personnalisées", premiumFeat8: "Taille de police · police de caractères",
       premiumBuyBtn: "Acheter Peekom Plus", premiumActivateBtn: "Activer", premiumCloseBtn: "Fermer",
       premiumLicenseLabel: "Clé de licence", premiumActivating: "Vérification…", premiumActivateFail: "Échec de l'activation.",
+      premiumUpgradeSuccessTitle: "Mise à niveau terminée",
+      premiumUpgradeSuccessLead: "Merci d'avoir acheté Peekom Plus.\nToutes les fonctions Plus sont maintenant disponibles.",
+      premiumUpgradeSuccessBtn: "Commencer",
       unsavedChangesConfirm: "Vous avez des modifications non enregistrées.\n\nFermer sans enregistrer ?"
     },
     de: {
@@ -861,6 +935,9 @@
       premiumFeat7: "Eigene Hintergrund- / Textfarbe", premiumFeat8: "Schriftgröße · Schriftart",
       premiumBuyBtn: "Peekom Plus kaufen", premiumActivateBtn: "Aktivieren", premiumCloseBtn: "Schließen",
       premiumLicenseLabel: "Lizenzschlüssel", premiumActivating: "Wird geprüft…", premiumActivateFail: "Aktivierung fehlgeschlagen.",
+      premiumUpgradeSuccessTitle: "Upgrade abgeschlossen",
+      premiumUpgradeSuccessLead: "Vielen Dank für den Kauf von Peekom Plus.\nAlle Plus-Funktionen sind jetzt verfügbar.",
+      premiumUpgradeSuccessBtn: "Loslegen",
       unsavedChangesConfirm: "Es gibt ungespeicherte Änderungen.\n\nOhne Speichern schließen?"
     },
     pt: {
@@ -904,6 +981,9 @@
       premiumFeat7: "Cores de fundo / texto personalizadas", premiumFeat8: "Tamanho da fonte · família tipográfica",
       premiumBuyBtn: "Comprar Peekom Plus", premiumActivateBtn: "Ativar", premiumCloseBtn: "Fechar",
       premiumLicenseLabel: "Chave de licença", premiumActivating: "Verificando…", premiumActivateFail: "Falha na ativação.",
+      premiumUpgradeSuccessTitle: "Atualização concluída",
+      premiumUpgradeSuccessLead: "Obrigado por comprar o Peekom Plus.\nTodos os recursos Plus já estão disponíveis.",
+      premiumUpgradeSuccessBtn: "Começar",
       unsavedChangesConfirm: "Há alterações não salvas.\n\nFechar sem salvar?"
     },
     it: {
@@ -947,6 +1027,9 @@
       premiumFeat7: "Colori di sfondo / testo personalizzati", premiumFeat8: "Dimensione font · famiglia tipografica",
       premiumBuyBtn: "Acquista Peekom Plus", premiumActivateBtn: "Attiva", premiumCloseBtn: "Chiudi",
       premiumLicenseLabel: "Chiave di licenza", premiumActivating: "Verifica…", premiumActivateFail: "Attivazione non riuscita.",
+      premiumUpgradeSuccessTitle: "Aggiornamento completato",
+      premiumUpgradeSuccessLead: "Grazie per aver acquistato Peekom Plus.\nTutte le funzioni Plus sono ora disponibili.",
+      premiumUpgradeSuccessBtn: "Inizia",
       unsavedChangesConfirm: "Hai modifiche non salvate.\n\nChiudere senza salvare?"
     },
     ru: {
@@ -990,6 +1073,9 @@
       premiumFeat7: "Свой цвет фона / текста", premiumFeat8: "Размер шрифта · семейство шрифтов",
       premiumBuyBtn: "Купить Peekom Plus", premiumActivateBtn: "Активировать", premiumCloseBtn: "Закрыть",
       premiumLicenseLabel: "Лицензионный ключ", premiumActivating: "Проверка…", premiumActivateFail: "Не удалось активировать.",
+      premiumUpgradeSuccessTitle: "Обновление завершено",
+      premiumUpgradeSuccessLead: "Спасибо за покупку Peekom Plus.\nТеперь доступны все функции Plus.",
+      premiumUpgradeSuccessBtn: "Начать",
       unsavedChangesConfirm: "Есть несохранённые изменения.\n\nЗакрыть без сохранения?"
     },
     vi: {
@@ -1033,6 +1119,9 @@
       premiumFeat7: "Màu nền / chữ tùy chỉnh", premiumFeat8: "Cỡ chữ · phông chữ",
       premiumBuyBtn: "Mua Peekom Plus", premiumActivateBtn: "Kích hoạt", premiumCloseBtn: "Đóng",
       premiumLicenseLabel: "Khóa bản quyền", premiumActivating: "Đang xác minh…", premiumActivateFail: "Kích hoạt thất bại.",
+      premiumUpgradeSuccessTitle: "Đã nâng cấp xong",
+      premiumUpgradeSuccessLead: "Cảm ơn bạn đã mua Peekom Plus.\nGiờ đây bạn có thể dùng mọi tính năng Plus.",
+      premiumUpgradeSuccessBtn: "Bắt đầu",
       unsavedChangesConfirm: "Có thay đổi chưa lưu.\n\nĐóng mà không lưu?"
     },
     th: {
@@ -1076,6 +1165,9 @@
       premiumFeat7: "สีพื้นหลัง / ข้อความกำหนดเอง", premiumFeat8: "ขนาดตัวอักษร · แบบอักษร",
       premiumBuyBtn: "ซื้อ Peekom Plus", premiumActivateBtn: "เปิดใช้งาน", premiumCloseBtn: "ปิด",
       premiumLicenseLabel: "คีย์ใบอนุญาต", premiumActivating: "กำลังตรวจสอบ…", premiumActivateFail: "เปิดใช้งานไม่สำเร็จ",
+      premiumUpgradeSuccessTitle: "อัปเกรดเสร็จสมบูรณ์",
+      premiumUpgradeSuccessLead: "ขอบคุณที่ซื้อ Peekom Plus\nคุณสามารถใช้ฟีเจอร์ Plus ทั้งหมดได้แล้ว",
+      premiumUpgradeSuccessBtn: "เริ่มต้นใช้งาน",
       unsavedChangesConfirm: "มีการเปลี่ยนแปลงที่ยังไม่บันทึก\n\nปิดโดยไม่บันทึก?"
     },
     id: {
@@ -1119,6 +1211,9 @@
       premiumFeat7: "Warna latar / teks kustom", premiumFeat8: "Ukuran font · jenis huruf",
       premiumBuyBtn: "Beli Peekom Plus", premiumActivateBtn: "Aktifkan", premiumCloseBtn: "Tutup",
       premiumLicenseLabel: "Kunci lisensi", premiumActivating: "Memverifikasi…", premiumActivateFail: "Aktivasi gagal.",
+      premiumUpgradeSuccessTitle: "Peningkatan selesai",
+      premiumUpgradeSuccessLead: "Terima kasih telah membeli Peekom Plus.\nSemua fitur Plus kini tersedia.",
+      premiumUpgradeSuccessBtn: "Mulai",
       unsavedChangesConfirm: "Ada perubahan yang belum disimpan.\n\nTutup tanpa menyimpan?"
     },
     hi: {
@@ -1162,6 +1257,9 @@
       premiumFeat7: "कस्टम पृष्ठभूमि / टेक्स्ट रंग", premiumFeat8: "फ़ॉन्ट आकार · फ़ॉन्ट परिवार",
       premiumBuyBtn: "Peekom Plus खरीदें", premiumActivateBtn: "सक्रिय करें", premiumCloseBtn: "बंद करें",
       premiumLicenseLabel: "लाइसेंस कुंजी", premiumActivating: "सत्यापन…", premiumActivateFail: "सक्रियण विफल।",
+      premiumUpgradeSuccessTitle: "अपग्रेड पूर्ण",
+      premiumUpgradeSuccessLead: "Peekom Plus खरीदने के लिए धन्यवाद।\nअब सभी Plus सुविधाएँ उपलब्ध हैं।",
+      premiumUpgradeSuccessBtn: "शुरू करें",
       unsavedChangesConfirm: "बिना सहेजे बदलाव हैं।\n\nबिना सहेजे बंद करें?"
     },
     ar: {
@@ -1205,6 +1303,9 @@
       premiumFeat7: "ألوان خلفية / نص مخصصة", premiumFeat8: "حجم الخط · نوع الخط",
       premiumBuyBtn: "شراء Peekom Plus", premiumActivateBtn: "تفعيل", premiumCloseBtn: "إغلاق",
       premiumLicenseLabel: "مفتاح الترخيص", premiumActivating: "جارٍ التحقق…", premiumActivateFail: "فشل التفعيل.",
+      premiumUpgradeSuccessTitle: "اكتملت الترقية",
+      premiumUpgradeSuccessLead: "شكراً لشرائك Peekom Plus.\nجميع ميزات Plus متاحة الآن.",
+      premiumUpgradeSuccessBtn: "ابدأ",
       unsavedChangesConfirm: "توجد تغييرات غير محفوظة.\n\nإغلاق بدون حفظ؟"
     }
   };

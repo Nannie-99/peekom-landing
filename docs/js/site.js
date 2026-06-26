@@ -6,7 +6,8 @@
 const LINKS = {
     win: "https://github.com/Nannie-99/peekom-landing/releases/latest/download/Peekom-Setup.exe",
     mac: "https://github.com/Nannie-99/peekom-landing/releases/latest",
-    buy: "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d"
+    buy: "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d",
+    reviewForm: "https://forms.gle/RZVnm6pCL7CRd5AY7"
 };
 
 const WIN_SETUP_FILENAME = "Peekom-Setup.exe";
@@ -18,7 +19,7 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 const RELEASE_HISTORY = [
     {
         version: "1.2.0",
-        date: "2026/06/19",
+        date: "2026/06/26",
         latest: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-Setup.exe",
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-macOS.dmg"
@@ -28,7 +29,7 @@ const RELEASE_HISTORY = [
 const CHANGELOG = {
     ko: [{
         version: "1.2.0",
-        date: "2026.06.19",
+        date: "2026.06.26",
         items: [
             "빼꼼 인덱스가 Peekom으로 돌아왔습니다",
             "가장자리 손잡이·얼음 모드·듀얼 모니터 지원",
@@ -39,7 +40,7 @@ const CHANGELOG = {
     }],
     en: [{
         version: "1.2.0",
-        date: "2026.06.19",
+        date: "2026.06.26",
         items: [
             "Peekom rebrand from legacy edge memo app",
             "Edge handle, Ice mode, dual monitor support",
@@ -254,7 +255,7 @@ function renderVersionHistory(d) {
     if (!host) return;
     const latestLabel = d.versionLatest || "Latest";
     const winLabel = d.versionWin || "Setup (x64)";
-    const macLabel = d.versionMac || "macOS";
+    const macLabel = d.versionMacSoon || "Coming soon";
     const rows = RELEASE_HISTORY.map(function (r) {
         const badge = r.latest ? ' <span class="badge-latest">' + latestLabel + '</span>' : "";
         return (
@@ -262,7 +263,7 @@ function renderVersionHistory(d) {
                 "<td><strong>v" + r.version + "</strong>" + badge + "</td>" +
                 "<td>" + r.date + "</td>" +
                 '<td><span class="os-icon">Win</span> <a href="' + r.winUrl + '" target="_blank" rel="noopener">' + winLabel + "</a></td>" +
-                '<td><span class="os-icon">Mac</span> <a href="' + r.macUrl + '" target="_blank" rel="noopener">' + macLabel + "</a></td>" +
+                '<td><span class="version-na" title="' + macLabel + '" aria-label="' + macLabel + '">&#10007;</span></td>' +
             "</tr>"
         );
     }).join("");
@@ -341,13 +342,16 @@ const i18n = {
         carouselCap1: "모니터 가장자리 손잡이",
         carouselCap2: "클릭·단축키로 메모 열기",
         carouselCap3: "얼음 모드 · 자동 접힘 딜레이",
+        reviewBtnLabel: "후기 남기기",
+        reviewEmpty: "첫 후기를 남겨주세요!",
+        reviewAnonymous: "익명",
         detectWin: "현재 환경: <strong>Windows</strong> — Windows 버튼 권장",
         detectMac: "현재 환경: <strong>macOS</strong> — macOS 버튼 권장",
         detectGeneric: "운영체제를 자동으로 감지하지 못했습니다. 직접 선택해 주세요.",
         featuresTitle: "기능", featuresSub: "Peekom이 하는 일을 한눈에 확인할 수 있습니다.",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "같은 앱 하나로 시작하고, Plus는 앱 안에서 잠금 해제합니다.",
-        comparePricing: '<span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> <span class="pricing-now">$' + PRICING.sale.toFixed(2) + ' USD</span> <span class="pricing-vat">(VAT 별도)</span> · <span class="pricing-launch">출시 기념 가격</span> · 1회 구매 · 최대 2대 기기 · 소버전 업데이트 포함 · 7일 환불 (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
-        guidePlusP: "1) Lemon Squeezy에서 출시 기념 $9.99 구매 → 2) 이메일 라이선스 키 수신 → 3) Peekom 실행 → 잠금 UI 또는 설정에서 키 입력 → 4) Peekom Plus + plus.png로 전환. 7일 환불: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
+        comparePricing: '<span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> <span class="pricing-now">$' + PRICING.sale.toFixed(2) + ' USD</span> <span class="pricing-vat">(VAT 별도)</span> · <span class="pricing-launch">출시 기념 가격</span> · 1회 구매 · 최대 2대 기기 · 소버전 업데이트 포함 · 30일 환불 (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
+        guidePlusP: "1) Lemon Squeezy에서 출시 기념 $9.99 구매 → 2) 이메일 라이선스 키 수신 → 3) Peekom 실행 → 잠금 UI 또는 설정에서 키 입력 → 4) Peekom Plus + plus.png로 전환. 30일 환불: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
         dlSub: "Peekom 하나만 설치하시면 됩니다. Plus는 앱 안에서 업그레이드합니다.",
         purchaseSuccessTitle: "Peekom Plus 구매가 완료되었습니다!",
         purchaseSuccessLead: "아래 라이선스 키를 복사한 뒤, Peekom 앱에서 Plus를 활성화해 주세요.",
@@ -365,6 +369,22 @@ const i18n = {
         compareNoLabel: "미지원",
         faqSub: "Peekom 사용 중 자주 묻는 내용입니다.",
         faqTitle: "자주 묻는 질문",
+        refundPolicyTitle: "Peekom Plus 환불 정책",
+        refundPolicyBody:
+            "<p>Peekom Plus의 결제·환불은 공식 판매자(Merchant of Record)인 Lemon Squeezy를 통해 처리됩니다.</p>" +
+            '<ul class="faq-refund-list">' +
+            "<li><strong>신청 기간</strong> — 구입일로부터 <strong>30일 이내</strong>에 신청한 경우 검토합니다.</li>" +
+            "<li><strong>환불 대상</strong> — 정상 작동 불가(앱이 정상적으로 실행·작동하지 않는 결함) 및 동일 주문의 중복 결제.</li>" +
+            "<li><strong>환불 불가</strong> — 단순 변심.</li>" +
+            "<li><strong>환불 시 라이선스</strong> — 환불이 완료되면 Peekom Plus 라이선스 키가 비활성화되며, 다음 온라인 실행 시 자동으로 무료 버전으로 전환됩니다.</li>" +
+            '<li><strong>절차</strong> — <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">문의 폼(또는 이메일)</a>으로 주문번호와 함께 신청 → 검토 → Lemon Squeezy 대시보드에서 환불 실행 → 카드사·결제수단에 따라 실제 반영까지 영업일이 소요될 수 있습니다.</li>' +
+            "</ul>",
+        faqR1q: "Peekom Plus 환불은 어떻게 신청하나요?",
+        faqR1a: '<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">문의 폼(또는 이메일)</a>으로 <strong>주문번호</strong>와 함께 신청해 주세요. 검토 후 Lemon Squeezy 대시보드에서 환불을 실행하며, 카드사·결제수단에 따라 실제 환불 반영까지 영업일이 소요될 수 있습니다.',
+        faqR2q: "어떤 경우에 환불받을 수 있나요?",
+        faqR2a: "구입일로부터 <strong>30일 이내</strong>라면 <strong>정상 작동 불가</strong>(앱이 정상적으로 실행·작동하지 않는 결함)와 동일 주문의 <strong>중복 결제</strong>에 대해 환불받을 수 있습니다. 단순 변심은 환불 대상이 아닙니다. 결제·환불은 공식 판매자인 Lemon Squeezy를 통해 처리됩니다.",
+        faqR3q: "환불 후 라이선스는 어떻게 되나요?",
+        faqR3a: "환불이 완료되면 Peekom Plus 라이선스 키가 <strong>비활성화</strong>됩니다. 다음에 온라인 상태로 앱을 실행하면 자동으로 무료 버전으로 전환되므로, 환불 신청 전에 Plus 사용 중단 여부를 확인해 주세요.",
         faq1q: "Peekom과 Peekom Plus의 차이는 무엇인가요?",
         faq1a: '무료는 3개 인덱스·묶음 이동·얼음 모드·자동 접힘 딜레이·모니터 선택·서식바·이미지 삽입을 포함합니다. Peekom Plus(출시 기념 $9.99, 정가 $12.99)는 10슬롯 독립 배치, 커스텀 색·글꼴·불투명도, 왼쪽 패널, 이미지 크기 조절, 보내기 등을 앱 안에서 잠금 해제합니다. <a href="features.html#compare">상세 비교표</a>를 참고하세요.',
         compareFreeName: "Peekom (무료)",
@@ -441,7 +461,15 @@ const i18n = {
             "</div>",
         compareColFeature: "기능",
         contactTitle: "연락", contactSub: "문의와 피드백을 보내실 수 있습니다.",
-        contactBody: "버그 리포트, 기능 제안, 라이선스 문의는 아래 이메일로 연락해 주세요.",
+        contactFeedbackTitle: "피드백 보내기",
+        contactFeedbackDesc: "버그 신고, 기능 제안, 라이선스 문의",
+        contactFeedbackBtn: "피드백 폼 열기",
+        contactReviewTitle: "후기 남기기",
+        contactReviewDesc: "사용 경험을 들려주세요. 홈페이지에 소개될 수 있어요.",
+        contactReviewBtn: "후기 폼 열기",
+        contactEmailTitle: "이메일 연락",
+        contactEmailDesc: "직접 연락이 필요할 때",
+        contactNote: "문의는 영업일 기준 10일 이내에 답변드리도록 노력하겠습니다. 이메일보다 구글 폼이 더 빠르게 전달되니 가능하면 폼을 이용해 주세요.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "개인정보 처리방침",
@@ -461,7 +489,7 @@ const i18n = {
         promoFreeTitle: "Peekom(무료)",
         promoVat: "(VAT 별도)",
         promoLaunchLabel: "출시 기념\n프로모션가\n적용 중",
-        comparePricingExtra: " · 1회 구매 · 최대 2대 기기 · 소버전 업데이트 포함 · 7일 환불 (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
+        comparePricingExtra: " · 1회 구매 · 최대 2대 기기 · 소버전 업데이트 포함 · 30일 환불 (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
         dlPlusHintExtra: ' · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Lemon Squeezy에서 구입</a> → 앱에서 라이선스 키 입력',
         fz1Title: "테두리에서 빼꼼",
         fz1Items: [
@@ -574,6 +602,7 @@ const i18n = {
         versionLatest: "최신",
         versionWin: "64-bit",
         versionMac: "macOS",
+        versionMacSoon: "출시 예정",
         changelogTitle: "변경 기록",
         linkChangelog: "Changelog / Releases", linkPrev: "Previous Versions", linkSmartScreen: "SmartScreen Guide"
     },
@@ -602,19 +631,38 @@ const i18n = {
         carouselCap1: "Edge handle on your monitor",
         carouselCap2: "Open memo via click or shortcut",
         carouselCap3: "Ice mode · auto-collapse delay",
+        reviewBtnLabel: "Leave a Review",
+        reviewEmpty: "Be the first to share your experience!",
+        reviewAnonymous: "Anonymous",
         detectWin: "Detected: <strong>Windows</strong> — Windows recommended",
         detectMac: "Detected: <strong>macOS</strong> — macOS recommended",
         detectGeneric: "OS not detected — choose manually",
         featuresTitle: "Features", featuresSub: "What Peekom does at a glance.",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "One app — Peekom Plus unlocks inside the app.",
-        comparePricing: '<span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> <span class="pricing-now">$' + PRICING.sale.toFixed(2) + ' USD</span> <span class="pricing-vat">(excl. VAT)</span> · <span class="pricing-launch">Launch price</span> · one-time · up to 2 devices · minor updates included · 7-day refund (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
-        guidePlusP: "1) Buy at launch price $9.99 on Lemon Squeezy → 2) Receive license key by email → 3) Open Peekom → enter key in lock UI or Settings → 4) Peekom Plus activation complete. 7-day refund: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
+        comparePricing: '<span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> <span class="pricing-now">$' + PRICING.sale.toFixed(2) + ' USD</span> <span class="pricing-vat">(excl. VAT)</span> · <span class="pricing-launch">Launch price</span> · one-time · up to 2 devices · minor updates included · 30-day refund (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
+        guidePlusP: "1) Buy at launch price $9.99 on Lemon Squeezy → 2) Receive license key by email → 3) Open Peekom → enter key in lock UI or Settings → 4) Peekom Plus activation complete. 30-day refund: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
         dlSub: "Install Peekom once. Upgrade to Peekom Plus inside the app.",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
         dlPlusHint: 'Peekom Plus: Was <span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> → Launch <strong>$' + PRICING.sale.toFixed(2) + '</strong> (excl. VAT) · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Buy on Lemon Squeezy</a> → enter license key in app',
         featureGifPending: "Demo GIF coming soon",
         compareNoLabel: "Not supported",
         faqSub: "Common questions about Peekom.",
+        refundPolicyTitle: "Peekom Plus Refund Policy",
+        refundPolicyBody:
+            "<p>Payments and refunds for Peekom Plus are processed by Lemon Squeezy, our Merchant of Record.</p>" +
+            '<ul class="faq-refund-list">' +
+            "<li><strong>Window</strong> — Requests are accepted within <strong>30 days</strong> of purchase.</li>" +
+            "<li><strong>Eligible</strong> — Product malfunction (the app fails to run or work correctly) and duplicate payments for the same order.</li>" +
+            "<li><strong>Not eligible</strong> — Change of mind / buyer's remorse.</li>" +
+            "<li><strong>License after refund</strong> — Once refunded, your Peekom Plus license key is disabled and the app reverts to the free version on its next online launch.</li>" +
+            '<li><strong>Process</strong> — Submit a request via the <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">contact form (or email)</a> with your order number → we review → we issue the refund from the Lemon Squeezy dashboard → the refund may take several business days depending on your card issuer.</li>' +
+            "</ul>",
+        faqR1q: "How do I request a Peekom Plus refund?",
+        faqR1a: 'Send us your <strong>order number</strong> through the <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">contact form (or email)</a>. After we review the request, we issue the refund from the Lemon Squeezy dashboard. The refund may take a few business days to appear, depending on your card issuer or payment method.',
+        faqR2q: "What is eligible for a refund?",
+        faqR2a: "Within <strong>30 days</strong> of purchase, refunds are available for <strong>product malfunction</strong> (the app fails to run or work correctly) and <strong>duplicate payments</strong> for the same order. Change of mind is not eligible. Payments and refunds are handled by Lemon Squeezy, our Merchant of Record.",
+        faqR3q: "What happens to my license after a refund?",
+        faqR3a: "Once a refund is completed, your Peekom Plus license key is <strong>disabled</strong>. The app automatically reverts to the free version the next time it launches while online, so make sure you intend to stop using Plus before requesting a refund.",
         faq1q: "What's the difference between free and Plus?",
         faq1a: 'Free includes 3 indexes, group handle move, Ice mode, hover delay, monitor selection, formatting toolbar, and image insert. Peekom Plus (launch $9.99, list $12.99) unlocks 10 slots, custom theme, fonts, opacity, left panel, image resize, and export in-app. See the <a href="features.html#compare">comparison table</a>.',
         compareFreeName: "Peekom (Free)",
@@ -703,7 +751,15 @@ const i18n = {
         faq7a: "Disable leftover Peekom startup entries in Task Manager, or reinstall and uninstall again.",
         compareColFeature: "Feature",
         contactTitle: "Contact", contactSub: "Send us your feedback.",
-        contactBody: "For bug reports, feature requests, or license inquiries, email us below.",
+        contactFeedbackTitle: "Send feedback",
+        contactFeedbackDesc: "Bug reports, feature ideas, license inquiries",
+        contactFeedbackBtn: "Open feedback form",
+        contactReviewTitle: "Leave a review",
+        contactReviewDesc: "Share your experience — it may be featured on our website.",
+        contactReviewBtn: "Open review form",
+        contactEmailTitle: "Email us",
+        contactEmailDesc: "When you need to reach us directly",
+        contactNote: "We aim to reply within about 10 business days. Google Forms are faster than email, so please use a form when you can.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "Privacy",
@@ -718,7 +774,7 @@ const i18n = {
         promoFreeTitle: "Peekom (Free)",
         promoVat: "(excl. VAT)",
         promoLaunchLabel: "Launch promo\nprice\napplied",
-        comparePricingExtra: " · one-time · up to 2 devices · minor updates included · 7-day refund (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
+        comparePricingExtra: " · one-time · up to 2 devices · minor updates included · 30-day refund (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
         dlPlusHintExtra: ' · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Buy on Lemon Squeezy</a> → enter license key in app',
         markdownGuideTitle: "Notes with Markdown",
         markdownGuideBody:
@@ -766,7 +822,7 @@ const i18n = {
         guideSectionEditTitle: "Editing",
         versionHistoryTitle: "History Versions",
         versionColVersion: "Version", versionColDate: "Release Date", versionColWin: "Windows", versionColMac: "macOS",
-        versionLatest: "Latest", versionWin: "64-bit", versionMac: "Universal",
+        versionLatest: "Latest", versionWin: "64-bit", versionMac: "Universal", versionMacSoon: "Coming soon",
         changelogTitle: "Changelog",
         fz1Title: "Peek from the edge",
         fz1Items: [
@@ -912,6 +968,7 @@ function enrichLocaleData(data, lang) {
     next.guidePlusStep2 = next.guidePlusStep2 || en.guidePlusStep2;
     next.guidePlusStep3 = next.guidePlusStep3 || en.guidePlusStep3;
     next.guidePlusStep4 = next.guidePlusStep4 || en.guidePlusStep4;
+    next.versionMacSoon = next.versionMacSoon || en.versionMacSoon;
     next.macComingSoonTitle = next.macComingSoonTitle || en.macComingSoonTitle;
     next.macComingSoonBody = next.macComingSoonBody || en.macComingSoonBody;
     next.featuresTitle = next.featuresTitle || en.featuresTitle;
@@ -920,6 +977,15 @@ function enrichLocaleData(data, lang) {
     next.compareSub = next.compareSub || en.compareSub;
     next.faq1a = next.faq1a || en.faq1a;
     next.contactEmail = CONTACT_EMAIL;
+    next.contactFeedbackTitle = next.contactFeedbackTitle || en.contactFeedbackTitle;
+    next.contactFeedbackDesc = next.contactFeedbackDesc || en.contactFeedbackDesc;
+    next.contactFeedbackBtn = next.contactFeedbackBtn || en.contactFeedbackBtn;
+    next.contactReviewTitle = next.contactReviewTitle || en.contactReviewTitle;
+    next.contactReviewDesc = next.contactReviewDesc || en.contactReviewDesc;
+    next.contactReviewBtn = next.contactReviewBtn || en.contactReviewBtn;
+    next.contactEmailTitle = next.contactEmailTitle || en.contactEmailTitle;
+    next.contactEmailDesc = next.contactEmailDesc || en.contactEmailDesc;
+    next.contactNote = next.contactNote || en.contactNote;
     next.footerCopy = next.footerCopy || "© 2026. Peekom All rights reserved.";
     next.dlWinNote = next.dlWinNote || en.dlWinNote;
     next.faq5q = next.faq5q || en.faq5q;
@@ -1161,6 +1227,13 @@ function applyLinks() {
         const el = document.getElementById(id);
         if (el) el.href = LINKS.buy;
     });
+
+    const reviewBtn = document.getElementById("reviewFormBtn");
+    if (reviewBtn && LINKS.reviewForm) {
+        reviewBtn.href = LINKS.reviewForm;
+        reviewBtn.target = "_blank";
+        reviewBtn.rel = "noopener noreferrer";
+    }
 }
 
 function triggerWinSetupDownload() {
@@ -1357,7 +1430,7 @@ function setThemeBtnA11y(id, label) {
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el && value != null) {
-        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq9a') {
+        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq9a' || id === 'refundPolicyBody' || id === 'faqR1a' || id === 'faqR2a' || id === 'faqR3a') {
             el.innerHTML = value;
         } else {
             el.textContent = value;
@@ -1473,11 +1546,11 @@ function updateUI() {
     setText('navFaq', d.navFaq);
     setText('navHelp', d.navHelp || d.navGuide);
     setText('navContact', d.navContact);
-    const searchInput = document.getElementById('searchInput');
-    if (searchInput) searchInput.placeholder = d.searchPlaceholder;
     const langSelect = document.getElementById('langSelect');
-    if (langSelect) langSelect.value = currentLang;
-    setText('footerLangLabel', d.footerLangLabel);
+    if (langSelect) {
+        langSelect.value = currentLang;
+        langSelect.setAttribute('aria-label', d.footerLangLabel || 'Language');
+    }
     setThemeBtnA11y('themeLightBtn', d.themeLightLabel);
     setThemeBtnA11y('themeDarkBtn', d.themeDarkLabel);
     setThemeBtnA11y('themeAutoBtn', d.themeAutoLabel);
@@ -1501,6 +1574,14 @@ function updateUI() {
     setText('heroUpgradeNote', d.heroUpgradeNote);
 
     setText('carouselCap1', d.carouselCap1);
+    setText('reviewBtnLabel', d.reviewBtnLabel);
+
+    if (window.PeekomReviews) {
+        window.PeekomReviews.refresh({
+            reviewEmpty: d.reviewEmpty,
+            reviewAnonymous: d.reviewAnonymous
+        });
+    }
 
     const detectedOsEl = document.getElementById('detectedOs');
     const winGuideBtnEl = document.getElementById('winGuideBtn');
@@ -1542,6 +1623,14 @@ function updateUI() {
 
     setText('faqTitle', d.faqTitle);
     setText('faqSub', d.faqSub);
+    setText('refundPolicyTitle', d.refundPolicyTitle);
+    setText('refundPolicyBody', d.refundPolicyBody);
+    setText('faqR1q', d.faqR1q);
+    setText('faqR1a', d.faqR1a);
+    setText('faqR2q', d.faqR2q);
+    setText('faqR2a', d.faqR2a);
+    setText('faqR3q', d.faqR3q);
+    setText('faqR3a', d.faqR3a);
     setText('faq1q', d.faq1q);
     setText('faq1a', d.faq1a);
     setText('faq2q', d.faq2q);
@@ -1607,7 +1696,15 @@ function updateUI() {
 
     setText('contactTitle', d.contactTitle);
     setText('contactSub', d.contactSub);
-    setText('contactBody', d.contactBody);
+    setText('contactFeedbackTitle', d.contactFeedbackTitle);
+    setText('contactFeedbackDesc', d.contactFeedbackDesc);
+    setText('contactFeedbackBtn', d.contactFeedbackBtn);
+    setText('contactReviewTitle', d.contactReviewTitle);
+    setText('contactReviewDesc', d.contactReviewDesc);
+    setText('contactReviewBtn', d.contactReviewBtn);
+    setText('contactEmailTitle', d.contactEmailTitle);
+    setText('contactEmailDesc', d.contactEmailDesc);
+    setText('contactNote', d.contactNote);
     const emailEl = document.getElementById('contactEmail');
     if (emailEl) {
         emailEl.textContent = d.contactEmail;
@@ -1631,7 +1728,7 @@ function updateUI() {
     if (brandIcon) brandIcon.alt = 'Peekom';
     applyLinks();
     highlightOSButtons();
-    ['fz1GifLabel', 'fz2GifLabel', 'fz3GifLabel', 'fz4GifLabel', 'fz5GifLabel'].forEach(function(id) {
+    ['fz4GifLabel', 'fz5GifLabel'].forEach(function(id) {
         setText(id, d.featureGifPending);
     });
     renderPrivacyPage(d);
@@ -1779,6 +1876,13 @@ window.onload = function() {
     initFaqAccordion();
     initHeroOfferActions();
     if (window.PeekomCarousel) window.PeekomCarousel.init();
+    if (window.PeekomReviews) {
+        const d = enrichLocaleData(i18n[currentLang] || i18n.en, currentLang);
+        window.PeekomReviews.init({
+            reviewEmpty: d.reviewEmpty,
+            reviewAnonymous: d.reviewAnonymous
+        });
+    }
 };
     window.PeekomSite = {
         LINKS: LINKS,

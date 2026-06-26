@@ -16,4 +16,286 @@
   Object.assign(S["id"], {"modePeek":"Peek","modeIce":"Ice","modeChipTipPeek":"Klik untuk menyematkan (mode Ice)","modeChipTipIce":"Klik untuk melepas (mode Peek)","settingsTitle":"Pengaturan Peekom Plus","settingsApply":"Terapkan","settingsClose":"Tutup","langLabel":"Bahasa","monitorLabel":"Monitor","monitorAuto":"Otomatis (ikuti mouse)","triggerLabel":"Mode pemicu","triggerHover":"Tutup otomatis saat mouse menjauh","triggerShortcut":"Buka / tutup dengan pintasan","triggerHoverHint":"Catatan tutup otomatis saat mouse keluar dari jendela.","shortcutLabel":"Pintasan","shortcutHint":"Contoh: Ctrl+Shift+M, Alt+Q","openAtLogin":"Jalankan saat startup","openAtLoginHint":"Aplikasi akan berjalan otomatis saat Windows dimulai.","pinToggleLabel":"Beralih Peek / Ice","pinToggleChip":"Beralih dengan klik chip (disarankan)","pinToggleDblclick":"Beralih dengan klik ganda","pinToggleClick":"Beralih dengan klik (asli)","pinToggleHint":"Gunakan 'klik chip' untuk menghindari pergantian tidak sengaja saat mengedit di mode Ice.","exportLabel":"Ekspor","exportSelectIndices":"Pilih indeks untuk diekspor","exportSelectAll":"Pilih semua","exportFormat":"Format","exportFormatTxt":".txt (teks biasa)","exportFormatMd":".md (Markdown)","exportFormatJson":".json (cadangan lengkap)","exportBtn":"Ekspor yang dipilih","exportDoing":" menyimpan…","exportDone":"Ekspor selesai.","exportFail":"Ekspor gagal.","importLabel":"Impor (pulihkan cadangan)","importBtn":"Muat file cadangan","importHint":"Pulihkan catatan dan pengaturan dari file .json yang tersimpan. Data saat ini akan ditimpa.","importConfirm":"Memuat cadangan akan menimpa semua indeks dan catatan saat ini.\nLanjutkan?","importDone":"Cadangan dipulihkan.","importFail":"File cadangan tidak valid.","importError":"Kesalahan saat membaca file.","howToTitle":"Cara menggunakan","howToSteps":["Klik <strong>gagang kanan</strong> untuk membuka catatan","Ketik catatan Anda, gunakan <strong>Ctrl+scroll</strong> atau tombol <strong>A- / A+</strong> untuk ukuran font","<strong>Seret atas/bawah</strong> untuk memposisikan, <strong>kiri/kanan</strong> untuk mengurutkan","Saat catatan dibuka, <strong>ikon ⚙</strong> muncul di kanan atas","Klik chip <strong>Peek / Ice</strong> di bawah untuk beralih penyematan"],"markdownTitle":"Dukungan Markdown","markdownDesc":"Gunakan sintaks Markdown di catatan untuk pemformatan otomatis.","markdownExamples":[{"syntax":"# Judul 1","result":"Judul besar"},{"syntax":"## Judul 2","result":"Judul sedang"},{"syntax":"**tebal**","result":"Tebal"},{"syntax":"*miring*","result":"Miring"},{"syntax":"- item","result":"Daftar"},{"syntax":"1. item","result":"Daftar bernomor"},{"syntax":"`kode`","result":"Kode inline"}],"iceEditTitle":"Mode Ice / Peek","iceEditDesc":"Mode Ice menjaga catatan terbuka. Mode Peek menutup otomatis saat mouse menjauh.","backupTitle":"Cadangan & Pemulihan","backupDesc":"Simpan indeks dan catatan ke file atau pulihkan dari cadangan sebelumnya.","indexLabel":"Indeks","indexAddBtn":"+ Tambah indeks","indexDeleteBtn":"Hapus","indexDeleteConfirm":"Hapus indeks ini dan catatannya?","indexDeleteConfirm2":"Klik lagi untuk konfirmasi","indexTitleLabel":"Judul indeks","indexThemeLabel":"Tema warna","indexPositionLabel":"Posisi (slot)","indexFontLabel":"Ukuran font default","themeYellow":"Kuning","themePink":"Merah muda","themeBlue":"Biru","themeGreen":"Hijau","themeCustom":"Kustom","customBgLabel":"Latar belakang","customTextLabel":"Warna teks","recentColors":"Baru-baru ini digunakan","aboutTitle":"Peekom Plus","aboutDesc":"Gagang kecil di tepi kanan layar. Klik untuk membuka catatan mengambang. Hingga 10 indeks, ukuran font, Markdown, dan ekspor.","statusApplied":"Pengaturan diterapkan.","statusShortcutFail":"Gagal mendaftarkan pintasan. Coba kombinasi lain.","statusStartupFail":"Tidak dapat menerapkan pengaturan startup.","statusApplyError":"Kesalahan saat menerapkan pengaturan.","unsavedChangesConfirm":"Ada perubahan yang belum disimpan.\n\nTutup tanpa menyimpan?","unsavedChangesTitle":"Perubahan belum diterapkan","unsavedChangesMessage":"Ada pengaturan yang belum disimpan. Terapkan atau batalkan untuk melanjutkan.","unsavedChangesApply":"Terapkan","unsavedChangesCancel":"Batal","indexTitleRequired":"Judul indeks minimal 1 karakter.","settingsTitlePlusKo":"Pengaturan Peekom Plus","settingsTitleFreeKo":"Pengaturan Peekom","settingsTitlePlus":"Peekom Plus Settings","settingsTitleFree":"Peekom Settings","settingsAboutShort":"Alat memo cepat di sepanjang tepi kanan layar.","memoOpacityLabel":"Opasitas memo","memoOpacityHint":"Plus — opasitas latar memo bawaan","memoAspectLabel":"Rasio aspek memo","memoAspectSquare":"1:1 (persegi)","memoAspectPortrait":"3:4 (portrait)","memoAspectHint":"Ukuran memo berdasarkan tinggi pegangan","monitorHint":"Layar mouse saat ini atau monitor tetap","hoverDelayLabel":"Penundaan lipat otomatis","hoverDelayHint":"Waktu setelah mouse pergi sebelum memo dilipat","hoverDelayUnit":"dtk","shortcutOpenClose":"Buka / tutup","shortcutSlotUp":"Buka memo di atas","shortcutSlotDown":"Buka memo di bawah","shortcutIndexHint":"Gunakan Ctrl+Shift+↑ / ↓ untuk membuka memo indeks lain.","shortcutCapturePlaceholder":"Klik lalu tekan kombinasi tombol","pinToggleDblclickDefault":"Klik ganda memo untuk beralih (bawaan)","pinToggleChipOnly":"Hanya klik chip","pinToggleClickMemo":"Klik memo untuk beralih","pinToggleRecommendHint":"Klik chip disarankan untuk menghindari beralih tidak sengaja","resetCommonDefaults":"Atur ulang nilai umum","resetCommonDefaultsHint":"Mengatur ulang monitor, rasio aspek, mode pemicu, dan opsi umum lainnya.","backupManageTitle":"Cadangan","backupHeadHint":"Pilih opsi lalu jalankan","backupExpand":"Bentang ▾","backupCollapse":"Tutup ▴","backupExportTab":"Ekspor","backupImportTab":"Impor","exportIndicesLabel":"Indeks untuk diekspor","exportRunBtn":"Jalankan ekspor","exportFormatTxtShort":"Teks (.txt)","exportFormatMdShort":"Markdown (.md)","exportFormatJsonShort":"Cadangan penuh (.json)","importOverwriteHint":"Memuat cadangan JSON akan menimpa data saat ini","showTrayIcon":"Tampilkan ikon baki","runAtStartupWin":"Jalankan Peekom saat Windows mulai","indexTitleMaxHint":"Hingga 6 karakter","handlePositionLabel":"Posisi pegangan","handlePositionHint":"Anda juga bisa menyeret pegangan untuk memindahkan posisi","handleSlotOption":"Slot {n}","fontSizePlusHint":"Plus — juga atur dengan Ctrl+scroll","fontFamilyLabel":"Font","fontSystemDefault":"Bawaan sistem","fontFamilyPlusHint":"Plus — pilih dari font terpasang di OS","attachedImagesLabel":"Gambar terlampir","attachedImagesHint":"Klik thumbnail untuk pratinjau lebih besar","attachedImagesEmpty":"Tidak ada gambar","commonTabAriaLabel":"Pengaturan umum","upgradePlusBtn":"✨ Upgrade ke Plus","eyedropperTitle":"Pipet warna","eyedropperUnsupported":"Pipet warna tidak didukung di lingkungan ini.","colorAdvancedPicker":"Lanjutan","colorPickScreen":"Pilih dari layar","settingsTierPaid":"[Plus]","settingsTierFree":"[Gratis]","shortcutOverlapError":"Pintasan saling tumpang tindih. Gunakan kombinasi berbeda untuk masing-masing.","resetCommonConfirm":"Atur ulang pengaturan umum ke bawaan?","resetCommonDone":"Diatur ulang ke bawaan. Klik Terapkan untuk menyimpan.","exportSelectOneError":"Pilih minimal satu indeks untuk diekspor.","importSyncFail":"Impor selesai tetapi gagal sinkron ke jendela utama.","indexAddSyncFail":"Indeks ditambahkan tetapi gagal sinkron ke jendela utama.","deleteSyncFail":"Dihapus tetapi gagal sinkron ke jendela utama.","indexDeleted":"Indeks dihapus.","imagePreviewAlt":"Pratinjau gambar","imageLoadedFromFile":"Dimuat dari file asli","imagePreviewFallback":"File asli tidak ditemukan; menampilkan pratinjau tersimpan.","imageNoPathInfo":"Tidak ada path asli; menampilkan pratinjau tersimpan.","fontSizeRangeHint":"Rentang: 8 – 36 px","startupCheckFail":"Tidak dapat memverifikasi pendaftaran startup. Coba lagi.","startupSetError":"Kesalahan saat mengonfigurasi startup.","stateChangedConfirm":"Pengaturan diubah di tempat lain.\n\nBuang perubahan yang belum disimpan dan segarkan?","applySyncFail":"Tidak dapat menyinkronkan pengaturan ke jendela utama. Coba mulai ulang aplikasi.","fmtTextColor":"Warna teks","fmtColorDefault":"Bawaan","fmtColorRed":"Merah","fmtColorBlue":"Biru","fmtColorGreen":"Hijau","fmtBold":"Tebal","fmtItalic":"Miring","fmtUnderline":"Garis bawah","fmtStrike":"Coret","fmtAlignMenu":"Perataan","fmtAlignLeft":"Rata kiri","fmtAlignCenter":"Tengah","fmtAlignRight":"Rata kanan","fmtAlignJustify":"Rata kiri-kanan","fmtListMenu":"Daftar","fmtListBullet":"Daftar bullet","fmtListSquare":"Bullet persegi","fmtListNumber":"Daftar bernomor","fmtListPlain":"Teks biasa","fmtInsertImage":"Sisipkan gambar","fmtImageScale":"Ukuran gambar","monitorDisplayLabel":"{name} ({width}×{height})","monitorDisplayFallback":"Layar {id}","indexTabFallback":"Indeks {n}","contrastWarning":"Kontras rendah dapat menyulitkan membaca. (rasio {ratio}:1)"});
   Object.assign(S["hi"], {"modePeek":"झाँकें","modeIce":"स्थिर","modeChipTipPeek":"पिन करने के लिए क्लिक करें (Ice मोड)","modeChipTipIce":"अनपिन करने के लिए क्लिक करें (Peek मोड)","settingsTitle":"Peekom Plus सेटिंग","settingsApply":"लागू करें","settingsClose":"बंद करें","langLabel":"भाषा","monitorLabel":"मॉनिटर","monitorAuto":"स्वतः (माउस का अनुसरण)","triggerLabel":"ट्रिगर मोड","triggerHover":"माउस दूर जाने पर स्वतः बंद","triggerShortcut":"शॉर्टकट से खोलें / बंद करें","triggerHoverHint":"माउस विंडो से बाहर जाने पर नोट स्वतः बंद हो जाता है।","shortcutLabel":"शॉर्टकट","shortcutHint":"उदा: Ctrl+Shift+M, Alt+Q","openAtLogin":"स्टार्टअप पर चलाएं","openAtLoginHint":"Windows शुरू होने पर ऐप स्वतः चलेगा।","pinToggleLabel":"Peek / Ice टॉगल","pinToggleChip":"चिप क्लिक से टॉगल करें (अनुशंसित)","pinToggleDblclick":"डबल क्लिक से टॉगल करें","pinToggleClick":"क्लिक से टॉगल करें (मूल)","pinToggleHint":"Ice मोड में संपादित करते समय गलती से टॉगल न हो इसके लिए 'चिप क्लिक' अनुशंसित है।","exportLabel":"निर्यात","exportSelectIndices":"निर्यात के लिए इंडेक्स चुनें","exportSelectAll":"सभी चुनें","exportFormat":"प्रारूप","exportFormatTxt":".txt (सादा पाठ)","exportFormatMd":".md (Markdown)","exportFormatJson":".json (पूर्ण बैकअप)","exportBtn":"चयनित निर्यात करें","exportDoing":" सहेज रहे हैं…","exportDone":"निर्यात पूर्ण।","exportFail":"निर्यात विफल।","importLabel":"आयात (बैकअप पुनर्स्थापित करें)","importBtn":"बैकअप फ़ाइल लोड करें","importHint":"सहेजी गई .json बैकअप से नोट्स और सेटिंग पुनर्स्थापित करें। वर्तमान डेटा ओवरराइट होगा।","importConfirm":"बैकअप लोड करने से सभी वर्तमान इंडेक्स और नोट्स ओवरराइट होंगे।\nजारी रखें?","importDone":"बैकअप पुनर्स्थापित किया।","importFail":"अमान्य बैकअप फ़ाइल।","importError":"फ़ाइल पढ़ने में त्रुटि।","howToTitle":"उपयोग कैसे करें","howToSteps":["नोट खोलने के लिए <strong>दाएं हैंडल</strong> पर क्लिक करें","नोट लिखें और फ़ॉन्ट आकार के लिए <strong>Ctrl+स्क्रॉल</strong> या <strong>A- / A+</strong> बटन उपयोग करें","स्थिति बदलने के लिए <strong>ऊपर/नीचे खींचें</strong>, क्रम के लिए <strong>बाएं/दाएं खींचें</strong>","नोट खुलने पर <strong>⚙ आइकन</strong> ऊपर दाएं दिखता है","पिनिंग टॉगल करने के लिए नीचे <strong>Peek / Ice चिप</strong> पर क्लिक करें"],"markdownTitle":"Markdown समर्थन","markdownDesc":"स्वचालित फ़ॉर्मेटिंग के लिए नोट में Markdown सिंटैक्स उपयोग करें।","markdownExamples":[{"syntax":"# शीर्षक 1","result":"बड़ा शीर्षक"},{"syntax":"## शीर्षक 2","result":"मध्यम शीर्षक"},{"syntax":"**बोल्ड**","result":"बोल्ड"},{"syntax":"*इटैलिक*","result":"इटैलिक"},{"syntax":"- आइटम","result":"सूची"},{"syntax":"1. आइटम","result":"क्रमांकित सूची"},{"syntax":"`कोड`","result":"इनलाइन कोड"}],"iceEditTitle":"Ice / Peek मोड","iceEditDesc":"Ice मोड नोट खुला रखता है। Peek मोड में माउस दूर जाने पर स्वतः बंद होता है।","backupTitle":"बैकअप और पुनर्स्थापना","backupDesc":"इंडेक्स और नोट्स फ़ाइल में सहेजें या पिछले बैकअप से पुनर्स्थापित करें।","indexLabel":"इंडेक्स","indexAddBtn":"+ इंडेक्स जोड़ें","indexDeleteBtn":"हटाएं","indexDeleteConfirm":"यह इंडेक्स और नोट हटाएं?","indexDeleteConfirm2":"पुष्टि के लिए फिर क्लिक करें","indexTitleLabel":"इंडेक्स शीर्षक","indexThemeLabel":"रंग थीम","indexPositionLabel":"स्थिति (स्लॉट)","indexFontLabel":"डिफ़ॉल्ट फ़ॉन्ट आकार","themeYellow":"पीला","themePink":"गुलाबी","themeBlue":"नीला","themeGreen":"हरा","themeCustom":"कस्टम","customBgLabel":"पृष्ठभूमि","customTextLabel":"टेक्स्ट रंग","recentColors":"हाल ही में उपयोग किए","aboutTitle":"Peekom Plus","aboutDesc":"स्क्रीन के दाएं किनारे पर एक छोटा हैंडल। क्लिक करके फ्लोटिंग नोट खोलें। 10 इंडेक्स, फ़ॉन्ट साइज़, Markdown और निर्यात।","statusApplied":"सेटिंग लागू की गई।","statusShortcutFail":"शॉर्टकट पंजीकरण विफल। दूसरा संयोजन आज़माएं।","statusStartupFail":"स्टार्टअप सेटिंग लागू नहीं हो सकी।","statusApplyError":"सेटिंग लागू करने में त्रुटि।","unsavedChangesConfirm":"बिना सहेजे बदलाव हैं।\n\nबिना सहेजे बंद करें?","unsavedChangesTitle":"बदलाव लागू नहीं हुए","unsavedChangesMessage":"सहेजे न गए सेटिंग हैं। जारी रखने के लिए लागू करें या रद्द करें।","unsavedChangesApply":"लागू करें","unsavedChangesCancel":"रद्द करें","indexTitleRequired":"इंडेक्स शीर्षक कम से कम 1 अक्षर का होना चाहिए।","settingsTitlePlusKo":"Peekom Plus सेटिंग","settingsTitleFreeKo":"Peekom सेटिंग","settingsTitlePlus":"Peekom Plus Settings","settingsTitleFree":"Peekom Settings","settingsAboutShort":"स्क्रीन के दाएँ किनारे पर तेज़ मेमो टूल।","memoOpacityLabel":"मेमो अपारदर्शिता","memoOpacityHint":"Plus — मेमो पृष्ठभूमि की डिफ़ॉल्ट अपारदर्शिता","memoAspectLabel":"मेमो आस्पект अनुपात","memoAspectSquare":"1:1 (वर्ग)","memoAspectPortrait":"3:4 (पोर्ट्रेट)","memoAspectHint":"मेमो का आकार हैंडल की ऊँचाई पर आधारित है","monitorHint":"वर्तमान माउस डिस्प्ले या निश्चित मॉनिटर","hoverDelayLabel":"स्वतः संकुचन विलंब","hoverDelayHint":"माउस हटने के बाद मेमो संकुचित होने तक का समय","hoverDelayUnit":"से.","shortcutOpenClose":"खोलें / बंद करें","shortcutSlotUp":"ऊपर का मेमो खोलें","shortcutSlotDown":"नीचे का मेमो खोलें","shortcutIndexHint":"अन्य इंडेक्स मेमो खोलने के लिए Ctrl+Shift+↑ / ↓ उपयोग करें।","shortcutCapturePlaceholder":"क्लिक करें, फिर की संयोजन दबाएँ","pinToggleDblclickDefault":"टॉगल के लिए मेमो पर डबल-क्लिक (डिफ़ॉल्ट)","pinToggleChipOnly":"केवल चिप क्लिक","pinToggleClickMemo":"टॉगल के लिए मेमो क्लिक","pinToggleRecommendHint":"गलती से टॉगल से बचने के लिए चिप क्लिक अनुशंसित है","resetCommonDefaults":"सामान्य डिफ़ॉल्ट पुनर्स्थापित करें","resetCommonDefaultsHint":"मॉनिटर, आस्पект, ट्रिगर मोड और अन्य सामान्य विकल्प रीसेट करता है।","backupManageTitle":"बैकअप","backupHeadHint":"विकल्प चुनें, फिर चलाएँ","backupExpand":"विस्तार ▾","backupCollapse":"संकुचित ▴","backupExportTab":"निर्यात","backupImportTab":"आयात","exportIndicesLabel":"निर्यात करने के लिए इंडेक्स","exportRunBtn":"निर्यात चलाएँ","exportFormatTxtShort":"टेक्स्ट (.txt)","exportFormatMdShort":"Markdown (.md)","exportFormatJsonShort":"पूर्ण बैकअप (.json)","importOverwriteHint":"JSON बैकअप लोड करने से वर्तमान डेटा अधिलेखित होगा","showTrayIcon":"ट्रे आइकन दिखाएँ","runAtStartupWin":"Windows शुरू होने पर Peekom चलाएँ","indexTitleMaxHint":"अधिकतम 6 अक्षर","handlePositionLabel":"हैंडल स्थिति","handlePositionHint":"स्थिति बदलने के लिए हैंडल खींच भी सकते हैं","handleSlotOption":"स्लॉट {n}","fontSizePlusHint":"Plus — Ctrl+स्क्रॉल से भी समायोजित करें","fontFamilyLabel":"फ़ॉन्ट","fontSystemDefault":"सिस्टम डिफ़ॉल्ट","fontFamilyPlusHint":"Plus — OS में इंस्टॉल फ़ॉन्ट में से चुनें","attachedImagesLabel":"संलग्न चित्र","attachedImagesHint":"बड़ा पूर्वावलोकन के लिए थंबनेल क्लिक करें","attachedImagesEmpty":"कोई चित्र नहीं","commonTabAriaLabel":"सामान्य सेटिंग","upgradePlusBtn":"✨ Plus में अपग्रेड करें","eyedropperTitle":"आईड्रॉपर","eyedropperUnsupported":"इस वातावरण में आईड्रॉपर समर्थित नहीं है।","colorAdvancedPicker":"उन्नत","colorPickScreen":"स्क्रीन से चुनें","settingsTierPaid":"[Plus]","settingsTierFree":"[मुफ़्त]","shortcutOverlapError":"शॉर्टकट ओवरलैप हो रहे हैं। प्रत्येक के लिए अलग संयोजन उपयोग करें।","resetCommonConfirm":"सामान्य सेटिंग डिफ़ॉल्ट पर पुनर्स्थापित करें?","resetCommonDone":"डिफ़ॉल्ट पर पुनर्स्थापित। सहेजने के लिए लागू करें क्लिक करें।","exportSelectOneError":"निर्यात के लिए कम से कम एक इंडेक्स चुनें।","importSyncFail":"आयात पूर्ण, लेकिन मुख्य विंडो से सिंक विफल।","indexAddSyncFail":"इंडेक्स जोड़ा गया, लेकिन मुख्य विंडो से सिंक विफल।","deleteSyncFail":"हटाया गया, लेकिन मुख्य विंडो से सिंक विफल।","indexDeleted":"इंडेक्स हटाया गया।","imagePreviewAlt":"चित्र पूर्वावलोकन","imageLoadedFromFile":"मूल फ़ाइल से लोड किया गया","imagePreviewFallback":"मूल फ़ाइल नहीं मिली; सहेजा पूर्वावलोकन दिखाया जा रहा है।","imageNoPathInfo":"मूल पथ नहीं; सहेजा पूर्वावलोकन दिखाया जा रहा है।","fontSizeRangeHint":"सीमा: 8 – 36 px","startupCheckFail":"स्टार्टअप पंजीकरण सत्यापित नहीं हो सका। पुनः प्रयास करें।","startupSetError":"स्टार्टअप सेटिंग कॉन्फ़िगर करते समय त्रुटि।","stateChangedConfirm":"सेटिंग कहीं और बदली गई।\n\nसहेजे न गए बदलाव छोड़कर रीफ़्रेश करें?","applySyncFail":"मुख्य विंडो में सेटिंग सिंक नहीं हो सकीं। ऐप पुनः प्रारंभ करें।","fmtTextColor":"टेक्स्ट रंग","fmtColorDefault":"डिफ़ॉल्ट","fmtColorRed":"लाल","fmtColorBlue":"नीला","fmtColorGreen":"हरा","fmtBold":"बोल्ड","fmtItalic":"इटैलिक","fmtUnderline":"रेखांकित","fmtStrike":"काटा हुआ","fmtAlignMenu":"संरेखण","fmtAlignLeft":"बाएँ","fmtAlignCenter":"केंद्र","fmtAlignRight":"दाएँ","fmtAlignJustify":"समायोजित","fmtListMenu":"सूची","fmtListBullet":"बुलेट सूची","fmtListSquare":"वर्ग बुलेट","fmtListNumber":"क्रमांकित सूची","fmtListPlain":"सादा टेक्स्ट","fmtInsertImage":"चित्र सम्मिलित करें","fmtImageScale":"चित्र आकार","monitorDisplayLabel":"{name} ({width}×{height})","monitorDisplayFallback":"डिस्प्ले {id}","indexTabFallback":"इंडेक्स {n}","contrastWarning":"कम कंट्रास्ट पढ़ना कठिन बना सकता है। (अनुपात {ratio}:1)"});
   Object.assign(S["ar"], {"modePeek":"لمحة","modeIce":"تثبيت","modeChipTipPeek":"انقر للتثبيت (وضع الجليد)","modeChipTipIce":"انقر لإلغاء التثبيت (وضع اللمحة)","settingsTitle":"إعدادات Peekom Plus","settingsApply":"تطبيق","settingsClose":"إغلاق","langLabel":"اللغة","monitorLabel":"الشاشة","monitorAuto":"تلقائي (اتباع المؤشر)","triggerLabel":"وضع التفعيل","triggerHover":"إغلاق تلقائي عند إبعاد الماوس","triggerShortcut":"فتح / إغلاق باختصار لوحة المفاتيح","triggerHoverHint":"تُغلق الملاحظة تلقائياً عند مغادرة الماوس للنافذة.","shortcutLabel":"اختصار لوحة المفاتيح","shortcutHint":"مثال: Ctrl+Shift+M, Alt+Q","openAtLogin":"تشغيل عند بدء تشغيل النظام","openAtLoginHint":"سيتم تشغيل التطبيق تلقائياً عند بدء تشغيل Windows.","pinToggleLabel":"تبديل لمحة / جليد","pinToggleChip":"التبديل بالنقر على الشريحة (موصى به)","pinToggleDblclick":"التبديل بالنقر المزدوج","pinToggleClick":"التبديل بالنقر (الأصلي)","pinToggleHint":"يُنصح بـ 'النقر على الشريحة' لتجنب التبديل العرضي أثناء التحرير في وضع الجليد.","exportLabel":"تصدير","exportSelectIndices":"اختر الفهارس للتصدير","exportSelectAll":"اختر الكل","exportFormat":"الصيغة","exportFormatTxt":".txt (نص عادي)","exportFormatMd":".md (Markdown)","exportFormatJson":".json (نسخ احتياطي كامل)","exportBtn":"تصدير المحدد","exportDoing":" جارٍ الحفظ…","exportDone":"اكتمل التصدير.","exportFail":"فشل التصدير.","importLabel":"استيراد (استعادة نسخة احتياطية)","importBtn":"تحميل ملف النسخ الاحتياطي","importHint":"استعادة الملاحظات والإعدادات من ملف .json محفوظ. سيتم الكتابة فوق البيانات الحالية.","importConfirm":"سيؤدي تحميل النسخة الاحتياطية إلى الكتابة فوق جميع الفهارس والملاحظات الحالية.\nهل تريد المتابعة؟","importDone":"تمت استعادة النسخة الاحتياطية.","importFail":"ملف النسخ الاحتياطي غير صالح.","importError":"خطأ أثناء قراءة الملف.","howToTitle":"كيفية الاستخدام","howToSteps":["انقر على <strong>المقبض الأيمن</strong> لفتح ملاحظة","اكتب ملاحظتك واستخدم <strong>Ctrl+التمرير</strong> أو أزرار <strong>A- / A+</strong> لتغيير حجم الخط","<strong>اسحب لأعلى/أسفل</strong> لتغيير الموضع، <strong>يسار/يمين</strong> لتغيير الترتيب","عند فتح ملاحظة، تظهر <strong>أيقونة ⚙</strong> في أعلى اليمين","انقر على شريحة <strong>لمحة / جليد</strong> أسفل الملاحظة لتبديل التثبيت"],"markdownTitle":"دعم Markdown","markdownDesc":"استخدم صيغة Markdown في ملاحظاتك للتنسيق التلقائي.","markdownExamples":[{"syntax":"# عنوان 1","result":"عنوان كبير"},{"syntax":"## عنوان 2","result":"عنوان متوسط"},{"syntax":"**غامق**","result":"نص غامق"},{"syntax":"*مائل*","result":"نص مائل"},{"syntax":"- عنصر","result":"قائمة"},{"syntax":"1. عنصر","result":"قائمة مرقمة"},{"syntax":"`كود`","result":"كود مضمّن"}],"iceEditTitle":"وضع الجليد / اللمحة","iceEditDesc":"يبقي وضع الجليد الملاحظة مفتوحة. يُغلق وضع اللمحة تلقائياً عند إبعاد الماوس.","backupTitle":"النسخ الاحتياطي والاستعادة","backupDesc":"احفظ الفهارس والملاحظات في ملف أو استعدها من نسخة احتياطية سابقة.","indexLabel":"الفهرس","indexAddBtn":"+ إضافة فهرس","indexDeleteBtn":"حذف","indexDeleteConfirm":"حذف هذا الفهرس وملاحظته؟","indexDeleteConfirm2":"انقر مرة أخرى للتأكيد","indexTitleLabel":"عنوان الفهرس","indexThemeLabel":"نظام الألوان","indexPositionLabel":"الموضع (الفتحة)","indexFontLabel":"حجم الخط الافتراضي","themeYellow":"أصفر","themePink":"وردي","themeBlue":"أزرق","themeGreen":"أخضر","themeCustom":"مخصص","customBgLabel":"الخلفية","customTextLabel":"لون النص","recentColors":"الألوان المستخدمة مؤخراً","aboutTitle":"Peekom Plus","aboutDesc":"مقبض صغير على الحافة اليمنى للشاشة. انقر للكشف عن ملاحظتك العائمة. حتى 10 فهارس، حجم الخط، Markdown والتصدير.","statusApplied":"تم تطبيق الإعدادات.","statusShortcutFail":"فشل تسجيل الاختصار. جرب تركيباً آخر.","statusStartupFail":"تعذر تطبيق إعداد بدء التشغيل.","statusApplyError":"خطأ أثناء تطبيق الإعدادات.","unsavedChangesConfirm":"توجد تغييرات غير محفوظة.\n\nإغلاق بدون حفظ؟","unsavedChangesTitle":"لم يتم تطبيق التغييرات","unsavedChangesMessage":"هناك إعدادات غير محفوظة. طبّق أو ألغِ للمتابعة.","unsavedChangesApply":"تطبيق","unsavedChangesCancel":"إلغاء","indexTitleRequired":"يجب أن يحتوي عنوان الفهرس على حرف واحد على الأقل.","settingsTitlePlusKo":"إعدادات Peekom Plus","settingsTitleFreeKo":"إعدادات Peekom","settingsTitlePlus":"Peekom Plus Settings","settingsTitleFree":"Peekom Settings","settingsAboutShort":"أداة مذكرة سريعة على طول الحافة اليمنى للشاشة.","memoOpacityLabel":"شفافية المذكرة","memoOpacityHint":"Plus — شفافية خلفية المذكرة الافتراضية","memoAspectLabel":"نسبة أبعاد المذكرة","memoAspectSquare":"1:1 (مربع)","memoAspectPortrait":"3:4 (عمودي)","memoAspectHint":"حجم المذكرة يعتمد على ارتفاع المقبض","monitorHint":"شاشة المؤشر الحالية أو شاشة ثابتة","hoverDelayLabel":"تأخير الطي التلقائي","hoverDelayHint":"الوقت بعد مغادرة المؤشر قبل طي المذكرة","hoverDelayUnit":"ث","shortcutOpenClose":"فتح / إغلاق","shortcutSlotUp":"فتح المذكرة أعلاه","shortcutSlotDown":"فتح المذكرة أدناه","shortcutIndexHint":"استخدم Ctrl+Shift+↑ / ↓ لفتح مذكرات فهرس أخرى.","shortcutCapturePlaceholder":"انقر ثم اضغط مجموعة المفاتيح","pinToggleDblclickDefault":"نقر مزدوج على المذكرة للتبديل (افتراضي)","pinToggleChipOnly":"نقر الشريحة فقط","pinToggleClickMemo":"نقر المذكرة للتبديل","pinToggleRecommendHint":"يُنصح بنقر الشريحة لتجنب التبديل العرضي","resetCommonDefaults":"إعادة تعيين القيم العامة","resetCommonDefaultsHint":"يعيد تعيين الشاشة ونسبة الأبعاد ووضع التشغيل وخيارات عامة أخرى.","backupManageTitle":"نسخ احتياطي","backupHeadHint":"اختر الخيارات ثم نفّذ","backupExpand":"توسيع ▾","backupCollapse":"طي ▴","backupExportTab":"تصدير","backupImportTab":"استيراد","exportIndicesLabel":"فهارس للتصدير","exportRunBtn":"تشغيل التصدير","exportFormatTxtShort":"نص (.txt)","exportFormatMdShort":"Markdown (.md)","exportFormatJsonShort":"نسخة كاملة (.json)","importOverwriteHint":"تحميل نسخة JSON يستبدل البيانات الحالية","showTrayIcon":"إظهار أيقونة شريط المهام","runAtStartupWin":"تشغيل Peekom عند بدء Windows","indexTitleMaxHint":"حتى 6 أحرف","handlePositionLabel":"موضع المقبض","handlePositionHint":"يمكنك أيضًا سحب المقبض لإعادة تحديد الموضع","handleSlotOption":"الفتحة {n}","fontSizePlusHint":"Plus — اضبط أيضًا بـ Ctrl+التمرير","fontFamilyLabel":"الخط","fontSystemDefault":"افتراضي النظام","fontFamilyPlusHint":"Plus — اختر من خطوط النظام المثبتة","attachedImagesLabel":"صور مرفقة","attachedImagesHint":"انقر على الصورة المصغرة للمعاينة بحجم أكبر","attachedImagesEmpty":"لا توجد صور","commonTabAriaLabel":"إعدادات عامة","upgradePlusBtn":"✨ الترقية إلى Plus","eyedropperTitle":"قطارة الألوان","eyedropperUnsupported":"قطارة الألوان غير مدعومة في هذه البيئة.","colorAdvancedPicker":"متقدم","colorPickScreen":"اختيار من الشاشة","settingsTierPaid":"[Plus]","settingsTierFree":"[مجاني]","shortcutOverlapError":"اختصارات متداخلة. استخدم مجموعة مختلفة لكل منها.","resetCommonConfirm":"إعادة تعيين الإعدادات العامة إلى الافتراضي؟","resetCommonDone":"تمت إعادة التعيين. انقر تطبيق للحفظ.","exportSelectOneError":"اختر فهرسًا واحدًا على الأقل للتصدير.","importSyncFail":"اكتمل الاستيراد لكن فشلت المزامنة مع النافذة الرئيسية.","indexAddSyncFail":"تمت إضافة الفهرس لكن فشلت المزامنة مع النافذة الرئيسية.","deleteSyncFail":"تم الحذف لكن فشلت المزامنة مع النافذة الرئيسية.","indexDeleted":"تم حذف الفهرس.","imagePreviewAlt":"معاينة الصورة","imageLoadedFromFile":"تم التحميل من الملف الأصلي","imagePreviewFallback":"الملف الأصلي غير موجود؛ عرض المعاينة المحفوظة.","imageNoPathInfo":"لا يوجد مسار أصلي؛ عرض المعاينة المحفوظة.","fontSizeRangeHint":"النطاق: 8 – 36 px","startupCheckFail":"تعذّر التحقق من تسجيل بدء التشغيل. حاول مرة أخرى.","startupSetError":"خطأ أثناء إعداد بدء التشغيل.","stateChangedConfirm":"تم تغيير الإعدادات في مكان آخر.\n\nتجاهل التغييرات غير المحفوظة وتحديث؟","applySyncFail":"تعذّرت مزامنة الإعدادات مع النافذة الرئيسية. أعد تشغيل التطبيق.","fmtTextColor":"لون النص","fmtColorDefault":"افتراضي","fmtColorRed":"أحمر","fmtColorBlue":"أزرق","fmtColorGreen":"أخضر","fmtBold":"عريض","fmtItalic":"مائل","fmtUnderline":"تسطير","fmtStrike":"يتوسطه خط","fmtAlignMenu":"محاذاة","fmtAlignLeft":"محاذاة لليسار","fmtAlignCenter":"توسيط","fmtAlignRight":"محاذاة لليمين","fmtAlignJustify":"ضبط","fmtListMenu":"قائمة","fmtListBullet":"قائمة نقطية","fmtListSquare":"نقاط مربعة","fmtListNumber":"قائمة مرقمة","fmtListPlain":"نص عادي","fmtInsertImage":"إدراج صورة","fmtImageScale":"حجم الصورة","monitorDisplayLabel":"{name} ({width}×{height})","monitorDisplayFallback":"الشاشة {id}","indexTabFallback":"الفهرس {n}","contrastWarning":"التباين المنخفض قد يصعّب القراءة. (النسبة {ratio}:1)"});
+  const settingsScopeHintI18n = {
+    ja: {
+      commonSettingsScopeHint: "このページの設定はすべてのメモに共通で適用されます。",
+      indexSettingsScopeHint: "このページの設定はこのインデックスのメモに個別適用されます。"
+    },
+    "zh-CN": {
+      commonSettingsScopeHint: "此页面的设置将统一应用于所有备忘录。",
+      indexSettingsScopeHint: "此页面的设置仅应用于该索引的备忘录。"
+    },
+    "zh-TW": {
+      commonSettingsScopeHint: "此頁面的設定將統一套用於所有備忘錄。",
+      indexSettingsScopeHint: "此頁面的設定僅套用於該索引的備忘錄。"
+    },
+    es: {
+      commonSettingsScopeHint: "Los ajustes de esta página se aplican a todas las notas a la vez.",
+      indexSettingsScopeHint: "Los ajustes de esta página se aplican solo a la nota de este índice."
+    },
+    fr: {
+      commonSettingsScopeHint: "Les paramètres de cette page s'appliquent à toutes les notes.",
+      indexSettingsScopeHint: "Les paramètres de cette page s'appliquent uniquement à la note de cet index."
+    },
+    de: {
+      commonSettingsScopeHint: "Einstellungen auf dieser Seite gelten für alle Notizen.",
+      indexSettingsScopeHint: "Einstellungen auf dieser Seite gelten nur für die Notiz dieses Index."
+    },
+    pt: {
+      commonSettingsScopeHint: "As configurações desta página aplicam-se a todas as notas.",
+      indexSettingsScopeHint: "As configurações desta página aplicam-se apenas à nota deste índice."
+    },
+    it: {
+      commonSettingsScopeHint: "Le impostazioni di questa pagina si applicano a tutte le note.",
+      indexSettingsScopeHint: "Le impostazioni di questa pagina si applicano solo alla nota di questo indice."
+    },
+    ru: {
+      commonSettingsScopeHint: "Настройки на этой странице применяются ко всем заметкам.",
+      indexSettingsScopeHint: "Настройки на этой странице применяются только к заметке этого индекса."
+    },
+    vi: {
+      commonSettingsScopeHint: "Cài đặt trên trang này áp dụng cho tất cả ghi chú.",
+      indexSettingsScopeHint: "Cài đặt trên trang này chỉ áp dụng cho ghi chú của chỉ mục này."
+    },
+    th: {
+      commonSettingsScopeHint: "การตั้งค่าในหน้านี้ใช้กับโน้ตทั้งหมด",
+      indexSettingsScopeHint: "การตั้งค่าในหน้านี้ใช้กับโน้ตของดัชนีนี้เท่านั้น"
+    },
+    id: {
+      commonSettingsScopeHint: "Pengaturan di halaman ini berlaku untuk semua memo.",
+      indexSettingsScopeHint: "Pengaturan di halaman ini hanya berlaku untuk memo indeks ini."
+    },
+    hi: {
+      commonSettingsScopeHint: "इस पृष्ठ की सेटिंग सभी मेमो पर एक साथ लागू होती हैं।",
+      indexSettingsScopeHint: "इस पृष्ठ की सेटिंग केवल इस इंडेक्स के मेमो पर लागू होती है।"
+    },
+    ar: {
+      commonSettingsScopeHint: "تُطبَّق إعدادات هذه الصفحة على جميع الملاحظات.",
+      indexSettingsScopeHint: "تُطبَّق إعدادات هذه الصفحة على ملاحظة هذا الفهرس فقط."
+    }
+  };
+  Object.keys(settingsScopeHintI18n).forEach((code) => {
+    if (S[code]) Object.assign(S[code], settingsScopeHintI18n[code]);
+  });
+  const fontFamilyLangHintI18n = {
+    ja: "選択したフォントが入力した文字をサポートする場合にのみ適用されます",
+    "zh-CN": "仅在选择字体支持所输入字符时才会应用",
+    "zh-TW": "僅在所選字體支援輸入字元時才會套用",
+    es: "Solo se aplica si la fuente seleccionada admite los caracteres que escribes",
+    fr: "Appliqué uniquement si la police choisie prend en charge les caractères saisis",
+    de: "Wird nur angewendet, wenn die gewählte Schrift die eingegebenen Zeichen unterstützt",
+    pt: "Aplicado apenas quando a fonte selecionada suporta os caracteres digitados",
+    it: "Applicato solo se il carattere selezionato supporta i caratteri immessi",
+    ru: "Применяется только если выбранный шрифт поддерживает введённые символы",
+    vi: "Chỉ áp dụng khi phông chữ đã chọn hỗ trợ các ký tự bạn nhập",
+    th: "ใช้ได้เฉพาะเมื่อแบบอักษรที่เลือกรองรับตัวอักษรที่คุณพิมพ์",
+    id: "Diterapkan hanya jika font yang dipilih mendukung karakter yang Anda ketik",
+    hi: "केवल तब लागू होता है जब चुना गया फ़ॉन्ट आपके दर्ज वर्णों का समर्थन करता है",
+    ar: "يُطبَّق فقط عندما يدعم الخط المحدد الأحرف التي تدخلها"
+  };
+  Object.keys(fontFamilyLangHintI18n).forEach((code) => {
+    if (S[code]) Object.assign(S[code], { fontFamilyLangHint: fontFamilyLangHintI18n[code] });
+  });
+  const fontFamilySampleI18n = {
+    ja: "あいう ABC 123",
+    "zh-CN": "汉字 ABC 123",
+    "zh-TW": "漢字 ABC 123",
+    es: "ABC 123",
+    fr: "ABC 123",
+    de: "ABC 123",
+    pt: "ABC 123",
+    it: "ABC 123",
+    ru: "Абвг ABC 123",
+    vi: "ABC 123",
+    th: "กขค ABC 123",
+    id: "ABC 123",
+    hi: "अआइ ABC 123",
+    ar: "أبجد ABC 123"
+  };
+  Object.keys(fontFamilySampleI18n).forEach((code) => {
+    if (S[code]) Object.assign(S[code], { fontFamilySample: fontFamilySampleI18n[code] });
+  });
+  const premiumNetI18n = {
+    ja: { premiumNetOnline: "インターネットに接続済み", premiumNetOffline: "インターネットに接続されていません", premiumOfflineHint: "ライセンス認証はインターネットに接続中のみ可能です。接続してからもう一度お試しください。" },
+    "zh-CN": { premiumNetOnline: "已连接到互联网", premiumNetOffline: "未连接到互联网", premiumOfflineHint: "许可证激活需要联网。请连接后重试。" },
+    "zh-TW": { premiumNetOnline: "已連線到網際網路", premiumNetOffline: "未連線到網際網路", premiumOfflineHint: "授權啟用需要連線。請連線後重試。" },
+    es: { premiumNetOnline: "Conectado a internet", premiumNetOffline: "Sin conexión a internet", premiumOfflineHint: "La activación de la licencia requiere conexión a internet. Conéctate e inténtalo de nuevo." },
+    fr: { premiumNetOnline: "Connecté à internet", premiumNetOffline: "Non connecté à internet", premiumOfflineHint: "L'activation de la licence nécessite une connexion internet. Connectez-vous et réessayez." },
+    de: { premiumNetOnline: "Mit dem Internet verbunden", premiumNetOffline: "Nicht mit dem Internet verbunden", premiumOfflineHint: "Die Lizenzaktivierung erfordert eine Internetverbindung. Bitte verbinden und erneut versuchen." },
+    pt: { premiumNetOnline: "Conectado à internet", premiumNetOffline: "Sem conexão com a internet", premiumOfflineHint: "A ativação da licença requer conexão com a internet. Conecte-se e tente novamente." },
+    it: { premiumNetOnline: "Connesso a internet", premiumNetOffline: "Non connesso a internet", premiumOfflineHint: "L'attivazione della licenza richiede una connessione a internet. Connettiti e riprova." },
+    ru: { premiumNetOnline: "Подключено к интернету", premiumNetOffline: "Нет подключения к интернету", premiumOfflineHint: "Для активации лицензии требуется подключение к интернету. Подключитесь и повторите попытку." },
+    vi: { premiumNetOnline: "Đã kết nối internet", premiumNetOffline: "Chưa kết nối internet", premiumOfflineHint: "Việc kích hoạt bản quyền yêu cầu kết nối internet. Vui lòng kết nối và thử lại." },
+    th: { premiumNetOnline: "เชื่อมต่ออินเทอร์เน็ตแล้ว", premiumNetOffline: "ไม่ได้เชื่อมต่ออินเทอร์เน็ต", premiumOfflineHint: "การเปิดใช้งานใบอนุญาตต้องเชื่อมต่ออินเทอร์เน็ต โปรดเชื่อมต่อแล้วลองอีกครั้ง" },
+    id: { premiumNetOnline: "Terhubung ke internet", premiumNetOffline: "Tidak terhubung ke internet", premiumOfflineHint: "Aktivasi lisensi memerlukan koneksi internet. Silakan hubungkan dan coba lagi." },
+    hi: { premiumNetOnline: "इंटरनेट से कनेक्टेड", premiumNetOffline: "इंटरनेट से कनेक्ट नहीं है", premiumOfflineHint: "लाइसेंस सक्रियण के लिए इंटरनेट कनेक्शन आवश्यक है। कृपया कनेक्ट करके पुनः प्रयास करें।" },
+    ar: { premiumNetOnline: "متصل بالإنترنت", premiumNetOffline: "غير متصل بالإنترنت", premiumOfflineHint: "يتطلب تفعيل الترخيص اتصالاً بالإنترنت. يرجى الاتصال والمحاولة مرة أخرى." }
+  };
+  Object.keys(premiumNetI18n).forEach((code) => {
+    if (S[code]) Object.assign(S[code], premiumNetI18n[code]);
+  });
+  const aboutAndScaleI18n = {
+    ja: { aboutContactLabel: "お問い合わせ", aboutDeveloperLabel: "制作者", imageScaleSmall: "小さく", imageScaleLarge: "大きく" },
+    "zh-CN": { aboutContactLabel: "联系", aboutDeveloperLabel: "制作者", imageScaleSmall: "小", imageScaleLarge: "大" },
+    "zh-TW": { aboutContactLabel: "聯絡", aboutDeveloperLabel: "製作者", imageScaleSmall: "小", imageScaleLarge: "大" },
+    es: { aboutContactLabel: "Contacto", aboutDeveloperLabel: "Creado por", imageScaleSmall: "Pequeño", imageScaleLarge: "Grande" },
+    fr: { aboutContactLabel: "Contact", aboutDeveloperLabel: "Créé par", imageScaleSmall: "Petit", imageScaleLarge: "Grand" },
+    de: { aboutContactLabel: "Kontakt", aboutDeveloperLabel: "Erstellt von", imageScaleSmall: "Klein", imageScaleLarge: "Groß" },
+    pt: { aboutContactLabel: "Contato", aboutDeveloperLabel: "Criado por", imageScaleSmall: "Pequeno", imageScaleLarge: "Grande" },
+    it: { aboutContactLabel: "Contatto", aboutDeveloperLabel: "Creato da", imageScaleSmall: "Piccolo", imageScaleLarge: "Grande" },
+    ru: { aboutContactLabel: "Контакт", aboutDeveloperLabel: "Создатель", imageScaleSmall: "Маленький", imageScaleLarge: "Большой" },
+    vi: { aboutContactLabel: "Liên hệ", aboutDeveloperLabel: "Người tạo", imageScaleSmall: "Nhỏ", imageScaleLarge: "Lớn" },
+    th: { aboutContactLabel: "ติดต่อ", aboutDeveloperLabel: "ผู้สร้าง", imageScaleSmall: "เล็ก", imageScaleLarge: "ใหญ่" },
+    id: { aboutContactLabel: "Kontak", aboutDeveloperLabel: "Dibuat oleh", imageScaleSmall: "Kecil", imageScaleLarge: "Besar" },
+    hi: { aboutContactLabel: "संपर्क", aboutDeveloperLabel: "निर्माता", imageScaleSmall: "छोटा", imageScaleLarge: "बड़ा" },
+    ar: { aboutContactLabel: "تواصل", aboutDeveloperLabel: "المُنشئ", imageScaleSmall: "صغير", imageScaleLarge: "كبير" }
+  };
+  Object.keys(aboutAndScaleI18n).forEach((code) => {
+    if (S[code]) Object.assign(S[code], aboutAndScaleI18n[code]);
+  });
+  const premiumErrI18n = {
+    ja: {
+      premiumErrEmptyKey: "ライセンスキーを入力してください。",
+      premiumErrActivationFailed: "ライセンスの有効化に失敗しました。キーを確認してください。",
+      premiumErrInvalidLicense: "無効なライセンスキーです。",
+      premiumErrActivationLimit: "このライセンスキーは有効化できる端末数の上限に達しています。",
+      premiumErrExpired: "期限切れのライセンスキーです。",
+      premiumErrDisabled: "無効化されたライセンスキーです。",
+      premiumErrNetwork: "Lemon Squeezy に接続できませんでした。インターネット接続を確認してください。",
+      premiumErrTampered: "ライセンスファイルが改ざんされました。ライセンスを再度有効化してください。"
+    },
+    "zh-CN": {
+      premiumErrEmptyKey: "请输入许可证密钥。",
+      premiumErrActivationFailed: "许可证激活失败，请检查密钥。",
+      premiumErrInvalidLicense: "无效的许可证密钥。",
+      premiumErrActivationLimit: "此许可证密钥已达到可激活设备数量上限。",
+      premiumErrExpired: "许可证密钥已过期。",
+      premiumErrDisabled: "许可证密钥已被禁用。",
+      premiumErrNetwork: "无法连接 Lemon Squeezy，请检查网络连接。",
+      premiumErrTampered: "许可证文件已被篡改，请重新激活许可证。"
+    },
+    "zh-TW": {
+      premiumErrEmptyKey: "請輸入授權金鑰。",
+      premiumErrActivationFailed: "授權啟用失敗，請檢查金鑰。",
+      premiumErrInvalidLicense: "無效的授權金鑰。",
+      premiumErrActivationLimit: "此授權金鑰已達可啟用裝置數量上限。",
+      premiumErrExpired: "授權金鑰已過期。",
+      premiumErrDisabled: "授權金鑰已被停用。",
+      premiumErrNetwork: "無法連線 Lemon Squeezy，請檢查網路連線。",
+      premiumErrTampered: "授權檔案已被竄改，請重新啟用授權。"
+    },
+    es: {
+      premiumErrEmptyKey: "Introduce una clave de licencia.",
+      premiumErrActivationFailed: "Error al activar la licencia. Comprueba la clave.",
+      premiumErrInvalidLicense: "Clave de licencia no válida.",
+      premiumErrActivationLimit: "Esta clave de licencia alcanzó el límite de activaciones.",
+      premiumErrExpired: "La clave de licencia ha caducado.",
+      premiumErrDisabled: "La clave de licencia está deshabilitada.",
+      premiumErrNetwork: "No se pudo conectar con Lemon Squeezy. Comprueba tu conexión a internet.",
+      premiumErrTampered: "El archivo de licencia fue alterado. Vuelve a activar la licencia."
+    },
+    fr: {
+      premiumErrEmptyKey: "Veuillez saisir une clé de licence.",
+      premiumErrActivationFailed: "Échec de l'activation de la licence. Vérifiez la clé.",
+      premiumErrInvalidLicense: "Clé de licence invalide.",
+      premiumErrActivationLimit: "Cette clé de licence a atteint sa limite d'activations.",
+      premiumErrExpired: "Cette clé de licence a expiré.",
+      premiumErrDisabled: "Cette clé de licence est désactivée.",
+      premiumErrNetwork: "Impossible de joindre Lemon Squeezy. Vérifiez votre connexion internet.",
+      premiumErrTampered: "Le fichier de licence a été altéré. Veuillez réactiver la licence."
+    },
+    de: {
+      premiumErrEmptyKey: "Bitte geben Sie einen Lizenzschlüssel ein.",
+      premiumErrActivationFailed: "Lizenzaktivierung fehlgeschlagen. Bitte Schlüssel prüfen.",
+      premiumErrInvalidLicense: "Ungültiger Lizenzschlüssel.",
+      premiumErrActivationLimit: "Dieser Lizenzschlüssel hat das Aktivierungslimit erreicht.",
+      premiumErrExpired: "Dieser Lizenzschlüssel ist abgelaufen.",
+      premiumErrDisabled: "Dieser Lizenzschlüssel ist deaktiviert.",
+      premiumErrNetwork: "Verbindung zu Lemon Squeezy fehlgeschlagen. Bitte Internetverbindung prüfen.",
+      premiumErrTampered: "Die Lizenzdatei wurde manipuliert. Bitte Lizenz erneut aktivieren."
+    },
+    pt: {
+      premiumErrEmptyKey: "Insira uma chave de licença.",
+      premiumErrActivationFailed: "Falha ao ativar a licença. Verifique a chave.",
+      premiumErrInvalidLicense: "Chave de licença inválida.",
+      premiumErrActivationLimit: "Esta chave de licença atingiu o limite de ativações.",
+      premiumErrExpired: "Esta chave de licença expirou.",
+      premiumErrDisabled: "Esta chave de licença está desativada.",
+      premiumErrNetwork: "Não foi possível conectar ao Lemon Squeezy. Verifique sua conexão com a internet.",
+      premiumErrTampered: "O arquivo de licença foi alterado. Ative a licença novamente."
+    },
+    it: {
+      premiumErrEmptyKey: "Inserisci una chiave di licenza.",
+      premiumErrActivationFailed: "Attivazione licenza non riuscita. Controlla la chiave.",
+      premiumErrInvalidLicense: "Chiave di licenza non valida.",
+      premiumErrActivationLimit: "Questa chiave di licenza ha raggiunto il limite di attivazioni.",
+      premiumErrExpired: "Questa chiave di licenza è scaduta.",
+      premiumErrDisabled: "Questa chiave di licenza è disabilitata.",
+      premiumErrNetwork: "Impossibile contattare Lemon Squeezy. Controlla la connessione internet.",
+      premiumErrTampered: "Il file di licenza è stato manomesso. Attiva di nuovo la licenza."
+    },
+    ru: {
+      premiumErrEmptyKey: "Введите ключ лицензии.",
+      premiumErrActivationFailed: "Не удалось активировать лицензию. Проверьте ключ.",
+      premiumErrInvalidLicense: "Недействительный ключ лицензии.",
+      premiumErrActivationLimit: "Для этого ключа достигнут лимит активаций.",
+      premiumErrExpired: "Срок действия ключа лицензии истёк.",
+      premiumErrDisabled: "Ключ лицензии отключён.",
+      premiumErrNetwork: "Не удалось подключиться к Lemon Squeezy. Проверьте интернет-соединение.",
+      premiumErrTampered: "Файл лицензии был изменён. Активируйте лицензию снова."
+    },
+    vi: {
+      premiumErrEmptyKey: "Vui lòng nhập khóa bản quyền.",
+      premiumErrActivationFailed: "Kích hoạt bản quyền thất bại. Vui lòng kiểm tra khóa.",
+      premiumErrInvalidLicense: "Khóa bản quyền không hợp lệ.",
+      premiumErrActivationLimit: "Khóa bản quyền này đã đạt giới hạn kích hoạt.",
+      premiumErrExpired: "Khóa bản quyền đã hết hạn.",
+      premiumErrDisabled: "Khóa bản quyền đã bị vô hiệu hóa.",
+      premiumErrNetwork: "Không thể kết nối Lemon Squeezy. Vui lòng kiểm tra kết nối internet.",
+      premiumErrTampered: "Tệp bản quyền đã bị sửa đổi. Vui lòng kích hoạt lại bản quyền."
+    },
+    th: {
+      premiumErrEmptyKey: "กรุณาใส่คีย์ใบอนุญาต",
+      premiumErrActivationFailed: "เปิดใช้งานใบอนุญาตไม่สำเร็จ โปรดตรวจสอบคีย์",
+      premiumErrInvalidLicense: "คีย์ใบอนุญาตไม่ถูกต้อง",
+      premiumErrActivationLimit: "คีย์ใบอนุญาตนี้ถึงขีดจำกัดการเปิดใช้งานแล้ว",
+      premiumErrExpired: "คีย์ใบอนุญาตหมดอายุแล้ว",
+      premiumErrDisabled: "คีย์ใบอนุญาตถูกปิดใช้งานแล้ว",
+      premiumErrNetwork: "เชื่อมต่อ Lemon Squeezy ไม่ได้ โปรดตรวจสอบการเชื่อมต่ออินเทอร์เน็ต",
+      premiumErrTampered: "ไฟล์ใบอนุญาตถูกแก้ไข โปรดเปิดใช้งานใบอนุญาตอีกครั้ง"
+    },
+    id: {
+      premiumErrEmptyKey: "Masukkan kunci lisensi.",
+      premiumErrActivationFailed: "Aktivasi lisensi gagal. Periksa kunci Anda.",
+      premiumErrInvalidLicense: "Kunci lisensi tidak valid.",
+      premiumErrActivationLimit: "Kunci lisensi ini telah mencapai batas aktivasi.",
+      premiumErrExpired: "Kunci lisensi telah kedaluwarsa.",
+      premiumErrDisabled: "Kunci lisensi dinonaktifkan.",
+      premiumErrNetwork: "Tidak dapat terhubung ke Lemon Squeezy. Periksa koneksi internet Anda.",
+      premiumErrTampered: "File lisensi telah diubah. Silakan aktifkan lisensi lagi."
+    },
+    hi: {
+      premiumErrEmptyKey: "कृपया लाइसेंस कुंजी दर्ज करें।",
+      premiumErrActivationFailed: "लाइसेंस सक्रियण विफल। कुंजी जाँचें।",
+      premiumErrInvalidLicense: "अमान्य लाइसेंस कुंजी।",
+      premiumErrActivationLimit: "इस लाइसेंस कुंजी की सक्रियण सीमा पूरी हो गई है।",
+      premiumErrExpired: "लाइसेंस कुंजी की अवधि समाप्त हो गई है।",
+      premiumErrDisabled: "लाइसेंस कुंजी निष्क्रिय है।",
+      premiumErrNetwork: "Lemon Squeezy से कनेक्ट नहीं हो सका। इंटरनेट कनेक्शन जाँचें।",
+      premiumErrTampered: "लाइसेंस फ़ाइल में छेड़छाड़ हुई है। कृपया लाइसेंस फिर से सक्रिय करें।"
+    },
+    ar: {
+      premiumErrEmptyKey: "يرجى إدخال مفتاح الترخيص.",
+      premiumErrActivationFailed: "فشل تفعيل الترخيص. يرجى التحقق من المفتاح.",
+      premiumErrInvalidLicense: "مفتاح ترخيص غير صالح.",
+      premiumErrActivationLimit: "وصل مفتاح الترخيص هذا إلى حد التفعيل.",
+      premiumErrExpired: "انتهت صلاحية مفتاح الترخيص.",
+      premiumErrDisabled: "تم تعطيل مفتاح الترخيص.",
+      premiumErrNetwork: "تعذّر الاتصال بـ Lemon Squeezy. يرجى التحقق من اتصال الإنترنت.",
+      premiumErrTampered: "تم العبث بملف الترخيص. يرجى إعادة تفعيل الترخيص."
+    }
+  };
+  Object.keys(premiumErrI18n).forEach((code) => {
+    if (S[code]) Object.assign(S[code], premiumErrI18n[code]);
+  });
 })(typeof window !== 'undefined' ? window : global);

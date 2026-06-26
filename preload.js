@@ -59,7 +59,8 @@ const ALLOWED_ON = new Set([
   "premium:changed",
   "premium:show-modal",
   "startup:synced",
-  "peek:auto-collapse-poll"
+  "peek:auto-collapse-poll",
+  "settings:window-state"
 ]);
 
 const REPLY_CHANNEL_PREFIXES = [

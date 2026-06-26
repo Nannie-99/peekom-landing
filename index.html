@@ -8,6 +8,8 @@
     <script src="assets/i18n.js"></script>
     <script src="assets/i18n-locale-extra.js"></script>
     <script src="assets/memo-sanitize.js"></script>
+    <script src="assets/memo-state-helpers.js"></script>
+    <script src="assets/memo-image-helpers.js"></script>
     <script src="assets/premium-config.js"></script>
     <script src="assets/premium-ui.js"></script>
     <style>
@@ -50,6 +52,7 @@
         width: 100%;
         height: 100%;
         isolation: isolate;
+        pointer-events: none;
       }
 
       .handle-column {
@@ -59,7 +62,7 @@
         width: var(--collapsed-width);
         height: 100%;
         z-index: 100;
-        pointer-events: auto;
+        pointer-events: none;
       }
 
       .panel-edge-left .handle-column {
@@ -227,10 +230,10 @@
         display: none;
         gap: 2px;
         padding: 4px 6px;
-        background: #fff;
-        border: 1px solid #dadce0;
+        background: var(--toolbar-surface, rgba(255, 255, 255, 0.96));
+        border: 1px solid var(--toolbar-border, rgba(60, 64, 67, 0.18));
         border-radius: 8px;
-        box-shadow: 0 1px 6px rgba(60, 64, 67, 0.15);
+        box-shadow: 0 1px 6px var(--toolbar-shadow, rgba(60, 64, 67, 0.15));
         z-index: 50;
         white-space: nowrap;
         align-items: center;
@@ -427,6 +430,11 @@
         margin: 2px 4px;
       }
 
+      .memo-editor img.peekom-memo-image[data-peekom-fixed-size="1"] {
+        max-width: none;
+        flex-shrink: 0;
+      }
+
       .memo-editor .peekom-image-wrap {
         display: inline;
         line-height: 0;
@@ -491,8 +499,13 @@
         transform: translateX(0);
         opacity: 1;
         visibility: visible;
-        pointer-events: auto;
+        pointer-events: none;
         z-index: 3;
+      }
+
+      .floating-panel.expanded .note-editor-wrap,
+      .floating-panel.expanded .note-footer {
+        pointer-events: auto;
       }
 
       .settings-icon-btn {
@@ -777,7 +790,7 @@
         border: 0;
         border-radius: 4px;
         background: transparent;
-        color: #3c4043;
+        color: var(--toolbar-fg, #3c4043);
         font-size: 12px;
         line-height: 1;
         cursor: pointer;
@@ -814,12 +827,12 @@
       }
 
       .tool-btn:hover {
-        background: #f1f3f4;
+        background: var(--toolbar-hover-bg, rgba(60, 64, 67, 0.08));
       }
 
       .tool-btn.active {
-        background: #e8eaed;
-        color: #202124;
+        background: var(--toolbar-active-bg, rgba(60, 64, 67, 0.16));
+        color: var(--toolbar-active-fg, #202124);
       }
 
       .tool-btn-icon svg {
@@ -835,13 +848,14 @@
 
       .save-indicator {
         position: absolute;
-        right: calc(var(--collapsed-width) + 12px);
-        bottom: 8px;
+        right: calc(var(--collapsed-width) + 10px);
+        bottom: 40px;
         font-size: 10px;
         color: var(--muted-text);
-        background: rgba(255, 255, 255, 0.7);
+        background: transparent;
+        border: 1px solid color-mix(in srgb, var(--muted-text) 35%, transparent);
         border-radius: 999px;
-        padding: 2px 8px;
+        padding: 1px 7px;
         opacity: 0;
         transition: opacity 280ms ease;
         pointer-events: none;
@@ -974,11 +988,11 @@
                 <button type="button" data-ratio="9:16">9:16</button>
               </div>
               <div class="image-staging-scale-row">
-                <span class="image-staging-scale-label">작게</span>
+                <span class="image-staging-scale-label" id="imageStagingScaleSmall">작게</span>
                 <div class="image-staging-scale-wrap" id="imageStagingSliderWrap">
                   <input id="imageStagingSlider" class="image-staging-scale" type="range" min="50" max="150" value="100" data-tip-key="fmtImageScale" />
                 </div>
-                <span class="image-staging-scale-label">크게</span>
+                <span class="image-staging-scale-label" id="imageStagingScaleLarge">크게</span>
               </div>
               <div class="image-staging-actions">
                 <button id="imageStagingCancelBtn" type="button">취소</button>
@@ -997,11 +1011,11 @@
               </div>
             </div>
           </div>
+
+          <div id="saveIndicator" class="save-indicator">저장됨</div>
         </article>
 
         <div id="handleContextMenu" class="handle-context-menu hidden" role="menu"></div>
-
-        <div id="saveIndicator" class="save-indicator">저장됨</div>
       </section>
     </main>
 
@@ -1072,6 +1086,10 @@
         if (imageStagingPreview) imageStagingPreview.alt = ti("imagePreviewAlt");
         const cropFreeBtn = imageStagingCropRatios?.querySelector('[data-ratio="free"]');
         if (cropFreeBtn) cropFreeBtn.textContent = ti("imageCropFree");
+        const scaleSmallLabel = document.getElementById("imageStagingScaleSmall");
+        if (scaleSmallLabel) scaleSmallLabel.textContent = ti("imageScaleSmall");
+        const scaleLargeLabel = document.getElementById("imageStagingScaleLarge");
+        if (scaleLargeLabel) scaleLargeLabel.textContent = ti("imageScaleLarge");
         setPinned(isPinned);
         applyFormatBarTooltips();
         window.PeekomPremiumUI?.refreshPremiumModalI18n?.();
@@ -1105,8 +1123,19 @@
             return;
           }
           const prev = localStorage.getItem(STATE_KEY);
-          if (prev) localStorage.setItem(STATE_KEY_BACKUP, prev);
-          localStorage.setItem(STATE_KEY, json);
+          try {
+            localStorage.setItem(STATE_KEY, json);
+          } catch (quotaErr) {
+            localStorage.removeItem(STATE_KEY_BACKUP);
+            localStorage.setItem(STATE_KEY, json);
+          }
+          if (prev) {
+            try {
+              localStorage.setItem(STATE_KEY_BACKUP, prev);
+            } catch {
+              try { localStorage.removeItem(STATE_KEY_BACKUP); } catch { /* ignore */ }
+            }
+          }
           ipcRenderer.send(replyChannel, { ok: true });
         } catch (err) {
           ipcRenderer.send(replyChannel, { ok: false, reason: String(err?.message || err) });
@@ -1116,7 +1145,7 @@
       const DEFAULT_HOVER_DELAY = 300;
       const LABEL_MAX = 6;
       const MAX_SLOTS = 10;
-      const FREE_MAX_SLOTS = 3;
+      const FREE_MAX_SLOTS = PeekomPremiumConfig?.FREE_MAX_SLOTS ?? 3;
       const FREE_MAX_IMAGES_PER_MEMO = 1;
       const PLUS_MAX_IMAGES_PER_MEMO = 5;
       let isPremium = false;
@@ -1338,7 +1367,6 @@
 
       function migrateFromV4(v4) {
         const global = { ...defaultGlobal(), ...v4.global };
-        delete global.panelEdge;
         global.memoAspectRatio = normalizeMemoAspectRatio(global.memoAspectRatio);
         return {
           version: 5,
@@ -1413,13 +1441,7 @@
           if (!s || s.version !== 5 || !Array.isArray(s.slots) || s.slots.length !== MAX_SLOTS) return null;
           s.global = { ...defaultGlobal(), ...s.global };
           delete s.global.imageSize;
-          delete s.global.panelEdge;
           s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
-          if (!s.global.setupCompleted && s.enabledCount > 1) {
-            s.enabledCount = 1;
-            s.order = [0];
-            s.activeSlot = 0;
-          }
           s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
           s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
           s.order = normalizeOrder(s.order, s.enabledCount);
@@ -1482,13 +1504,39 @@
       }
 
       function saveState(state) {
+        const json = JSON.stringify(state);
+        let prev = null;
         try {
-          const prev = localStorage.getItem(STATE_KEY);
-          if (prev) localStorage.setItem(STATE_KEY_BACKUP, prev);
+          prev = localStorage.getItem(STATE_KEY);
         } catch {
           /* ignore */
         }
-        localStorage.setItem(STATE_KEY, JSON.stringify(state));
+        // 메인 상태 저장을 최우선으로 한다. 이미지(base64)로 용량이 커져
+        // 저장에 실패하면, 백업본을 비워 공간을 확보한 뒤 다시 시도한다.
+        try {
+          localStorage.setItem(STATE_KEY, json);
+        } catch (err) {
+          try {
+            localStorage.removeItem(STATE_KEY_BACKUP);
+            localStorage.setItem(STATE_KEY, json);
+          } catch (err2) {
+            console.error("saveState failed (storage quota?)", err2);
+            return false;
+          }
+        }
+        // 직전 상태를 백업으로 보관 (여유 공간이 없으면 백업은 포기).
+        if (prev) {
+          try {
+            localStorage.setItem(STATE_KEY_BACKUP, prev);
+          } catch {
+            try {
+              localStorage.removeItem(STATE_KEY_BACKUP);
+            } catch {
+              /* ignore */
+            }
+          }
+        }
+        return true;
       }
 
       function clamp(n, a, b) {
@@ -1568,8 +1616,10 @@
       /** @type {{ dataUrl: string, filePath: string | null, scale: number } | null} */
       let imageStaging = null;
       let memoEditorFocused = false;
+      let memoComposing = false;
       let toolbarDropdownOpen = false;
       let handleContextMenuOpen = false;
+      let settingsWindowOpen = false;
 
       function clearPeekCollapseDelayTimer() {
         if (peekCollapseDelayTimer) {
@@ -1609,20 +1659,94 @@
         }, 1200);
       }
 
-      function persistActiveMemo() {
+      const isMemoHtmlEffectivelyEmpty = PeekomMemoState.isMemoHtmlEffectivelyEmpty;
+      const pickMemoHtml = PeekomMemoState.pickMemoHtml;
+      const pickMemoImages = PeekomMemoState.pickMemoImages;
+
+      function flushMemoEditorToActiveSlot() {
+        if (!memoEditor || !appState?.slots) return;
         const slot = appState.activeSlot;
+        appState.slots[slot].memoHtml = memoEditor.innerHTML;
         syncSlotImagesFromMemo(slot);
-        appState.slots[slot].memoHtml = sanitizeMemoHtml(memoEditor.innerHTML);
-        saveState(appState);
+      }
+
+      async function compressSlotImagesIfOversized(slotIndex = appState.activeSlot) {
+        if (!memoEditor || !appState?.slots?.[slotIndex] || !PeekomMemoImage) return false;
+        // 에디터에 로드된 인덱스가 아니면(이미 다른 인덱스로 전환됨) 건드리지 않는다.
+        // 에디터 내용을 잘못된 인덱스에 덮어써 메모가 복사되는 것을 막는다.
+        if (slotIndex !== appState.activeSlot) return false;
+        const imgs = Array.from(memoEditor.querySelectorAll("img.peekom-memo-image"));
+        let changed = false;
+        for (const img of imgs) {
+          const src = img.getAttribute("src") || "";
+          if (!PeekomMemoImage.shouldCompressDataUrl(src)) continue;
+          const widthPx = parseInt(img.style.width, 10) || img.naturalWidth || 0;
+          const heightPx = parseInt(img.style.height, 10) || img.naturalHeight || 0;
+          const compressed = await PeekomMemoImage.compressDataUrlForMemo(src, {
+            displayWidth: widthPx,
+            displayHeight: heightPx
+          });
+          // 압축 대기(await) 도중 인덱스가 바뀌었으면 즉시 중단한다.
+          if (slotIndex !== appState.activeSlot) return changed;
+          if (compressed && compressed !== src) {
+            img.setAttribute("src", compressed);
+            changed = true;
+          }
+        }
+        if (changed && slotIndex === appState.activeSlot) {
+          syncSlotImagesFromMemo(slotIndex);
+          appState.slots[slotIndex].memoHtml = memoEditor.innerHTML;
+        }
+        return changed;
+      }
+
+      async function persistActiveMemo() {
+        if (!memoEditor || !appState?.slots) return;
+        flushMemoEditorToActiveSlot();
+        await compressSlotImagesIfOversized(appState.activeSlot);
+
+        if (!saveState(appState)) {
+          alert(ti("saveStateQuotaAlert"));
+          return;
+        }
         showSaveIndicator();
         notifySettingsChanged(["memoHtml", "images"]);
       }
 
-      window.__peekomFlushActiveMemo = () => {
+      window.__peekomFlushActiveMemo = async () => {
         if (!memoEditor || !appState?.slots) return false;
-        persistActiveMemo();
+        await persistActiveMemo();
         return true;
       };
+
+      window.__peekomFlushAllMemos = async () => {
+        if (!appState?.slots) return false;
+        if (memoEditor) {
+          await persistActiveMemo();
+        } else if (!saveState(appState)) {
+          alert(ti("saveStateQuotaAlert"));
+          return false;
+        }
+        return true;
+      };
+
+      function assignNextFreeYSlot(slots, enabledCount, slotIndex) {
+        const occupied = new Set();
+        for (let i = 0; i < enabledCount; i++) {
+          if (i === slotIndex) continue;
+          occupied.add(clamp(slots[i].ySlot ?? i, 0, MAX_Y_SLOTS - 1));
+        }
+        let free = 0;
+        while (occupied.has(free) && free < MAX_Y_SLOTS) free++;
+        slots[slotIndex].ySlot = free < MAX_Y_SLOTS ? free : clamp(slotIndex, 0, MAX_Y_SLOTS - 1);
+        slots[slotIndex].ySlotUpdatedAt = Date.now();
+      }
+
+      function prepareSlotRoster() {
+        const ec = appState.enabledCount;
+        appState.order = normalizeOrder(appState.order, ec);
+        resolveYSlotConflicts(appState.slots, ec);
+      }
 
       function resolveYSlotConflicts(slots, enabledCount) {
         if (!isPremium) {
@@ -1651,9 +1775,11 @@
         for (const slot of displaced) {
           let free = 0;
           while (occupied.has(free) && free < MAX_Y_SLOTS) free++;
-          if (free < MAX_Y_SLOTS) {
-            occupied.add(free);
-            slots[slot].ySlot = free;
+          const assigned = free < MAX_Y_SLOTS ? free : clamp(slot, 0, MAX_Y_SLOTS - 1);
+          occupied.add(assigned);
+          slots[slot].ySlot = assigned;
+          if (!slots[slot].ySlotUpdatedAt) {
+            slots[slot].ySlotUpdatedAt = Date.now();
           }
         }
       }
@@ -1668,12 +1794,27 @@
         return { widthPx, heightPx, handleUnit };
       }
 
-      function loadMemoForActiveSlot() {
+      function loadMemoForActiveSlot(options = {}) {
+        const { force = false } = options;
         const slotIndex = appState.activeSlot;
-        memoEditor.innerHTML = sanitizeMemoHtml(appState.slots[slotIndex].memoHtml || "");
+        const nextHtml = appState.slots[slotIndex].memoHtml || "";
+        const liveHtml = memoEditor?.innerHTML || "";
+        if (
+          !force &&
+          !isExpanded &&
+          memoEditor &&
+          !isMemoHtmlEffectivelyEmpty(liveHtml) &&
+          isMemoHtmlEffectivelyEmpty(nextHtml)
+        ) {
+          return;
+        }
+        memoEditor.innerHTML = nextHtml;
         syncSlotImagesFromMemo(slotIndex);
         normalizeMemoTypography(slotIndex);
         scanAndLinkifyEditor(true);
+        void compressSlotImagesIfOversized(slotIndex).then((changed) => {
+          if (changed) saveState(appState);
+        });
       }
 
       function applyFontSizeForSlot(slotIndex) {
@@ -1716,6 +1857,17 @@
         });
       }
 
+      // 메모에 인라인으로 박힌 글꼴(font-family)을 제거해 기본/슬롯 글꼴로 통일.
+      // 무료 사용자는 글꼴/크기 변경이 막혀 있으므로, 외부에서 복사해 온 텍스트도
+      // 기본 세팅으로 맞춰 붙여넣어지도록 한다.
+      function stripMemoInlineFontFamilies(root) {
+        root.querySelectorAll("*").forEach((el) => {
+          if (el === root) return;
+          if (el.style?.fontFamily) el.style.removeProperty("font-family");
+          if (el.tagName === "FONT" && el.hasAttribute("face")) el.removeAttribute("face");
+        });
+      }
+
       function demoteEmptyMarkdownBlocks(root) {
         root.querySelectorAll("h1, h2, h3, ul, ol").forEach((block) => {
           if (!isMemoBlockEmpty(block)) return;
@@ -1731,6 +1883,7 @@
         applyFontSizeForSlot(slotIndex);
         unwrapMemoFontTags(memoEditor);
         stripMemoInlineFontSizes(memoEditor);
+        stripMemoInlineFontFamilies(memoEditor);
         demoteEmptyMarkdownBlocks(memoEditor);
         if (preserveCaret && caret !== null) {
           setCaretByCharOffset(memoEditor, caret);
@@ -1780,6 +1933,14 @@
         return `rgb(${r}, ${g}, ${b})`;
       }
 
+      function getRelativeLuminance(hex) {
+        const [r, g, b] = parseHexRgb(hex).map((value) => {
+          const c = value / 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      }
+
       function applyThemeForSlot(slotIndex) {
         const slot = appState.slots[slotIndex];
         let themeName = slot.theme;
@@ -1808,9 +1969,24 @@
         const opacityPct = isPremium
           ? clamp(Number(appState.global.memoDefaultOpacity) || 100, 30, 100)
           : 100;
+        const isDarkTheme = getRelativeLuminance(bg) < 0.33;
+        const toolbarFg = isDarkTheme ? "rgba(255, 255, 255, 0.96)" : "#3c4043";
+        const toolbarActiveFg = isDarkTheme ? "#ffffff" : "#202124";
+        const toolbarHoverBg = isDarkTheme ? "rgba(255, 255, 255, 0.16)" : "rgba(60, 64, 67, 0.08)";
+        const toolbarActiveBg = isDarkTheme ? "rgba(255, 255, 255, 0.24)" : "rgba(60, 64, 67, 0.16)";
+        const toolbarSurface = isDarkTheme ? withAlpha(bg, 0.94) : "rgba(255, 255, 255, 0.96)";
+        const toolbarBorder = isDarkTheme ? "rgba(255, 255, 255, 0.18)" : "rgba(60, 64, 67, 0.18)";
+        const toolbarShadow = isDarkTheme ? "rgba(0, 0, 0, 0.32)" : "rgba(60, 64, 67, 0.15)";
         document.documentElement.style.setProperty("--note-bg", withAlpha(bg, opacityPct / 100));
         document.documentElement.style.setProperty("--note-text", text);
         document.documentElement.style.setProperty("--accent", accent);
+        document.documentElement.style.setProperty("--toolbar-fg", toolbarFg);
+        document.documentElement.style.setProperty("--toolbar-active-fg", toolbarActiveFg);
+        document.documentElement.style.setProperty("--toolbar-hover-bg", toolbarHoverBg);
+        document.documentElement.style.setProperty("--toolbar-active-bg", toolbarActiveBg);
+        document.documentElement.style.setProperty("--toolbar-surface", toolbarSurface);
+        document.documentElement.style.setProperty("--toolbar-border", toolbarBorder);
+        document.documentElement.style.setProperty("--toolbar-shadow", toolbarShadow);
         const ff = isPremium && slot.fontFamily ? slot.fontFamily : "";
         document.documentElement.style.setProperty(
           "--note-font-family",
@@ -1831,9 +2007,6 @@
 
       function applyPanelEdgeUI() {
         const edge = getEffectivePanelEdge();
-        if (appState.global.panelEdge !== edge) {
-          appState.global.panelEdge = edge;
-        }
         panel.classList.toggle("panel-edge-left", edge === "left");
         lastPanelLayoutKey = "";
         updatePanelPosition();
@@ -1905,13 +2078,16 @@
 
       /** 손잡이·메모·설정버튼 등 실제 인터랙션이 있는 영역 */
       const HIT_TARGET_SELECTOR =
-        ".edge-handle, .floating-panel.expanded .note-shell, .first-run-tip:not(.hidden), #handleContextMenu, #handleContextMenu *, #peekomPremiumModal, #peekomPremiumModal *";
+        ".edge-handle, .floating-panel.expanded .note-editor-wrap, .floating-panel.expanded .memo-editor, .floating-panel.expanded .note-footer, .floating-panel.expanded .mode-chip, .floating-panel.expanded .tool-btn, .floating-panel.expanded .toolbar-dropdown, .floating-panel.expanded .toolbar-dropdown *, .floating-panel.expanded .color-swatch-btn, .floating-panel.expanded .color-swatch-btn *, .floating-panel.expanded .toolbar-dropdown-wrap, .floating-panel.expanded .toolbar-dropdown-wrap *, .image-staging-overlay:not(.hidden), .image-staging-overlay:not(.hidden) *, #deleteIndexModal:not(.hidden), #deleteIndexModal:not(.hidden) *, .first-run-tip:not(.hidden), #handleContextMenu, #handleContextMenu *, #peekomPremiumModal, #peekomPremiumModal *";
       /** OS 폴링이 연속으로 "바깥" 판정할 때만 접기 (창 리사이즈 false-positive 방지) */
       const COLLAPSE_CONFIRM_POLLS = 2;
+      /** 창 확장 직후 잘못된 "바깥" 판정 방지용 유예 시간 (ms) */
+      const EXPAND_GRACE_MS = 350;
 
       let hitTestRafId = null;
       /** 연속으로 인덱스 바깥에 있는 폴링 횟수 카운터 */
       let consecutiveOutsidePollCount = 0;
+      let panelExpandedAt = 0;
 
       function isPremiumModalOpen() {
         const el = document.getElementById("peekomPremiumModal");
@@ -1930,7 +2106,8 @@
           !draggingHandle &&
           !imageStaging &&
           !handleContextMenuOpen &&
-          !toolbarDropdownOpen
+          !toolbarDropdownOpen &&
+          !settingsWindowOpen
         );
       }
 
@@ -1958,6 +2135,10 @@
         if (!shouldAutoCollapseOnHoverOutside()) {
           consecutiveOutsidePollCount = 0;
           clearPeekCollapseDelayTimer();
+          return;
+        }
+
+        if (Date.now() - panelExpandedAt < EXPAND_GRACE_MS) {
           return;
         }
 
@@ -2019,10 +2200,10 @@
             const y = typeof event.clientY === "number" ? event.clientY : -1;
             const hasValidCoords = x >= 0 && y >= 0;
             const el = hasValidCoords ? document.elementFromPoint(x, y) : null;
-            const overHandle = Boolean(el && el.closest(".edge-handle"));
+            const interactive = isInteractiveHitTarget(el);
             syncWindowInteraction({
-              ignoreMouse: !overHandle,
-              pointerOver: overHandle
+              ignoreMouse: !interactive,
+              pointerOver: interactive
             });
             return;
           }
@@ -2033,8 +2214,8 @@
 
           if (!hasValidCoords) {
             syncWindowInteraction({
-              ignoreMouse: false,
-              pointerOver: true
+              ignoreMouse: true,
+              pointerOver: false
             });
             return;
           }
@@ -2056,6 +2237,9 @@
         }
         isExpanded = nextExpanded;
         consecutiveOutsidePollCount = 0;
+        if (nextExpanded) {
+          panelExpandedAt = Date.now();
+        }
         panel.classList.toggle("expanded", nextExpanded);
 
         if (!nextExpanded) {
@@ -2077,7 +2261,7 @@
         syncPeekAutoCollapseToMain();
         refreshAllHandleThemes();
         if (nextExpanded) {
-          syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
+          refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
           requestAnimationFrame(() => {
             updatePanelPosition();
             memoEditor?.focus();
@@ -2194,47 +2378,6 @@
         });
       }
 
-      function onHandleContextMenu(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        if (draggingHandle) return;
-        const btn = event.currentTarget;
-        const slot = Number(btn.dataset.slotIndex);
-        const items = [];
-
-        const max = getMaxEnabledSlots();
-        if (appState.enabledCount < max) {
-          items.push({
-            label: ti("handleAddIndex"),
-            action: () => addIndexAtBottom()
-          });
-        } else if (!isPremium) {
-          items.push({
-            label: ti("handleUpgradePlus"),
-            action: () => window.PeekomPremiumUI?.showPremiumModal()
-          });
-        }
-
-        items.push({
-          label: ti("handleDeleteIndex"),
-          danger: true,
-          disabled: appState.enabledCount <= 1,
-          action: () => {
-            if (appState.enabledCount <= 1) return;
-            if (appState.activeSlot !== slot) {
-              persistActiveMemo();
-              appState.activeSlot = slot;
-              applyThemeForSlot(slot);
-              loadMemoForActiveSlot();
-              updateActiveHandle(slot);
-            }
-            deleteCurrentIndexWithConfirm();
-          }
-        });
-
-        showHandleContextMenu(event.clientX, event.clientY, items);
-      }
-
       function onHandleColumnContextMenu(event) {
         if (event.target.closest(".edge-handle")) return;
         event.preventDefault();
@@ -2261,8 +2404,9 @@
       }
 
       function renderHandleStack() {
+        prepareSlotRoster();
         const ec = appState.enabledCount;
-        const ord = appState.order.slice(0, ec);
+        const ord = appState.order;
         handleColumn.innerHTML = "";
 
         ord.forEach((slotIndex) => {
@@ -2289,9 +2433,9 @@
 
           btn.addEventListener("mouseenter", onHandleMouseEnter);
           btn.addEventListener("mouseleave", onHandleMouseLeave);
+          btn.addEventListener("pointerenter", (e) => refreshPointerHitTest(e, true));
           btn.addEventListener("pointerdown", onHandlePointerDown);
           btn.addEventListener("click", onHandleClick);
-          btn.addEventListener("contextmenu", onHandleContextMenu);
 
           handleColumn.appendChild(btn);
         });
@@ -2340,6 +2484,8 @@
 
       function onHandlePointerDown(event) {
         if (event.button !== 0) return;
+        const btn = event.currentTarget;
+        const slot = Number(btn.dataset.slotIndex);
         draggingHandle = true;
         syncPeekAutoCollapseToMain();
         dragMoved = false;
@@ -2347,10 +2493,10 @@
         dragStartX = event.clientX;
         dragStartY = event.clientY;
         dragMode = null;
-        const btn = event.currentTarget;
         pointerCaptureEl = btn;
-        reorderSlot = Number(btn.dataset.slotIndex);
+        reorderSlot = slot;
         dragPointerId = event.pointerId;
+        syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
         try {
           btn.setPointerCapture(event.pointerId);
         } catch {
@@ -2384,9 +2530,9 @@
           appState.activeSlot = slot;
           appState.global.lastOpenedSlotIndex = slot;
           applyThemeForSlot(slot);
-          loadMemoForActiveSlot();
+          loadMemoForActiveSlot({ force: true });
           saveState(appState);
-          updateActiveHandle(slot);
+          renderHandleStack();
         }
 
         if (!isExpanded) {
@@ -2395,7 +2541,6 @@
         }
 
         setPinned(false);
-        persistActiveMemo();
         setExpanded(false);
       }
 
@@ -2611,6 +2756,7 @@
         }
         pointerCaptureEl = null;
         syncPeekAutoCollapseToMain();
+        refreshPointerHitTest(event, true);
 
         if (wasMoveSlot) {
           resolveYSlotConflicts(appState.slots, appState.enabledCount);
@@ -2623,13 +2769,31 @@
         }
       }
 
+      ipcRenderer.on("settings:window-state", (_, payload) => {
+        settingsWindowOpen = Boolean(payload?.open);
+        syncPeekAutoCollapseToMain();
+        refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
+      });
+
       ipcRenderer.on("peek:auto-collapse-poll", (_, payload) => {
+        if (payload?.outsideWindow) {
+          refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
+        } else if (
+          typeof payload?.clientX === "number" &&
+          typeof payload?.clientY === "number" &&
+          payload.clientX >= 0 &&
+          payload.clientY >= 0
+        ) {
+          refreshPointerHitTest(
+            { clientX: payload.clientX, clientY: payload.clientY },
+            true
+          );
+        }
         collapseIfOutsideIndexFromPoll(payload);
       });
 
       panel.addEventListener("mouseenter", () => {
         consecutiveOutsidePollCount = 0;
-        syncWindowInteraction({ pointerOver: true });
       });
 
       // mouseleave는 alwaysOnTop 정책용 pointerOver 해제만 담당.
@@ -2637,7 +2801,7 @@
       // 창 이동/리사이즈 시 Windows가 synthetic mouseleave를 보내므로
       // 여기서 ignoreMouse를 건드리면 손잡이 오른쪽 클릭이 통과되는 버그 발생.
       panel.addEventListener("mouseleave", () => {
-        syncWindowInteraction({ pointerOver: false });
+        refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
       });
 
       // modeChip 버튼 클릭: 항상 빼꼼/얼음 전환
@@ -2669,6 +2833,15 @@
 
       // 설정 아이콘 호버 노출 기능 제거: 펼침 상태에서 고정 표시
 
+      memoEditor.addEventListener("compositionstart", () => {
+        memoComposing = true;
+      });
+
+      memoEditor.addEventListener("compositionend", () => {
+        memoComposing = false;
+        persistActiveMemo();
+      });
+
       memoEditor.addEventListener("focus", () => {
         memoEditorFocused = true;
         refreshAutoCollapsePolicy();
@@ -2676,12 +2849,11 @@
 
       memoEditor.addEventListener("blur", () => {
         memoEditorFocused = false;
-        normalizeMemoTypography(appState.activeSlot, { preserveCaret: false });
-        persistActiveMemo();
         refreshAutoCollapsePolicy();
       });
 
       memoEditor.addEventListener("input", () => {
+        if (memoComposing) return;
         persistActiveMemo();
         scheduleUrlScan();
         updateToolbarActiveState();
@@ -2753,11 +2925,110 @@
       document.querySelectorAll("[data-align]").forEach((btn) => {
         btn.addEventListener("click", (event) => {
           event.stopPropagation();
-          executeCmd(btn.dataset.align);
+          applyAlignment(btn.dataset.align);
           closeToolbarDropdowns();
           updateToolbarActiveState();
         });
       });
+
+      function getMemoDirectLineBlock(node) {
+        if (!node || !memoEditor.contains(node)) return null;
+        let el = node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        while (el && el !== memoEditor) {
+          if (el.parentElement === memoEditor) return el;
+          el = el.parentElement;
+        }
+        return null;
+      }
+
+      function getSelectedAlignmentBlocks() {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return [];
+
+        const range = sel.getRangeAt(0);
+        const startDirect = getMemoDirectLineBlock(range.startContainer);
+        const endDirect = getMemoDirectLineBlock(range.endContainer);
+
+        if (startDirect && endDirect && startDirect.parentElement === memoEditor && endDirect.parentElement === memoEditor) {
+          if (startDirect.tagName === "UL" || startDirect.tagName === "OL") {
+            if (startDirect !== endDirect) return [];
+            if (!range.collapsed) {
+              return Array.from(startDirect.querySelectorAll(":scope > li")).filter((li) => range.intersectsNode(li));
+            }
+            const anchor = sel.anchorNode;
+            const li = (anchor?.nodeType === Node.TEXT_NODE ? anchor.parentElement : anchor)?.closest?.("li");
+            return li && startDirect.contains(li) ? [li] : [];
+          }
+
+          if (startDirect === endDirect) return [startDirect];
+
+          const blocks = [];
+          let el = startDirect;
+          while (el) {
+            if (el.tagName === "UL" || el.tagName === "OL") {
+              Array.from(el.querySelectorAll(":scope > li"))
+                .filter((li) => range.intersectsNode(li))
+                .forEach((li) => blocks.push(li));
+            } else {
+              blocks.push(el);
+            }
+            if (el === endDirect) break;
+            el = el.nextElementSibling;
+          }
+          return blocks;
+        }
+
+        const refNode = range.collapsed ? sel.anchorNode : range.commonAncestorContainer;
+        let ref = refNode?.nodeType === Node.TEXT_NODE ? refNode.parentElement : refNode;
+        const block = ref?.closest?.("p, h1, h2, h3, li, div");
+        if (!block || block === memoEditor || !memoEditor.contains(block)) return [];
+        if (block.tagName === "DIV" && block.parentElement !== memoEditor) {
+          const outer = getMemoDirectLineBlock(block);
+          return outer ? [outer] : [block];
+        }
+        return [block];
+      }
+
+      function applyAlignmentToBlock(block, textAlign) {
+        if (block.tagName === "LI") {
+          const list = block.closest("ul, ol");
+          if (list) list.style.textAlign = textAlign;
+        } else {
+          block.style.textAlign = textAlign;
+        }
+      }
+
+      function applyAlignment(alignCmd) {
+        memoEditor.focus();
+        const alignMap = {
+          justifyLeft: "left",
+          justifyCenter: "center",
+          justifyRight: "right",
+          justifyFull: "justify"
+        };
+        const textAlign = alignMap[alignCmd];
+        if (!textAlign) return;
+
+        const blocks = getSelectedAlignmentBlocks();
+        if (blocks.length > 0) {
+          blocks.forEach((block) => applyAlignmentToBlock(block, textAlign));
+          return;
+        }
+
+        const node = getSelectionNodeInEditor();
+        if (!node) {
+          document.execCommand(alignCmd, false, null);
+          return;
+        }
+
+        const block = node.closest("p, h1, h2, h3, li, div");
+        if (!block || block === memoEditor) {
+          document.execCommand(alignCmd, false, null);
+          return;
+        }
+
+        applyAlignmentToBlock(block, textAlign);
+      }
 
       function getSelectionNodeInEditor() {
         const sel = window.getSelection();
@@ -2812,7 +3083,11 @@
           return;
         }
         if (ol) {
-          document.execCommand("insertOrderedList", false, null);
+          removeListFormatting();
+          document.execCommand("insertUnorderedList", false, null);
+          const list = getSelectionNodeInEditor()?.closest("ul:not(.peekom-task-list)");
+          if (list) list.classList.toggle("peekom-list-square", wantSquare);
+          return;
         }
         document.execCommand("insertUnorderedList", false, null);
         const list = getSelectionNodeInEditor()?.closest("ul:not(.peekom-task-list)");
@@ -2896,10 +3171,22 @@
         });
 
         let alignValue = "justifyLeft";
-        try {
-          alignValue = document.queryCommandValue("justify") || "justifyLeft";
-        } catch {
-          alignValue = "justifyLeft";
+        const alignNode = getSelectionNodeInEditor();
+        const alignBlock = alignNode?.closest("p, h1, h2, h3, li, div");
+        if (alignBlock && alignBlock !== memoEditor) {
+          const listEl = alignBlock.tagName === "LI" ? alignBlock.closest("ul, ol") : null;
+          const styleTarget = listEl || alignBlock;
+          const ta = (styleTarget.style.textAlign || window.getComputedStyle(styleTarget).textAlign || "left").toLowerCase();
+          if (ta === "center") alignValue = "justifyCenter";
+          else if (ta === "right") alignValue = "justifyRight";
+          else if (ta === "justify") alignValue = "justifyFull";
+          else alignValue = "justifyLeft";
+        } else {
+          try {
+            alignValue = document.queryCommandValue("justify") || "justifyLeft";
+          } catch {
+            alignValue = "justifyLeft";
+          }
         }
         document.querySelectorAll("[data-align]").forEach((b) => {
           b.classList.toggle("active", b.dataset.align === alignValue);
@@ -2991,15 +3278,29 @@
         slot.images = slot.images.filter((entry) => liveIds.has(entry.id));
         liveImages.forEach((img) => {
           const id = img.getAttribute("data-peekom-id");
-          if (!id || slot.images.some((entry) => entry.id === id)) return;
+          if (!id) return;
           const widthStyle = String(img.style.width || "");
+          const heightStyle = String(img.style.height || "");
           const widthPx = parseInt(widthStyle, 10);
+          const heightPx = parseInt(heightStyle, 10);
+          const existingIdx = slot.images.findIndex((entry) => entry.id === id);
+          if (existingIdx >= 0) {
+            const entry = slot.images[existingIdx];
+            slot.images[existingIdx] = {
+              ...entry,
+              dataUrl: img.getAttribute("src") || entry.dataUrl,
+              widthPx: Number.isFinite(widthPx) ? widthPx : entry.widthPx,
+              heightPx: Number.isFinite(heightPx) ? heightPx : entry.heightPx
+            };
+            return;
+          }
           slot.images.push({
             id,
             sourcePath: null,
             dataUrl: img.getAttribute("src") || "",
             widthPx: Number.isFinite(widthPx) ? widthPx : undefined,
-            scale: Number.isFinite(widthPx) ? widthPx : 100,
+            heightPx: Number.isFinite(heightPx) ? heightPx : undefined,
+            scale: 100,
             insertedAt: new Date().toISOString()
           });
         });
@@ -3197,11 +3498,13 @@
       }
 
       function loadImageElement(src) {
-        return new Promise((resolve, reject) => {
-          const img = new Image();
-          img.onload = () => resolve(img);
-          img.onerror = reject;
-          img.src = src;
+        return PeekomMemoImage.loadImageElement(src);
+      }
+
+      async function canvasToMemoDataUrl(canvas, displayWidth, displayHeight) {
+        return PeekomMemoImage.compressCanvasForMemoStorage(canvas, {
+          displayWidth,
+          displayHeight
         });
       }
 
@@ -3227,10 +3530,14 @@
           canvas.width = Math.round(sw);
           canvas.height = Math.round(sh);
           canvas.getContext("2d").drawImage(img, sx, sy, sw, sh, 0, 0, canvas.width, canvas.height);
+          const displayW = Math.max(1, Math.round(crop.w));
+          const displayH = Math.max(1, Math.round(crop.h));
           return {
-            dataUrl: canvas.toDataURL("image/png"),
-            widthPx: canvas.width,
-            heightPx: canvas.height
+            dataUrl: await canvasToMemoDataUrl(canvas, displayW, displayH),
+            widthPx: displayW,
+            heightPx: displayH,
+            nativeWidthPx: canvas.width,
+            nativeHeightPx: canvas.height
           };
         }
 
@@ -3242,25 +3549,28 @@
           canvas.height = displayH;
           canvas.getContext("2d").drawImage(img, 0, 0, natW, natH, 0, 0, displayW, displayH);
           return {
-            dataUrl: canvas.toDataURL("image/png"),
+            dataUrl: await canvasToMemoDataUrl(canvas, displayW, displayH),
             widthPx: displayW,
             heightPx: displayH
           };
         }
 
         const memoMaxW = Math.max(120, memoEditor?.clientWidth || 300);
-        if (natW <= memoMaxW) {
-          return { dataUrl: src, widthPx: natW, heightPx: natH };
+        let targetW = natW;
+        let targetH = natH;
+        if (natW > memoMaxW) {
+          const ratio = memoMaxW / natW;
+          targetW = memoMaxW;
+          targetH = Math.round(natH * ratio);
         }
-        const ratio = memoMaxW / natW;
         const canvas = document.createElement("canvas");
-        canvas.width = memoMaxW;
-        canvas.height = Math.round(natH * ratio);
-        canvas.getContext("2d").drawImage(img, 0, 0, canvas.width, canvas.height);
+        canvas.width = targetW;
+        canvas.height = targetH;
+        canvas.getContext("2d").drawImage(img, 0, 0, targetW, targetH);
         return {
-          dataUrl: canvas.toDataURL("image/png"),
-          widthPx: canvas.width,
-          heightPx: canvas.height
+          dataUrl: await canvasToMemoDataUrl(canvas, targetW, targetH),
+          widthPx: targetW,
+          heightPx: targetH
         };
       }
 
@@ -3359,9 +3669,10 @@
         }
       }
 
-      function insertInlineMemoImage(dataUrl, widthPx, imageId) {
+      function insertInlineMemoImage(dataUrl, widthPx, heightPx, imageId) {
         const w = Math.max(1, Math.round(widthPx));
-        const imgHtml = `<span class="peekom-image-wrap"><img class="peekom-memo-image" data-peekom-id="${imageId}" src="${dataUrl}" style="width:${w}px;max-width:100%;height:auto;" alt=""></span>`;
+        const h = Math.max(1, Math.round(heightPx || widthPx));
+        const imgHtml = `<span class="peekom-image-wrap"><img class="peekom-memo-image" data-peekom-id="${imageId}" data-peekom-fixed-size="1" src="${dataUrl}" style="width:${w}px;height:${h}px;max-width:none;" alt=""></span>`;
         memoEditor.focus();
         const sel = window.getSelection();
         if (sel && sel.rangeCount > 0 && memoEditor.contains(sel.anchorNode)) {
@@ -3386,7 +3697,7 @@
         if (!imageStaging) return;
         if (!guardMemoImageLimit()) return;
         const slot = appState.activeSlot;
-        const { dataUrl, widthPx, heightPx } = await exportStagedImage();
+        const { dataUrl, widthPx, heightPx, nativeWidthPx, nativeHeightPx } = await exportStagedImage();
         const id = crypto.randomUUID();
         if (!Array.isArray(appState.slots[slot].images)) {
           appState.slots[slot].images = [];
@@ -3397,12 +3708,15 @@
           dataUrl,
           widthPx,
           heightPx,
-          scale: widthPx,
+          nativeWidthPx: nativeWidthPx || widthPx,
+          nativeHeightPx: nativeHeightPx || heightPx,
+          scale: 100,
           insertedAt: new Date().toISOString()
         });
-        insertInlineMemoImage(dataUrl, widthPx, id);
+        insertInlineMemoImage(dataUrl, widthPx, heightPx, id);
         hideImageStaging();
         persistActiveMemo();
+        notifySettingsChanged(["images", "memoHtml"]);
       }
 
       clipImageBtn?.addEventListener("click", (event) => {
@@ -3476,12 +3790,12 @@
       });
 
       function addIndexAtBottom() {
+        if (!isPremium && appState.enabledCount >= FREE_MAX_SLOTS) {
+          window.PeekomPremiumUI?.showPremiumModal();
+          return;
+        }
         const max = getMaxEnabledSlots();
         if (appState.enabledCount >= max) {
-          if (!isPremium && max === FREE_MAX_SLOTS) {
-            window.PeekomPremiumUI?.showPremiumModal();
-            return;
-          }
           alert(ti("indexMaxSlotsAlert", { max }));
           return;
         }
@@ -3491,10 +3805,16 @@
         appState.enabledCount += 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
         appState.activeSlot = newSlot;
-        if (!isPremium) packFreeYSlots();
+        appState.global.setupCompleted = true;
+        if (isPremium) {
+          assignNextFreeYSlot(appState.slots, appState.enabledCount, newSlot);
+        } else {
+          packFreeYSlots();
+        }
+        prepareSlotRoster();
         saveState(appState);
         applyThemeForSlot(newSlot);
-        loadMemoForActiveSlot();
+        loadMemoForActiveSlot({ force: true });
         renderHandleStack();
         setExpanded(true);
         ipcRenderer.invoke("settings:notify-applied", {
@@ -3523,10 +3843,11 @@
         appState.enabledCount -= 1;
         appState.order = normalizeOrder(appState.order, appState.enabledCount);
         appState.activeSlot = clampSlotIndex(Math.max(0, del - 1), appState.enabledCount);
+        appState.global.setupCompleted = true;
         if (!isPremium) packFreeYSlots();
         saveState(appState);
         applyThemeForSlot(appState.activeSlot);
-        loadMemoForActiveSlot();
+        loadMemoForActiveSlot({ force: true });
         renderHandleStack();
         ipcRenderer.invoke("settings:notify-applied", {
           skipSettingsReload: false,
@@ -3949,7 +4270,7 @@
       }
 
       function applyLoadedAppState(fresh, options = {}) {
-        const { preserveMemoHtml = null, preserveSlotIndex = null } = options;
+        const { loadMemo = true } = options;
         appState = fresh;
         appSettings = { ...defaultGlobal(), ...appState.global };
         delete appSettings.imageSize;
@@ -3968,17 +4289,8 @@
 
         resolveYSlotConflicts(appState.slots, appState.enabledCount);
         applyThemeForSlot(appState.activeSlot);
-        if (preserveMemoHtml != null && preserveSlotIndex != null && appState.slots[preserveSlotIndex]) {
-          const safeHtml = sanitizeMemoHtml(preserveMemoHtml);
-          appState.slots[preserveSlotIndex].memoHtml = safeHtml;
-          if (appState.activeSlot === preserveSlotIndex) {
-            memoEditor.innerHTML = safeHtml;
-            syncSlotImagesFromMemo(preserveSlotIndex);
-            normalizeMemoTypography(preserveSlotIndex);
-            scanAndLinkifyEditor(true);
-          }
-        } else {
-          loadMemoForActiveSlot();
+        if (loadMemo) {
+          loadMemoForActiveSlot({ force: true });
         }
         renderHandleStack();
         refreshAllHandleThemes();
@@ -3986,7 +4298,7 @@
         lastPanelLayoutKey = "";
         updatePanelPosition();
         if (isExpanded) {
-          syncWindowInteraction({ ignoreMouse: false, pointerOver: true });
+          refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
         }
         setPinned(isPinned);
         syncPeekAutoCollapseToMain();
@@ -3994,35 +4306,76 @@
 
       ipcRenderer.on("settings:applied", async (_event, payload = {}) => {
         const wasExpanded = isExpanded;
-        const editingSlot = appState.activeSlot;
-        if (wasExpanded) {
-          persistActiveMemo();
-        }
-        const editingHtml = wasExpanded
-          ? appState.slots[editingSlot]?.memoHtml || memoEditor.innerHTML
-          : null;
+        const activeSlotBefore = appState.activeSlot;
 
-        setPinned(false);
-        setExpanded(false);
-
-        await syncPremiumState();
-
-        let fresh = await reloadAppStateFromDisk();
-        if (!fresh && payload && typeof payload.stateJson === "string") {
+        let fresh = null;
+        if (payload && typeof payload.stateJson === "string") {
           fresh = tryParseV5State(payload.stateJson);
+        }
+
+        if (wasExpanded && memoEditor) {
+          flushMemoEditorToActiveSlot();
+          if (fresh) {
+            const slot = clampSlotIndex(activeSlotBefore, fresh.enabledCount);
+            fresh.slots[slot].memoHtml = appState.slots[activeSlotBefore].memoHtml;
+            fresh.slots[slot].images = pickMemoImages(
+              fresh.slots[slot].images,
+              appState.slots[activeSlotBefore].images
+            );
+          } else {
+            saveState(appState);
+          }
+        }
+
+        if (!fresh) {
+          fresh = loadState();
         }
         if (!fresh) return;
 
-        applyLoadedAppState(fresh, {
-          preserveMemoHtml: editingHtml,
-          preserveSlotIndex: editingSlot
-        });
+        if (!wasExpanded && memoEditor) {
+          const liveHtml = memoEditor.innerHTML || "";
+          if (!isMemoHtmlEffectivelyEmpty(liveHtml)) {
+            // 에디터에 로드된 내용은 항상 "메인에서 보던 인덱스(activeSlotBefore)"의 것이다.
+            // fresh.activeSlot(설정창이 저장한 인덱스)에 쓰면 A 내용이 B로 복사되는 버그가 발생한다.
+            const slot = clampSlotIndex(activeSlotBefore, fresh.enabledCount);
+            fresh.slots[slot].memoHtml = liveHtml;
+          }
+        }
+
+        appState = fresh;
+        appSettings = { ...defaultGlobal(), ...appState.global };
+        hoverDelayMs = appState.global.hoverDelayMs;
+
+        if (typeof PeekomI18n !== "undefined" && appState.global.language) {
+          PeekomI18n.setLang(appState.global.language);
+          document.documentElement.lang = PeekomI18n.getCurrentLang();
+        }
+        applyFormatBarTooltips();
+        applyMainUiLabels();
+
+        if (appState.activeSlot >= appState.enabledCount) {
+          appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
+        }
+
+        prepareSlotRoster();
+        applyThemeForSlot(appState.activeSlot);
+        if (wasExpanded) {
+          loadMemoForActiveSlot({ force: true });
+        }
+        renderHandleStack();
+        refreshAllHandleThemes();
+        applyPanelEdgeUI();
+        updatePanelPosition();
         saveState(appState);
 
         try {
           await syncSettingsToMain();
         } catch (err) {
           console.error(err);
+        }
+        syncPeekAutoCollapseToMain();
+        if (wasExpanded) {
+          refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
         }
       });
 
@@ -4043,9 +4396,9 @@
           persistActiveMemo();
           appState.activeSlot = idx;
           applyThemeForSlot(idx);
-          loadMemoForActiveSlot();
+          loadMemoForActiveSlot({ force: true });
           saveState(appState);
-          updateActiveHandle(idx);
+          renderHandleStack();
         }
         appState.global.lastOpenedSlotIndex = idx;
         saveState(appState);
@@ -4073,6 +4426,7 @@
         if (favicon) favicon.href = iconPath;
         if (!isPremium) enforceFreeTypography();
         enforceSlotLimits();
+        prepareSlotRoster();
         applyPanelEdgeUI();
         renderHandleStack();
         applyThemeForSlot(appState.activeSlot);
@@ -4087,6 +4441,8 @@
         isPremium = Boolean(p.isPremium);
         if (!isPremium) enforceFreeTypography();
         enforceSlotLimits();
+        prepareSlotRoster();
+        applyPanelEdgeUI();
         renderHandleStack();
         applyThemeForSlot(appState.activeSlot);
         applyImageStagingSliderState();
@@ -4147,10 +4503,10 @@
           persistActiveMemo();
           appState.activeSlot = idx;
           applyThemeForSlot(idx);
-          loadMemoForActiveSlot();
+          loadMemoForActiveSlot({ force: true });
           appState.global.lastOpenedSlotIndex = idx;
           saveState(appState);
-          updateActiveHandle(idx);
+          renderHandleStack();
         }
         setExpanded(true);
       }
@@ -4174,7 +4530,6 @@
         await syncPremiumState();
         enforceSlotLimits();
         enforceFreeTypography();
-        saveState(appState);
 
         // 최소 1개 인덱스 보장
         if (!appState.enabledCount || appState.enabledCount < 1) {
@@ -4201,7 +4556,7 @@
         document.documentElement.style.setProperty("--collapsed-width", `${COLLAPSED_WIDTH}px`);
 
         applyThemeForSlot(appState.activeSlot);
-        loadMemoForActiveSlot();
+        loadMemoForActiveSlot({ force: true });
         applyPanelEdgeUI();
         updatePanelPosition();
 
@@ -4217,6 +4572,13 @@
           const w = Math.round(window.innerHeight * 0.30);
           document.documentElement.style.setProperty("--panel-width", `${w}px`);
           updatePanelPosition();
+        });
+
+        window.addEventListener("pagehide", () => {
+          if (memoEditor && appState?.slots) {
+            flushMemoEditorToActiveSlot();
+            saveState(appState);
+          }
         });
 
         try {

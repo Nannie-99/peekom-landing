@@ -26,11 +26,6 @@
                 <li><a href="contact.html" data-nav="contact" id="navContact">연락</a></li>
             </ul>
                         <div class="navbar__right">
-                <div class="search-wrap">
-                    <input type="search" class="search-input" id="searchInput" placeholder="검색..." autocomplete="off">
-                    <span class="search-icon">&#128269;</span>
-                    <div class="search-results" id="searchResults"></div>
-                </div>
                 <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
                     <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
                         <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
@@ -49,10 +44,27 @@
         <section class="section" id="contact">
             <h2 class="section-title" id="contactTitle">연락</h2>
             <p class="section-sub" id="contactSub">문의 및 피드백을 보내주세요.</p>
-            <div class="contact-box">
-                <p id="contactBody">버그 리포트, 기능 제안, 라이선스 문의는 아래 이메일로 연락해 주세요.</p>
-                <p><a href="mailto:hello.peekom@gmail.com" id="contactEmail">hello.peekom@gmail.com</a></p>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <span class="contact-card__icon" aria-hidden="true">&#128172;</span>
+                    <h3 class="contact-card__title" id="contactFeedbackTitle">피드백 보내기</h3>
+                    <p class="contact-card__desc" id="contactFeedbackDesc">버그 신고, 기능 제안, 라이선스 문의</p>
+                    <a class="contact-card__btn" href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener" id="contactFeedbackBtn">피드백 폼 열기</a>
+                </div>
+                <div class="contact-card">
+                    <span class="contact-card__icon" aria-hidden="true">&#11088;</span>
+                    <h3 class="contact-card__title" id="contactReviewTitle">후기 남기기</h3>
+                    <p class="contact-card__desc" id="contactReviewDesc">사용 경험을 들려주세요. 홈페이지에 소개될 수 있어요.</p>
+                    <a class="contact-card__btn" href="https://forms.gle/RZVnm6pCL7CRd5AY7" target="_blank" rel="noopener" id="contactReviewBtn">후기 폼 열기</a>
+                </div>
+                <div class="contact-card">
+                    <span class="contact-card__icon" aria-hidden="true">&#9993;</span>
+                    <h3 class="contact-card__title" id="contactEmailTitle">이메일 연락</h3>
+                    <p class="contact-card__desc" id="contactEmailDesc">직접 연락이 필요할 때</p>
+                    <a class="contact-card__btn contact-card__btn--ghost" href="mailto:hello.peekom@gmail.com" id="contactEmail">hello.peekom@gmail.com</a>
+                </div>
             </div>
+            <p class="contact-note" id="contactNote">문의는 영업일 기준 10일 이내에 답변드리도록 노력하겠습니다. 이메일보다 구글 폼이 더 빠르게 전달되니 가능하면 폼을 이용해 주세요.</p>
             <div class="page-cta-strip" id="pageCtaStrip"></div>
         </section>
     </main>
@@ -64,7 +76,7 @@
                 <a href="privacy.html" id="footerPrivacy">개인정보 처리방침</a>
             </p>
             <div class="footer__controls">
-                <label class="footer__lang-label" for="langSelect" id="footerLangLabel">언어</label>
+                <svg class="footer__lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
             </div>
         </div>

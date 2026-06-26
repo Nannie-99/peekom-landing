@@ -28,7 +28,7 @@ const locales = {
 };
 
 function buildIt() {
-    const cpExtra = " · pagamento unico · fino a 2 dispositivi · aggiornamenti minori inclusi · rimborso 7 giorni " + mailLink();
+    const cpExtra = " · pagamento unico · fino a 2 dispositivi · aggiornamenti minori inclusi · rimborso 30 giorni " + mailLink();
     return {
         navHome: "Home", navFeatures: "Funzionalità", navDownload: "Download", navFaq: "FAQ", navHelp: "Guida", navContact: "Contatti",
         searchPlaceholder: "Cerca...",
@@ -60,7 +60,7 @@ function buildIt() {
         featuresTitle: "Funzionalità", featuresSub: "Cosa fa Peekom in sintesi.",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "Un'app sola — Peekom Plus si sblocca nell'app.",
         comparePricing: pricingBlock("(IVA esclusa)", "Prezzo di lancio", cpExtra),
-        guidePlusP: "1) Acquista a $9.99 di lancio su Lemon Squeezy → 2) Ricevi la chiave di licenza via email → 3) Apri Peekom → inserisci la chiave nell'interfaccia di blocco o nelle Impostazioni → 4) Attivazione Peekom Plus completata. Rimborso 7 giorni: <a href=\"mailto:" + E + "\">" + E + "</a>",
+        guidePlusP: "1) Acquista a $9.99 di lancio su Lemon Squeezy → 2) Ricevi la chiave di licenza via email → 3) Apri Peekom → inserisci la chiave nell'interfaccia di blocco o nelle Impostazioni → 4) Attivazione Peekom Plus completata. Rimborso 30 giorni: <a href=\"mailto:" + E + "\">" + E + "</a>",
         dlSub: "Installa Peekom una volta. Passa a Peekom Plus nell'app.",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
         dlPlusHint: 'Peekom Plus: Era ' + PW + ' → Lancio <strong>$9.99</strong> (IVA esclusa) · ' + buyLink("Acquista su Lemon Squeezy") + " → inserisci la chiave nell'app",
@@ -219,7 +219,7 @@ function formatBarBodyIt() {
 }
 
 function buildRu() {
-    const cpExtra = " · разовая оплата · до 2 устройств · минорные обновления включены · возврат за 7 дней " + mailLink();
+    const cpExtra = " · разовая оплата · до 2 устройств · минорные обновления включены · возврат за 30 дней " + mailLink();
     return Object.assign(sharedFz("ru"), {
         navHome: "Главная", navFeatures: "Функции", navDownload: "Загрузка", navFaq: "Вопросы", navHelp: "Руководство", navContact: "Контакты",
         searchPlaceholder: "Поиск...",
@@ -243,7 +243,7 @@ function buildRu() {
         featuresTitle: "Функции", featuresSub: "Что делает Peekom — кратко.",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "Одно приложение — Peekom Plus разблокируется внутри.",
         comparePricing: pricingBlock("(без НДС)", "Цена запуска", cpExtra),
-        guidePlusP: "1) Купите по цене запуска $9.99 на Lemon Squeezy → 2) Получите ключ по email → 3) Откройте Peekom → введите ключ в интерфейсе блокировки или Настройках → 4) Активация Peekom Plus завершена. Возврат 7 дней: <a href=\"mailto:" + E + "\">" + E + "</a>",
+        guidePlusP: "1) Купите по цене запуска $9.99 на Lemon Squeezy → 2) Получите ключ по email → 3) Откройте Peekom → введите ключ в интерфейсе блокировки или Настройках → 4) Активация Peekom Plus завершена. Возврат 30 дней: <a href=\"mailto:" + E + "\">" + E + "</a>",
         dlSub: "Установите Peekom один раз. Перейдите на Peekom Plus в приложении.",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
         dlPlusHint: 'Peekom Plus: Было ' + PW + ' → Запуск <strong>$9.99</strong> (без НДС) · ' + buyLink("Купить на Lemon Squeezy") + " → введите ключ в приложении",

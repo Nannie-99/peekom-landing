@@ -1,7 +1,7 @@
 const RELEASE_HISTORY = [
     {
         version: "1.2.0",
-        date: "2026/06/19",
+        date: "2026/06/26",
         latest: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-Setup.exe",
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-macOS.dmg"
@@ -11,7 +11,7 @@ const RELEASE_HISTORY = [
 const CHANGELOG = {
     ko: [{
         version: "1.2.0",
-        date: "2026.06.19",
+        date: "2026.06.26",
         items: [
             "빼꼼 인덱스가 Peekom으로 돌아왔습니다",
             "가장자리 손잡이·얼음 모드·듀얼 모니터 지원",
@@ -21,7 +21,7 @@ const CHANGELOG = {
     }],
     en: [{
         version: "1.2.0",
-        date: "2026.06.19",
+        date: "2026.06.26",
         items: [
             "Peekom rebrand from legacy edge memo app",
             "Edge handle, Ice mode, dual monitor support",
