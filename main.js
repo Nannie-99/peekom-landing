@@ -248,6 +248,7 @@ async function applyBrandingAsync() {
   app.setName(name);
   if (process.platform === "win32") {
     app.setAppUserModelId(APP_ID);
+    reapplyStartupRegistration();
   }
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.setTitle(name);
@@ -457,11 +458,33 @@ function setStartupLoginState(openAtLogin) {
     app.setLoginItemSettings({ openAtLogin: Boolean(openAtLogin) });
     return;
   }
+  // 시작 프로그램 등록 이름을 무료/Plus 공통의 고정 값(APP_ID)으로 못박는다.
+  // 이름을 고정하지 않으면 Plus 전환 시 앱 이름이 바뀌며 다른 항목으로 등록되어
+  // 재부팅 시 자동 실행이 누락될 수 있다. getLoginItemSettings는 AppUserModelId
+  // 이름으로 조회하므로 동일한 APP_ID로 맞춰 조회·등록이 항상 일치하게 한다.
   app.setLoginItemSettings({
     openAtLogin: Boolean(openAtLogin),
     path: process.execPath,
-    args: []
+    args: [],
+    name: APP_ID
   });
+}
+
+/**
+ * 시작 프로그램이 켜져 있어야 하면 현재 실행 파일·고정 이름으로 등록을 다시 맞춘다.
+ * Plus 전환(앱 이름 변경)이나 과거 버전이 다른 이름으로 등록한 항목이 있어도
+ * 고정 이름으로 자동 이전되어 재부팅 시 자동 실행이 유지된다.
+ */
+function reapplyStartupRegistration() {
+  if (process.platform !== "win32" || !app.isPackaged) return;
+  try {
+    const state = readStartupLoginState();
+    if (state.openAtLogin || state.executableWillLaunchAtLogin) {
+      setStartupLoginState(true);
+    }
+  } catch {
+    /* ignore */
+  }
 }
 
 /** 제거 후 남는 고아 시작 항목 방지: 실행 파일이 없으면 등록 해제 */

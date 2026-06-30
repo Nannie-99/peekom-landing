@@ -68,7 +68,6 @@
                             </div>
                         </div>
                     </div>
-                    <p class="hero-text-note hero-text-note--compare" id="heroFreeCompareNote">무료와 Plus 차이를 확인하세요.</p>
                     <div class="hero-offer-stack hero-dl-grid">
                         <a href="https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" class="hero-offer-card hero-offer-card--plus hero-offer-card--link" id="heroPlusBuyBtn" data-os="win" target="_blank" rel="noopener noreferrer">
                             <img class="hero-offer-card__icon" src="images/plus.png" alt="" width="32" height="32">
@@ -113,6 +112,8 @@
                             </div>
                         </a>
                     </div>
+                    <p class="hero-text-note hero-text-note--compare" id="heroFreeCompareNote">무료와 Plus 차이를 확인하세요.</p>
+                    <p class="hero-text-note hero-text-note--upgrade" id="heroUpgradeNote">무료 앱 설치 후 설정에서 Peekom Plus로 업그레이드할 수 있습니다.</p>
                     <div class="hero-free-wrap">
                         <div class="promo-section promo-section--compare">
                             <div class="promo-section__head" id="heroFreeBar">
@@ -150,7 +151,7 @@
                             </div>
                         </a>
                     </div>
-                    <p class="hero-text-note hero-text-note--upgrade" id="heroUpgradeNote">무료 앱 설치 후 설정에서 Peekom Plus로 업그레이드할 수 있습니다.</p>
+                    <button type="button" class="win-guide-link" id="winGuideBtn" onclick="openModal()" style="display:none;">Windows 설치 시 파란 SmartScreen 경고가 보이나요?</button>
                 </div>
 
                 <div class="hero-carousel" id="heroCarousel" aria-label="Usage screenshots" dir="ltr">
@@ -189,7 +190,16 @@
                     </div>
                 </div>
                 <div class="hero-carousel__footer" id="winGuideFooter">
-                    <button type="button" class="win-guide-link" id="winGuideBtn" onclick="openModal()" style="display:none;">Windows 설치 시 파란 SmartScreen 경고가 보이나요?</button>
+                    <div class="settings-guide-card" id="settingsGuideCard">
+                        <div class="settings-guide-card__body">
+                            <h3 class="settings-guide-card__title" id="settingsGuideTitle">설정창은 어떻게 여나요?</h3>
+                            <p class="settings-guide-card__text" id="settingsGuideText">작업표시줄 오른쪽 끝의 <strong>∧</strong> 를 눌러 Peekom 아이콘을 찾은 뒤, 아이콘을 더블클릭하거나 우클릭 → ‘설정’을 선택하세요.</p>
+                        </div>
+                        <button type="button" class="settings-guide-card__thumb" id="settingsGuideThumb" onclick="openImgZoom('images/S1.png')" aria-label="설정 여는 위치 확대 보기">
+                            <img src="images/S1.png" alt="작업표시줄 트레이의 Peekom 아이콘 위치" loading="lazy">
+                            <span class="settings-guide-card__zoom" aria-hidden="true">🔍</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -220,6 +230,13 @@
                 <li id="step2"></li>
                 <li id="step3"></li>
             </ol>
+        </div>
+    </div>
+
+    <div class="img-zoom-overlay" id="imgZoomOverlay" onclick="closeImgZoomOnBackdrop(event)">
+        <div class="img-zoom" role="dialog" aria-modal="true">
+            <button class="img-zoom__close" onclick="closeImgZoom()" aria-label="Close">&times;</button>
+            <img class="img-zoom__img" id="imgZoomImg" src="" alt="">
         </div>
     </div>
 

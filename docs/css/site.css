@@ -663,6 +663,7 @@
             grid-row: 2;
             justify-self: end;
             align-self: start;
+            margin-top: -32px;
             padding: 8px 0 0;
             text-align: right;
             background: none;
@@ -1066,6 +1067,18 @@
 
         .hero-text-note--upgrade {
             margin-top: 8px;
+        }
+
+        .hero-offer-stack + .hero-text-note--compare {
+            margin-top: 14px;
+        }
+
+        .hero-text-note--compare:has(+ .hero-text-note--upgrade) {
+            margin-bottom: 0;
+        }
+
+        .hero-text-note--compare + .hero-text-note--upgrade {
+            margin-top: 0;
         }
 
         .hero-text-note a {
@@ -1907,6 +1920,8 @@
             cursor: pointer;
             text-decoration: underline;
             padding: 0;
+            text-align: left;
+            align-self: flex-start;
         }
 
         .win-guide-link:hover { color: #1d4ed8; }
@@ -2472,6 +2487,141 @@
         .guide-list li { margin-bottom: 10px; }
         .guide-list b { color: var(--text); }
 
+        /* ── Settings onboarding card (subtle yellow, in carousel footer) ── */
+        .settings-guide-card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: left;
+            padding: 12px 14px;
+            border: 1px solid rgba(241, 196, 15, 0.45);
+            border-left: 3px solid #f1c40f;
+            border-radius: 8px;
+            background: rgba(241, 196, 15, 0.10);
+        }
+
+        .settings-guide-card__body { min-width: 0; flex: 1 1 auto; }
+
+        .settings-guide-card__title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text);
+            margin: 0 0 4px;
+        }
+
+        .settings-guide-card__title::before {
+            content: "⚙";
+            font-size: 14px;
+            color: #d4a106;
+            line-height: 1;
+        }
+
+        .settings-guide-card__text {
+            font-size: 12px;
+            line-height: 1.55;
+            color: var(--text-dim);
+            margin: 0;
+        }
+
+        .settings-guide-card__text strong { color: var(--text); font-weight: 700; }
+
+        .settings-guide-card__thumb {
+            position: relative;
+            flex: 0 0 auto;
+            width: 150px;
+            padding: 0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-panel);
+            cursor: zoom-in;
+            overflow: hidden;
+            line-height: 0;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .settings-guide-card__thumb:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px var(--shadow-soft);
+        }
+
+        .settings-guide-card__thumb img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .settings-guide-card__zoom {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.55);
+            color: #fff;
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        /* ── Image zoom lightbox ── */
+        .img-zoom-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 220;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s;
+        }
+
+        .img-zoom-overlay.active { opacity: 1; visibility: visible; }
+
+        .img-zoom {
+            position: relative;
+            max-width: min(960px, 94vw);
+            max-height: 88vh;
+            transform: scale(0.96);
+            transition: transform 0.2s;
+        }
+
+        .img-zoom-overlay.active .img-zoom { transform: scale(1); }
+
+        .img-zoom__img {
+            display: block;
+            max-width: 100%;
+            max-height: 88vh;
+            border-radius: 8px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .img-zoom__close {
+            position: absolute;
+            top: -14px;
+            right: -14px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 50%;
+            background: #fff;
+            color: #1a1a1a;
+            font-size: 20px;
+            line-height: 1;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
         mark.search-hit {
             background: var(--yellow-muted);
             color: var(--yellow);
@@ -2748,12 +2898,14 @@
             .hero { grid-template-columns: 1fr; }
             .hero__text-col { grid-column: 1; grid-row: auto; }
             .hero-carousel { grid-column: 1; grid-row: auto; justify-self: stretch; }
-            .hero-carousel__footer { grid-column: 1; justify-self: stretch; width: auto !important; }
+            .hero-carousel__footer { grid-column: 1; justify-self: stretch; width: auto !important; margin-top: 0; }
             .hero__title { font-size: 38px; margin: 12px 0 18px; }
             .hero__title-icon { width: 44px; height: 44px; }
             .hero-carousel { max-width: 100%; }
             .hero-reviews { flex-direction: column; }
             .hero-reviews__btn { width: 100%; }
+            .settings-guide-card { flex-direction: column; align-items: stretch; margin-top: 0; }
+            .settings-guide-card__thumb { width: 100%; }
             .hero-reviews__item { flex-wrap: wrap; }
             .hero-reviews__text { white-space: normal; }
             .feature-z-block { grid-template-columns: 1fr; }

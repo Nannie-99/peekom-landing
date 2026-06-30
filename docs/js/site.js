@@ -484,6 +484,8 @@ const i18n = {
         dlWinLabel: "Windows x64 · Windows 10 · 11 (64-bit)",
         dlMacLabel: "macOS",
         winGuideBtn: "Windows 설치 시 파란 SmartScreen 경고가 보이나요?",
+        settingsGuideTitle: "설정창은 어떻게 여나요?",
+        settingsGuideText: "작업표시줄 오른쪽 끝의 <strong>∧</strong> 를 눌러 Peekom 아이콘을 찾은 뒤, 아이콘을 더블클릭하거나 우클릭 → ‘설정’을 선택하세요.",
         promoNote: "프로모션 종료 후 가격 인상 예정",
         promoSectionTitle: "Peekom Plus(유료)",
         promoFreeTitle: "Peekom(무료)",
@@ -719,6 +721,8 @@ const i18n = {
         help5t: "5. Ice mode", help5p: "Click the <strong>Peek / Ice</strong> chip to pin the memo without hover (free & Plus).",
         help6t: "6. Settings · Plus", help6p: "Tray → Settings → Common tab to change trigger mode and shortcuts. Use the Upgrade to Plus button to enter a license key and switch branding to Peekom Plus.",
         winGuideBtn: "See a blue SmartScreen warning when installing on Windows?",
+        settingsGuideTitle: "How do I open Settings?",
+        settingsGuideText: "Click the <strong>∧</strong> at the right end of the taskbar to find the Peekom icon, then double-click it (or right-click → \u201CSettings\u201D).",
         dlTitle: "Download", dlWinNote: "Windows 10 & 11 (64-bit)",
         dlWinLabel: "Windows x64 · Windows 10 & 11 (64-bit)",
         dlMacLabel: "macOS",
@@ -1033,6 +1037,8 @@ function enrichLocaleData(data, lang) {
     next.faqSub = next.faqSub || en.faqSub;
     next.faq1q = next.faq1q || en.faq1q;
     next.winGuideBtn = next.winGuideBtn || en.winGuideBtn;
+    next.settingsGuideTitle = next.settingsGuideTitle || en.settingsGuideTitle;
+    next.settingsGuideText = next.settingsGuideText || en.settingsGuideText;
     next.linkChangelog = next.linkChangelog || en.linkChangelog;
     next.linkPrev = next.linkPrev || en.linkPrev;
     next.linkSmartScreen = next.linkSmartScreen || en.linkSmartScreen;
@@ -1430,7 +1436,7 @@ function setThemeBtnA11y(id, label) {
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el && value != null) {
-        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq9a' || id === 'refundPolicyBody' || id === 'faqR1a' || id === 'faqR2a' || id === 'faqR3a') {
+        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq9a' || id === 'refundPolicyBody' || id === 'faqR1a' || id === 'faqR2a' || id === 'faqR3a' || id === 'settingsGuideText') {
             el.innerHTML = value;
         } else {
             el.textContent = value;
@@ -1612,6 +1618,8 @@ function updateUI() {
     }
 
     setText('winGuideBtn', d.winGuideBtn);
+    setText('settingsGuideTitle', d.settingsGuideTitle);
+    setText('settingsGuideText', d.settingsGuideText);
     setText('dlTitle', d.dlTitle);
     setText('dlSub', d.dlSub);
     setText('dlPlusHeadTitle', d.promoSectionTitle || "Peekom Plus(유료)");
@@ -1850,8 +1858,26 @@ function closeModalOnBackdrop(e) {
     if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
 
+/* ── Image zoom lightbox ── */
+function openImgZoom(src) {
+    const overlay = document.getElementById('imgZoomOverlay');
+    const img = document.getElementById('imgZoomImg');
+    if (!overlay || !img) return;
+    if (src) img.src = src;
+    overlay.classList.add('active');
+}
+
+function closeImgZoom() {
+    const overlay = document.getElementById('imgZoomOverlay');
+    if (overlay) overlay.classList.remove('active');
+}
+
+function closeImgZoomOnBackdrop(e) {
+    if (e.target === document.getElementById('imgZoomOverlay')) closeImgZoom();
+}
+
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') { closeModal(); closeImgZoom(); }
 });
 
 function updateActiveNav() {
@@ -1895,5 +1921,8 @@ window.onload = function() {
     window.openModal = openModal;
     window.closeModal = closeModal;
     window.closeModalOnBackdrop = closeModalOnBackdrop;
+    window.openImgZoom = openImgZoom;
+    window.closeImgZoom = closeImgZoom;
+    window.closeImgZoomOnBackdrop = closeImgZoomOnBackdrop;
     window.closeSearch = closeSearch;
 })();
