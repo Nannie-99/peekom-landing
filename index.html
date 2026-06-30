@@ -4555,7 +4555,15 @@
 
       function switchSlotByOffset(offset) {
         const ec = appState.enabledCount;
-        const ord = appState.order.slice(0, ec);
+        // 위/아래 메모 열기는 인덱스 생성 순서가 아닌 손잡이 위치(ySlot)를 따른다.
+        // ySlot이 작을수록 화면 위쪽 손잡이이므로, 같은 값은 탭 순서로 안정 정렬한다.
+        const baseOrd = appState.order.slice(0, ec);
+        const ord = baseOrd.slice().sort((a, b) => {
+          const ya = appState.slots[a].ySlot ?? 0;
+          const yb = appState.slots[b].ySlot ?? 0;
+          if (ya !== yb) return ya - yb;
+          return baseOrd.indexOf(a) - baseOrd.indexOf(b);
+        });
         const pos = ord.indexOf(appState.activeSlot);
         const currentPos = pos >= 0 ? pos : 0;
         const nextPos =

@@ -445,8 +445,15 @@ function assertOsSupported() {
   return false;
 }
 
+// 윈도우 로그인 자동 실행으로 켜진 경우를 식별하기 위한 인자.
+// (바로가기 더블클릭/수동 실행은 인자가 없어 설정창을 함께 열고,
+//  로그인 자동 실행은 이 인자가 붙어 백그라운드로만 뜬다.)
+const STARTUP_LOGIN_ARG = "--autostart";
+
 function getStartupLoginOptions() {
-  return process.platform === "darwin" ? {} : { path: process.execPath, args: [] };
+  return process.platform === "darwin"
+    ? {}
+    : { path: process.execPath, args: [STARTUP_LOGIN_ARG] };
 }
 
 function readStartupLoginState() {
@@ -465,7 +472,7 @@ function setStartupLoginState(openAtLogin) {
   app.setLoginItemSettings({
     openAtLogin: Boolean(openAtLogin),
     path: process.execPath,
-    args: [],
+    args: [STARTUP_LOGIN_ARG],
     name: APP_ID
   });
 }
@@ -1219,13 +1226,10 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on("second-instance", (_event, commandLine) => {
-    const shouldOpenSettings = Array.isArray(commandLine) && commandLine.includes("--open-settings");
-    if (shouldOpenSettings) {
-      createSettingsWindow();
-      return;
-    }
-    focusRunningInstance();
+  app.on("second-instance", () => {
+    // 바로가기(.lnk) 더블클릭 또는 --open-settings 인자로 재실행되면 설정창을 연다.
+    // (이미 실행 중인 단일 인스턴스에서 처리되며, 설정창이 열려 있으면 포커스만 한다.)
+    createSettingsWindow();
   });
 
   app.whenReady().then(async () => {
@@ -1827,7 +1831,10 @@ if (!gotTheLock) {
   createMainWindow();
   initAutoUpdater();
 
-  const shouldOpenSettings = process.argv.includes("--open-settings");
+  // 로그인 자동 실행(--autostart)이 아니면(=바로가기 더블클릭/수동 실행) 설정창을 함께 연다.
+  // 로그인 자동 실행은 메모 본체 창만 백그라운드로 띄운다.
+  const launchedAtLogin = process.argv.includes(STARTUP_LOGIN_ARG);
+  const shouldOpenSettings = process.argv.includes("--open-settings") || !launchedAtLogin;
 
   // 첫 실행(v5 상태 없음)이거나 setupCompleted가 false면 설정창 자동 오픈
   mainWindow.webContents.once("did-finish-load", () => {

@@ -18,9 +18,15 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 
 const RELEASE_HISTORY = [
     {
+        version: "1.2.1",
+        date: "2026/07/01",
+        latest: true,
+        winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.1/Peekom-Setup.exe",
+        macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.1/Peekom-macOS.dmg"
+    },
+    {
         version: "1.2.0",
         date: "2026/06/26",
-        latest: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-Setup.exe",
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-macOS.dmg"
     }
@@ -28,6 +34,14 @@ const RELEASE_HISTORY = [
 
 const CHANGELOG = {
     ko: [{
+        version: "1.2.1",
+        date: "2026.07.01",
+        items: [
+            "단축키 ‘위/아래 메모 열기’가 손잡이 위치 순서대로 동작하도록 수정",
+            "바로가기 더블클릭으로 설정창 열기 (앱이 꺼져 있으면 메모·설정 함께, 켜져 있으면 설정만 추가)",
+            "Windows 시작 시 자동 실행 안정성 개선 (Plus 포함)"
+        ]
+    }, {
         version: "1.2.0",
         date: "2026.06.26",
         items: [
@@ -39,6 +53,14 @@ const CHANGELOG = {
         ]
     }],
     en: [{
+        version: "1.2.1",
+        date: "2026.07.01",
+        items: [
+            "Up/Down memo shortcuts now follow handle position order",
+            "Double-click the shortcut to open Settings (memo + settings when closed, settings only when running)",
+            "More reliable launch-at-startup on Windows (including Plus)"
+        ]
+    }, {
         version: "1.2.0",
         date: "2026.06.26",
         items: [

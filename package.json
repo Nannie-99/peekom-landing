@@ -1,6 +1,6 @@
 {
   "name": "peekom",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Peekom — edge memo app with optional Plus upgrade",
   "main": "main.js",
   "scripts": {
