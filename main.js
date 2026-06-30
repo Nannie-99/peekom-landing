@@ -1,4 +1,5 @@
 const { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, nativeImage, screen, shell, Tray } = require("electron");
+const { pathToFileURL } = require("url");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
@@ -124,8 +125,22 @@ function resolveShellIconPath(isPremium) {
   return path.join(__dirname, "build", "icon.ico");
 }
 
+// 창/트레이/작업표시줄에 표시되는 런타임 아이콘 경로.
+// Plus는 plus.png를 우선 사용하고, 없으면 .ico로 폴백한다.
+function resolveRuntimeIconPath(isPremium) {
+  if (isPremium) {
+    const candidates = app.isPackaged
+      ? [path.join(process.resourcesPath, "plus.png"), path.join(process.resourcesPath, "plus.ico")]
+      : [path.join(__dirname, "build", "plus.png"), path.join(__dirname, "build", "plus.ico")];
+    for (const p of candidates) {
+      if (fs.existsSync(p)) return p;
+    }
+  }
+  return resolveShellIconPath(isPremium);
+}
+
 function loadAppIcon(isPremium) {
-  const iconPath = resolveIconPath(isPremium);
+  const iconPath = resolveRuntimeIconPath(isPremium);
   if (!fs.existsSync(iconPath)) return undefined;
   const image = nativeImage.createFromPath(iconPath);
   return image.isEmpty() ? undefined : image;
@@ -181,7 +196,7 @@ function psEscape(value) {
 }
 
 function updateWindowsShellBranding(isPremium) {
-  if (process.platform !== "win32" || !app.isPackaged) return;
+  if (process.platform !== "win32" || !app.isPackaged) return Promise.resolve();
 
   const label = isPremium ? "Peekom Plus" : "Peekom";
   const legacyLabel = isPremium ? "Peekom" : "Peekom Plus";
@@ -190,7 +205,7 @@ function updateWindowsShellBranding(isPremium) {
   const workDir = path.dirname(exePath);
   const desktop = app.getPath("desktop");
   const startMenu = path.join(app.getPath("appData"), "Microsoft", "Windows", "Start Menu", "Programs");
-  const targets = [
+  const primaryTargets = [
     path.join(desktop, `${label}.lnk`),
     path.join(startMenu, `${label}.lnk`)
   ];
@@ -199,7 +214,7 @@ function updateWindowsShellBranding(isPremium) {
     path.join(startMenu, `${legacyLabel}.lnk`)
   ];
 
-  const shortcutLines = targets
+  const shortcutLines = primaryTargets
     .map((shortcutPath) => {
       return [
         `$s = $shell.CreateShortcut('${psEscape(shortcutPath)}')`,
@@ -213,19 +228,20 @@ function updateWindowsShellBranding(isPremium) {
     .join("; ");
 
   const removeLines = legacyTargets
-    .filter((legacyPath) => !targets.includes(legacyPath))
     .map((legacyPath) => `if (Test-Path '${psEscape(legacyPath)}') { Remove-Item -LiteralPath '${psEscape(legacyPath)}' -Force }`)
     .join("; ");
 
   const script = `$shell = New-Object -ComObject WScript.Shell; ${shortcutLines}; ${removeLines}`;
-  require("child_process").execFile(
-    "powershell.exe",
-    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
-    () => {}
-  );
+  return new Promise((resolve) => {
+    require("child_process").execFile(
+      "powershell.exe",
+      ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", script],
+      () => resolve()
+    );
+  });
 }
 
-function applyBranding() {
+async function applyBrandingAsync() {
   premiumActive = license.isPremiumActive();
   APP_ICON = loadAppIcon(premiumActive);
   const name = getAppDisplayName();
@@ -248,7 +264,9 @@ function applyBranding() {
   if (trayIcon) {
     trayIcon.setContextMenu(buildTrayMenu());
   }
-  updateWindowsShellBranding(premiumActive);
+  if (process.platform === "win32" && app.isPackaged) {
+    await updateWindowsShellBranding(premiumActive);
+  }
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send("premium:changed", { isPremium: premiumActive });
   }
@@ -257,8 +275,83 @@ function applyBranding() {
   }
 }
 
+function applyBranding() {
+  void applyBrandingAsync().catch((err) => {
+    console.error("applyBranding failed:", err);
+  });
+}
+
 function broadcastPremiumChanged() {
   applyBranding();
+}
+
+let licenseRecheckTimer = null;
+let downgradeInProgress = false;
+let lastLicenseRecheckAt = 0;
+
+/**
+ * 실행 중 라이선스를 재검증한다. 인터넷에서 비활성화(deactivate)가 감지되면
+ * 현재 메모를 저장한 뒤 앱을 종료·자동 재실행하여 Peekom(무료)로 다운그레이드한다.
+ * 네트워크 오류 등 불명확한 응답에서는 캐시된 Plus 권한을 그대로 유지한다.
+ */
+async function recheckLicenseForDowngrade(force = false) {
+  if (downgradeInProgress) return;
+  const now = Date.now();
+  if (!force && now - lastLicenseRecheckAt < 60 * 1000) return;
+  lastLicenseRecheckAt = now;
+
+  const wasPremium = license.isPremiumActive();
+  if (!wasPremium) {
+    // 메모리상 Plus인데 서명 검증만 실패한 경우(구 HMAC) 서버 재검증 후 복구 시도
+    if (premiumActive) {
+      try {
+        await license.verifyStoredLicense();
+      } catch {
+        /* ignore */
+      }
+      if (license.isPremiumActive()) {
+        await applyBrandingAsync().catch(() => {});
+        return;
+      }
+    }
+    if (!license.isPremiumActive()) {
+      await applyBrandingAsync().catch(() => {});
+    }
+    return;
+  }
+
+  try {
+    await license.verifyStoredLicense();
+  } catch {
+    return;
+  }
+
+  const isPremiumNow = license.isPremiumActive();
+  if (wasPremium && !isPremiumNow) {
+    downgradeInProgress = true;
+    try {
+      await flushMainWindowMemo();
+    } catch {
+      /* ignore */
+    }
+    try {
+      await updateWindowsShellBranding(false);
+    } catch (err) {
+      console.error("downgrade shell branding failed:", err);
+    }
+    app.relaunch();
+    app.exit(0);
+    return;
+  }
+
+  await applyBrandingAsync().catch(() => {});
+}
+
+function startLicenseRecheckTimer() {
+  if (licenseRecheckTimer) return;
+  licenseRecheckTimer = setInterval(() => {
+    recheckLicenseForDowngrade();
+  }, 5 * 60 * 1000);
 }
 
 const BASE_NOTE_HEIGHT = 460;
@@ -378,6 +471,32 @@ function healOrphanedStartupRegistration() {
     if (!fs.existsSync(process.execPath)) {
       setStartupLoginState(false);
     }
+  } catch {
+    /* ignore */
+  }
+}
+
+function getStartupDefaultMarkerPath() {
+  return path.join(app.getPath("userData"), "startup-default.json");
+}
+
+/**
+ * 설치 후 최초 1회: Windows 로그인 시 자동 시작을 기본으로 켜 둔다.
+ * 이렇게 하면 부팅 직후부터 앱이 백그라운드로 실행되어 트레이 아이콘이 항상 표시된다.
+ * 사용자가 이후 설정에서 끄면 마커가 남아 다시 켜지 않으므로 사용자의 선택을 존중한다.
+ */
+function applyDefaultStartupOnce() {
+  if (process.platform !== "win32" || !app.isPackaged) return;
+  try {
+    const markerPath = getStartupDefaultMarkerPath();
+    if (fs.existsSync(markerPath)) return;
+    setStartupLoginState(true);
+    fs.mkdirSync(path.dirname(markerPath), { recursive: true });
+    fs.writeFileSync(
+      markerPath,
+      JSON.stringify({ appliedAt: new Date().toISOString() }),
+      "utf8"
+    );
   } catch {
     /* ignore */
   }
@@ -764,6 +883,7 @@ function createMainWindow() {
   mainWindow.on("focus", () => {
     mainWindowFocused = true;
     applyAlwaysOnTopPolicy();
+    recheckLicenseForDowngrade();
   });
 
   mainWindow.on("blur", () => {
@@ -777,6 +897,8 @@ function createMainWindow() {
     updatePeekCollapseMonitor();
     mainWindow.webContents.setZoomFactor(1.0);
     pushStartupLoginSync(mainWindow);
+    if (APP_ICON) mainWindow.setIcon(APP_ICON);
+    void recheckLicenseForDowngrade(true);
   });
 
   // Ctrl/Cmd +/- 줌 키를 렌더러가 처리하기 전에 차단
@@ -1097,12 +1219,16 @@ if (!gotTheLock) {
 
   premiumActive = license.isPremiumActive();
   APP_ICON = loadAppIcon(premiumActive);
-  applyBranding();
+  await applyBrandingAsync().catch((err) => {
+    console.error("startup branding failed:", err);
+  });
   healOrphanedStartupRegistration();
+  applyDefaultStartupOnce();
 
   appSettings = normalizeSettings();
   updateShortcutRegistration();
   ensureTrayIcon();
+  startLicenseRecheckTimer();
 
   ipcMain.handle("premium:get", () => ({
     ok: true,
@@ -1110,6 +1236,21 @@ if (!gotTheLock) {
     buyUrl: LEMON_BUY_URL,
     ...license.getLicenseDebugInfo()
   }));
+
+  ipcMain.handle("branding:get", () => {
+    const isPremium = license.isPremiumActive();
+    const iconPath = resolveRuntimeIconPath(isPremium);
+    let faviconUrl = null;
+    if (fs.existsSync(iconPath)) {
+      faviconUrl = pathToFileURL(iconPath).href;
+    }
+    return {
+      ok: true,
+      isPremium,
+      displayName: isPremium ? "Peekom Plus" : "Peekom",
+      faviconUrl
+    };
+  });
 
   ipcMain.handle("premium:activate", async (_, licenseKey) => {
     const result = await license.activateLicenseKey(licenseKey);
@@ -1121,6 +1262,22 @@ if (!gotTheLock) {
 
   ipcMain.handle("premium:open-buy", async () => {
     await shell.openExternal(LEMON_BUY_URL);
+    return { ok: true };
+  });
+
+  // 업그레이드 완료 후 "시작하기": Plus 바로가기로 교체(기존 Peekom 바로가기 삭제)한 뒤
+  // 앱을 완전히 종료하고 Peekom Plus로 자동 재실행한다. 재실행 시 작업표시줄/트레이/창
+  // 아이콘이 모두 Plus 브랜딩으로 새로 적용된다.
+  ipcMain.handle("premium:finalize-upgrade", async () => {
+    premiumActive = license.isPremiumActive();
+    if (!premiumActive) return { ok: false, reason: "NOT_PREMIUM" };
+    try {
+      await applyBrandingAsync();
+    } catch (err) {
+      console.error("finalize-upgrade branding failed:", err);
+    }
+    app.relaunch();
+    app.exit(0);
     return { ok: true };
   });
 
@@ -1724,6 +1881,10 @@ app.on("before-quit", (event) => {
 });
 
 app.on("will-quit", () => {
+  if (licenseRecheckTimer) {
+    clearInterval(licenseRecheckTimer);
+    licenseRecheckTimer = null;
+  }
   if (trayIcon) {
     trayIcon.destroy();
     trayIcon = null;

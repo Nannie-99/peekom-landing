@@ -258,6 +258,22 @@
     return backdrop;
   }
 
+  // "시작하기": Plus 바로가기 교체 + 앱 완전 종료 후 Peekom Plus로 자동 재실행.
+  async function finalizeUpgradeAndRelaunch() {
+    const btn = document.getElementById("premiumUpgradeSuccessBtn");
+    if (btn) btn.disabled = true;
+    try {
+      if (window.peekom && typeof window.peekom.invoke === "function") {
+        await window.peekom.invoke("premium:finalize-upgrade");
+        return; // 앱이 곧 종료·재실행되므로 이후 처리는 필요 없음
+      }
+    } catch (err) {
+      console.error("premium:finalize-upgrade failed:", err);
+    }
+    // 폴백: IPC를 사용할 수 없으면 모달만 닫는다.
+    hidePremiumModal();
+  }
+
   function showPremiumUpgradeSuccess() {
     const backdrop = document.getElementById("peekomPremiumModal");
     if (!backdrop) return;
@@ -277,7 +293,7 @@
     `;
     refreshPremiumModalI18n();
     backdrop.classList.remove("hidden");
-    document.getElementById("premiumUpgradeSuccessBtn")?.addEventListener("click", hidePremiumModal);
+    document.getElementById("premiumUpgradeSuccessBtn")?.addEventListener("click", finalizeUpgradeAndRelaunch);
     if (typeof window.peekomSyncWindowInteraction === "function") {
       window.peekomSyncWindowInteraction({ ignoreMouse: false, pointerOver: true });
     }

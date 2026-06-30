@@ -2151,12 +2151,16 @@
                 dst.theme === "custom" ? dst.customBg || "#fff" : THEME_MAP[dst.theme]?.bg || "#fff";
             }
             const fontSel = document.getElementById(`slot${s}FontFamily`);
-            if (fontSel) fontSel.value = dst.fontFamily || "";
+            if (fontSel) {
+              ensureFontFamilyOption(fontSel, dst.fontFamily);
+              fontSel.value = dst.fontFamily || "";
+            }
           }
         }
         if (!editing) {
           syncThemeGroupSelection();
           syncCustomColorVisibility();
+          patchBaseline();
         }
         renderAllSlotImageThumbs();
       }
@@ -2224,7 +2228,6 @@
           appState.global.openAtLogin = parsed.openAtLogin;
           appState.global.showTrayIcon = parsed.showTrayIcon;
           appState.enabledCount = parsed.enabledCount;
-          appState.activeSlot = parsed.activeSlot;
           draftMonitorTarget = parsed.monitorTarget;
           parsed.slots.forEach((sl, i) => {
             if (!appState.slots[i]) return;
@@ -2406,7 +2409,7 @@
         if (format === "json") {
           const content = JSON.stringify(appState, null, 2);
           try {
-            const result = await ipcRenderer.invoke("export:save", { format: "json", content, defaultName: "ppaekkom-plus-backup.json" });
+            const result = await ipcRenderer.invoke("export:save", { format: "json", content, defaultName: "peekom-backup.json" });
             if (result?.ok) setStatus(ti("exportDone"), 2500);
             else if (!result?.canceled) setStatus(result?.message || ti("exportFail"), 5000);
           } catch (err) { setStatus(ti("exportFail"), 5000); }
@@ -2514,7 +2517,6 @@
           customBg: sl.customBg,
           customText: sl.customText,
           ySlot: sl.ySlot,
-          ySlotUpdatedAt: sl.ySlotUpdatedAt,
           fontSize: sl.fontSize,
           fontFamily: sl.fontFamily || ""
         }));
@@ -2533,7 +2535,6 @@
           openAtLogin: state.global.openAtLogin,
           showTrayIcon: state.global.showTrayIcon,
           enabledCount: state.enabledCount,
-          activeSlot: state.activeSlot,
           slots: slotData,
           monitorTarget: draftMonitorTarget
         });
@@ -3153,18 +3154,27 @@
         }
       }
 
-      function updateAppBrandingAssets() {
+      async function updateAppBrandingAssets() {
         const logo = document.getElementById("aboutLogo");
-        const iconPath = isPremium ? "build/plus.ico" : "build/icon.ico";
+        const aboutTitle = document.querySelector(".about-title");
+        const fallbackIcon = isPremium ? "build/plus.png" : "build/icon.ico";
         const appLabel = isPremium ? "Peekom Plus" : "Peekom";
+        let iconUrl = fallbackIcon;
+        let displayName = appLabel;
+        try {
+          const b = await ipcRenderer.invoke("branding:get");
+          if (b?.faviconUrl) iconUrl = b.faviconUrl;
+          if (b?.displayName) displayName = b.displayName;
+        } catch {
+          /* fallback */
+        }
         if (logo) {
-          logo.src = iconPath;
-          logo.alt = appLabel;
+          logo.src = iconUrl;
+          logo.alt = displayName;
         }
         const favicon = document.getElementById("appFavicon");
-        if (favicon) favicon.href = iconPath;
-        const aboutTitle = document.querySelector(".about-title");
-        if (aboutTitle) aboutTitle.textContent = appLabel;
+        if (favicon) favicon.href = iconUrl;
+        if (aboutTitle) aboutTitle.textContent = displayName;
       }
 
       function updateSettingsTitle() {
@@ -3306,6 +3316,7 @@
       }
 
       window.onPremiumActivated = async () => {
+        isPremium = true;
         await syncPremiumState();
         updateSettingsTitle();
         updateAppBrandingAssets();
@@ -3825,9 +3836,7 @@
           return;
         }
         const label = resolveSlotLabel(appState.slots[slotIndex]?.label, slotIndex);
-        const ok = confirm(
-          `「${label}」 인덱스를 삭제할까요?\n\n메모, 제목, 색상이 모두 사라집니다.`
-        );
+        const ok = confirm(ti("indexDeleteConfirm", { label }));
         if (!ok) return;
         readSettingsForm();
         void performDelete(slotIndex);
@@ -3844,6 +3853,12 @@
         }
         markSettingsLocalMutation();
         readSettingsForm();
+        try {
+          await ipcRenderer.invoke("memo:flush");
+        } catch {
+          /* ignore */
+        }
+        await refreshSlotMemosFromDisk();
         const newSlotIndex = appState.enabledCount;
         appState.slots[newSlotIndex] = {
           ...defaultSlot(newSlotIndex),
@@ -3878,6 +3893,12 @@
 
         markSettingsLocalMutation();
         readSettingsForm();
+        try {
+          await ipcRenderer.invoke("memo:flush");
+        } catch {
+          /* ignore */
+        }
+        await refreshSlotMemosFromDisk();
 
         for (let i = slotIndex; i < MAX_SLOTS - 1; i++) {
           appState.slots[i] = appState.slots[i + 1];
@@ -4675,7 +4696,10 @@
           updateFontDisplay(s);
 
           const fontSel = document.getElementById(`slot${s}FontFamily`);
-          if (fontSel) fontSel.value = appState.slots[s].fontFamily || "";
+          if (fontSel) {
+            ensureFontFamilyOption(fontSel, appState.slots[s].fontFamily);
+            fontSel.value = appState.slots[s].fontFamily || "";
+          }
           updateFontFamilyPreview(s);
         }
         syncThemeGroupSelection();
@@ -4749,7 +4773,11 @@
 
           const fontSel = document.getElementById(`slot${s}FontFamily`);
           if (fontSel && isPremium) {
-            appState.slots[s].fontFamily = fontSel.value || "";
+            // 글꼴 목록이 비동기로 채워지기 전에는 select 값이 비어 있어
+            // 저장된 fontFamily가 지워지지 않도록 한다.
+            if (fontSel.dataset.fontsLoaded === "1") {
+              appState.slots[s].fontFamily = fontSel.value || "";
+            }
           }
 
           const themeGroup = panelHost.querySelector(`[data-theme-group="${s}"]`);
@@ -4772,6 +4800,17 @@
           if (/^#[0-9A-Fa-f]{6}$/.test(bgVal)) appState.slots[s].customBg = bgVal;
           if (/^#[0-9A-Fa-f]{6}$/.test(textVal)) appState.slots[s].customText = textVal;
         }
+      }
+
+      function ensureFontFamilyOption(sel, fontName) {
+        if (!sel) return;
+        const name = typeof fontName === "string" ? fontName.trim() : "";
+        if (!name) return;
+        if (Array.from(sel.options).some((opt) => opt.value === name)) return;
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        sel.appendChild(opt);
       }
 
       function isValidFontOptionName(name) {
@@ -4803,14 +4842,16 @@
         for (let s = 0; s < appState.enabledCount; s++) {
           const sel = document.getElementById(`slot${s}FontFamily`);
           if (!sel || sel.dataset.fontsLoaded) continue;
-          sel.dataset.fontsLoaded = "1";
           const current = appState.slots[s].fontFamily || "";
+          ensureFontFamilyOption(sel, current);
           fonts.forEach((name) => {
+            if (Array.from(sel.options).some((opt) => opt.value === name)) return;
             const opt = document.createElement("option");
             opt.value = name;
             opt.textContent = name;
             sel.appendChild(opt);
           });
+          sel.dataset.fontsLoaded = "1";
           sel.value = current;
           updateFontFamilyPreview(s);
         }
@@ -4867,6 +4908,7 @@
         if (!applyBtn) return;
         applyBtn.disabled = true;
         try {
+          await populateFontSelects();
           readSettingsForm();
 
           try {
@@ -5088,9 +5130,11 @@
         });
 
         ipcRenderer.on("premium:changed", async (_e, payload) => {
-          isPremium = Boolean(payload?.isPremium);
+          const nextPremium = Boolean(payload?.isPremium);
+          const wasPremium = isPremium;
+          isPremium = nextPremium;
           enforceSlotLimits();
-          if (!isPremium) enforceFreeSlotDefaults();
+          if (wasPremium && !nextPremium) enforceFreeSlotDefaults();
           prepareSlotRoster();
           updateSettingsTitle();
           updateAppBrandingAssets();

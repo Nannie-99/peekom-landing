@@ -15,18 +15,81 @@ function isOnline() {
 const LICENSE_FILE = "peekom-license.json";
 const LS_LICENSE_API = "https://api.lemonsqueezy.com/v1/licenses";
 const LICENSE_FORMAT_VERSION = 1;
+// app.setName()이 Peekom ↔ Peekom Plus로 바뀌어도 서명이 깨지지 않도록 고정 ID 사용
+const LICENSE_HMAC_APP_ID = "com.peekom.app";
 
-function getLicensePath() {
-  return path.join(app.getPath("userData"), LICENSE_FILE);
+function hashHmacSalt(salt) {
+  return crypto.createHash("sha256").update(`peekom-license-v1-${salt}`).digest();
+}
+
+function getHmacSecretCandidates() {
+  const env = String(process.env.PEEKOM_LICENSE_HMAC_SECRET || "").trim();
+  if (env) return [env];
+  return [
+    hashHmacSalt(LICENSE_HMAC_APP_ID),
+    hashHmacSalt("Peekom"),
+    hashHmacSalt("Peekom Plus")
+  ];
 }
 
 function deriveHmacSecret() {
-  const env = String(process.env.PEEKOM_LICENSE_HMAC_SECRET || "").trim();
-  if (env) return env;
+  return getHmacSecretCandidates()[0];
+}
+
+function signPayloadWithSecret(payload, secret) {
   return crypto
-    .createHash("sha256")
-    .update(`peekom-license-v1-${app.getName()}`)
-    .digest();
+    .createHmac("sha256", secret)
+    .update(canonicalJson(payload))
+    .digest("base64url");
+}
+
+function signPayload(payload) {
+  return signPayloadWithSecret(payload, deriveHmacSecret());
+}
+
+function verifySignedRecord(raw) {
+  if (!raw || raw.v !== LICENSE_FORMAT_VERSION || !raw.payload || !raw.sig) {
+    return false;
+  }
+  try {
+    const sig = String(raw.sig);
+    for (const secret of getHmacSecretCandidates()) {
+      const expected = signPayloadWithSecret(raw.payload, secret);
+      const a = Buffer.from(sig);
+      const b = Buffer.from(expected);
+      if (a.length === b.length && crypto.timingSafeEqual(a, b)) {
+        return true;
+      }
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+function shouldMigrateLicenseSignature(raw) {
+  if (!raw?.payload || !raw.sig) return false;
+  if (!verifySignedRecord(raw)) return false;
+  return raw.sig !== signPayload(raw.payload);
+}
+
+function migrateLicenseSignature(raw) {
+  if (!shouldMigrateLicenseSignature(raw)) return;
+  const rec = flattenSignedRecord(raw);
+  writeSignedLicense({
+    licenseKey: rec.licenseKey,
+    instanceId: rec.instanceId,
+    lsInstanceId: rec.lsInstanceId,
+    licenseStatus: rec.licenseStatus,
+    activatedAt: rec.activatedAt,
+    testMode: rec.testMode,
+    devMode: rec.devMode,
+    isPremium: rec.isPremium
+  });
+}
+
+function getLicensePath() {
+  return path.join(app.getPath("userData"), LICENSE_FILE);
 }
 
 function canonicalJson(obj) {
@@ -51,28 +114,6 @@ function buildSignedPayload(fields) {
     testMode: Boolean(fields.testMode),
     devMode: Boolean(fields.devMode)
   };
-}
-
-function signPayload(payload) {
-  return crypto
-    .createHmac("sha256", deriveHmacSecret())
-    .update(canonicalJson(payload))
-    .digest("base64url");
-}
-
-function verifySignedRecord(raw) {
-  if (!raw || raw.v !== LICENSE_FORMAT_VERSION || !raw.payload || !raw.sig) {
-    return false;
-  }
-  try {
-    const expected = signPayload(raw.payload);
-    const a = Buffer.from(String(raw.sig));
-    const b = Buffer.from(expected);
-    if (a.length !== b.length) return false;
-    return crypto.timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
 }
 
 function isPayloadPremium(payload) {
@@ -136,6 +177,15 @@ function readLicenseRecord() {
   try {
     const raw = JSON.parse(fs.readFileSync(getLicensePath(), "utf8"));
     if (verifySignedRecord(raw)) {
+      migrateLicenseSignature(raw);
+      try {
+        const updated = JSON.parse(fs.readFileSync(getLicensePath(), "utf8"));
+        if (verifySignedRecord(updated)) {
+          return flattenSignedRecord(updated);
+        }
+      } catch {
+        /* fallthrough */
+      }
       return flattenSignedRecord(raw);
     }
     if (raw && raw.isPremium && !raw.sig && app.isPackaged) {
@@ -357,11 +407,11 @@ async function verifyStoredLicense() {
       params.instance_id = rec.lsInstanceId;
     }
 
-    const { data } = await callLicenseApi("validate", params);
+    const { ok, status: httpStatus, data } = await callLicenseApi("validate", params);
     const status = data?.license_key?.status;
-    const valid = data?.valid === true && isLicenseStatusPremium(status);
+    const isActive = data?.valid === true && isLicenseStatusPremium(status);
 
-    if (valid) {
+    if (isActive) {
       writeSignedLicense({
         isPremium: true,
         licenseKey,
@@ -374,7 +424,16 @@ async function verifyStoredLicense() {
       return readLicenseRecord();
     }
 
-    if (status === "expired" || status === "disabled") {
+    // 서버가 명시적으로 무효를 알리면 캐시된 Plus 권한을 해제한다.
+    // valid:false, 키 상태가 active가 아님, HTTP 4xx 거절 모두 해당한다.
+    // (네트워크 오류 등 불명확한 응답은 catch에서 잡혀 캐시된 Plus를 유지한다.)
+    const explicitlyInvalid =
+      data?.valid === false ||
+      (typeof status === "string" && status.length > 0 && !isLicenseStatusPremium(status));
+    const rejectedByHttp =
+      !ok && (httpStatus === 400 || httpStatus === 404 || httpStatus === 422);
+
+    if (explicitlyInvalid || rejectedByHttp) {
       invalidateLicense(rec.instanceId);
     }
   } catch {

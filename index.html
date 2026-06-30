@@ -1149,6 +1149,9 @@
       const FREE_MAX_IMAGES_PER_MEMO = 1;
       const PLUS_MAX_IMAGES_PER_MEMO = 5;
       let isPremium = false;
+      // 초기 상태 로딩이 끝나기 전에는 premium:changed가 슬롯/저장에 개입하지 못하게 막는다.
+      // (초기화 중 createFreshState()인 빈 상태를 저장해 사용자 데이터를 덮어쓰는 것을 방지)
+      let appInitialized = false;
 
       function getMaxEnabledSlots() {
         return isPremium ? MAX_SLOTS : FREE_MAX_SLOTS;
@@ -1156,7 +1159,38 @@
 
       function enforceSlotLimits() {
         const max = getMaxEnabledSlots();
+        if (isPremium) {
+          // 재활성화: 다운그레이드 때 숨겨 두었던(데이터는 보존된) 탭 수/순서를 복원한다.
+          const suspendedCount =
+            typeof appState.suspendedEnabledCount === "number"
+              ? clamp(Math.round(appState.suspendedEnabledCount), 1, MAX_SLOTS)
+              : 0;
+          if (suspendedCount > appState.enabledCount) {
+            appState.enabledCount = suspendedCount;
+            if (
+              Array.isArray(appState.suspendedOrder) &&
+              appState.suspendedOrder.length === suspendedCount
+            ) {
+              appState.order = normalizeOrder(appState.suspendedOrder, suspendedCount);
+            } else {
+              appState.order = normalizeOrder(appState.order, suspendedCount);
+            }
+          }
+          delete appState.suspendedEnabledCount;
+          delete appState.suspendedOrder;
+          return;
+        }
         if (appState.enabledCount > max) {
+          // 다운그레이드: 무료 한도를 넘는 탭은 화면에서 숨긴다.
+          // 메모 데이터는 slots 배열에 그대로 보존하고, 재활성화 시 복원할 수 있도록
+          // 원래 탭 개수와 순서를 기록해 둔다(가장 오래전에 만든 탭부터 유지됨).
+          appState.suspendedEnabledCount = Math.max(
+            typeof appState.suspendedEnabledCount === "number"
+              ? appState.suspendedEnabledCount
+              : 0,
+            appState.enabledCount
+          );
+          appState.suspendedOrder = appState.order.slice(0, appState.enabledCount);
           appState.enabledCount = max;
           appState.order = normalizeOrder(appState.order, max);
           appState.activeSlot = clampSlotIndex(appState.activeSlot, max);
@@ -1589,6 +1623,7 @@
       const deleteIndexConfirmBtn = document.getElementById("deleteIndexConfirmBtn");
 
       let isExpanded = false;
+      let loadedMemoSlotIndex = null;
       let isPinned = false;
       let hoverTimer = null;
       let settingsRevealTimer = null;
@@ -1663,18 +1698,25 @@
       const pickMemoHtml = PeekomMemoState.pickMemoHtml;
       const pickMemoImages = PeekomMemoState.pickMemoImages;
 
+      function getMemoEditorTargetSlot() {
+        if (loadedMemoSlotIndex !== null && Number.isFinite(loadedMemoSlotIndex)) {
+          return clampSlotIndex(loadedMemoSlotIndex, appState.enabledCount);
+        }
+        return appState.activeSlot;
+      }
+
       function flushMemoEditorToActiveSlot() {
         if (!memoEditor || !appState?.slots) return;
-        const slot = appState.activeSlot;
+        const slot = getMemoEditorTargetSlot();
         appState.slots[slot].memoHtml = memoEditor.innerHTML;
         syncSlotImagesFromMemo(slot);
       }
 
-      async function compressSlotImagesIfOversized(slotIndex = appState.activeSlot) {
+      async function compressSlotImagesIfOversized(slotIndex = getMemoEditorTargetSlot()) {
         if (!memoEditor || !appState?.slots?.[slotIndex] || !PeekomMemoImage) return false;
         // 에디터에 로드된 인덱스가 아니면(이미 다른 인덱스로 전환됨) 건드리지 않는다.
         // 에디터 내용을 잘못된 인덱스에 덮어써 메모가 복사되는 것을 막는다.
-        if (slotIndex !== appState.activeSlot) return false;
+        if (slotIndex !== getMemoEditorTargetSlot()) return false;
         const imgs = Array.from(memoEditor.querySelectorAll("img.peekom-memo-image"));
         let changed = false;
         for (const img of imgs) {
@@ -1687,13 +1729,13 @@
             displayHeight: heightPx
           });
           // 압축 대기(await) 도중 인덱스가 바뀌었으면 즉시 중단한다.
-          if (slotIndex !== appState.activeSlot) return changed;
+          if (slotIndex !== getMemoEditorTargetSlot()) return changed;
           if (compressed && compressed !== src) {
             img.setAttribute("src", compressed);
             changed = true;
           }
         }
-        if (changed && slotIndex === appState.activeSlot) {
+        if (changed && slotIndex === getMemoEditorTargetSlot()) {
           syncSlotImagesFromMemo(slotIndex);
           appState.slots[slotIndex].memoHtml = memoEditor.innerHTML;
         }
@@ -1703,7 +1745,7 @@
       async function persistActiveMemo() {
         if (!memoEditor || !appState?.slots) return;
         flushMemoEditorToActiveSlot();
-        await compressSlotImagesIfOversized(appState.activeSlot);
+        await compressSlotImagesIfOversized(getMemoEditorTargetSlot());
 
         if (!saveState(appState)) {
           alert(ti("saveStateQuotaAlert"));
@@ -1809,6 +1851,7 @@
           return;
         }
         memoEditor.innerHTML = nextHtml;
+        loadedMemoSlotIndex = slotIndex;
         syncSlotImagesFromMemo(slotIndex);
         normalizeMemoTypography(slotIndex);
         scanAndLinkifyEditor(true);
@@ -1987,7 +2030,8 @@
         document.documentElement.style.setProperty("--toolbar-surface", toolbarSurface);
         document.documentElement.style.setProperty("--toolbar-border", toolbarBorder);
         document.documentElement.style.setProperty("--toolbar-shadow", toolbarShadow);
-        const ff = isPremium && slot.fontFamily ? slot.fontFamily : "";
+        const ff =
+          typeof slot.fontFamily === "string" ? slot.fontFamily.trim() : "";
         document.documentElement.style.setProperty(
           "--note-font-family",
           ff
@@ -4316,11 +4360,17 @@
         if (wasExpanded && memoEditor) {
           flushMemoEditorToActiveSlot();
           if (fresh) {
-            const slot = clampSlotIndex(activeSlotBefore, fresh.enabledCount);
-            fresh.slots[slot].memoHtml = appState.slots[activeSlotBefore].memoHtml;
-            fresh.slots[slot].images = pickMemoImages(
-              fresh.slots[slot].images,
-              appState.slots[activeSlotBefore].images
+            const memoSlot = loadedMemoSlotIndex !== null
+              ? clampSlotIndex(loadedMemoSlotIndex, fresh.enabledCount)
+              : clampSlotIndex(activeSlotBefore, fresh.enabledCount);
+            // 가져오기(백업 복원) 시 백업 본문이 비어 있는 에디터에 덮이지 않도록 병합한다.
+            fresh.slots[memoSlot].memoHtml = pickMemoHtml(
+              fresh.slots[memoSlot].memoHtml,
+              appState.slots[memoSlot].memoHtml
+            );
+            fresh.slots[memoSlot].images = pickMemoImages(
+              fresh.slots[memoSlot].images,
+              appState.slots[memoSlot].images
             );
           } else {
             saveState(appState);
@@ -4332,19 +4382,19 @@
         }
         if (!fresh) return;
 
-        if (!wasExpanded && memoEditor) {
+        if (!wasExpanded && memoEditor && loadedMemoSlotIndex !== null) {
+          const slot = clampSlotIndex(loadedMemoSlotIndex, fresh.enabledCount);
           const liveHtml = memoEditor.innerHTML || "";
-          if (!isMemoHtmlEffectivelyEmpty(liveHtml)) {
-            // 에디터에 로드된 내용은 항상 "메인에서 보던 인덱스(activeSlotBefore)"의 것이다.
-            // fresh.activeSlot(설정창이 저장한 인덱스)에 쓰면 A 내용이 B로 복사되는 버그가 발생한다.
-            const slot = clampSlotIndex(activeSlotBefore, fresh.enabledCount);
-            fresh.slots[slot].memoHtml = liveHtml;
-          }
+          fresh.slots[slot].memoHtml = pickMemoHtml(fresh.slots[slot].memoHtml, liveHtml);
         }
 
         appState = fresh;
         appSettings = { ...defaultGlobal(), ...appState.global };
         hoverDelayMs = appState.global.hoverDelayMs;
+
+        // 설정창의 activeSlot(보통 0)이 메인에 덮어씌워지지 않도록, 열려 있던 인덱스를 유지한다.
+        appState.activeSlot = clampSlotIndex(activeSlotBefore, appState.enabledCount);
+        appState.global.lastOpenedSlotIndex = appState.activeSlot;
 
         if (typeof PeekomI18n !== "undefined" && appState.global.language) {
           PeekomI18n.setLang(appState.global.language);
@@ -4353,15 +4403,8 @@
         applyFormatBarTooltips();
         applyMainUiLabels();
 
-        if (appState.activeSlot >= appState.enabledCount) {
-          appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
-        }
-
         prepareSlotRoster();
         applyThemeForSlot(appState.activeSlot);
-        if (wasExpanded) {
-          loadMemoForActiveSlot({ force: true });
-        }
         renderHandleStack();
         refreshAllHandleThemes();
         applyPanelEdgeUI();
@@ -4375,7 +4418,10 @@
         }
         syncPeekAutoCollapseToMain();
         if (wasExpanded) {
-          refreshPointerHitTest({ clientX: -1, clientY: -1 }, true);
+          setPinned(false);
+          setExpanded(false);
+        } else {
+          loadMemoForActiveSlot({ force: true });
         }
       });
 
@@ -4417,19 +4463,42 @@
         addIndexAtBottom();
       });
 
+      async function applyPremiumBranding() {
+        const fallbackTitle = isPremium ? "Peekom Plus" : "Peekom";
+        try {
+          const b = await ipcRenderer.invoke("branding:get");
+          document.title = b?.displayName || fallbackTitle;
+          const favicon = document.getElementById("appFavicon");
+          if (favicon && b?.faviconUrl) {
+            favicon.href = b.faviconUrl;
+          } else if (favicon) {
+            favicon.href = isPremium ? "build/plus.png" : "build/icon.ico";
+          }
+        } catch {
+          document.title = fallbackTitle;
+          const favicon = document.getElementById("appFavicon");
+          if (favicon) favicon.href = isPremium ? "build/plus.png" : "build/icon.ico";
+        }
+      }
+
       ipcRenderer.on("premium:changed", (_, payload) => {
-        isPremium = Boolean(payload?.isPremium);
-        const iconPath = isPremium ? "build/plus.ico" : "build/icon.ico";
-        const appLabel = isPremium ? "Peekom Plus" : "Peekom";
-        document.title = appLabel;
-        const favicon = document.getElementById("appFavicon");
-        if (favicon) favicon.href = iconPath;
-        if (!isPremium) enforceFreeTypography();
+        const nextPremium = Boolean(payload?.isPremium);
+        const wasPremium = isPremium;
+        isPremium = nextPremium;
+        void applyPremiumBranding();
+        // 초기 로딩이 끝나기 전에는 isPremium/파비콘만 반영하고 상태 저장은 하지 않는다.
+        // (initialize()가 실제 저장 데이터를 불러오기 전이라 빈 상태를 저장할 위험이 있음)
+        if (!appInitialized) return;
+        if (wasPremium && !nextPremium) enforceFreeTypography();
+        // enforceSlotLimits()가 다운그레이드 시 탭을 숨기거나 재활성화 시 복원하므로
+        // 변경된 탭 개수/순서를 반드시 저장해 다음 실행에도 유지되도록 한다.
         enforceSlotLimits();
+        saveState(appState);
         prepareSlotRoster();
         applyPanelEdgeUI();
         renderHandleStack();
         applyThemeForSlot(appState.activeSlot);
+        loadMemoForActiveSlot({ force: true });
         applyImageStagingSliderState();
         if (!isPremium) {
           normalizeMemoTypography(appState.activeSlot, { preserveCaret: true });
@@ -4439,12 +4508,15 @@
       window.onPremiumActivated = async () => {
         const p = await ipcRenderer.invoke("premium:get");
         isPremium = Boolean(p.isPremium);
+        await applyPremiumBranding();
         if (!isPremium) enforceFreeTypography();
         enforceSlotLimits();
+        saveState(appState);
         prepareSlotRoster();
         applyPanelEdgeUI();
         renderHandleStack();
         applyThemeForSlot(appState.activeSlot);
+        loadMemoForActiveSlot({ force: true });
         applyImageStagingSliderState();
       };
 
@@ -4518,6 +4590,7 @@
         } catch {
           isPremium = false;
         }
+        await applyPremiumBranding();
       }
 
       function initializeFirstRunTip() {
@@ -4526,8 +4599,11 @@
       }
 
       async function initialize() {
-        appState = loadState();
+        // 상태를 불러오기 전에 프리미엄 여부를 먼저 확정한다.
+        // (custom 테마는 isPremium=false일 때 yellow로 강등되어 저장되므로,
+        //  로드보다 먼저 동기화하지 않으면 재시작 시 커스텀 색상이 유실된다.)
         await syncPremiumState();
+        appState = loadState();
         enforceSlotLimits();
         enforceFreeTypography();
 
@@ -4547,6 +4623,7 @@
         }
 
         saveState(appState);
+        appInitialized = true;
         appSettings = { ...defaultGlobal(), ...appState.global };
         hoverDelayMs = appState.global.hoverDelayMs;
 

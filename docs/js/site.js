@@ -1728,9 +1728,6 @@ function updateUI() {
     if (brandIcon) brandIcon.alt = 'Peekom';
     applyLinks();
     highlightOSButtons();
-    ['fz4GifLabel', 'fz5GifLabel'].forEach(function(id) {
-        setText(id, d.featureGifPending);
-    });
     renderPrivacyPage(d);
     syncHeroHeights();
 }

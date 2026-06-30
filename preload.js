@@ -36,8 +36,10 @@ const ALLOWED_INVOKE = new Set([
   "startup:get",
   "startup:set",
   "premium:get",
+  "branding:get",
   "premium:activate",
   "premium:open-buy",
+  "premium:finalize-upgrade",
   "color:restore-advanced-picker",
   "color:prepare-advanced-picker"
 ]);
