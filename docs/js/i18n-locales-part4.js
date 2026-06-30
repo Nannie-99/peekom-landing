@@ -4,7 +4,7 @@ window.PeekomI18nLocales = window.PeekomI18nLocales || {};
 
 const PRICING = { list: 12.99, sale: 9.99 };
 const CONTACT_EMAIL = "hello.peekom@gmail.com";
-const LINKS = { buy: "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" };
+const LINKS = { buy: "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" };
 
 Object.assign(window.PeekomI18nLocales, {
     id: {

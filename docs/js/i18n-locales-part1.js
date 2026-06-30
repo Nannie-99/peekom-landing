@@ -39,7 +39,7 @@ window.PeekomI18nLocales.ja = {
     guidePlusP: '1) Lemon Squeezy で発売記念 $9.99 を購入 → 2) メールでライセンスキーを受信 → 3) Peekom を起動 → ロック画面または設定でキーを入力 → 4) Peekom Plus の有効化が完了。30日間返金: <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>',
     dlSub: "Peekom を一度インストールするだけ。Plus はアプリ内でアップグレードします。",
     dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-    dlPlusHint: 'Peekom Plus: 通常 <span class="pricing-was">$12.99</span> → 発売記念 <strong>$9.99</strong> (税別) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
+    dlPlusHint: 'Peekom Plus: 通常 <span class="pricing-was">$12.99</span> → 発売記念 <strong>$9.99</strong> (税別) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
     featureGifPending: "デモ GIF 準備中",
     compareNoLabel: "非対応",
     faqSub: "Peekom に関するよくある質問です。",
@@ -171,7 +171,7 @@ window.PeekomI18nLocales.ja = {
     promoVat: "(税別)",
     promoLaunchLabel: "発売記念\n価格\n適用中",
     comparePricingExtra: ' · 買い切り · 最大2台 · マイナーアップデート込み · 30日間返金 (<a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>)',
-    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
+    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" id="dlBuyLinkInner">Lemon Squeezy で購入</a> → アプリでライセンスキーを入力',
     markdownGuideTitle: "Markdown でメモする",
     markdownGuideBody:
         '<p class="guide-table-intro">コードを覚える必要はありません。普通に入力して <strong>Enter</strong> を押すと自動で書式が適用されます。</p>' +
@@ -314,7 +314,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     guidePlusP: '1) 在 Lemon Squeezy 以首发价 $9.99 购买 → 2) 通过邮件收到许可证密钥 → 3) 打开 Peekom → 在锁定界面或设置中输入密钥 → 4) Peekom Plus 激活完成。30天退款: <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>',
     dlSub: "只需安装一次 Peekom。Plus 在应用内升级。",
     dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-    dlPlusHint: 'Peekom Plus: 原价 <span class="pricing-was">$12.99</span> → 首发 <strong>$9.99</strong> (不含增值税) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
+    dlPlusHint: 'Peekom Plus: 原价 <span class="pricing-was">$12.99</span> → 首发 <strong>$9.99</strong> (不含增值税) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
     featureGifPending: "演示 GIF 即将推出",
     compareNoLabel: "不支持",
     faqSub: "关于 Peekom 的常见问题。",
@@ -446,7 +446,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     promoVat: "(不含增值税)",
     promoLaunchLabel: "首发优惠\n价格\n已生效",
     comparePricingExtra: ' · 一次性购买 · 最多2台设备 · 含小版本更新 · 30天退款 (<a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>)',
-    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
+    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" id="dlBuyLinkInner">在 Lemon Squeezy 购买</a> → 在应用中输入许可证密钥',
     markdownGuideTitle: "用 Markdown 编写备忘",
     markdownGuideBody:
         '<p class="guide-table-intro">像平时一样输入——按 <strong>Enter</strong> 后自动应用格式。</p>' +
@@ -589,7 +589,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     guidePlusP: '1) 在 Lemon Squeezy 以首發價 $9.99 購買 → 2) 透過電子郵件收到授權金鑰 → 3) 開啟 Peekom → 在鎖定畫面或設定中輸入金鑰 → 4) Peekom Plus 啟用完成。30天退款: <a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>',
     dlSub: "只需安裝一次 Peekom。Plus 在應用程式內升級。",
     dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-    dlPlusHint: 'Peekom Plus: 原價 <span class="pricing-was">$12.99</span> → 首發 <strong>$9.99</strong> (不含增值稅) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
+    dlPlusHint: 'Peekom Plus: 原價 <span class="pricing-was">$12.99</span> → 首發 <strong>$9.99</strong> (不含增值稅) · <a href="https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
     featureGifPending: "示範 GIF 即將推出",
     compareNoLabel: "不支援",
     faqSub: "關於 Peekom 的常見問題。",
@@ -721,7 +721,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     promoVat: "(不含增值稅)",
     promoLaunchLabel: "首發優惠\n價格\n已生效",
     comparePricingExtra: ' · 一次性購買 · 最多2台裝置 · 含小版本更新 · 30天退款 (<a href="mailto:hello.peekom@gmail.com">hello.peekom@gmail.com</a>)',
-    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
+    dlPlusHintExtra: ' · <a href="https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8" id="dlBuyLinkInner">在 Lemon Squeezy 購買</a> → 在應用程式中輸入授權金鑰',
     markdownGuideTitle: "用 Markdown 撰寫備忘",
     markdownGuideBody:
         '<p class="guide-table-intro">像平時一樣輸入——按 <strong>Enter</strong> 後自動套用格式。</p>' +

@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const E = "hello.peekom@gmail.com";
-const B = "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d";
+const B = "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8";
 const PW = '<span class="pricing-was">$12.99</span>';
 const PN = '<span class="pricing-now">$9.99 USD</span>';
 

@@ -11,7 +11,7 @@
   const FREE_MAX_SLOTS = 3;
   const PREMIUM_MAX_SLOTS = 10;
   const LEMON_SQUEEZY_BUY_URL =
-    "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d";
+    "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8";
   const GITHUB_RELEASES_URL = "https://github.com/Nannie-99/peekom-landing/releases/latest";
   const PRIVACY_URL = "https://www.peekom.com/privacy.html";
   const DOCS_URL = "https://www.peekom.com/";

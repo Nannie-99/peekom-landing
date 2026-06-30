@@ -99,7 +99,7 @@ const MONITOR_PREFS_FILE = "monitor-prefs.json";
 const APP_ID = "com.peekom.app";
 const DOCS_HELP_URL = "https://www.peekom.com/#help";
 const LEMON_BUY_URL =
-  "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d";
+  "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8";
 
 function resolveIconPath(isPremium) {
   return resolveShellIconPath(isPremium);

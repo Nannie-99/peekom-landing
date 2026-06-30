@@ -6,7 +6,7 @@
 const LINKS = {
     win: "https://github.com/Nannie-99/peekom-landing/releases/latest/download/Peekom-Setup.exe",
     mac: "https://github.com/Nannie-99/peekom-landing/releases/latest",
-    buy: "https://peekom.lemonsqueezy.com/checkout/buy/b8f36320-f95e-4ce2-a49c-2c28e2d4c20d",
+    buy: "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8",
     reviewForm: "https://forms.gle/RZVnm6pCL7CRd5AY7"
 };
 
