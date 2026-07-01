@@ -2127,6 +2127,25 @@
             margin-bottom: 0;
         }
 
+        .faq-group {
+            margin-top: 28px;
+            padding-top: 4px;
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-group__label {
+            margin: 0 0 12px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .faq-group .faq-accordion:last-child {
+            margin-bottom: 0;
+        }
+
         /* ── Page CTA strip ── */
         .page-cta-strip {
             margin-top: 40px;

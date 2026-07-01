@@ -391,6 +391,10 @@ const i18n = {
         compareNoLabel: "미지원",
         faqSub: "Peekom 사용 중 자주 묻는 내용입니다.",
         faqTitle: "자주 묻는 질문",
+        faqGroupProductLabel: "제품·기능",
+        faqGroupLicenseLabel: "라이선스",
+        faqGroupInstallLabel: "설치",
+        faqGroupTroubleshootLabel: "문제 해결",
         refundPolicyTitle: "Peekom Plus 환불 정책",
         refundPolicyBody:
             "<p>Peekom Plus의 결제·환불은 공식 판매자(Merchant of Record)인 Lemon Squeezy를 통해 처리됩니다.</p>" +
@@ -430,6 +434,10 @@ const i18n = {
         faq3a: "Lemon Squeezy를 통해 구매한 라이선스 키를 앱 최초 실행 시 입력하면 Peekom Plus가 활성화됩니다.",
         faq3bq: "한 라이선스 키로 여러 대의 PC에서 사용할 수 있나요?",
         faq3ba: "같은 16자리 라이선스 키를 업무 PC·개인 PC에 각각 한 번씩 입력해 Peekom Plus로 쓰는 것은 가능합니다. 라이선스당 최대 2대까지 등록됩니다.",
+        faq3cq: "회사 PC를 바꾸거나 이직한 경우에도 계속 사용할 수 있나요?",
+        faq3ca: "Peekom Plus 라이선스는 기본적으로 최대 2대 기기에서 사용할 수 있습니다. 같은 기기에서 삭제 후 다시 설치하는 것은 가능하며, 새로운 기기로 변경이 필요한 경우에는 문의를 통해 확인 후 지원해드리고 있습니다. 상황에 따라 기존 활성화 기기 초기화 후 새 기기에서 다시 인증을 안내드릴 수 있습니다.",
+        faq3dq: "기기 변경이 필요할 때는 무엇을 보내면 되나요?",
+        faq3da: "빠른 확인을 위해 구매 시 사용한 이메일 주소, 주문번호, 라이선스 키, 그리고 기기 변경 사유를 함께 보내주시면 됩니다. 이미 2대 기기 모두 활성화된 상태라면 기존 활성 기기를 초기화한 뒤 다시 인증을 안내드릴 수 있으므로, 필요한 내용은 미리 백업해 두신 후 문의해 주세요.",
         faq4q: "Windows 설치 시 파란 경고창이 뜹니다.",
         faq4a: 'SmartScreen 경고는 서명되지 않은 앱에서 흔히 나타납니다. <a href="#" onclick="openModal(); return false;">설치 가이드</a>를 참고해 [추가 정보] → [실행] 순서로 진행하세요.',
         faq5q: "Windows 몇부터 사용할 수 있나요?",
@@ -750,6 +758,10 @@ const i18n = {
         dlMacLabel: "macOS",
         linkChangelog: "Changelog / Releases", linkPrev: "Previous Versions", linkSmartScreen: "SmartScreen Guide",
         faqTitle: "FAQ",
+        faqGroupProductLabel: "Product & features",
+        faqGroupLicenseLabel: "License",
+        faqGroupInstallLabel: "Installation",
+        faqGroupTroubleshootLabel: "Troubleshooting",
         faq2q: "How does dual monitor support work?",
         faq2a: "In Settings → Display monitor, choose auto (follow mouse) or a fixed monitor. Available on Free and Plus.",
         faq8q: "Can Peekom only be used on the right edge of the monitor?",
@@ -767,6 +779,10 @@ const i18n = {
         faq3a: "Buy on Lemon Squeezy, then enter the license key in-app to unlock Peekom Plus (no reinstall).",
         faq3bq: "Can I use one license key on more than one PC?",
         faq3ba: "Yes. You can enter the same 16-character license key once on each of up to two PCs—for example, your work PC and personal PC—to use Peekom Plus on both.",
+        faq3cq: "Can I keep using Peekom if I change my work PC or switch jobs?",
+        faq3ca: "A Peekom Plus license can be used on up to two devices. Reinstalling on the same device is allowed. If you need to move to a new device, please contact us and we will review and assist you. Depending on the situation, we may guide you to reactivate on the new device after resetting previously activated devices.",
+        faq3dq: "What information should I send if I need a device change?",
+        faq3da: "For a faster review, please send the email address used for purchase, your order number, your license key, and the reason for the device change. If both device slots are already activated, we may need to reset the existing activated devices before reactivation, so please back up anything you need in advance before contacting us.",
         faq4q: "A blue warning appears when installing on Windows.",
         faq4a: 'SmartScreen warnings are common for unsigned apps. See the <a href="#" onclick="openModal(); return false;">install guide</a>: [More Info] → [Run Anyway].',
         faq5q: "Which Windows versions are supported?",
@@ -1653,6 +1669,10 @@ function updateUI() {
 
     setText('faqTitle', d.faqTitle);
     setText('faqSub', d.faqSub);
+    setText('faqGroupProductLabel', d.faqGroupProductLabel);
+    setText('faqGroupLicenseLabel', d.faqGroupLicenseLabel);
+    setText('faqGroupInstallLabel', d.faqGroupInstallLabel);
+    setText('faqGroupTroubleshootLabel', d.faqGroupTroubleshootLabel);
     setText('refundPolicyTitle', d.refundPolicyTitle);
     setText('refundPolicyBody', d.refundPolicyBody);
     setText('faqR1q', d.faqR1q);
@@ -1673,6 +1693,10 @@ function updateUI() {
     setText('faq3a', d.faq3a);
     setText('faq3bq', d.faq3bq);
     setText('faq3ba', d.faq3ba);
+    setText('faq3cq', d.faq3cq);
+    setText('faq3ca', d.faq3ca);
+    setText('faq3dq', d.faq3dq);
+    setText('faq3da', d.faq3da);
     setText('faq4q', d.faq4q);
     const faq4aEl = document.getElementById('faq4a');
     if (faq4aEl) faq4aEl.innerHTML = d.faq4a;
