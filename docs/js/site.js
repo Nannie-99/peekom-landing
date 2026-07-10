@@ -18,9 +18,15 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 
 const RELEASE_HISTORY = [
     {
+        version: "1.2.2",
+        date: "2026/07/11",
+        latest: true,
+        winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.2/Peekom-Setup.exe",
+        macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.2/Peekom-macOS.dmg"
+    },
+    {
         version: "1.2.1",
         date: "2026/07/01",
-        latest: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.1/Peekom-Setup.exe",
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.1/Peekom-macOS.dmg"
     },
@@ -32,45 +38,395 @@ const RELEASE_HISTORY = [
     }
 ];
 
+const CHANGELOG_V122 = {
+    ko: [
+        "체크리스트 기능 추가 (Peekom Plus)",
+        "맞춤법 검사 켜기/끄기 (설정, 기본값: 끄기)",
+        "여러 문단 블록 선택 시 정렬 일괄 적용",
+        "붙여넣기 시 배경색·글자색 제거",
+        "커서 위치 유지 및 메모 재오픈 시 복원",
+        "표시 모니터 고정 설정 유지 개선 (Plus)",
+        "바탕화면 바로가기 삭제 후 재생성 방지",
+        "설정 공통 탭 UI 개선 (초기화 버튼, 맞춤법 안내)"
+    ],
+    en: [
+        "Checklist feature (Peekom Plus)",
+        "Spell check on/off toggle (Settings, default: off)",
+        "Align all block-selected paragraphs at once",
+        "Paste strips background and text color",
+        "Cursor position preserved when typing and reopening memos",
+        "Fixed display monitor setting persists after reboot (Plus)",
+        "Desktop shortcut no longer recreates after deletion",
+        "Settings Common tab UI updates (Reset button, spell check hint)"
+    ],
+    ja: [
+        "チェックリスト機能追加（Peekom Plus）",
+        "スペルチェックのオン/オフ（設定、既定：オフ）",
+        "複数段落のブロック選択時に一括配置",
+        "貼り付け時に背景色・文字色を除去",
+        "カーソル位置の維持とメモ再オープン時の復元",
+        "表示モニター固定設定の再起動後も維持（Plus）",
+        "デスクトップショートカット削除後の再作成を防止",
+        "設定の共通タブUI改善（リセットボタン、スペルチェック案内）"
+    ],
+    "zh-CN": [
+        "新增清单功能（Peekom Plus）",
+        "拼写检查开关（设置，默认：关闭）",
+        "多段落块选时批量对齐",
+        "粘贴时移除背景色和文字颜色",
+        "保持光标位置，重新打开备忘录时恢复",
+        "固定显示器设置在重启后保持（Plus）",
+        "删除桌面快捷方式后不再自动重建",
+        "设置通用选项卡 UI 改进（重置按钮、拼写检查说明）"
+    ],
+    "zh-TW": [
+        "新增清單功能（Peekom Plus）",
+        "拼寫檢查開關（設定，預設：關閉）",
+        "多段落區塊選取時批次對齊",
+        "貼上時移除背景色和文字顏色",
+        "保持游標位置，重新開啟備忘錄時還原",
+        "固定顯示器設定在重啟後保持（Plus）",
+        "刪除桌面捷徑後不再自動重建",
+        "設定通用分頁 UI 改進（重設按鈕、拼寫檢查說明）"
+    ],
+    es: [
+        "Función de lista de tareas (Peekom Plus)",
+        "Activar/desactivar corrector ortográfico (Ajustes, predeterminado: desactivado)",
+        "Alinear todos los párrafos seleccionados en bloque",
+        "Al pegar se eliminan color de fondo y de texto",
+        "Posición del cursor conservada al escribir y al reabrir notas",
+        "El monitor fijo se mantiene tras reiniciar (Plus)",
+        "El acceso directo del escritorio ya no se recrea al eliminarlo",
+        "Mejoras en la pestaña Común de Ajustes (botón Restablecer, aviso de ortografía)"
+    ],
+    fr: [
+        "Fonction liste de contrôle (Peekom Plus)",
+        "Activation/désactivation de la vérification orthographique (Réglages, par défaut : désactivé)",
+        "Alignement groupé des paragraphes sélectionnés en bloc",
+        "Suppression des couleurs de fond et de texte lors du collage",
+        "Position du curseur conservée à la saisie et à la réouverture des notes",
+        "Le moniteur fixe est conservé après redémarrage (Plus)",
+        "Le raccourci bureau ne se recrée plus après suppression",
+        "Améliorations de l'onglet Commun (bouton Réinitialiser, aide orthographe)"
+    ],
+    de: [
+        "Checklisten-Funktion (Peekom Plus)",
+        "Rechtschreibprüfung ein/aus (Einstellungen, Standard: aus)",
+        "Ausrichtung aller blockweise ausgewählten Absätze",
+        "Hintergrund- und Textfarbe beim Einfügen entfernen",
+        "Cursorposition beim Tippen und erneuten Öffnen beibehalten",
+        "Fester Monitor bleibt nach Neustart erhalten (Plus)",
+        "Desktop-Verknüpfung wird nach Löschen nicht mehr neu erstellt",
+        "Verbesserungen im Tab „Allgemein“ (Zurücksetzen, Rechtschreibhinweis)"
+    ],
+    pt: [
+        "Função de lista de tarefas (Peekom Plus)",
+        "Ativar/desativar verificação ortográfica (Configurações, padrão: desativado)",
+        "Alinhar todos os parágrafos selecionados em bloco",
+        "Colar remove cor de fundo e de texto",
+        "Posição do cursor mantida ao digitar e ao reabrir notas",
+        "Monitor fixo permanece após reinício (Plus)",
+        "Atalho da área de trabalho não é mais recriado após exclusão",
+        "Melhorias na aba Comum (botão Redefinir, dica de ortografia)"
+    ],
+    it: [
+        "Funzione checklist (Peekom Plus)",
+        "Attivazione/disattivazione controllo ortografico (Impostazioni, predefinito: disattivo)",
+        "Allineamento in blocco di più paragrafi selezionati",
+        "Incolla rimuove colore di sfondo e del testo",
+        "Posizione del cursore mantenuta durante la digitazione e alla riapertura",
+        "Monitor fisso mantenuto dopo il riavvio (Plus)",
+        "Collegamento desktop non viene più ricreato dopo l'eliminazione",
+        "Miglioramenti scheda Comune (pulsante Reimposta, nota ortografia)"
+    ],
+    ru: [
+        "Функция чек-листа (Peekom Plus)",
+        "Вкл./выкл. проверки орфографии (Настройки, по умолчанию: выкл.)",
+        "Выравнивание всех выбранных блоком абзацев",
+        "При вставке удаляются цвет фона и текста",
+        "Сохранение позиции курсора при наборе и повторном открытии",
+        "Закреплённый монитор сохраняется после перезагрузки (Plus)",
+        "Ярлык на рабочем столе больше не воссоздаётся после удаления",
+        "Улучшения вкладки «Общие» (кнопка сброса, подсказка орфографии)"
+    ],
+    vi: [
+        "Tính năng checklist (Peekom Plus)",
+        "Bật/tắt kiểm tra chính tả (Cài đặt, mặc định: tắt)",
+        "Căn chỉnh tất cả đoạn văn được chọn theo khối",
+        "Dán loại bỏ màu nền và màu chữ",
+        "Giữ vị trí con trỏ khi gõ và khi mở lại ghi chú",
+        "Màn hình cố định được giữ sau khi khởi động lại (Plus)",
+        "Lối tắt màn hình nền không còn được tạo lại sau khi xóa",
+        "Cải thiện tab Chung (nút Đặt lại, gợi ý chính tả)"
+    ],
+    th: [
+        "ฟีเจอร์เช็กลิสต์ (Peekom Plus)",
+        "เปิด/ปิดตรวจสอบการสะกด (การตั้งค่า ค่าเริ่มต้น: ปิด)",
+        "จัดแนวย่อหน้าที่เลือกเป็นบล็อกพร้อมกัน",
+        "วางข้อความลบสีพื้นหลังและสีตัวอักษร",
+        "คงตำแหน่งเคอร์เซอร์เมื่อพิมพ์และเปิดโน้ตใหม่",
+        "จอที่กำหนดคงอยู่หลังรีสตาร์ท (Plus)",
+        "ทางลัดเดสก์ท็อปไม่ถูกสร้างใหม่หลังลบ",
+        "ปรับปรุงแท็บทั่วไป (ปุ่มรีเซ็ต คำอธิบายสะกด)"
+    ],
+    id: [
+        "Fitur checklist (Peekom Plus)",
+        "Aktif/nonaktif pemeriksaan ejaan (Pengaturan, default: mati)",
+        "Sejajarkan semua paragraf yang dipilih blok",
+        "Tempel menghapus warna latar dan teks",
+        "Posisi kursor dipertahankan saat mengetik dan membuka ulang memo",
+        "Monitor tetap bertahan setelah reboot (Plus)",
+        "Pintasan desktop tidak dibuat ulang setelah dihapus",
+        "Perbaikan tab Umum (tombol Atur ulang, petunjuk ejaan)"
+    ],
+    hi: [
+        "चेकलिस्ट सुविधा (Peekom Plus)",
+        "वर्तनी जाँच चालू/बंद (सेटिंग्स, डिफ़ॉल्ट: बंद)",
+        "ब्लॉक चयनित सभी अनुच्छेदों को एक साथ संरेखित करें",
+        "पेस्ट पर पृष्ठभूमि और टेक्स्ट रंग हटाएँ",
+        "टाइप करते और मेमो दोबारा खोलते समय कर्सर स्थिति बनाए रखें",
+        "तय मॉनिटर रीबूट के बाद भी बना रहे (Plus)",
+        "डेस्कटॉप शॉर्टकट हटाने के बाद दोबारा नहीं बनता",
+        "सामान्य टैब UI सुधार (रीसेट बटन, वर्तनी संकेत)"
+    ],
+    ar: [
+        "ميزة قائمة المهام (Peekom Plus)",
+        "تشغيل/إيقاف التدقيق الإملائي (الإعدادات، الافتراضي: إيقاف)",
+        "محاذاة جميع الفقرات المحددة ككتلة",
+        "اللصق يزيل لون الخلفية ولون النص",
+        "الحفاظ على موضع المؤشر عند الكتابة وإعادة فتح الملاحظة",
+        "الشاشة الثابتة تبقى بعد إعادة التشغيل (Plus)",
+        "اختصار سطح المكتب لا يُعاد إنشاؤه بعد الحذف",
+        "تحسينات تبويب عام (زر إعادة التعيين، تلميح الإملاء)"
+    ]
+};
+
+const CHANGELOG_V121 = {
+    ko: [
+        "단축키 ‘위/아래 메모 열기’가 손잡이 위치 순서대로 동작하도록 수정",
+        "바로가기 더블클릭으로 설정창 열기 (앱이 꺼져 있으면 메모·설정 함께, 켜져 있으면 설정만 추가)",
+        "Windows 시작 시 자동 실행 안정성 개선 (Plus 포함)"
+    ],
+    en: [
+        "Up/Down memo shortcuts now follow handle position order",
+        "Double-click the shortcut to open Settings (memo + settings when closed, settings only when running)",
+        "More reliable launch-at-startup on Windows (including Plus)"
+    ],
+    ja: [
+        "「上/下でメモを開く」ショートカットがハンドル位置の順序に従うよう修正",
+        "ショートカットのダブルクリックで設定を開く（終了時はメモと設定、起動中は設定のみ）",
+        "Windows 起動時の自動実行の安定性を改善（Plus 含む）"
+    ],
+    "zh-CN": [
+        "“上/下打开备忘录”快捷键现按手柄位置顺序切换",
+        "双击快捷方式打开设置（应用关闭时同时打开备忘录与设置，运行中仅打开设置）",
+        "改进 Windows 开机自启动的稳定性（含 Plus）"
+    ],
+    "zh-TW": [
+        "「上/下開啟備忘錄」快捷鍵改為依手柄位置順序切換",
+        "雙擊捷徑開啟設定（應用程式關閉時同時開啟備忘錄與設定，執行中僅開啟設定）",
+        "改善 Windows 開機自動啟動的穩定性（含 Plus）"
+    ],
+    es: [
+        "Los atajos arriba/abajo siguen el orden de posición del mango",
+        "Doble clic en el acceso directo abre Ajustes (nota + ajustes si está cerrado; solo ajustes si está en ejecución)",
+        "Inicio automático en Windows más fiable (incluido Plus)"
+    ],
+    fr: [
+        "Les raccourcis haut/bas suivent l’ordre des positions du poignée",
+        "Double-clic sur le raccourci pour ouvrir Réglages (mémo + réglages si fermé ; réglages seuls si l’app tourne)",
+        "Démarrage automatique Windows plus fiable (Plus inclus)"
+    ],
+    de: [
+        "Auf/Ab-Shortcuts folgen jetzt der Griff-Positionsreihenfolge",
+        "Doppelklick auf Verknüpfung öffnet Einstellungen (Notiz + Einstellungen wenn geschlossen; nur Einstellungen wenn aktiv)",
+        "Zuverlässigerer Autostart unter Windows (inkl. Plus)"
+    ],
+    pt: [
+        "Atalhos cima/baixo seguem a ordem de posição do indicador",
+        "Duplo clique no atalho abre Configurações (nota + configurações se fechado; só configurações se em execução)",
+        "Inicialização automática no Windows mais confiável (inclui Plus)"
+    ],
+    it: [
+        "Le scorciatoie su/giù seguono l’ordine di posizione della maniglia",
+        "Doppio clic sul collegamento apre Impostazioni (nota + impostazioni se chiuso; solo impostazioni se in esecuzione)",
+        "Avvio automatico su Windows più affidabile (Plus incluso)"
+    ],
+    ru: [
+        "Горячие клавиши вверх/вниз следуют порядку позиций ручки",
+        "Двойной щелчок по ярлыку открывает настройки (заметка + настройки если закрыто; только настройки если запущено)",
+        "Более надёжный автозапуск в Windows (включая Plus)"
+    ],
+    vi: [
+        "Phím tắt lên/xuống theo thứ tự vị trí tay cầm",
+        "Nhấp đúp lối tắt mở Cài đặt (ghi chú + cài đặt khi đóng; chỉ cài đặt khi đang chạy)",
+        "Tự khởi động Windows ổn định hơn (gồm Plus)"
+    ],
+    th: [
+        "ทางลัดขึ้น/ลงตามลำดับตำแหน่งที่จับ",
+        "ดับเบิลคลิกทางลัดเปิดการตั้งค่า (โน้ต + การตั้งค่าเมื่อปิดแอป; เฉพาะการตั้งค่าเมื่อกำลังทำงาน)",
+        "เริ่มอัตโนมัติบน Windows เสถียรขึ้น (รวม Plus)"
+    ],
+    id: [
+        "Pintasan atas/bawah mengikuti urutan posisi pegangan",
+        "Klik ganda pintasan membuka Pengaturan (memo + pengaturan jika tertutup; hanya pengaturan jika berjalan)",
+        "Peluncuran otomatis Windows lebih andal (termasuk Plus)"
+    ],
+    hi: [
+        "ऊपर/नीचे शॉर्टकट अब हैंडल स्थिति क्रम का पालन करते हैं",
+        "शॉर्टकट पर डबल-क्लिक से सेटिंग्स खुलती हैं (बंद होने पर मेमो + सेटिंग्स; चलने पर केवल सेटिंग्स)",
+        "Windows पर ऑटो-स्टार्ट अधिक विश्वसनीय (Plus सहित)"
+    ],
+    ar: [
+        "اختصارات أعلى/أسفل تتبع ترتيب موضع المقبض",
+        "النقر المزدوج على الاختصار يفتح الإعدادات (ملاحظة + إعدادات عند الإغلاق؛ إعدادات فقط عند التشغيل)",
+        "تشغيل تلقائي أوثق عند بدء Windows (يشمل Plus)"
+    ]
+};
+
+const CHANGELOG_V120 = {
+    ko: [
+        "빼꼼 인덱스가 Peekom으로 돌아왔습니다",
+        "가장자리 손잡이·얼음 모드·듀얼 모니터 지원",
+        "서식바: 글자색·목록(점/네모/숫자) 드롭다운, 순서 개편",
+        "무료 메모당 이미지 1장 · Plus 5장, 크기 조절·비율 자르기",
+        "Peekom Plus: 10슬롯 독립 배치, 커스텀 테마·글꼴·불투명도, 왼쪽 패널, 보내기·JSON 백업"
+    ],
+    en: [
+        "Peekom rebrand from legacy edge memo app",
+        "Edge handle, Ice mode, dual monitor support",
+        "Toolbar: color & list dropdowns, reordered controls",
+        "Free: 1 image per memo · Plus: 5, resize & aspect crop",
+        "Peekom Plus: 10 slots, custom theme, left panel, export & JSON backup"
+    ],
+    ja: [
+        "レガシーエッジメモアプリから Peekom へリブランド",
+        "端ハンドル・ICE モード・デュアルモニター対応",
+        "書式バー：文字色・リスト（箇条書き/番号）ドロップダウン、並び替え",
+        "無料：メモあたり画像1枚 · Plus：5枚、サイズ調整・比率トリミング",
+        "Peekom Plus：10スロット独立配置、カスタムテーマ・フォント・不透明度、左パネル、エクスポート・JSONバックアップ"
+    ],
+    "zh-CN": [
+        "从旧版边缘备忘录应用更名为 Peekom",
+        "边缘手柄、ICE 模式、双显示器支持",
+        "格式工具栏：颜色与列表下拉菜单、控件重新排序",
+        "免费每条备忘录 1 张图片 · Plus 5 张，可缩放与裁剪比例",
+        "Peekom Plus：10 个槽位、自定义主题、左侧面板、导出与 JSON 备份"
+    ],
+    "zh-TW": [
+        "舊版邊緣備忘錄應用程式更名為 Peekom",
+        "邊緣手柄、ICE 模式、雙螢幕支援",
+        "格式工具列：顏色與清單下拉選單、控制項重新排序",
+        "免費每則備忘錄 1 張圖片 · Plus 5 張，可縮放與裁剪比例",
+        "Peekom Plus：10 個槽位、自訂主題、左側面板、匯出與 JSON 備份"
+    ],
+    es: [
+        "Peekom: nueva marca del antiguo app de notas en el borde",
+        "Mango en el borde, modo ICE, soporte de doble monitor",
+        "Barra de formato: menús de color y listas, controles reordenados",
+        "Gratis: 1 imagen por nota · Plus: 5, redimensionar y recortar proporción",
+        "Peekom Plus: 10 ranuras, tema personalizado, panel izquierdo, exportar y copia JSON"
+    ],
+    fr: [
+        "Peekom : nouveau nom de l’ancienne app mémo au bord d’écran",
+        "Poignée au bord, mode ICE, support double écran",
+        "Barre de formatage : menus couleur et listes, contrôles réorganisés",
+        "Gratuit : 1 image par note · Plus : 5, redimensionnement et recadrage",
+        "Peekom Plus : 10 emplacements, thème personnalisé, panneau gauche, export et sauvegarde JSON"
+    ],
+    de: [
+        "Peekom: Rebrand der früheren Rand-Notiz-App",
+        "Rand-Griff, ICE-Modus, Dual-Monitor-Unterstützung",
+        "Formatleiste: Farb- und Listen-Dropdowns, neu angeordnete Steuerelemente",
+        "Kostenlos: 1 Bild pro Notiz · Plus: 5, Größe & Seitenverhältnis zuschneiden",
+        "Peekom Plus: 10 Slots, eigenes Theme, linkes Panel, Export & JSON-Backup"
+    ],
+    pt: [
+        "Peekom: nova marca do antigo app de notas na borda",
+        "Indicador na borda, modo ICE, suporte a dois monitores",
+        "Barra de formatação: menus de cor e listas, controles reordenados",
+        "Grátis: 1 imagem por nota · Plus: 5, redimensionar e cortar proporção",
+        "Peekom Plus: 10 slots, tema personalizado, painel esquerdo, exportar e backup JSON"
+    ],
+    it: [
+        "Peekom: rebrand dall’app memo sul bordo",
+        "Maniglia sul bordo, modalità ICE, supporto doppio monitor",
+        "Barra formattazione: menu colore e elenchi, controlli riordinati",
+        "Gratis: 1 immagine per nota · Plus: 5, ridimensiona e ritaglia proporzione",
+        "Peekom Plus: 10 slot, tema personalizzato, pannello sinistro, esporta e backup JSON"
+    ],
+    ru: [
+        "Peekom: ребрендинг прежнего приложения заметок у края экрана",
+        "Ручка у края, режим ICE, поддержка двух мониторов",
+        "Панель форматирования: выпадающие меню цвета и списков, новый порядок элементов",
+        "Бесплатно: 1 изображение на заметку · Plus: 5, изменение размера и обрезка",
+        "Peekom Plus: 10 слотов, своя тема, левая панель, экспорт и JSON-резервная копия"
+    ],
+    vi: [
+        "Peekom: đổi tên từ ứng dụng ghi chú cạnh màn hình cũ",
+        "Tay cầm cạnh màn hình, chế độ ICE, hỗ trợ hai màn hình",
+        "Thanh định dạng: menu màu & danh sách, sắp xếp lại điều khiển",
+        "Miễn phí: 1 ảnh/ghi chú · Plus: 5, đổi kích thước & cắt tỷ lệ",
+        "Peekom Plus: 10 slot, chủ đề tùy chỉnh, bảng trái, xuất & sao lưu JSON"
+    ],
+    th: [
+        "Peekom: เปลี่ยนชื่อจากแอปโน้ตขอบจอเดิม",
+        "ที่จับขอบจอ โหมด ICE รองรับจอคู่",
+        "แถบจัดรูปแบบ: เมนูสีและรายการ จัดลำดับใหม่",
+        "ฟรี: 1 รูปต่อโน้ต · Plus: 5 ปรับขนาดและครอปสัดส่วน",
+        "Peekom Plus: 10 สล็อต ธีมกำหนดเอง แผงซ้าย ส่งออกและสำรอง JSON"
+    ],
+    id: [
+        "Peekom: rebrand dari app memo tepi layar lama",
+        "Pegangan tepi, mode ICE, dukungan dual monitor",
+        "Bilah format: dropdown warna & daftar, kontrol diurutkan ulang",
+        "Gratis: 1 gambar per memo · Plus: 5, ubah ukuran & crop proporsi",
+        "Peekom Plus: 10 slot, tema kustom, panel kiri, ekspor & cadangan JSON"
+    ],
+    hi: [
+        "Peekom: पुराने एज मेमो ऐप से रीब्रांड",
+        "किनारे का हैंडल, ICE मोड, डुअल मॉनिटर समर्थन",
+        "फ़ॉर्मेटिंग टूलबार: रंग और सूची ड्रॉपडाउन, नियंत्रण पुनर्क्रमित",
+        "मुफ़्त: प्रति मेमो 1 छवि · Plus: 5, आकार बदलें और अनुपात क्रॉप",
+        "Peekom Plus: 10 स्लॉट, कस्टम थीम, बायाँ पैनल, निर्यात और JSON बैकअप"
+    ],
+    ar: [
+        "Peekom: إعادة تسمية من تطبيق الملاحظات القديم على حافة الشاشة",
+        "مقبض الحافة، وضع ICE، دعم شاشتين",
+        "شريط التنسيق: قوائم اللون والقوائم، إعادة ترتيب عناصر التحكم",
+        "مجاني: صورة واحدة لكل ملاحظة · Plus: 5، تغيير الحجم وقص النسبة",
+        "Peekom Plus: 10 فتحات، سمة مخصصة، لوحة يسار، تصدير ونسخ JSON احتياطي"
+    ]
+};
+
+function buildChangelogForLang(lang) {
+    const v122 = CHANGELOG_V122[lang] || CHANGELOG_V122.en;
+    const v121 = CHANGELOG_V121[lang] || CHANGELOG_V121.en;
+    const v120 = CHANGELOG_V120[lang] || CHANGELOG_V120.en;
+    return [
+        { version: "1.2.2", date: "2026.07.11", items: v122 },
+        { version: "1.2.1", date: "2026.07.01", items: v121 },
+        { version: "1.2.0", date: "2026.06.26", items: v120 }
+    ];
+}
+
 const CHANGELOG = {
-    ko: [{
-        version: "1.2.1",
-        date: "2026.07.01",
-        items: [
-            "단축키 ‘위/아래 메모 열기’가 손잡이 위치 순서대로 동작하도록 수정",
-            "바로가기 더블클릭으로 설정창 열기 (앱이 꺼져 있으면 메모·설정 함께, 켜져 있으면 설정만 추가)",
-            "Windows 시작 시 자동 실행 안정성 개선 (Plus 포함)"
-        ]
-    }, {
-        version: "1.2.0",
-        date: "2026.06.26",
-        items: [
-            "빼꼼 인덱스가 Peekom으로 돌아왔습니다",
-            "가장자리 손잡이·얼음 모드·듀얼 모니터 지원",
-            "서식바: 글자색·목록(점/네모/숫자) 드롭다운, 순서 개편",
-            "무료 메모당 이미지 1장 · Plus 5장, 크기 조절·비율 자르기",
-            "Peekom Plus: 10슬롯 독립 배치, 커스텀 테마·글꼴·불투명도, 왼쪽 패널, 보내기·JSON 백업"
-        ]
-    }],
-    en: [{
-        version: "1.2.1",
-        date: "2026.07.01",
-        items: [
-            "Up/Down memo shortcuts now follow handle position order",
-            "Double-click the shortcut to open Settings (memo + settings when closed, settings only when running)",
-            "More reliable launch-at-startup on Windows (including Plus)"
-        ]
-    }, {
-        version: "1.2.0",
-        date: "2026.06.26",
-        items: [
-            "Peekom rebrand from legacy edge memo app",
-            "Edge handle, Ice mode, dual monitor support",
-            "Toolbar: color & list dropdowns, reordered controls",
-            "Free: 1 image per memo · Plus: 5, resize & aspect crop",
-            "Peekom Plus: 10 slots, custom theme, left panel, export & JSON backup"
-        ]
-    }]
+    ko: buildChangelogForLang("ko"),
+    en: buildChangelogForLang("en"),
+    ja: buildChangelogForLang("ja"),
+    "zh-CN": buildChangelogForLang("zh-CN"),
+    "zh-TW": buildChangelogForLang("zh-TW"),
+    es: buildChangelogForLang("es"),
+    fr: buildChangelogForLang("fr"),
+    de: buildChangelogForLang("de"),
+    pt: buildChangelogForLang("pt"),
+    it: buildChangelogForLang("it"),
+    ru: buildChangelogForLang("ru"),
+    vi: buildChangelogForLang("vi"),
+    th: buildChangelogForLang("th"),
+    id: buildChangelogForLang("id"),
+    hi: buildChangelogForLang("hi"),
+    ar: buildChangelogForLang("ar")
 };
 
 function getPromoDiscountPct() {
@@ -356,8 +712,8 @@ const i18n = {
         heroMacPlusCardBadge: "유료",
         heroPlusCardMeta: "1회 구매 · 최대 2대 기기 · 영구 사용",
         heroFreeCardTitle: "Peekom",
-        heroFreeCardBadge: "무료",
-        heroMacFreeCardBadge: "무료",
+        heroFreeCardBadge: "프리웨어",
+        heroMacFreeCardBadge: "프리웨어",
         heroWinCardMeta: "Windows 10 · 11 (64-bit)",
         heroMacFreeCardMeta: "macOS",
         heroFreeDownloadLabel: "다운로드",
@@ -433,7 +789,7 @@ const i18n = {
         faq3q: "Peekom Plus 라이선스는 어떻게 인증하나요?",
         faq3a: "Lemon Squeezy를 통해 구매한 라이선스 키를 앱 최초 실행 시 입력하면 Peekom Plus가 활성화됩니다.",
         faq3bq: "한 라이선스 키로 여러 대의 PC에서 사용할 수 있나요?",
-        faq3ba: "같은 16자리 라이선스 키를 업무 PC·개인 PC에 각각 한 번씩 입력해 Peekom Plus로 쓰는 것은 가능합니다. 라이선스당 최대 2대까지 등록됩니다.",
+        faq3ba: "같은 라이선스 키를 업무 PC·개인 PC에 각각 한 번씩 입력해 Peekom Plus로 쓰는 것은 가능합니다. 라이선스당 최대 2대까지 등록됩니다.",
         faq3cq: "회사 PC를 바꾸거나 이직한 경우에도 계속 사용할 수 있나요?",
         faq3ca: "Peekom Plus 라이선스는 기본적으로 최대 2대 기기에서 사용할 수 있습니다. 같은 기기에서 삭제 후 다시 설치하는 것은 가능하며, 새로운 기기로 변경이 필요한 경우에는 문의를 통해 확인 후 지원해드리고 있습니다. 상황에 따라 기존 활성화 기기 초기화 후 새 기기에서 다시 인증을 안내드릴 수 있습니다.",
         faq3dq: "기기 변경이 필요할 때는 무엇을 보내면 되나요?",
@@ -444,8 +800,79 @@ const i18n = {
         faq5a: "Windows 10 및 Windows 11 (64-bit)에서 사용할 수 있습니다. 설치 파일은 64-bit 전용이며, Windows 7 / 8 / 8.1은 지원하지 않습니다. (Electron 36 기준)",
         faq6q: "인덱스를 추가했는데 설정창에 안 보여요.",
         faq6a: "메인 화면과 설정창이 동시에 열려 있으면 목록이 잠시 어긋날 수 있습니다. 설정창을 다시 열거나 포커스를 주면 최신 인덱스 목록이 반영됩니다.",
-        faq7q: "삭제 후에도 부팅할 때 이상한 글자가 남아요.",
-        faq7a: "Windows 시작 프로그램에 등록된 항목이 남아 있으면, 삭제된 실행 파일을 찾다가 오류 창이 뜰 수 있습니다. 작업 관리자 → 시작 프로그램에서 빼꼼 관련 항목을 끄거나, 최신 버전으로 재설치 후 제거하세요. 최신 버전은 제거 시 자동으로 정리합니다.",
+        faq7q: "빼꼼 인덱스(구버전)를 제거한 뒤 부팅할 때 이상한 글자·오류가 뜹니다. 어떻게 하나요?",
+        faq7a:
+            "<p>구버전(빼꼼 인덱스)을 삭제했는데 <strong>자동 실행이 켜진 상태</strong>로 제거되면, Windows 시작 프로그램에 예전 실행 항목이 남아 PC를 켤 때 삭제된 파일을 찾다가 <strong>깨진 글자·오류 창</strong>이 뜰 수 있습니다.</p>" +
+            "<p><strong>Windows 11</strong></p>" +
+            '<ol class="guide-step-list">' +
+            "<li>설정 → 앱 → 시작 프로그램 (또는 설치된 앱 → 시작 프로그램)</li>" +
+            "<li>목록에서 「빼꼼 인덱스」 또는 비슷한 이름 찾기</li>" +
+            "<li><strong>끔(OFF)</strong>으로 변경</li>" +
+            "</ol>" +
+            "<p><strong>Windows 10</strong></p>" +
+            '<ol class="guide-step-list">' +
+            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd>로 작업 관리자 열기</li>" +
+            "<li><strong>시작 프로그램</strong> 탭</li>" +
+            "<li>「빼꼼 인덱스」 선택 → <strong>사용 안 함</strong></li>" +
+            "</ol>" +
+            "<p>위 항목을 끈 뒤 <strong>재부팅</strong>해 보세요. 더 이상 자동 실행되지 않으면 원인은 시작 프로그램 등록이었습니다. 이후 <a href=\"download.html\">Peekom(무료)</a>만 새로 설치해 사용하시면 됩니다.</p>" +
+            '<p class="privacy-doc__note">구버전 메모 내용은 Peekom과 <strong>저장 위치가 달라 자동 이전되지 않습니다.</strong> 필요한 내용은 미리 복사해 두세요.</p>',
+        faq10q: "Peekom 설정(환경설정)은 어디서 열나요?",
+        faq10a:
+            "작업 표시줄(트레이)의 Peekom 아이콘을 <strong>우클릭 → 환경설정</strong>으로 열 수 있습니다. 또는 트레이 아이콘을 <strong>더블클릭</strong>하거나, 바탕화면 <strong>Peekom 바로가기 더블클릭</strong>으로도 열립니다(앱이 꺼져 있으면 메모와 함께 열림). 자세한 내용은 <a href=\"help.html\">가이드</a>를 참고하세요.",
+        faq11q: "라이선스 키는 어떻게 입력하나요? 입력창 예시와 메일의 키가 달라요.",
+        faq11a:
+            "<p>Peekom Plus는 Lemon Squeezy 구매 확인 메일에 있는 <strong>라이선스 키 전체</strong>를 사용합니다.</p>" +
+            '<ol class="guide-step-list">' +
+            "<li><a href=\"" + LINKS.buy + "\" target=\"_blank\" rel=\"noopener\">Peekom Plus 구매</a> 후 메일에서 <strong>[License Key]</strong> 복사 (<strong>하이픈 포함 전체</strong>)</li>" +
+            "<li>Peekom 실행 → <strong>환경설정</strong> 또는 <strong>Plus 잠금 화면</strong> → 라이선스 키 붙여넣기 → <strong>인증</strong></li>" +
+            "<li>인터넷 연결 상태에서 진행 (회사망은 아래 FAQ 참고)</li>" +
+            "</ol>" +
+            "<p>입력창에 보이는 <code>XXXX-XXXX-XXXX-XXXX</code>는 <strong>형식 예시</strong>일 뿐입니다. <strong>16자리만 넣지 마시고</strong>, 메일에 적힌 <strong>전체 키</strong>를 그대로 입력하세요.</p>" +
+            "<p>키를 잃어버리셨다면 <a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 주문 내역</a>에서 같은 이메일로 다시 확인할 수 있습니다.</p>",
+        faq12q: "인터넷은 되는데 라이선스 인증이 안 됩니다. 「Lemon Squeezy 서버에 연결하지 못했습니다」가 뜹니다.",
+        faq12a:
+            "<p>PC가 온라인이어도 Plus 인증은 <strong>Lemon Squeezy 서버(<code>api.lemonsqueezy.com</code>)</strong>에 별도로 접속해야 합니다. 회사 <strong>방화벽·보안 프로그램·VPN·프록시</strong>가 이 주소만 막으면 위 메시지가 나올 수 있습니다.</p>" +
+            "<p><strong>시도해 보세요</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>집 Wi‑Fi·휴대폰 핫스팟</strong> 등 다른 네트워크에서 한 번 활성화</li>" +
+            "<li>IT에 <strong><code>https://api.lemonsqueezy.com</code> HTTPS(443) 허용</strong> 요청</li>" +
+            "<li>회사 VPN 사용 중이면 끄거나, 허용된 VPN으로 재시도</li>" +
+            "</ul>" +
+            "<p><strong>활성화 한도(최대 2대) 초과</strong> 메시지가 나오면 <a href=\"contact.html\">문의</a>로 구매 이메일·주문번호·라이선스 키를 보내 주세요. 기기 초기화를 안내해 드릴 수 있습니다.</p>" +
+            "<p>설치 파일을 다시 받아도, <strong>서버 접속이 막혀 있으면</strong> 같은 오류가 날 수 있습니다.</p>",
+        faq13q: "Peekom은 프리웨어인가요? 회사 PC에 설치할 수 있나요?",
+        faq13a:
+            "<p><strong>Peekom 무료 버전</strong>은 별도 라이선스 비용 없이 설치·사용할 수 있는 <strong>프리웨어(무료 소프트웨어)</strong>입니다. 유료 기능인 <strong>Peekom Plus</strong>는 선택 사항이며, 구매하지 않아도 무료 버전만으로 계속 사용할 수 있습니다.</p>" +
+            "<p>(※ Microsoft Windows <strong>공식 인증 프로그램</strong>을 의미하는 것은 아닙니다.)</p>" +
+            "<p>회사 PC에서는 보안 정책에 따라 설치·실행 경로가 제한될 수 있습니다. Peekom은 프로그램 폴더 외에 <code>%AppData%\\Roaming\\Peekom</code>에 메모·설정을 저장하므로, IT에 아래를 함께 허용 요청해 주세요.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>공식 설치 파일: <a href=\"download.html\">peekom.com/download</a>의 <code>Peekom-Setup.exe</code></li>" +
+            "<li>데이터 폴더: <code>C:\\Users\\(사용자명)\\AppData\\Roaming\\Peekom</code></li>" +
+            "<li>Plus 인증 시: <code>https://api.lemonsqueezy.com</code></li>" +
+            "</ul>",
+        faq14q: "메모가 사라졌어요. 복구할 수 있나요?",
+        faq14a:
+            "<p>Peekom은 메모를 <strong>사용 중인 PC에만 저장</strong>합니다. 서버(클라우드)에 올려 두지 않으며, 저희가 원격으로 PC 안의 메모를 조회하거나 복구해 드릴 수 없습니다.</p>" +
+            "<p><strong>자동 백업 기능은 없습니다.</strong> Peekom Plus에서는 <strong>보내기</strong>(.txt / .md / .json)나 <strong>JSON 백업·복원</strong>으로 내용을 따로 저장할 수 있지만, <strong>미리 백업해 두지 않으면</strong> PC 재시작·재설치·데이터 폴더 삭제 등 이후에는 복구가 어렵습니다.</p>" +
+            "<p>다음을 한 번 확인해 보세요.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Peekom을 <strong>삭제 후 재설치</strong>하셨는지</li>" +
+            "<li><strong>다른 Windows 사용자 계정</strong>으로 로그인하셨는지</li>" +
+            "<li>회사 보안 프로그램이 <strong>AppData</strong> 폴더를 정리했는지</li>" +
+            "</ul>" +
+            "<p>앞으로는 주기적으로 Plus <strong>JSON 백업</strong> 또는 <strong>보내기</strong>로 내용을 저장해 두시는 것을 권장합니다.</p>",
+        faq15q: "Plus 구매 후 라이선스 키 메일이 오지 않아요.",
+        faq15a:
+            "<p>결제 직후 Lemon Squeezy에서 <strong>구매 확인 메일</strong>이 발송됩니다. 아래를 확인해 주세요.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>스팸·프로모션·소셜</strong> 메일함</li>" +
+            "<li>발신자 <strong>Lemon Squeezy</strong> 또는 제목에 <strong>Peekom / License</strong>가 포함된 메일</li>" +
+            "<li>결제 시 입력한 <strong>이메일 주소</strong>가 맞는지 (회사·개인 메일 혼동 여부)</li>" +
+            "</ul>" +
+            "<p><a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 주문 내역</a>에서 결제에 사용한 이메일로 로그인하면 주문·라이선스 키를 다시 볼 수 있습니다.</p>" +
+            "<p>그래도 찾기 어려우시면 <a href=\"contact.html\">문의</a>로 <strong>구매 이메일·결제 일시·영수증</strong>을 보내 주시면 확인 후 안내해 드리겠습니다.</p>",
+        dlFreeFreewareNote: "무료 버전은 프리웨어(Freeware)이며, Peekom Plus는 선택 사항입니다.",
         helpTitle: "가이드", helpSub: "Peekom을 빠르게 시작하는 방법을 안내합니다.",
         guideStartBody:
             '<div class="guide-step">' +
@@ -516,6 +943,7 @@ const i18n = {
         winGuideBtn: "Windows 설치 시 파란 SmartScreen 경고가 보이나요?",
         settingsGuideTitle: "설정창은 어떻게 여나요?",
         settingsGuideText: "작업표시줄 오른쪽 끝의 <strong>∧</strong> 를 눌러 Peekom 아이콘을 찾은 뒤, 아이콘을 더블클릭하거나 우클릭 → ‘설정’을 선택하세요.",
+        settingsGuideThumbAria: "설정 여는 위치 확대 보기",
         promoNote: "프로모션 종료 후 가격 인상 예정",
         promoSectionTitle: "Peekom Plus(유료)",
         promoFreeTitle: "Peekom(무료)",
@@ -753,6 +1181,7 @@ const i18n = {
         winGuideBtn: "See a blue SmartScreen warning when installing on Windows?",
         settingsGuideTitle: "How do I open Settings?",
         settingsGuideText: "Click the <strong>∧</strong> at the right end of the taskbar to find the Peekom icon, then double-click it (or right-click → \u201CSettings\u201D).",
+        settingsGuideThumbAria: "Zoom in on where to open Settings",
         dlTitle: "Download", dlWinNote: "Windows 10 & 11 (64-bit)",
         dlWinLabel: "Windows x64 · Windows 10 & 11 (64-bit)",
         dlMacLabel: "macOS",
@@ -778,7 +1207,7 @@ const i18n = {
         faq3q: "How is Plus activated?",
         faq3a: "Buy on Lemon Squeezy, then enter the license key in-app to unlock Peekom Plus (no reinstall).",
         faq3bq: "Can I use one license key on more than one PC?",
-        faq3ba: "Yes. You can enter the same 16-character license key once on each of up to two PCs—for example, your work PC and personal PC—to use Peekom Plus on both.",
+        faq3ba: "Yes. Enter the same license key once on each of up to two PCs—for example, your work PC and personal PC—to use Peekom Plus on both.",
         faq3cq: "Can I keep using Peekom if I change my work PC or switch jobs?",
         faq3ca: "A Peekom Plus license can be used on up to two devices. Reinstalling on the same device is allowed. If you need to move to a new device, please contact us and we will review and assist you. Depending on the situation, we may guide you to reactivate on the new device after resetting previously activated devices.",
         faq3dq: "What information should I send if I need a device change?",
@@ -789,8 +1218,83 @@ const i18n = {
         faq5a: "Peekom runs on Windows 10 and 11 (64-bit). The installer is 64-bit only. Windows 7, 8, and 8.1 are not supported (Electron 36).",
         faq6q: "I added an index but it doesn't show in Settings.",
         faq6a: "Reopen Settings to refresh the list; recent versions sync automatically.",
-        faq7q: "Strange text at startup after uninstalling.",
-        faq7a: "Disable leftover Peekom startup entries in Task Manager, or reinstall and uninstall again.",
+        faq7q: "After removing the legacy app 빼꼼 인덱스, strange text or errors appear at startup. What should I do?",
+        faq7a:
+            "<p>If you removed the legacy app (빼꼼 인덱스) while <strong>startup at login was still enabled</strong>, a leftover Windows startup entry may try to run a deleted file and show <strong>garbled text or an error</strong> at boot.</p>" +
+            "<p><strong>Windows 11</strong></p>" +
+            '<ol class="guide-step-list">' +
+            "<li>Settings → Apps → Startup (or Installed apps → Startup)</li>" +
+            "<li>Find <strong>빼꼼 인덱스</strong> or a similar name in the list</li>" +
+            "<li>Turn it <strong>Off</strong></li>" +
+            "</ol>" +
+            "<p><strong>Windows 10</strong></p>" +
+            '<ol class="guide-step-list">' +
+            "<li>Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> to open Task Manager</li>" +
+            "<li>Open the <strong>Startup</strong> tab</li>" +
+            "<li>Select <strong>빼꼼 인덱스</strong> → <strong>Disable</strong></li>" +
+            "</ol>" +
+            "<p>Turn the entry off, then <strong>restart</strong>. If the issue stops, the cause was the startup registration. You can then install <a href=\"download.html\">Peekom (free)</a> fresh.</p>" +
+            '<p class="privacy-doc__note">Memo content from the legacy app is <strong>not migrated automatically</strong> because Peekom stores data in a different location. Copy anything you need before removing the old app.</p>',
+        faq10q: "Where do I open Peekom Settings?",
+        faq10a:
+            "Right-click the Peekom icon in the <strong>system tray</strong> → <strong>Settings</strong>. You can also <strong>double-click</strong> the tray icon, or <strong>double-click</strong> the desktop shortcut (if the app was closed, the memo and Settings open together). See the <a href=\"help.html\">guide</a> for details.",
+        faq11q: "How do I enter my license key? The placeholder doesn't match the email key.",
+        faq11a:
+            "<p>Use the <strong>full license key</strong> from your Lemon Squeezy receipt email.</p>" +
+            '<ol class="guide-step-list">' +
+            "<li>After <a href=\"" + LINKS.buy + "\" target=\"_blank\" rel=\"noopener\">purchasing Plus</a>, copy <strong>[License Key]</strong> from the email (<strong>including all hyphens</strong>)</li>" +
+            "<li>Launch Peekom → <strong>Settings</strong> or the <strong>Plus lock screen</strong> → paste the key → <strong>Activate</strong></li>" +
+            "<li>Use a working internet connection (see corporate network FAQ below if needed)</li>" +
+            "</ol>" +
+            "<p>The <code>XXXX-XXXX-XXXX-XXXX</code> placeholder is only an <strong>example</strong>. Do <strong>not</strong> enter 16 characters only—paste the <strong>entire key</strong> from your email.</p>" +
+            "<p>Lost the email? Sign in at <a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy My Orders</a> with the same address.</p>",
+        faq12q: "I'm online but activation fails with \"Could not reach Lemon Squeezy.\"",
+        faq12a:
+            "<p>Even when your PC is online, Plus activation must reach <strong>Lemon Squeezy (<code>api.lemonsqueezy.com</code>)</strong>. Corporate <strong>firewalls, security software, VPNs, or proxies</strong> may block only that server.</p>" +
+            "<p><strong>Try this</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Activate once on another network (home Wi‑Fi, mobile hotspot)</li>" +
+            "<li>Ask IT to allow <strong><code>https://api.lemonsqueezy.com</code> over HTTPS (443)</strong></li>" +
+            "<li>Turn off a corporate VPN, or try an allowed VPN</li>" +
+            "</ul>" +
+            "<p>If you see an <strong>activation limit (max 2 devices)</strong> message, <a href=\"contact.html\">contact us</a> with your purchase email, order number, and license key—we can help reset devices.</p>" +
+            "<p>Downloading the installer again will <strong>not</strong> fix this if the server is still blocked.</p>",
+        faq13q: "Is Peekom freeware? Can I install it on a company PC?",
+        faq13a:
+            "<p><strong>Peekom (free)</strong> is <strong>freeware</strong>—you can install and use it without a separate license fee. <strong>Peekom Plus</strong> is optional paid functionality.</p>" +
+            "<p>(This describes the <strong>license type</strong>, not Microsoft Windows official certification.)</p>" +
+            "<p>Company PCs may restrict install or data paths. Besides the program folder, Peekom stores memos and settings under <code>%AppData%\\Roaming\\Peekom</code>. Ask IT to allow:</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Official installer: <code>Peekom-Setup.exe</code> from <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Data folder: <code>C:\\Users\\(username)\\AppData\\Roaming\\Peekom</code></li>" +
+            "<li>For Plus activation: <code>https://api.lemonsqueezy.com</code></li>" +
+            "</ul>",
+        faq14q: "My memo disappeared. Can I recover it?",
+        faq14a:
+            "<p>Peekom stores memos <strong>only on your PC</strong>. There is no cloud server, and we cannot remotely view or restore your data.</p>" +
+            "<p>There is <strong>no automatic backup</strong>. Peekom Plus offers <strong>Export</strong> (.txt / .md / .json) and <strong>JSON backup/restore</strong>, but without a prior backup, recovery is difficult after reinstall, account change, or AppData cleanup.</p>" +
+            "<p>Please check:</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Did you <strong>uninstall and reinstall</strong> Peekom?</li>" +
+            "<li>Are you signed in to a <strong>different Windows user account</strong>?</li>" +
+            "<li>Did company security software clean <strong>AppData</strong>?</li>" +
+            "</ul>" +
+            "<p>We recommend periodic Plus <strong>JSON backups</strong> or <strong>Export</strong> going forward.</p>",
+        faq15q: "I bought Plus but didn't receive the license key email.",
+        faq15a:
+            "<p>Lemon Squeezy sends a <strong>purchase confirmation email</strong> after payment. Please check:</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Spam, Promotions, or Social</strong> folders</li>" +
+            "<li>Sender <strong>Lemon Squeezy</strong> or subject containing <strong>Peekom / License</strong></li>" +
+            "<li>The <strong>email address</strong> used at checkout (work vs personal)</li>" +
+            "</ul>" +
+            "<p>Sign in at <a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy My Orders</a> with that email to view your key again.</p>" +
+            "<p>Still stuck? <a href=\"contact.html\">Contact us</a> with your <strong>purchase email, payment time, and receipt</strong>.</p>",
+        dlFreeFreewareNote: "Peekom (free) is freeware; Plus is optional.",
+        heroFreeCardBadge: "Freeware",
+        heroMacFreeCardBadge: "Freeware",
+        heroWinCardMeta: "Windows 10 · 11 (64-bit) · Freeware",
+        heroMacFreeCardMeta: "macOS · Freeware",
         compareColFeature: "Feature",
         contactTitle: "Contact", contactSub: "Send us your feedback.",
         contactFeedbackTitle: "Send feedback",
@@ -956,22 +1460,22 @@ function resolveLang(lang) {
 }
 
 const SITE_OFFER_BADGES = {
-    ko: { paid: "유료", free: "무료" },
-    en: { paid: "PAID", free: "FREE" },
-    ja: { paid: "有料", free: "無料" },
-    "zh-CN": { paid: "付费", free: "免费" },
-    "zh-TW": { paid: "付費", free: "免費" },
-    es: { paid: "DE PAGO", free: "GRATIS" },
-    fr: { paid: "PAYANT", free: "GRATUIT" },
-    de: { paid: "KOSTENPFL.", free: "GRATIS" },
-    pt: { paid: "PAGO", free: "GRÁTIS" },
-    it: { paid: "A PAGAMENTO", free: "GRATIS" },
-    ru: { paid: "ПЛАТНО", free: "БЕСПЛ." },
-    vi: { paid: "TRẢ PHÍ", free: "MIỄN PHÍ" },
-    th: { paid: "เสียเงิน", free: "ฟรี" },
-    id: { paid: "BERBAYAR", free: "GRATIS" },
-    hi: { paid: "सशुल्क", free: "मुफ़्त" },
-    ar: { paid: "مدفوع", free: "مجاني" }
+    ko: { paid: "유료", free: "프리웨어" },
+    en: { paid: "PAID", free: "Freeware" },
+    ja: { paid: "有料", free: "フリーウェア" },
+    "zh-CN": { paid: "付费", free: "免费软件" },
+    "zh-TW": { paid: "付費", free: "免費軟體" },
+    es: { paid: "DE PAGO", free: "Freeware" },
+    fr: { paid: "PAYANT", free: "Freeware" },
+    de: { paid: "KOSTENPFL.", free: "Freeware" },
+    pt: { paid: "PAGO", free: "Freeware" },
+    it: { paid: "A PAGAMENTO", free: "Freeware" },
+    ru: { paid: "ПЛАТНО", free: "Freeware" },
+    vi: { paid: "TRẢ PHÍ", free: "Freeware" },
+    th: { paid: "เสียเงิน", free: "Freeware" },
+    id: { paid: "BERBAYAR", free: "Freeware" },
+    hi: { paid: "सशुल्क", free: "Freeware" },
+    ar: { paid: "مدفوع", free: "Freeware" }
 };
 
 function enrichLocaleData(data, lang) {
@@ -1034,8 +1538,18 @@ function enrichLocaleData(data, lang) {
     next.faq5a = next.faq5a || en.faq5a;
     next.faq6q = next.faq6q || en.faq6q;
     next.faq6a = next.faq6a || en.faq6a;
-    next.faq7q = next.faq7q || en.faq7q;
-    next.faq7a = next.faq7a || en.faq7a;
+    [
+        'faq7q', 'faq7a', 'faq10q', 'faq10a', 'faq11q', 'faq11a',
+        'faq12q', 'faq12a', 'faq13q', 'faq13a', 'faq14q', 'faq14a',
+        'faq15q', 'faq15a', 'dlFreeFreewareNote',
+        'settingsGuideTitle', 'settingsGuideText', 'settingsGuideThumbAria'
+    ].forEach(function (key) {
+        if (!next[key] && en[key]) next[key] = en[key];
+    });
+    next.faqGroupProductLabel = next.faqGroupProductLabel || en.faqGroupProductLabel;
+    next.faqGroupLicenseLabel = next.faqGroupLicenseLabel || en.faqGroupLicenseLabel;
+    next.faqGroupInstallLabel = next.faqGroupInstallLabel || en.faqGroupInstallLabel;
+    next.faqGroupTroubleshootLabel = next.faqGroupTroubleshootLabel || en.faqGroupTroubleshootLabel;
     next.faq8q = next.faq8q || en.faq8q;
     next.faq8a = next.faq8a || en.faq8a;
     next.faq9q = next.faq9q || en.faq9q;
@@ -1474,7 +1988,7 @@ function setThemeBtnA11y(id, label) {
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el && value != null) {
-        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq9a' || id === 'refundPolicyBody' || id === 'faqR1a' || id === 'faqR2a' || id === 'faqR3a' || id === 'settingsGuideText') {
+        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq7a' || id === 'faq9a' || id === 'faq10a' || id === 'faq11a' || id === 'faq12a' || id === 'faq13a' || id === 'faq14a' || id === 'faq15a' || id === 'refundPolicyBody' || id === 'faqR1a' || id === 'faqR2a' || id === 'faqR3a' || id === 'settingsGuideText') {
             el.innerHTML = value;
         } else {
             el.textContent = value;
@@ -1658,11 +2172,16 @@ function updateUI() {
     setText('winGuideBtn', d.winGuideBtn);
     setText('settingsGuideTitle', d.settingsGuideTitle);
     setText('settingsGuideText', d.settingsGuideText);
+    const settingsGuideThumb = document.getElementById('settingsGuideThumb');
+    if (settingsGuideThumb && d.settingsGuideThumbAria) {
+        settingsGuideThumb.setAttribute('aria-label', d.settingsGuideThumbAria);
+    }
     setText('dlTitle', d.dlTitle);
     setText('dlSub', d.dlSub);
     setText('dlPlusHeadTitle', d.promoSectionTitle || "Peekom Plus(유료)");
     setText('dlFreeTitle', d.promoFreeTitle || "Peekom(무료)");
     setText('dlFreeCompareNote', d.heroFreeCompareNote);
+    setText('dlFreeFreewareNote', d.dlFreeFreewareNote);
     setText('linkChangelog', d.linkChangelog);
     setText('linkPrev', d.linkPrev);
     setText('linkSmartScreen', d.linkSmartScreen);
@@ -1683,6 +2202,8 @@ function updateUI() {
     setText('faqR3a', d.faqR3a);
     setText('faq1q', d.faq1q);
     setText('faq1a', d.faq1a);
+    setText('faq10q', d.faq10q);
+    setText('faq10a', d.faq10a);
     setText('faq2q', d.faq2q);
     setText('faq2a', d.faq2a);
     setText('faq8q', d.faq8q);
@@ -1697,6 +2218,14 @@ function updateUI() {
     setText('faq3ca', d.faq3ca);
     setText('faq3dq', d.faq3dq);
     setText('faq3da', d.faq3da);
+    setText('faq11q', d.faq11q);
+    setText('faq11a', d.faq11a);
+    setText('faq12q', d.faq12q);
+    setText('faq12a', d.faq12a);
+    setText('faq15q', d.faq15q);
+    setText('faq15a', d.faq15a);
+    setText('faq13q', d.faq13q);
+    setText('faq13a', d.faq13a);
     setText('faq4q', d.faq4q);
     const faq4aEl = document.getElementById('faq4a');
     if (faq4aEl) faq4aEl.innerHTML = d.faq4a;
@@ -1707,6 +2236,8 @@ function updateUI() {
         setText('faq6a', d.faq6a);
         setText('faq7q', d.faq7q);
         setText('faq7a', d.faq7a);
+        setText('faq14q', d.faq14q);
+        setText('faq14a', d.faq14a);
     }
 
     setText('helpTitle', d.helpTitle || d.navGuide);

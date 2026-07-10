@@ -158,34 +158,97 @@ function getMonitorPrefsPath() {
   return path.join(app.getPath("userData"), MONITOR_PREFS_FILE);
 }
 
+function getDisplayFingerprint(display) {
+  if (!display?.bounds) return null;
+  const { x, y, width, height } = display.bounds;
+  return {
+    x,
+    y,
+    width,
+    height,
+    scaleFactor: display.scaleFactor ?? 1
+  };
+}
+
+function fingerprintsMatch(a, b) {
+  if (!a || !b) return false;
+  return (
+    a.x === b.x &&
+    a.y === b.y &&
+    a.width === b.width &&
+    a.height === b.height &&
+    a.scaleFactor === b.scaleFactor
+  );
+}
+
+function matchDisplayByFingerprint(fingerprint) {
+  if (!fingerprint) return null;
+  return screen.getAllDisplays().find((display) => fingerprintsMatch(getDisplayFingerprint(display), fingerprint)) || null;
+}
+
+function tryRematchFixedDisplay() {
+  if (followCursorMode) return null;
+
+  if (targetDisplayId !== null) {
+    const byId = getDisplayById(targetDisplayId);
+    if (byId) return byId;
+  }
+
+  const matched = matchDisplayByFingerprint(targetDisplayFingerprint);
+  if (matched) {
+    targetDisplayId = matched.id;
+    saveMonitorPrefs();
+    return matched;
+  }
+
+  return null;
+}
+
 function loadMonitorPrefs() {
   try {
     const prefs = JSON.parse(fs.readFileSync(getMonitorPrefsPath(), "utf8"));
-    if (prefs?.mode === "fixed" && typeof prefs.displayId === "number") {
-      const display = getDisplayById(prefs.displayId);
-      if (display) {
-        followCursorMode = false;
-        targetDisplayId = prefs.displayId;
+    if (prefs?.mode === "fixed") {
+      followCursorMode = false;
+      targetDisplayFingerprint = prefs.fingerprint ?? null;
+
+      if (typeof prefs.displayId === "number") {
+        const display = getDisplayById(prefs.displayId);
+        if (display) {
+          targetDisplayId = prefs.displayId;
+          targetDisplayFingerprint = getDisplayFingerprint(display);
+          return;
+        }
+      }
+
+      const matched = matchDisplayByFingerprint(targetDisplayFingerprint);
+      if (matched) {
+        targetDisplayId = matched.id;
+        targetDisplayFingerprint = getDisplayFingerprint(matched);
+        saveMonitorPrefs();
         return;
       }
+
+      targetDisplayId = typeof prefs.displayId === "number" ? prefs.displayId : null;
+      return;
     }
   } catch {
     /* ignore */
   }
   followCursorMode = true;
   targetDisplayId = null;
+  targetDisplayFingerprint = null;
 }
 
 function saveMonitorPrefs() {
   try {
-    fs.writeFileSync(
-      getMonitorPrefsPath(),
-      JSON.stringify({
-        mode: followCursorMode ? "auto" : "fixed",
-        displayId: followCursorMode ? null : targetDisplayId
-      }),
-      "utf8"
-    );
+    const payload = {
+      mode: followCursorMode ? "auto" : "fixed",
+      displayId: followCursorMode ? null : targetDisplayId
+    };
+    if (!followCursorMode && targetDisplayFingerprint) {
+      payload.fingerprint = targetDisplayFingerprint;
+    }
+    fs.writeFileSync(getMonitorPrefsPath(), JSON.stringify(payload), "utf8");
   } catch {
     /* ignore */
   }
@@ -205,10 +268,7 @@ function updateWindowsShellBranding(isPremium) {
   const workDir = path.dirname(exePath);
   const desktop = app.getPath("desktop");
   const startMenu = path.join(app.getPath("appData"), "Microsoft", "Windows", "Start Menu", "Programs");
-  const primaryTargets = [
-    path.join(desktop, `${label}.lnk`),
-    path.join(startMenu, `${label}.lnk`)
-  ];
+  const primaryTargets = [path.join(startMenu, `${label}.lnk`)];
   const legacyTargets = [
     path.join(desktop, `${legacyLabel}.lnk`),
     path.join(startMenu, `${legacyLabel}.lnk`)
@@ -386,6 +446,7 @@ let settingsAllowClose = false;
 let followCursorDisplayInterval = null;
 let followCursorMode = true;
 let targetDisplayId = null;
+let targetDisplayFingerprint = null;
 let lastAttachedSignature = null;
 let panelExpanded = false;
 let pointerOverPanel = false;
@@ -673,11 +734,10 @@ function getCursorDisplay() {
 }
 
 function resolveTargetDisplay() {
-  if (!followCursorMode && targetDisplayId !== null) {
-    const fixedDisplay = getDisplayById(targetDisplayId);
+  if (!followCursorMode) {
+    const fixedDisplay = tryRematchFixedDisplay();
     if (fixedDisplay) return fixedDisplay;
-    followCursorMode = true;
-    targetDisplayId = null;
+    return getCursorDisplay();
   }
 
   return getCursorDisplay();
@@ -1393,9 +1453,11 @@ if (!gotTheLock) {
       }
       followCursorMode = false;
       targetDisplayId = selectedDisplay.id;
+      targetDisplayFingerprint = getDisplayFingerprint(selectedDisplay);
     } else {
       followCursorMode = true;
       targetDisplayId = null;
+      targetDisplayFingerprint = null;
     }
 
     saveMonitorPrefs();
@@ -1863,9 +1925,18 @@ if (!gotTheLock) {
     }
   });
 
-  screen.on("display-added", () => refreshWindowPosition(true));
-  screen.on("display-removed", () => refreshWindowPosition(true));
-  screen.on("display-metrics-changed", () => refreshWindowPosition(true));
+  screen.on("display-added", () => {
+    if (!followCursorMode) tryRematchFixedDisplay();
+    refreshWindowPosition(true);
+  });
+  screen.on("display-removed", () => {
+    if (!followCursorMode) tryRematchFixedDisplay();
+    refreshWindowPosition(true);
+  });
+  screen.on("display-metrics-changed", () => {
+    if (!followCursorMode) tryRematchFixedDisplay();
+    refreshWindowPosition(true);
+  });
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) {

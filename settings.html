@@ -461,6 +461,40 @@
         padding: 6px 5px 6px 0;
       }
 
+      .panel-scope-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 0 var(--settings-gutter);
+      }
+
+      .panel-scope-row .panel-scope-intro {
+        flex: 1;
+        min-width: 0;
+        padding: 0;
+      }
+
+      .common-reset-btn {
+        flex-shrink: 0;
+        height: 28px;
+        padding: 0 12px;
+        border: 1px solid #8e44ad;
+        border-radius: var(--radius);
+        background: #fff;
+        color: #8e44ad;
+        font-size: 12px;
+        font-family: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .common-reset-btn:hover {
+        border-color: #7d3c98;
+        color: #7d3c98;
+        background: #faf5fc;
+      }
+
       .panel-scope-intro {
         margin: 0;
         padding: 0 var(--settings-gutter);
@@ -1160,29 +1194,6 @@
         accent-color: var(--accent);
       }
 
-      .common-reset-section {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        text-align: right;
-        padding-left: var(--settings-gutter);
-      }
-
-      .common-reset-section .field-hint-below {
-        padding-left: 0;
-        margin-top: 4px;
-        text-align: right;
-      }
-
-      #resetCommonDefaultsBtn {
-        border-color: #8e44ad;
-      }
-
-      #resetCommonDefaultsBtn:hover {
-        border-color: #7d3c98;
-        color: #7d3c98;
-      }
-
       .font-size-row {
         display: flex;
         align-items: center;
@@ -1662,6 +1673,7 @@
           monitorMode: "auto",
           monitorTargetId: null,
           pinToggleMode: "dblclick",
+          spellcheckEnabled: false,
           setupCompleted: false,
           showTrayIcon: true,
           memoAspectRatio: "3:4",
@@ -2221,6 +2233,7 @@
           appState.global.shortcutSlotNext = parsed.shortcutSlotNext;
           appState.global.language = parsed.language;
           appState.global.pinToggleMode = parsed.pinToggleMode;
+          appState.global.spellcheckEnabled = parsed.spellcheckEnabled === true;
           appState.global.memoAspectRatio = parsed.memoAspectRatio;
           appState.global.memoDefaultOpacity = parsed.memoDefaultOpacity;
           appState.global.imageLayout = parsed.imageLayout;
@@ -2501,6 +2514,7 @@
           showTrayIcon: state.global.showTrayIcon,
           language: state.global.language,
           pinToggleMode: state.global.pinToggleMode,
+          spellcheckEnabled: state.global.spellcheckEnabled === true,
           memoAspectRatio: state.global.memoAspectRatio,
           imageLayout: state.global.imageLayout,
           enabledCount: state.enabledCount,
@@ -2527,6 +2541,7 @@
           shortcutSlotNext: state.global.shortcutSlotNext,
           language: state.global.language,
           pinToggleMode: state.global.pinToggleMode,
+          spellcheckEnabled: state.global.spellcheckEnabled === true,
           panelEdge: state.global.panelEdge,
           memoAspectRatio: state.global.memoAspectRatio,
           memoDefaultOpacity: state.global.memoDefaultOpacity,
@@ -2822,7 +2837,7 @@
         const upgradeBtn = document.getElementById("settingsUpgradeBtn");
         if (upgradeBtn) upgradeBtn.textContent = ti("upgradePlusBtn");
 
-        const scopeIntro = panel.querySelector(".panel-scope-intro");
+        const scopeIntro = panel.querySelector(".panel-scope-row .panel-scope-intro");
         if (scopeIntro) scopeIntro.textContent = ti("commonSettingsScopeHint");
 
         setLabelFor("monitorSelect", "monitorLabel");
@@ -2879,10 +2894,14 @@
         const pinToggleHint = panel.querySelector('[for="pinToggleSelect"]')?.closest(".field-stack")?.querySelector(".field-hint-below");
         if (pinToggleHint) pinToggleHint.textContent = ti("pinToggleRecommendHint");
 
+        setLabelFor("spellcheckSelect", "spellcheckLabel");
+        setSelectOptionText("spellcheckSelect", "on", "spellcheckOn");
+        setSelectOptionText("spellcheckSelect", "off", "spellcheckOff");
+        const spellcheckHint = document.getElementById("spellcheckHint");
+        if (spellcheckHint) spellcheckHint.textContent = ti("spellcheckHint");
+
         const resetBtn = document.getElementById("resetCommonDefaultsBtn");
         if (resetBtn) resetBtn.textContent = ti("resetCommonDefaults");
-        const resetHint = panel.querySelector(".common-reset-section .field-hint-below");
-        if (resetHint) resetHint.textContent = ti("resetCommonDefaultsHint");
 
         const backupTitle = panel.querySelector(".backup-section-head h4");
         if (backupTitle) {
@@ -3360,7 +3379,10 @@
               </div>
             </section>
 
-            <p class="panel-scope-intro">${ti("commonSettingsScopeHint")}</p>
+            <div class="panel-scope-row">
+              <p class="panel-scope-intro">${ti("commonSettingsScopeHint")}</p>
+              <button type="button" class="common-reset-btn" id="resetCommonDefaultsBtn">${ti("resetCommonDefaults")}</button>
+            </div>
 
             <div class="field-stack" id="monitorFieldWrap">
               <div class="field-inline">
@@ -3467,9 +3489,15 @@
               <p class="field-hint-below">${ti("pinToggleRecommendHint")}</p>
             </div>
 
-            <div class="common-reset-section">
-              <button type="button" class="settings-action-btn" id="resetCommonDefaultsBtn">${ti("resetCommonDefaults")}</button>
-              <p class="field-hint-below">${ti("resetCommonDefaultsHint")}</p>
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="spellcheckSelect">${ti("spellcheckLabel")}</label>
+                <select id="spellcheckSelect" class="setting-select">
+                  <option value="on">${ti("spellcheckOn")}</option>
+                  <option value="off">${ti("spellcheckOff")}</option>
+                </select>
+              </div>
+              <p class="field-hint-below" id="spellcheckHint">${ti("spellcheckHint")}</p>
             </div>
 
             <section class="backup-section" id="backupSection">
@@ -4115,6 +4143,7 @@
           shortcutSlotNext: "CommandOrControl+Shift+Down",
           hoverDelayMs: 300,
           pinToggleMode: "dblclick",
+          spellcheckEnabled: false,
           imageLayout: "below"
         };
       }
@@ -4132,6 +4161,7 @@
         appState.global.shortcutSlotNext = defaults.shortcutSlotNext;
         appState.global.hoverDelayMs = defaults.hoverDelayMs;
         appState.global.pinToggleMode = defaults.pinToggleMode;
+        appState.global.spellcheckEnabled = defaults.spellcheckEnabled;
         appState.global.imageLayout = defaults.imageLayout;
         draftMonitorTarget = null;
         applySettingsForm();
@@ -4668,6 +4698,10 @@
         if (runZoomitOnStartupCheckbox) runZoomitOnStartupCheckbox.checked = Boolean(appState.global.openAtLogin);
         if (showTrayIconCheckbox) showTrayIconCheckbox.checked = appState.global.showTrayIcon !== false;
         if (pinToggleSelect) pinToggleSelect.value = appState.global.pinToggleMode || "dblclick";
+        const spellcheckSelect = document.getElementById("spellcheckSelect");
+        if (spellcheckSelect) {
+          spellcheckSelect.value = appState.global.spellcheckEnabled === true ? "on" : "off";
+        }
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
           panelEdgeSelect.value = appState.global.panelEdge === "left" ? "left" : "right";
@@ -4738,6 +4772,10 @@
           );
         }
         if (pinToggleSelect) appState.global.pinToggleMode = pinToggleSelect.value;
+        const spellcheckSelect = document.getElementById("spellcheckSelect");
+        if (spellcheckSelect) {
+          appState.global.spellcheckEnabled = spellcheckSelect.value === "on";
+        }
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
           const nextEdge = panelEdgeSelect.value === "left" ? "left" : "right";

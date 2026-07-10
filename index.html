@@ -554,7 +554,7 @@
         filter: brightness(0.9);
       }
 
-      .memo-editor ul,
+      .memo-editor ul:not(.peekom-task-list),
       .memo-editor ol {
         margin-left: 18px;
       }
@@ -566,25 +566,31 @@
       }
 
       .peekom-task-list li {
-        display: flex;
-        align-items: flex-start;
-        gap: 6px;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        column-gap: 0.35em;
+        align-items: baseline;
         margin-left: 0;
+      }
+
+      .peekom-task-content {
+        min-width: 0;
+        line-height: inherit;
       }
 
       .peekom-task-check {
         flex-shrink: 0;
-        width: 15px;
-        height: 15px;
-        border: 1.5px solid currentColor;
-        border-radius: 3px;
+        width: 0.95em;
+        height: 0.95em;
+        border: 0.09em solid currentColor;
+        border-radius: 0.18em;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         user-select: none;
-        margin-top: 3px;
-        font-size: 11px;
+        margin-top: 0.08em;
+        font-size: 0.72em;
         line-height: 1;
         box-sizing: border-box;
       }
@@ -592,13 +598,92 @@
       .peekom-task-list li[data-checked="true"] .peekom-task-check::after {
         content: "✓";
         font-weight: 700;
-        font-size: 10px;
+        font-size: 1em;
       }
 
-      .peekom-task-list li[data-checked="true"] {
-        opacity: 0.72;
-        text-decoration: line-through;
-        text-decoration-color: color-mix(in srgb, currentColor 55%, transparent);
+      /* B-2 체크리스트 위젯: 편집 영역과 분리된 독립 컨테이너(테두리 없음) */
+      .peekom-checklist {
+        margin: 0.25em 0;
+        padding: 0;
+        user-select: none;
+      }
+
+      .peekom-checklist-row {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        column-gap: 0.4em;
+        align-items: baseline;
+        padding: 0.05em 0;
+      }
+
+      .peekom-checklist-box {
+        flex-shrink: 0;
+        width: 0.95em;
+        height: 0.95em;
+        border: 0.09em solid currentColor;
+        border-radius: 0.18em;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        margin-top: 0.08em;
+        font-size: 0.9em;
+        line-height: 1;
+        box-sizing: border-box;
+      }
+
+      .peekom-checklist-row[data-checked="true"] .peekom-checklist-box::after {
+        content: "✓";
+        font-weight: 700;
+        font-size: 0.85em;
+      }
+
+      .peekom-checklist-text {
+        min-width: 0;
+        line-height: inherit;
+        outline: none;
+        white-space: pre-wrap;
+        word-break: break-word;
+        -webkit-user-select: text;
+        user-select: text;
+        cursor: text;
+      }
+
+      .peekom-checklist-remove,
+      .peekom-checklist-add {
+        border: none;
+        background: transparent;
+        color: currentColor;
+        cursor: pointer;
+        padding: 0;
+        font: inherit;
+        line-height: 1;
+        opacity: 0;
+        transition: opacity 0.12s ease;
+      }
+
+      .peekom-checklist-remove {
+        align-self: center;
+        width: 1.1em;
+        height: 1.1em;
+        font-size: 0.9em;
+      }
+
+      .peekom-checklist:hover .peekom-checklist-remove,
+      .peekom-checklist:hover .peekom-checklist-add {
+        opacity: 0.45;
+      }
+
+      .peekom-checklist-remove:hover,
+      .peekom-checklist-add:hover {
+        opacity: 0.9 !important;
+      }
+
+      .peekom-checklist-add {
+        margin-top: 0.15em;
+        margin-left: 0.05em;
+        font-size: 0.9em;
+        opacity: 0.3;
       }
 
       .memo-image-block {
@@ -835,6 +920,11 @@
         color: var(--toolbar-active-fg, #202124);
       }
 
+      /* 체크리스트 편집 중: 사용할 수 없는 서식 아이콘을 흐리게 표시 */
+      .tool-btn.tool-context-disabled {
+        opacity: 0.3;
+      }
+
       .tool-btn-icon svg {
         display: block;
       }
@@ -957,6 +1047,14 @@
                     </svg>
                   </button>
                 </div>
+              </div>
+              <div class="tool-group">
+                <button id="taskListBtn" class="tool-btn tool-btn-icon" type="button" data-tip-key="fmtTaskList" hidden>
+                  <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3.5" y="3.5" width="17" height="17" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                    <path d="M7.3 12.2l3 3 6.1-6.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </button>
               </div>
               <div class="tool-group">
                 <button id="clipImageBtn" class="tool-btn tool-btn-icon" type="button" data-tip-key="fmtInsertImage">
@@ -1258,6 +1356,7 @@
           monitorMode: "auto",
           monitorTargetId: null,
           pinToggleMode: "dblclick",
+          spellcheckEnabled: false,
           setupCompleted: false,
           showTrayIcon: true,
           memoAspectRatio: "3:4",
@@ -1281,7 +1380,8 @@
           imageData: null,
           imageScale: 100,
           images: [],
-          fontFamily: null
+          fontFamily: null,
+          memoCaretOffset: null
         };
       }
 
@@ -1605,7 +1705,9 @@
       const modeChip = document.getElementById("modeChip");
       const firstRunTip = document.getElementById("firstRunTip");
       const listMenuBtn = document.getElementById("listMenuBtn");
+      const alignMenuBtn = document.getElementById("alignMenuBtn");
       const clipImageBtn = document.getElementById("clipImageBtn");
+      const taskListBtn = document.getElementById("taskListBtn");
       const saveIndicator = document.getElementById("saveIndicator");
       const handleContextMenu = document.getElementById("handleContextMenu");
       const imageStagingOverlay = document.getElementById("imageStagingOverlay");
@@ -1624,6 +1726,8 @@
 
       let isExpanded = false;
       let loadedMemoSlotIndex = null;
+      let caretSaveTimer = null;
+      let savedEditorRange = null;
       let isPinned = false;
       let hoverTimer = null;
       let settingsRevealTimer = null;
@@ -1707,9 +1811,35 @@
 
       function flushMemoEditorToActiveSlot() {
         if (!memoEditor || !appState?.slots) return;
+        saveCaretToActiveSlot();
         const slot = getMemoEditorTargetSlot();
         appState.slots[slot].memoHtml = memoEditor.innerHTML;
         syncSlotImagesFromMemo(slot);
+      }
+
+      function saveCaretToActiveSlot() {
+        if (!memoEditor || !appState?.slots) return;
+        const offset = getCaretCharOffset(memoEditor);
+        if (offset === null) return;
+        const slot = getMemoEditorTargetSlot();
+        appState.slots[slot].memoCaretOffset = offset;
+      }
+
+      function restoreCaretForActiveSlot() {
+        if (!memoEditor || !appState?.slots) return;
+        const slot = getMemoEditorTargetSlot();
+        const saved = appState.slots[slot]?.memoCaretOffset;
+        if (typeof saved !== "number" || saved < 0) return;
+        setCaretByCharOffset(memoEditor, saved);
+      }
+
+      function applySpellcheckSetting() {
+        if (!memoEditor) return;
+        memoEditor.spellcheck = appState.global.spellcheckEnabled === true;
+      }
+
+      function updateTaskListBtnVisibility() {
+        if (taskListBtn) taskListBtn.hidden = !isPremium;
       }
 
       async function compressSlotImagesIfOversized(slotIndex = getMemoEditorTargetSlot()) {
@@ -1852,9 +1982,14 @@
         }
         memoEditor.innerHTML = nextHtml;
         loadedMemoSlotIndex = slotIndex;
+        const savedCaret = appState.slots[slotIndex]?.memoCaretOffset;
         syncSlotImagesFromMemo(slotIndex);
         normalizeMemoTypography(slotIndex);
+        hydrateLegacyChecklists(memoEditor);
         scanAndLinkifyEditor(true);
+        if (typeof savedCaret === "number" && savedCaret >= 0) {
+          setCaretByCharOffset(memoEditor, savedCaret);
+        }
         void compressSlotImagesIfOversized(slotIndex).then((changed) => {
           if (changed) saveState(appState);
         });
@@ -1911,6 +2046,29 @@
         });
       }
 
+      function stripMemoBackgroundColors(root) {
+        root.querySelectorAll("*").forEach((el) => {
+          if (el === root) return;
+          if (el.closest(".peekom-checklist")) return;
+          if (el.style?.backgroundColor) el.style.removeProperty("background-color");
+          if (el.style?.background) el.style.removeProperty("background");
+        });
+        root.querySelectorAll("mark").forEach((mark) => {
+          const parent = mark.parentNode;
+          if (!parent) return;
+          while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+          parent.removeChild(mark);
+        });
+      }
+
+      function stripMemoInlineTextColors(root) {
+        root.querySelectorAll("*").forEach((el) => {
+          if (el === root) return;
+          if (el.closest(".peekom-checklist")) return;
+          if (el.style?.color) el.style.removeProperty("color");
+        });
+      }
+
       function demoteEmptyMarkdownBlocks(root) {
         root.querySelectorAll("h1, h2, h3, ul, ol").forEach((block) => {
           if (!isMemoBlockEmpty(block)) return;
@@ -1927,6 +2085,8 @@
         unwrapMemoFontTags(memoEditor);
         stripMemoInlineFontSizes(memoEditor);
         stripMemoInlineFontFamilies(memoEditor);
+        stripMemoBackgroundColors(memoEditor);
+        stripMemoInlineTextColors(memoEditor);
         demoteEmptyMarkdownBlocks(memoEditor);
         if (preserveCaret && caret !== null) {
           setCaretByCharOffset(memoEditor, caret);
@@ -2309,6 +2469,7 @@
           requestAnimationFrame(() => {
             updatePanelPosition();
             memoEditor?.focus();
+            restoreCaretForActiveSlot();
           });
         } else {
           requestAnimationFrame(() => updatePanelPosition());
@@ -2886,12 +3047,14 @@
         persistActiveMemo();
       });
 
-      memoEditor.addEventListener("focus", () => {
+      memoEditor.addEventListener("focusin", () => {
         memoEditorFocused = true;
         refreshAutoCollapsePolicy();
       });
 
-      memoEditor.addEventListener("blur", () => {
+      memoEditor.addEventListener("focusout", (event) => {
+        // 위젯 내부의 편집 가능한 텍스트 등 자식 요소 간 이동은 포커스 유지로 간주
+        if (event.relatedTarget && memoEditor.contains(event.relatedTarget)) return;
         memoEditorFocused = false;
         refreshAutoCollapsePolicy();
       });
@@ -2904,6 +3067,24 @@
       });
 
       memoEditor.addEventListener("keydown", (event) => {
+        // B-2 체크리스트 위젯 내부 텍스트 편집 시 키 처리
+        const checklistText = event.target?.closest?.(".peekom-checklist-text");
+        if (checklistText && memoEditor.contains(checklistText)) {
+          const row = checklistText.closest(".peekom-checklist-row");
+          const widget = checklistText.closest(CHECKLIST_SELECTOR);
+          if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            addChecklistRowAfter(widget, row, true);
+            return;
+          }
+          if (event.key === "Backspace" && (checklistText.textContent || "").length === 0) {
+            event.preventDefault();
+            removeChecklistRow(row);
+            return;
+          }
+          return;
+        }
+
         if (event.key === "Backspace" || event.key === "Delete") {
           const sel = window.getSelection();
           if (sel && sel.rangeCount > 0) {
@@ -2948,12 +3129,58 @@
       });
 
       memoEditor.addEventListener("click", (event) => {
+        // B-2 체크리스트 위젯 상호작용
+        const checkBox = event.target.closest(".peekom-checklist-box");
+        if (checkBox && memoEditor.contains(checkBox)) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleChecklistRow(checkBox.closest(".peekom-checklist-row"));
+          return;
+        }
+        const removeBtn = event.target.closest(".peekom-checklist-remove");
+        if (removeBtn && memoEditor.contains(removeBtn)) {
+          event.preventDefault();
+          event.stopPropagation();
+          removeChecklistRow(removeBtn.closest(".peekom-checklist-row"));
+          return;
+        }
+        const addBtn = event.target.closest(".peekom-checklist-add");
+        if (addBtn && memoEditor.contains(addBtn)) {
+          event.preventDefault();
+          event.stopPropagation();
+          addChecklistRowAfter(addBtn.closest(CHECKLIST_SELECTOR), null, true);
+          return;
+        }
+        // (하위호환) 기존 인라인 task-list 체크박스
+        const check = event.target.closest(".peekom-task-check");
+        if (check) {
+          event.preventDefault();
+          event.stopPropagation();
+          const li = check.closest(".peekom-task-list > li");
+          if (!li || !memoEditor.contains(li)) return;
+          const next = li.dataset.checked !== "true";
+          li.dataset.checked = String(next);
+          check.setAttribute("aria-checked", String(next));
+          persistActiveMemo();
+          return;
+        }
         const link = event.target.closest("a[data-external]");
         if (!link) return;
         event.preventDefault();
         const href = link.getAttribute("href");
         if (href) {
           ipcRenderer.invoke("shell:open-external", href).catch((err) => console.error(err));
+        }
+      });
+
+      const formatBar = document.getElementById("formatBar");
+      formatBar?.addEventListener("mousedown", (event) => {
+        if (event.target.closest("button, .color-swatch-btn")) {
+          event.preventDefault();
+          const sel = window.getSelection();
+          if (sel && sel.rangeCount > 0 && isSelectionInMemoEditor()) {
+            savedEditorRange = sel.getRangeAt(0).cloneRange();
+          }
         }
       });
 
@@ -2985,65 +3212,235 @@
         return null;
       }
 
-      function getSelectedAlignmentBlocks() {
+      function restoreSavedEditorSelection() {
+        if (!savedEditorRange) return false;
+        try {
+          if (
+            !memoEditor.contains(savedEditorRange.startContainer) ||
+            !memoEditor.contains(savedEditorRange.endContainer)
+          ) {
+            return false;
+          }
+          const sel = window.getSelection();
+          if (!sel) return false;
+          sel.removeAllRanges();
+          sel.addRange(savedEditorRange.cloneRange());
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      function getBlockFromRange(range) {
+        if (!range || !memoEditor) return null;
+        let node = range.startContainer;
+        if (node === memoEditor) {
+          const child = memoEditor.childNodes[range.startOffset];
+          if (child?.nodeType === Node.ELEMENT_NODE) return child;
+          if (range.startOffset > 0) {
+            const prev = memoEditor.childNodes[range.startOffset - 1];
+            if (prev?.nodeType === Node.ELEMENT_NODE) return prev;
+          }
+          return null;
+        }
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+        if (!node || !memoEditor.contains(node)) return null;
+
+        const taskLi = node.closest(".peekom-task-list > li");
+        if (taskLi && memoEditor.contains(taskLi)) return taskLi;
+
+        const li = node.closest("ul > li, ol > li");
+        if (li) {
+          const list = li.parentElement;
+          if (list?.parentElement === memoEditor) return li;
+        }
+
+        while (node && node !== memoEditor) {
+          if (node.parentElement === memoEditor) return node;
+          node = node.parentElement;
+        }
+        return null;
+      }
+
+      function getCurrentEditBlock() {
+        const range = getActiveEditorRange();
+        if (range) {
+          const block = getBlockFromRange(range);
+          if (block) return block;
+        }
+        return getCurrentAlignmentBlock();
+      }
+
+      function getActiveEditorRange() {
+        if (savedEditorRange) {
+          try {
+            if (
+              memoEditor.contains(savedEditorRange.startContainer) &&
+              memoEditor.contains(savedEditorRange.endContainer)
+            ) {
+              return savedEditorRange;
+            }
+          } catch {
+            /* invalid saved range */
+          }
+        }
         const sel = window.getSelection();
-        if (!sel || sel.rangeCount === 0) return [];
-
+        if (!sel || sel.rangeCount === 0) return null;
         const range = sel.getRangeAt(0);
-        const startDirect = getMemoDirectLineBlock(range.startContainer);
-        const endDirect = getMemoDirectLineBlock(range.endContainer);
+        if (!memoEditor.contains(range.startContainer)) return null;
+        return range;
+      }
 
-        if (startDirect && endDirect && startDirect.parentElement === memoEditor && endDirect.parentElement === memoEditor) {
-          if (startDirect.tagName === "UL" || startDirect.tagName === "OL") {
-            if (startDirect !== endDirect) return [];
-            if (!range.collapsed) {
-              return Array.from(startDirect.querySelectorAll(":scope > li")).filter((li) => range.intersectsNode(li));
+      function rangeOverlapsElement(range, el) {
+        if (!range || !el) return false;
+        try {
+          const probe = document.createRange();
+          probe.selectNodeContents(el);
+          return (
+            range.compareBoundaryPoints(Range.END_TO_START, probe) < 0 &&
+            range.compareBoundaryPoints(Range.START_TO_END, probe) > 0
+          );
+        } catch {
+          return range.intersectsNode(el);
+        }
+      }
+
+      function getCurrentAlignmentBlock() {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return null;
+        let node = sel.anchorNode;
+        if (!node || !memoEditor.contains(node)) return null;
+
+        if (node === memoEditor) {
+          const range = sel.getRangeAt(0);
+          if (range.endContainer === memoEditor && range.endOffset > 0) {
+            const child = memoEditor.childNodes[range.endOffset - 1];
+            if (child?.nodeType === Node.ELEMENT_NODE) {
+              if (child.tagName === "UL" || child.tagName === "OL") {
+                const li = child.querySelector(":scope > li:last-child");
+                return li || child;
+              }
+              return child;
             }
-            const anchor = sel.anchorNode;
-            const li = (anchor?.nodeType === Node.TEXT_NODE ? anchor.parentElement : anchor)?.closest?.("li");
-            return li && startDirect.contains(li) ? [li] : [];
           }
-
-          if (startDirect === endDirect) return [startDirect];
-
-          const blocks = [];
-          let el = startDirect;
-          while (el) {
-            if (el.tagName === "UL" || el.tagName === "OL") {
-              Array.from(el.querySelectorAll(":scope > li"))
-                .filter((li) => range.intersectsNode(li))
-                .forEach((li) => blocks.push(li));
-            } else {
-              blocks.push(el);
-            }
-            if (el === endDirect) break;
-            el = el.nextElementSibling;
-          }
-          return blocks;
+          if (!memoEditor.childNodes.length) return ensureBlockLine(memoEditor);
+          return null;
         }
 
-        const refNode = range.collapsed ? sel.anchorNode : range.commonAncestorContainer;
-        let ref = refNode?.nodeType === Node.TEXT_NODE ? refNode.parentElement : refNode;
-        const block = ref?.closest?.("p, h1, h2, h3, li, div");
-        if (!block || block === memoEditor || !memoEditor.contains(block)) return [];
-        if (block.tagName === "DIV" && block.parentElement !== memoEditor) {
-          const outer = getMemoDirectLineBlock(block);
-          return outer ? [outer] : [block];
+        if (node.nodeType === Node.TEXT_NODE) node = node.parentElement;
+        if (!node) return null;
+
+        const taskLi = node.closest(".peekom-task-list > li");
+        if (taskLi && memoEditor.contains(taskLi)) return taskLi;
+
+        const li = node.closest("ul > li, ol > li");
+        if (li) {
+          const list = li.parentElement;
+          if (list?.parentElement === memoEditor) return li;
         }
-        return [block];
+
+        while (node && node !== memoEditor) {
+          if (node.parentElement === memoEditor) return node;
+          node = node.parentElement;
+        }
+        return null;
+      }
+
+      function getSelectedAlignmentBlocks() {
+        const range = getActiveEditorRange();
+        if (!range) return [];
+
+        if (range.collapsed) {
+          const line = getCurrentAlignmentBlock();
+          return line ? [line] : [];
+        }
+
+        const blocks = [];
+        const seen = new Set();
+        const addBlock = (block) => {
+          if (!block || seen.has(block)) return;
+          seen.add(block);
+          blocks.push(block);
+        };
+
+        Array.from(memoEditor.children).forEach((child) => {
+          if (child.nodeType !== Node.ELEMENT_NODE) return;
+          if (child.tagName === "UL" || child.tagName === "OL") {
+            Array.from(child.children).forEach((li) => {
+              if (li.tagName === "LI" && rangeOverlapsElement(range, li)) addBlock(li);
+            });
+            return;
+          }
+          if (rangeOverlapsElement(range, child)) addBlock(child);
+        });
+        return blocks;
+      }
+
+      function getSelectedTaskBlocks() {
+        const range = getActiveEditorRange();
+        if (!range) return [];
+
+        if (range.collapsed) {
+          const block = getCurrentEditBlock();
+          return block ? [block] : [];
+        }
+
+        const blocks = [];
+        const seen = new Set();
+        const addBlock = (block) => {
+          if (!block || block === memoEditor || seen.has(block)) return;
+          seen.add(block);
+          blocks.push(block);
+        };
+
+        Array.from(memoEditor.children).forEach((child) => {
+          if (child.nodeType !== Node.ELEMENT_NODE) return;
+          if (child.tagName === "UL" || child.tagName === "OL") {
+            Array.from(child.children).forEach((li) => {
+              if (li.tagName === "LI" && rangeOverlapsElement(range, li)) addBlock(li);
+            });
+            return;
+          }
+          if (rangeOverlapsElement(range, child)) addBlock(child);
+        });
+
+        return blocks;
       }
 
       function applyAlignmentToBlock(block, textAlign) {
+        if (!block) return;
         if (block.tagName === "LI") {
-          const list = block.closest("ul, ol");
-          if (list) list.style.textAlign = textAlign;
-        } else {
-          block.style.textAlign = textAlign;
+          const list = block.parentElement;
+          if (list?.style?.textAlign) list.style.removeProperty("text-align");
         }
+        block.style.textAlign = textAlign;
+      }
+
+      // 서식 적용 대상이 체크리스트 위젯 내부 텍스트인지 판별(저장된 선택 우선).
+      function getChecklistTextForFormatting() {
+        let container = savedEditorRange?.startContainer || null;
+        if (!container) {
+          const sel = window.getSelection();
+          if (sel && sel.rangeCount) container = sel.getRangeAt(0).startContainer;
+        }
+        if (!container) return null;
+        const el = container.nodeType === Node.TEXT_NODE ? container.parentElement : container;
+        if (!el || !memoEditor.contains(el)) return null;
+        return el.closest(".peekom-checklist-text");
+      }
+
+      // 현재(또는 저장된) 선택이 체크리스트 위젯 내부인지 여부.
+      function isSelectionInChecklist() {
+        const sel = window.getSelection();
+        let node = sel && sel.rangeCount ? sel.anchorNode : null;
+        if ((!node || !memoEditor.contains(node)) && savedEditorRange) {
+          node = savedEditorRange.startContainer;
+        }
+        const el = node && node.nodeType === Node.TEXT_NODE ? node.parentElement : node;
+        return !!(el && memoEditor.contains(el) && el.closest(CHECKLIST_SELECTOR));
       }
 
       function applyAlignment(alignCmd) {
-        memoEditor.focus();
         const alignMap = {
           justifyLeft: "left",
           justifyCenter: "center",
@@ -3053,25 +3450,30 @@
         const textAlign = alignMap[alignCmd];
         if (!textAlign) return;
 
-        const blocks = getSelectedAlignmentBlocks();
-        if (blocks.length > 0) {
-          blocks.forEach((block) => applyAlignmentToBlock(block, textAlign));
+        // 체크리스트 위젯 내부에서는 정렬 기능을 사용하지 않는다(목록·이미지와 동일).
+        if (isSelectionInChecklist()) {
+          savedEditorRange = null;
           return;
         }
 
-        const node = getSelectionNodeInEditor();
-        if (!node) {
-          document.execCommand(alignCmd, false, null);
-          return;
+        if (savedEditorRange) {
+          const sel = window.getSelection();
+          if (sel) {
+            sel.removeAllRanges();
+            sel.addRange(savedEditorRange.cloneRange());
+          }
         }
 
-        const block = node.closest("p, h1, h2, h3, li, div");
-        if (!block || block === memoEditor) {
-          document.execCommand(alignCmd, false, null);
-          return;
+        let blocks = getSelectedAlignmentBlocks();
+        if (blocks.length === 0) {
+          const line = getCurrentAlignmentBlock();
+          if (line) blocks = [line];
         }
 
-        applyAlignmentToBlock(block, textAlign);
+        blocks.forEach((block) => applyAlignmentToBlock(block, textAlign));
+        savedEditorRange = null;
+        memoEditor.focus();
+        persistActiveMemo();
       }
 
       function getSelectionNodeInEditor() {
@@ -3101,6 +3503,8 @@
       }
 
       function applyListStyle(style) {
+        // 체크리스트 위젯 내부에서는 목록 서식을 적용하지 않는다.
+        if (isSelectionInChecklist()) return;
         memoEditor.focus();
         if (style === "plain") {
           removeListFormatting();
@@ -3149,6 +3553,375 @@
         });
       });
 
+      function buildTaskListHtml(content, checked = false) {
+        const c = checked ? "true" : "false";
+        const inner = content && content.trim() ? content : "<br>";
+        return `<ul class="peekom-task-list"><li data-checked="${c}"><span class="peekom-task-check" contenteditable="false" role="checkbox" aria-checked="${c}" tabindex="-1"></span><div class="peekom-task-content">${inner}</div></li></ul>`;
+      }
+
+      function getTaskListItemContentHtml(li) {
+        const contentEl = li.querySelector(":scope > .peekom-task-content");
+        if (contentEl) return contentEl.innerHTML.trim() || "<br>";
+        let inner = li.innerHTML.trim();
+        inner = inner.replace(/<span[^>]*class="[^"]*peekom-task-check[^"]*"[^>]*><\/span>/i, "").trim();
+        return inner || "<br>";
+      }
+
+      function taskListContentToBlockHtml(inner) {
+        const trimmed = (inner || "").trim() || "<br>";
+        return `<div>${trimmed}</div>`;
+      }
+
+      function unwrapTaskListItem(li) {
+        if (!li?.closest(".peekom-task-list")) return;
+        const list = li.closest(".peekom-task-list");
+        const inner = getTaskListItemContentHtml(li);
+        const blockHtml = taskListContentToBlockHtml(inner);
+        if (list.querySelectorAll(":scope > li").length === 1) {
+          replaceLineElement(list, blockHtml, { preserveCaret: true });
+          return;
+        }
+        const div = document.createElement("div");
+        div.innerHTML = inner.trim() || "<br>";
+        if (!div.textContent.trim() && !div.querySelector("br, img")) {
+          div.innerHTML = "<br>";
+        }
+        li.parentNode?.replaceChild(div, li);
+      }
+
+      function replaceListItemWithTaskList(li) {
+        const list = li.parentElement;
+        if (!list || list.parentElement !== memoEditor) {
+          replaceLineElement(li, buildTaskListHtml(li.innerHTML.trim() || "<br>"), { preserveCaret: true });
+          return;
+        }
+
+        const content = li.innerHTML.trim() || "<br>";
+        const items = Array.from(list.querySelectorAll(":scope > li"));
+
+        if (items.length === 1) {
+          replaceLineElement(list, buildTaskListHtml(content), { preserveCaret: true });
+          return;
+        }
+
+        const idx = items.indexOf(li);
+        const before = items.slice(0, idx);
+        const after = items.slice(idx + 1);
+        const frag = document.createDocumentFragment();
+        const listTag = list.tagName === "OL" ? "ol" : "ul";
+        const listClass = list.classList.contains("peekom-list-square") ? "peekom-list-square" : "";
+
+        if (before.length) {
+          const group = document.createElement(listTag);
+          if (listClass) group.classList.add(listClass);
+          before.forEach((item) => group.appendChild(item));
+          frag.appendChild(group);
+        }
+
+        frag.appendChild(htmlToFragment(buildTaskListHtml(content)).firstChild);
+
+        if (after.length) {
+          const group = document.createElement(listTag);
+          if (listClass) group.classList.add(listClass);
+          after.forEach((item) => group.appendChild(item));
+          frag.appendChild(group);
+        }
+
+        const caret = getCaretCharOffset(memoEditor);
+        list.parentNode.replaceChild(frag, list);
+        if (caret !== null) setCaretByCharOffset(memoEditor, caret);
+      }
+
+      function insertTaskListAtBlock(block) {
+        if (!block || block === memoEditor || block.classList?.contains("peekom-task-list")) return;
+
+        if (block.tagName === "LI" && !block.closest(".peekom-task-list")) {
+          replaceListItemWithTaskList(block);
+          return;
+        }
+
+        const content = block.innerHTML.trim() || "<br>";
+        replaceLineElement(block, buildTaskListHtml(content), { preserveCaret: true });
+      }
+
+      function convertUlToTaskList(ul) {
+        if (!ul || ul.classList.contains("peekom-task-list")) return;
+        const caret = getCaretCharOffset(memoEditor);
+        ul.classList.add("peekom-task-list");
+        ul.classList.remove("peekom-list-square");
+        Array.from(ul.children).forEach((li) => {
+          if (li.tagName !== "LI") return;
+          if (li.querySelector(":scope > .peekom-task-check")) return;
+          const checked = li.dataset.checked === "true";
+          li.dataset.checked = checked ? "true" : "false";
+          const content = document.createElement("div");
+          content.className = "peekom-task-content";
+          while (li.firstChild) content.appendChild(li.firstChild);
+          if (!content.childNodes.length) content.appendChild(document.createElement("br"));
+          const check = document.createElement("span");
+          check.className = "peekom-task-check";
+          check.setAttribute("contenteditable", "false");
+          check.setAttribute("role", "checkbox");
+          check.setAttribute("aria-checked", checked ? "true" : "false");
+          check.setAttribute("tabindex", "-1");
+          li.appendChild(check);
+          li.appendChild(content);
+        });
+        if (caret !== null) setCaretByCharOffset(memoEditor, caret);
+      }
+
+      function getTaskItemsInSelection() {
+        const range = getActiveEditorRange();
+        if (!range) return [];
+        if (range.collapsed) {
+          const node = getSelectionNodeInEditor();
+          const li = node?.closest(".peekom-task-list > li");
+          return li && memoEditor.contains(li) ? [li] : [];
+        }
+        return Array.from(memoEditor.querySelectorAll(".peekom-task-list > li")).filter((li) =>
+          rangeOverlapsElement(range, li)
+        );
+      }
+
+      function toggleTaskListForCurrentLine() {
+        if (!isPremium) {
+          window.PeekomPremiumUI?.showPremiumModal();
+          return;
+        }
+
+        restoreSavedEditorSelection();
+        memoEditor.focus();
+        restoreSavedEditorSelection();
+
+        // 1) 이미 체크박스로 지정된 줄이 선택되어 있으면 해제한다.
+        const taskItems = getTaskItemsInSelection();
+        if (taskItems.length) {
+          taskItems.slice().reverse().forEach((li) => unwrapTaskListItem(li));
+          savedEditorRange = null;
+          persistActiveMemo();
+          updateToolbarActiveState();
+          return;
+        }
+
+        // 2) 커서가 일반 목록(글머리표/번호) 줄에 있으면 그 줄만 체크박스로 전환한다.
+        const range = getActiveEditorRange();
+        const node = getSelectionNodeInEditor();
+        const normalLi = node?.closest("ul:not(.peekom-task-list) > li, ol > li");
+        if (range && range.collapsed && normalLi && memoEditor.contains(normalLi)) {
+          replaceListItemWithTaskList(normalLi);
+          savedEditorRange = null;
+          persistActiveMemo();
+          updateToolbarActiveState();
+          return;
+        }
+
+        // 3) 그 외(일반 문단/여러 줄)는 목록 버튼과 동일하게 네이티브 목록을 만든 뒤 체크박스로 변환한다.
+        document.execCommand("insertUnorderedList", false, null);
+        const createdUl = getSelectionNodeInEditor()?.closest("ul:not(.peekom-task-list)");
+        if (createdUl) convertUlToTaskList(createdUl);
+
+        savedEditorRange = null;
+        persistActiveMemo();
+        updateToolbarActiveState();
+      }
+
+      // ===== B-2 체크리스트 위젯 =====
+      // 메모 편집 영역(contenteditable) 안에 "편집 잠금(contenteditable=false)"된 독립 컨테이너를
+      // 이미지처럼 하나의 블록으로 심는다. 위/아래에는 일반 텍스트가 올 수 있고, 위젯 내부의
+      // 체크/텍스트는 위젯이 스스로 관리하므로 본문 편집 로직과 충돌하지 않는다.
+      // 저장은 렌더링된 HTML을 그대로 memoHtml에 담는다(항목 텍스트의 서식이 실제 HTML로
+      // 보존되므로 JSON 속성 직렬화에서 발생하던 서식 유실·"undefined" 문제가 없다).
+      const CHECKLIST_SELECTOR = ".peekom-checklist";
+
+      function buildChecklistRow(item) {
+        const checked = !!(item && item.c);
+        const row = document.createElement("div");
+        row.className = "peekom-checklist-row";
+        row.setAttribute("data-checked", checked ? "true" : "false");
+
+        const box = document.createElement("span");
+        box.className = "peekom-checklist-box";
+        box.setAttribute("role", "checkbox");
+        box.setAttribute("aria-checked", checked ? "true" : "false");
+        box.setAttribute("tabindex", "-1");
+        box.setAttribute("contenteditable", "false");
+
+        const text = document.createElement("span");
+        text.className = "peekom-checklist-text";
+        text.setAttribute("contenteditable", "true");
+        const rawText = item && typeof item.t === "string" ? item.t : "";
+        // 항목 텍스트는 인라인 서식(굵게/기울임/밑줄/취소선/색)을 허용하되 안전하게 정화한다.
+        text.innerHTML = window.PeekomMemoSanitize
+          ? window.PeekomMemoSanitize.sanitizeMemoHtml(rawText)
+          : rawText;
+        if (item && typeof item.a === "string" && item.a) {
+          text.style.textAlign = item.a;
+        }
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "peekom-checklist-remove";
+        remove.setAttribute("tabindex", "-1");
+        remove.setAttribute("contenteditable", "false");
+        remove.textContent = "×";
+
+        row.appendChild(box);
+        row.appendChild(text);
+        row.appendChild(remove);
+        return row;
+      }
+
+      // 완성된 체크리스트 위젯(행 + 항목 추가 버튼)을 렌더링된 상태로 만든다.
+      // 이 렌더 결과가 그대로 memoHtml에 저장되고, 로드 시 별도 하이드레이트 없이 복원된다.
+      function buildChecklistWidget(items) {
+        const widget = document.createElement("div");
+        widget.className = "peekom-checklist";
+        widget.setAttribute("contenteditable", "false");
+        const list = Array.isArray(items) && items.length ? items : [{ t: "", c: false }];
+        list.forEach((item) => widget.appendChild(buildChecklistRow(item)));
+        const add = document.createElement("button");
+        add.type = "button";
+        add.className = "peekom-checklist-add";
+        add.setAttribute("tabindex", "-1");
+        add.setAttribute("contenteditable", "false");
+        add.textContent = "＋";
+        widget.appendChild(add);
+        return widget;
+      }
+
+      // 하위호환: 예전 방식(data-items만 저장, 내부는 비어 있음)으로 저장된 체크리스트를
+      // 로드 시 한 번 렌더링된 형태로 복원한다. 이미 렌더된 위젯은 건드리지 않는다.
+      function hydrateLegacyChecklists(root) {
+        const scope = root || memoEditor;
+        if (!scope) return;
+        scope.querySelectorAll(CHECKLIST_SELECTOR).forEach((w) => {
+          if (w.querySelector(":scope > .peekom-checklist-row")) return;
+          let items = [{ t: "", c: false }];
+          try {
+            const raw = w.getAttribute("data-items");
+            const arr = raw ? JSON.parse(raw) : null;
+            if (Array.isArray(arr) && arr.length) {
+              items = arr.map((it) => ({
+                t: it && typeof it.t === "string" ? it.t : "",
+                c: !!(it && it.c),
+                a: it && typeof it.a === "string" ? it.a : ""
+              }));
+            }
+          } catch {
+            /* 손상된 데이터는 빈 항목으로 대체 */
+          }
+          w.replaceWith(buildChecklistWidget(items));
+        });
+      }
+
+      function focusChecklistText(row) {
+        const text = row?.querySelector(".peekom-checklist-text");
+        if (!text) return;
+        text.focus();
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(text);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+
+      function toggleChecklistRow(row) {
+        if (!row) return;
+        const next = row.getAttribute("data-checked") === "true" ? "false" : "true";
+        row.setAttribute("data-checked", next);
+        row.querySelector(".peekom-checklist-box")?.setAttribute("aria-checked", next);
+        persistActiveMemo();
+      }
+
+      function addChecklistRowAfter(widget, afterRow, focus = true) {
+        if (!widget) return null;
+        const row = buildChecklistRow({ t: "", c: false });
+        if (afterRow && afterRow.parentNode === widget) {
+          afterRow.after(row);
+        } else {
+          const add = widget.querySelector(":scope > .peekom-checklist-add");
+          if (add) widget.insertBefore(row, add);
+          else widget.appendChild(row);
+        }
+        if (focus) focusChecklistText(row);
+        persistActiveMemo();
+        return row;
+      }
+
+      function removeChecklistRow(row) {
+        const widget = row?.closest(CHECKLIST_SELECTOR);
+        if (!widget) return;
+        const rows = Array.from(widget.querySelectorAll(":scope > .peekom-checklist-row"));
+        const idx = rows.indexOf(row);
+        if (rows.length <= 1) {
+          const line = document.createElement("div");
+          line.appendChild(document.createElement("br"));
+          widget.replaceWith(line);
+          placeCaretInEmptyLine(line);
+          persistActiveMemo();
+          return;
+        }
+        const focusTarget = rows[idx - 1] || rows[idx + 1] || null;
+        row.remove();
+        if (focusTarget) focusChecklistText(focusTarget);
+        persistActiveMemo();
+      }
+
+      function insertOrExtendChecklist() {
+        if (!isPremium) {
+          window.PeekomPremiumUI?.showPremiumModal();
+          return;
+        }
+        restoreSavedEditorSelection();
+        memoEditor.focus();
+        restoreSavedEditorSelection();
+
+        const sel = window.getSelection();
+        const anchor = sel && sel.rangeCount ? sel.anchorNode : null;
+        const anchorEl = anchor && anchor.nodeType === Node.TEXT_NODE ? anchor.parentElement : anchor;
+        const existing =
+          anchorEl && memoEditor.contains(anchorEl) ? anchorEl.closest(CHECKLIST_SELECTOR) : null;
+        if (existing) {
+          const curRow = anchorEl.closest(".peekom-checklist-row");
+          addChecklistRowAfter(existing, curRow, true);
+          savedEditorRange = null;
+          return;
+        }
+
+        const widget = buildChecklistWidget([{ t: "", c: false }]);
+        let ref = null;
+        if (sel && sel.rangeCount && memoEditor.contains(sel.anchorNode)) {
+          let n = sel.anchorNode;
+          while (n && n.parentNode !== memoEditor) n = n.parentNode;
+          if (n && n.parentNode === memoEditor) ref = n;
+        }
+        if (ref) ref.after(widget);
+        else memoEditor.appendChild(widget);
+
+        if (!widget.nextSibling) {
+          const after = document.createElement("div");
+          after.appendChild(document.createElement("br"));
+          widget.after(after);
+        }
+        focusChecklistText(widget.querySelector(":scope > .peekom-checklist-row"));
+        savedEditorRange = null;
+        persistActiveMemo();
+      }
+
+      taskListBtn?.addEventListener("mousedown", (event) => {
+        event.preventDefault();
+        const sel = window.getSelection();
+        if (sel && sel.rangeCount > 0 && isSelectionInMemoEditor()) {
+          savedEditorRange = sel.getRangeAt(0).cloneRange();
+        }
+      });
+
+      taskListBtn?.addEventListener("click", (event) => {
+        event.stopPropagation();
+        insertOrExtendChecklist();
+      });
+
 
       document.querySelectorAll(".color-swatch-btn").forEach((btn) => {
         btn.addEventListener("click", (event) => {
@@ -3172,6 +3945,15 @@
       }
 
       function updateToolbarActiveState() {
+        // 커서가 체크리스트 위젯 안에 있으면 목록·이미지·정렬 아이콘을 흐리게 표시(선택 불가 암시).
+        const inChecklist = !!(memoEditor && isSelectionInChecklist());
+        listMenuBtn?.classList.toggle("tool-context-disabled", inChecklist);
+        alignMenuBtn?.classList.toggle("tool-context-disabled", inChecklist);
+        clipImageBtn?.classList.toggle("tool-context-disabled", inChecklist);
+        document.querySelectorAll("[data-align]").forEach((b) => {
+          b.classList.toggle("tool-context-disabled", inChecklist);
+        });
+
         if (!memoEditor || !isSelectionInMemoEditor()) {
           toolbarButtons.forEach((button) => button.classList.remove("active"));
           listMenuBtn?.classList.remove("active");
@@ -3240,6 +4022,10 @@
       document.addEventListener("selectionchange", () => {
         if (!isExpanded) return;
         updateToolbarActiveState();
+        if (memoEditor && (document.activeElement === memoEditor || memoEditor.contains(document.activeElement))) {
+          clearTimeout(caretSaveTimer);
+          caretSaveTimer = setTimeout(() => saveCaretToActiveSlot(), 300);
+        }
       });
 
       memoEditor.addEventListener("keyup", updateToolbarActiveState);
@@ -3260,6 +4046,11 @@
         const trigger = wrap.querySelector(".tool-btn");
         trigger?.addEventListener("click", (event) => {
           event.stopPropagation();
+          // 체크리스트 위젯 내부에서는 목록·정렬 메뉴를 열지 않는다(선택 불가).
+          if ((wrapId === "listDropdownWrap" || wrapId === "alignDropdownWrap") && isSelectionInChecklist()) {
+            closeToolbarDropdowns();
+            return;
+          }
           const willOpen = !dropdown.classList.contains("open");
           closeToolbarDropdowns();
           if (willOpen) {
@@ -3703,6 +4494,8 @@
       }
 
       async function pickMemoImage() {
+        // 체크리스트 위젯 내부에서는 이미지 삽입을 막는다.
+        if (isSelectionInChecklist()) return;
         if (!guardMemoImageLimit()) return;
         try {
           const result = await ipcRenderer.invoke("image:pick");
@@ -3910,7 +4703,15 @@
       });
 
       function executeCmd(command, value = null) {
-        memoEditor.focus();
+        // 체크리스트 위젯 내부 텍스트에 서식을 적용할 때는 memoEditor로 포커스를
+        // 옮기지 않고(그러면 커서가 위젯 밖 맨 앞으로 튄다) 해당 텍스트에 포커스를 유지한다.
+        const clText = getChecklistTextForFormatting();
+        if (clText) {
+          clText.focus();
+          restoreSavedEditorSelection();
+        } else {
+          memoEditor.focus();
+        }
         document.execCommand(command, false, value);
       }
 
@@ -4023,7 +4824,7 @@
           if (taskMatch) {
             const checked = taskMatch[2].toLowerCase() === "x";
             const content = parseMarkdownInline(taskMatch[3]);
-            return `<ul class="peekom-task-list"><li data-checked="${checked}"><span class="peekom-task-check" contenteditable="false" role="checkbox" aria-checked="${checked}" tabindex="-1"></span>${content}</li></ul>`;
+            return `<ul class="peekom-task-list"><li data-checked="${checked}"><span class="peekom-task-check" contenteditable="false" role="checkbox" aria-checked="${checked}" tabindex="-1"></span><div class="peekom-task-content">${content}</div></li></ul>`;
           }
         }
         if (trimmed.startsWith("- ")) {
@@ -4142,7 +4943,8 @@
           if (node.nodeType === Node.ELEMENT_NODE) {
             if (
               node.classList?.contains("peekom-memo-image") ||
-              node.classList?.contains("peekom-image-wrap")
+              node.classList?.contains("peekom-image-wrap") ||
+              node.classList?.contains("peekom-checklist")
             ) {
               offset += 1;
               return;
@@ -4209,7 +5011,8 @@
           } else if (node.nodeType === Node.ELEMENT_NODE) {
             if (
               node.classList?.contains("peekom-memo-image") ||
-              node.classList?.contains("peekom-image-wrap")
+              node.classList?.contains("peekom-image-wrap") ||
+              node.classList?.contains("peekom-checklist")
             ) {
               if (remaining <= 0) {
                 range.setStartAfter(node);
@@ -4247,6 +5050,9 @@
           acceptNode(node) {
             if (!node.nodeValue || node.nodeValue.length < 4) return NodeFilter.FILTER_REJECT;
             if (node.parentElement && node.parentElement.closest("a")) {
+              return NodeFilter.FILTER_REJECT;
+            }
+            if (node.parentElement && node.parentElement.closest(".peekom-checklist")) {
               return NodeFilter.FILTER_REJECT;
             }
             return NodeFilter.FILTER_ACCEPT;
@@ -4287,8 +5093,12 @@
           mutated = true;
         });
 
-        if (mutated && caret !== null) {
-          setCaretByCharOffset(memoEditor, caret);
+        if (mutated) {
+          if (caret !== null) {
+            setCaretByCharOffset(memoEditor, caret);
+          } else if (!skipCaret) {
+            restoreCaretForActiveSlot();
+          }
         }
       }
 
@@ -4326,6 +5136,8 @@
         }
         applyFormatBarTooltips();
         applyMainUiLabels();
+        applySpellcheckSetting();
+        updateTaskListBtnVisibility();
 
         if (appState.activeSlot >= appState.enabledCount) {
           appState.activeSlot = clampSlotIndex(appState.activeSlot, appState.enabledCount);
@@ -4402,6 +5214,8 @@
         }
         applyFormatBarTooltips();
         applyMainUiLabels();
+        applySpellcheckSetting();
+        updateTaskListBtnVisibility();
 
         prepareSlotRoster();
         applyThemeForSlot(appState.activeSlot);
@@ -4503,6 +5317,7 @@
         if (!isPremium) {
           normalizeMemoTypography(appState.activeSlot, { preserveCaret: true });
         }
+        updateTaskListBtnVisibility();
       });
 
       window.onPremiumActivated = async () => {
@@ -4642,6 +5457,8 @@
 
         applyThemeForSlot(appState.activeSlot);
         loadMemoForActiveSlot({ force: true });
+        applySpellcheckSetting();
+        updateTaskListBtnVisibility();
         applyPanelEdgeUI();
         updatePanelPosition();
 

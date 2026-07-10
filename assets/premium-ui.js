@@ -12,7 +12,8 @@
     "premiumFeat5",
     "premiumFeat6",
     "premiumFeat7",
-    "premiumFeat8"
+    "premiumFeat8",
+    "premiumFeat9"
   ];
 
   function t(key, fallback) {

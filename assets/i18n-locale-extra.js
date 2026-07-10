@@ -298,4 +298,80 @@
   Object.keys(premiumErrI18n).forEach((code) => {
     if (S[code]) Object.assign(S[code], premiumErrI18n[code]);
   });
+
+  const checklistLabelI18n = {
+    ja: "チェックリスト",
+    "zh-CN": "清单",
+    "zh-TW": "清單",
+    es: "Lista de tareas",
+    fr: "Liste de contrôle",
+    de: "Checkliste",
+    pt: "Lista de tarefas",
+    it: "Elenco di controllo",
+    ru: "Чек-лист",
+    vi: "Danh sách kiểm",
+    th: "เช็กลิสต์",
+    id: "Daftar periksa",
+    hi: "चेकलिस्ट",
+    ar: "قائمة مهام"
+  };
+  Object.keys(checklistLabelI18n).forEach((code) => {
+    if (S[code]) S[code].fmtTaskList = checklistLabelI18n[code];
+  });
+
+  const premiumFeat9I18n = {
+    ja: "メモのチェックリスト",
+    "zh-CN": "备忘录清单",
+    "zh-TW": "備忘錄清單",
+    es: "Lista de tareas en notas",
+    fr: "Liste de contrôle dans les notes",
+    de: "Memo-Checkliste",
+    pt: "Lista de tarefas nas notas",
+    it: "Checklist nelle note",
+    ru: "Чек-лист в заметках",
+    vi: "Danh sách kiểm trong ghi chú",
+    th: "เช็กลิสต์ในโน้ต",
+    id: "Daftar periksa memo",
+    hi: "मेमो चेकलिस्ट",
+    ar: "قائمة مهام في الملاحظة"
+  };
+  const resetCommonDefaultsI18n = {
+    ja: "リセット",
+    "zh-CN": "重置",
+    "zh-TW": "重設",
+    es: "Restablecer",
+    fr: "Réinitialiser",
+    de: "Zurücksetzen",
+    pt: "Redefinir",
+    it: "Reimposta",
+    ru: "Сброс",
+    vi: "Đặt lại",
+    th: "รีเซ็ต",
+    id: "Atur ulang",
+    hi: "रीसेट",
+    ar: "إعادة التعيين"
+  };
+  const spellcheckHintI18n = {
+    ja: "スペルが正しくないとき赤い点線を表示します",
+    "zh-CN": "拼写不正确时显示红色虚线下划线",
+    "zh-TW": "拼寫不正確時顯示紅色虛線底線",
+    es: "Muestra subrayado rojo punteado cuando la ortografía es incorrecta",
+    fr: "Affiche un soulignement rouge pointillé en cas d'erreur orthographique",
+    de: "Zeigt rote gepunktete Unterstreichung bei Rechtschreibfehlern",
+    pt: "Exibe sublinhado vermelho pontilhado quando a ortografia estiver incorreta",
+    it: "Mostra sottolineatura rossa tratteggiata se l'ortografia è errata",
+    ru: "Показывает красное пунктирное подчёркивание при орфографических ошибках",
+    vi: "Hiển thị gạch chân đỏ chấm chấm khi chính tả sai",
+    th: "แสดงเส้นประสีแดงเมื่อสะกดผิด",
+    id: "Menampilkan garis bawah merah putus-putus jika ejaan salah",
+    hi: "गलत वर्तनी होने पर लाल बिंदीदार रेखा दिखाता है",
+    ar: "يعرض خطاً أحمر منقطاً عند وجود خطأ إملائي"
+  };
+  Object.keys(premiumFeat9I18n).forEach((code) => {
+    if (S[code]) {
+      S[code].premiumFeat9 = premiumFeat9I18n[code];
+      S[code].resetCommonDefaults = resetCommonDefaultsI18n[code];
+      S[code].spellcheckHint = spellcheckHintI18n[code];
+    }
+  });
 })(typeof window !== 'undefined' ? window : global);

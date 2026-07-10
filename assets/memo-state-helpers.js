@@ -8,7 +8,7 @@
     probe.innerHTML = trimmed;
     const text = (probe.textContent || "").trim();
     if (text) return false;
-    return !probe.querySelector("img.peekom-memo-image");
+    return !probe.querySelector("img.peekom-memo-image, .peekom-checklist");
   }
 
   function pickMemoHtml(dstHtml, srcHtml) {

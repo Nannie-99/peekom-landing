@@ -36,11 +36,13 @@
             rows: [
                 { feature: "모드 전환 방식 선택", free: "✓", plus: "✓" },
                 { feature: "서식바", free: "✓", plus: "✓" },
+                { feature: "맞춤법 검사 켜기/끄기", free: "✓", plus: "✓" },
                 { feature: "이미지 삽입", free: "✓", plus: "✓" },
                 { feature: "메모당 이미지", free: "1개", plus: "5개" },
                 { feature: "글자 크기 조절", free: "—", plus: "✓" },
                 { feature: "이미지 크기 조절 (50–150%)", free: "—", plus: "✓" },
-                { feature: "커스텀 글꼴", free: "—", plus: "✓" }
+                { feature: "커스텀 글꼴", free: "—", plus: "✓" },
+                { feature: "메모 체크리스트", free: "—", plus: "✓" }
             ]
         },
         {
@@ -96,11 +98,13 @@
             rows: [
                 { feature: "Peek / Ice toggle mode", free: "✓", plus: "✓" },
                 { feature: "Formatting toolbar", free: "✓", plus: "✓" },
+                { feature: "Spell check on/off", free: "✓", plus: "✓" },
                 { feature: "Image insert", free: "✓", plus: "✓" },
                 { feature: "Images per memo", free: "1", plus: "5" },
                 { feature: "Font size (Ctrl+wheel)", free: "—", plus: "✓" },
                 { feature: "Image resize (50–150%)", free: "—", plus: "✓" },
-                { feature: "Custom fonts", free: "—", plus: "✓" }
+                { feature: "Custom fonts", free: "—", plus: "✓" },
+                { feature: "Memo checklist", free: "—", plus: "✓" }
             ]
         },
         {

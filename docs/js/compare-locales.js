@@ -39,11 +39,13 @@
                 rows: [
                     { feature: "모드 전환 방식 선택", free: "✓", plus: "✓" },
                     { feature: "서식바", free: "✓", plus: "✓" },
+                    { feature: "맞춤법 검사 켜기/끄기", free: "✓", plus: "✓" },
                     { feature: "이미지 삽입", free: "✓", plus: "✓" },
                     { feature: "메모당 이미지", free: "1개", plus: "5개" },
                     { feature: "글자 크기 조절", free: "—", plus: "✓" },
                     { feature: "이미지 크기 조절 (50–150%)", free: "—", plus: "✓" },
-                    { feature: "커스텀 글꼴", free: "—", plus: "✓" }
+                    { feature: "커스텀 글꼴", free: "—", plus: "✓" },
+                    { feature: "메모 체크리스트", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -98,11 +100,13 @@
                 rows: [
                     { feature: "Peek / Ice toggle mode", free: "✓", plus: "✓" },
                     { feature: "Formatting toolbar", free: "✓", plus: "✓" },
+                    { feature: "Spell check on/off", free: "✓", plus: "✓" },
                     { feature: "Image insert", free: "✓", plus: "✓" },
                     { feature: "Images per memo", free: "1", plus: "5" },
                     { feature: "Font size adjustment", free: "—", plus: "✓" },
                     { feature: "Image resize (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Custom fonts", free: "—", plus: "✓" }
+                    { feature: "Custom fonts", free: "—", plus: "✓" },
+                    { feature: "Memo checklist", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -157,11 +161,13 @@
                 rows: [
                     { feature: "モード切替方式の選択", free: "✓", plus: "✓" },
                     { feature: "書式バー", free: "✓", plus: "✓" },
+                    { feature: "スペルチェックのオン/オフ", free: "✓", plus: "✓" },
                     { feature: "画像挿入", free: "✓", plus: "✓" },
                     { feature: "メモあたりの画像", free: "1", plus: "5" },
                     { feature: "文字サイズ調整", free: "—", plus: "✓" },
                     { feature: "画像サイズ調整（50–150%）", free: "—", plus: "✓" },
-                    { feature: "カスタムフォント", free: "—", plus: "✓" }
+                    { feature: "カスタムフォント", free: "—", plus: "✓" },
+                    { feature: "メモのチェックリスト", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -216,11 +222,13 @@
                 rows: [
                     { feature: "模式切换方式选择", free: "✓", plus: "✓" },
                     { feature: "格式工具栏", free: "✓", plus: "✓" },
+                    { feature: "拼写检查 开/关", free: "✓", plus: "✓" },
                     { feature: "插入图片", free: "✓", plus: "✓" },
                     { feature: "每条备忘图片数", free: "1张", plus: "5张" },
                     { feature: "字体大小调节", free: "—", plus: "✓" },
                     { feature: "图片大小调节（50–150%）", free: "—", plus: "✓" },
-                    { feature: "自定义字体", free: "—", plus: "✓" }
+                    { feature: "自定义字体", free: "—", plus: "✓" },
+                    { feature: "备忘录清单", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -275,11 +283,13 @@
                 rows: [
                     { feature: "模式切換方式選擇", free: "✓", plus: "✓" },
                     { feature: "格式工具列", free: "✓", plus: "✓" },
+                    { feature: "拼寫檢查 開/關", free: "✓", plus: "✓" },
                     { feature: "插入圖片", free: "✓", plus: "✓" },
                     { feature: "每則備忘圖片數", free: "1張", plus: "5張" },
                     { feature: "字體大小調整", free: "—", plus: "✓" },
                     { feature: "圖片大小調整（50–150%）", free: "—", plus: "✓" },
-                    { feature: "自訂字型", free: "—", plus: "✓" }
+                    { feature: "自訂字型", free: "—", plus: "✓" },
+                    { feature: "備忘錄清單", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -334,11 +344,13 @@
                 rows: [
                     { feature: "Modo de cambio Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barra de formato", free: "✓", plus: "✓" },
+                    { feature: "Corrector ortográfico activar/desactivar", free: "✓", plus: "✓" },
                     { feature: "Insertar imagen", free: "✓", plus: "✓" },
                     { feature: "Imágenes por nota", free: "1", plus: "5" },
                     { feature: "Tamaño de fuente", free: "—", plus: "✓" },
                     { feature: "Redimensionar imagen (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Fuentes personalizadas", free: "—", plus: "✓" }
+                    { feature: "Fuentes personalizadas", free: "—", plus: "✓" },
+                    { feature: "Lista de tareas en notas", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -393,11 +405,13 @@
                 rows: [
                     { feature: "Mode bascule Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barre de formatage", free: "✓", plus: "✓" },
+                    { feature: "Vérification orthographique activable", free: "✓", plus: "✓" },
                     { feature: "Insertion d'image", free: "✓", plus: "✓" },
                     { feature: "Images par note", free: "1", plus: "5" },
                     { feature: "Taille de police", free: "—", plus: "✓" },
                     { feature: "Redimensionnement image (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Polices personnalisées", free: "—", plus: "✓" }
+                    { feature: "Polices personnalisées", free: "—", plus: "✓" },
+                    { feature: "Liste de contrôle dans les notes", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -452,11 +466,13 @@
                 rows: [
                     { feature: "Peek-/Ice-Umschaltmodus", free: "✓", plus: "✓" },
                     { feature: "Formatleiste", free: "✓", plus: "✓" },
+                    { feature: "Rechtschreibprüfung ein/aus", free: "✓", plus: "✓" },
                     { feature: "Bild einfügen", free: "✓", plus: "✓" },
                     { feature: "Bilder pro Notiz", free: "1", plus: "5" },
                     { feature: "Schriftgröße", free: "—", plus: "✓" },
                     { feature: "Bildgröße (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Eigene Schriftarten", free: "—", plus: "✓" }
+                    { feature: "Eigene Schriftarten", free: "—", plus: "✓" },
+                    { feature: "Memo-Checkliste", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -511,11 +527,13 @@
                 rows: [
                     { feature: "Modo de alternância Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barra de formatação", free: "✓", plus: "✓" },
+                    { feature: "Verificação ortográfica ligar/desligar", free: "✓", plus: "✓" },
                     { feature: "Inserir imagem", free: "✓", plus: "✓" },
                     { feature: "Imagens por nota", free: "1", plus: "5" },
                     { feature: "Tamanho da fonte", free: "—", plus: "✓" },
                     { feature: "Redimensionar imagem (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Fontes personalizadas", free: "—", plus: "✓" }
+                    { feature: "Fontes personalizadas", free: "—", plus: "✓" },
+                    { feature: "Lista de tarefas nas notas", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -570,11 +588,13 @@
                 rows: [
                     { feature: "Modalità Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Barra di formattazione", free: "✓", plus: "✓" },
+                    { feature: "Controllo ortografico on/off", free: "✓", plus: "✓" },
                     { feature: "Inserimento immagine", free: "✓", plus: "✓" },
                     { feature: "Immagini per nota", free: "1", plus: "5" },
                     { feature: "Dimensione carattere", free: "—", plus: "✓" },
                     { feature: "Ridimensionamento immagine (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Font personalizzati", free: "—", plus: "✓" }
+                    { feature: "Font personalizzati", free: "—", plus: "✓" },
+                    { feature: "Checklist nelle note", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -629,11 +649,13 @@
                 rows: [
                     { feature: "Режим переключения Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Панель форматирования", free: "✓", plus: "✓" },
+                    { feature: "Проверка орфографии вкл./выкл.", free: "✓", plus: "✓" },
                     { feature: "Вставка изображения", free: "✓", plus: "✓" },
                     { feature: "Изображений на заметку", free: "1", plus: "5" },
                     { feature: "Размер шрифта", free: "—", plus: "✓" },
                     { feature: "Размер изображения (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Свои шрифты", free: "—", plus: "✓" }
+                    { feature: "Свои шрифты", free: "—", plus: "✓" },
+                    { feature: "Чек-лист в заметках", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -688,11 +710,13 @@
                 rows: [
                     { feature: "Chế độ chuyển Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Thanh định dạng", free: "✓", plus: "✓" },
+                    { feature: "Kiểm tra chính tả bật/tắt", free: "✓", plus: "✓" },
                     { feature: "Chèn hình ảnh", free: "✓", plus: "✓" },
                     { feature: "Hình ảnh mỗi ghi chú", free: "1", plus: "5" },
                     { feature: "Cỡ chữ", free: "—", plus: "✓" },
                     { feature: "Thay đổi kích thước ảnh (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Phông chữ tùy chỉnh", free: "—", plus: "✓" }
+                    { feature: "Phông chữ tùy chỉnh", free: "—", plus: "✓" },
+                    { feature: "Danh sách kiểm trong ghi chú", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -747,11 +771,13 @@
                 rows: [
                     { feature: "โหมดสลับ Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "แถบจัดรูปแบบ", free: "✓", plus: "✓" },
+                    { feature: "ตรวจสอบการสะกด เปิด/ปิด", free: "✓", plus: "✓" },
                     { feature: "แทรกรูปภาพ", free: "✓", plus: "✓" },
                     { feature: "รูปภาพต่อบันทึก", free: "1", plus: "5" },
                     { feature: "ปรับขนาดตัวอักษร", free: "—", plus: "✓" },
                     { feature: "ปรับขนาดรูป (50–150%)", free: "—", plus: "✓" },
-                    { feature: "ฟอนต์กำหนดเอง", free: "—", plus: "✓" }
+                    { feature: "ฟอนต์กำหนดเอง", free: "—", plus: "✓" },
+                    { feature: "เช็กลิสต์ในโน้ต", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -806,11 +832,13 @@
                 rows: [
                     { feature: "Mode beralih Peek / Ice", free: "✓", plus: "✓" },
                     { feature: "Bilah pemformatan", free: "✓", plus: "✓" },
+                    { feature: "Pemeriksaan ejaan nyala/mati", free: "✓", plus: "✓" },
                     { feature: "Sisipkan gambar", free: "✓", plus: "✓" },
                     { feature: "Gambar per memo", free: "1", plus: "5" },
                     { feature: "Ukuran font", free: "—", plus: "✓" },
                     { feature: "Ubah ukuran gambar (50–150%)", free: "—", plus: "✓" },
-                    { feature: "Font kustom", free: "—", plus: "✓" }
+                    { feature: "Font kustom", free: "—", plus: "✓" },
+                    { feature: "Daftar periksa memo", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -865,11 +893,13 @@
                 rows: [
                     { feature: "पीक / आइस टॉगल मोड", free: "✓", plus: "✓" },
                     { feature: "फ़ॉर्मेटिंग टूलबार", free: "✓", plus: "✓" },
+                    { feature: "वर्तनी जाँच चालू/बंद", free: "✓", plus: "✓" },
                     { feature: "छवि सम्मिलित करें", free: "✓", plus: "✓" },
                     { feature: "प्रति मेमो छवियाँ", free: "1", plus: "5" },
                     { feature: "फ़ॉन्ट आकार", free: "—", plus: "✓" },
                     { feature: "छवि आकार (50–150%)", free: "—", plus: "✓" },
-                    { feature: "कस्टम फ़ॉन्ट", free: "—", plus: "✓" }
+                    { feature: "कस्टम फ़ॉन्ट", free: "—", plus: "✓" },
+                    { feature: "मेमो चेकलिस्ट", free: "—", plus: "✓" }
                 ]
             },
             {
@@ -924,11 +954,13 @@
                 rows: [
                     { feature: "وضع تبديل لمحة / جليد", free: "✓", plus: "✓" },
                     { feature: "شريط التنسيق", free: "✓", plus: "✓" },
+                    { feature: "التدقيق الإملائي تشغيل/إيقاف", free: "✓", plus: "✓" },
                     { feature: "إدراج صورة", free: "✓", plus: "✓" },
                     { feature: "صور لكل ملاحظة", free: "1", plus: "5" },
                     { feature: "حجم الخط", free: "—", plus: "✓" },
                     { feature: "تغيير حجم الصورة (50–150%)", free: "—", plus: "✓" },
-                    { feature: "خطوط مخصصة", free: "—", plus: "✓" }
+                    { feature: "خطوط مخصصة", free: "—", plus: "✓" },
+                    { feature: "قائمة مهام في الملاحظة", free: "—", plus: "✓" }
                 ]
             },
             {

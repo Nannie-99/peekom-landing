@@ -1974,6 +1974,17 @@
             margin-bottom: 8px;
         }
 
+        #download #dlFreeFreewareNote {
+            max-width: 572px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            #download #dlFreeFreewareNote {
+                white-space: normal;
+            }
+        }
+
         .hero-offer-stack--free-row {
             grid-template-columns: 1fr 1fr;
             max-width: 572px;
