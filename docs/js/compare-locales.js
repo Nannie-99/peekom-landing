@@ -59,8 +59,7 @@
                     { feature: "프리셋 테마", free: "✓", plus: "✓" },
                     { feature: "커스텀 배경·글자 색", free: "—", plus: "✓" },
                     { feature: "보내기 · JSON 백업", free: "—", plus: "✓" },
-                    { feature: "가격", free: "무료", plus: "$9.99" },
-                    { feature: "기기 수", free: "—", plus: "최대 2대" }
+                    { feature: "가격", free: "무료", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -120,8 +119,7 @@
                     { feature: "Preset themes", free: "✓", plus: "✓" },
                     { feature: "Custom bg & text colors", free: "—", plus: "✓" },
                     { feature: "Export · JSON backup", free: "—", plus: "✓" },
-                    { feature: "Price", free: "Free", plus: "$9.99" },
-                    { feature: "Devices", free: "—", plus: "Up to 2" }
+                    { feature: "Price", free: "Free", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -181,8 +179,7 @@
                     { feature: "プリセットテーマ", free: "✓", plus: "✓" },
                     { feature: "カスタム背景・文字色", free: "—", plus: "✓" },
                     { feature: "書き出し · JSONバックアップ", free: "—", plus: "✓" },
-                    { feature: "価格", free: "無料", plus: "$9.99" },
-                    { feature: "デバイス数", free: "—", plus: "最大2台" }
+                    { feature: "価格", free: "無料", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -242,8 +239,7 @@
                     { feature: "预设主题", free: "✓", plus: "✓" },
                     { feature: "自定义背景·文字颜色", free: "—", plus: "✓" },
                     { feature: "导出 · JSON 备份", free: "—", plus: "✓" },
-                    { feature: "价格", free: "免费", plus: "$9.99" },
-                    { feature: "设备数量", free: "—", plus: "最多2台" }
+                    { feature: "价格", free: "免费", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -303,8 +299,7 @@
                     { feature: "預設主題", free: "✓", plus: "✓" },
                     { feature: "自訂背景·文字顏色", free: "—", plus: "✓" },
                     { feature: "匯出 · JSON 備份", free: "—", plus: "✓" },
-                    { feature: "價格", free: "免費", plus: "$9.99" },
-                    { feature: "裝置數量", free: "—", plus: "最多2台" }
+                    { feature: "價格", free: "免費", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -364,8 +359,7 @@
                     { feature: "Temas predefinidos", free: "✓", plus: "✓" },
                     { feature: "Colores de fondo y texto", free: "—", plus: "✓" },
                     { feature: "Exportar · copia JSON", free: "—", plus: "✓" },
-                    { feature: "Precio", free: "Gratis", plus: "$9.99" },
-                    { feature: "Dispositivos", free: "—", plus: "Hasta 2" }
+                    { feature: "Precio", free: "Gratis", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -425,8 +419,7 @@
                     { feature: "Thèmes prédéfinis", free: "✓", plus: "✓" },
                     { feature: "Couleurs de fond et de texte", free: "—", plus: "✓" },
                     { feature: "Export · sauvegarde JSON", free: "—", plus: "✓" },
-                    { feature: "Prix", free: "Gratuit", plus: "$9.99" },
-                    { feature: "Appareils", free: "—", plus: "Jusqu'à 2" }
+                    { feature: "Prix", free: "Gratuit", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -486,8 +479,7 @@
                     { feature: "Voreingestellte Themes", free: "✓", plus: "✓" },
                     { feature: "Eigene Hintergrund- & Textfarben", free: "—", plus: "✓" },
                     { feature: "Export · JSON-Backup", free: "—", plus: "✓" },
-                    { feature: "Preis", free: "Kostenlos", plus: "$9.99" },
-                    { feature: "Geräte", free: "—", plus: "Bis zu 2" }
+                    { feature: "Preis", free: "Kostenlos", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -547,8 +539,7 @@
                     { feature: "Temas predefinidos", free: "✓", plus: "✓" },
                     { feature: "Cores de fundo e texto", free: "—", plus: "✓" },
                     { feature: "Exportar · backup JSON", free: "—", plus: "✓" },
-                    { feature: "Preço", free: "Grátis", plus: "$9.99" },
-                    { feature: "Dispositivos", free: "—", plus: "Até 2" }
+                    { feature: "Preço", free: "Grátis", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -608,8 +599,7 @@
                     { feature: "Temi predefiniti", free: "✓", plus: "✓" },
                     { feature: "Colori sfondo e testo", free: "—", plus: "✓" },
                     { feature: "Esporta · backup JSON", free: "—", plus: "✓" },
-                    { feature: "Prezzo", free: "Gratis", plus: "$9.99" },
-                    { feature: "Dispositivi", free: "—", plus: "Fino a 2" }
+                    { feature: "Prezzo", free: "Gratis", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -669,8 +659,7 @@
                     { feature: "Готовые темы", free: "✓", plus: "✓" },
                     { feature: "Свои цвета фона и текста", free: "—", plus: "✓" },
                     { feature: "Экспорт · резервная копия JSON", free: "—", plus: "✓" },
-                    { feature: "Цена", free: "Бесплатно", plus: "$9.99" },
-                    { feature: "Устройства", free: "—", plus: "До 2" }
+                    { feature: "Цена", free: "Бесплатно", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -730,8 +719,7 @@
                     { feature: "Chủ đề có sẵn", free: "✓", plus: "✓" },
                     { feature: "Màu nền & chữ tùy chỉnh", free: "—", plus: "✓" },
                     { feature: "Xuất · sao lưu JSON", free: "—", plus: "✓" },
-                    { feature: "Giá", free: "Miễn phí", plus: "$9.99" },
-                    { feature: "Thiết bị", free: "—", plus: "Tối đa 2" }
+                    { feature: "Giá", free: "Miễn phí", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -791,8 +779,7 @@
                     { feature: "ธีมสำเร็จรูป", free: "✓", plus: "✓" },
                     { feature: "สีพื้นหลังและตัวอักษร", free: "—", plus: "✓" },
                     { feature: "ส่งออก · สำรอง JSON", free: "—", plus: "✓" },
-                    { feature: "ราคา", free: "ฟรี", plus: "$9.99" },
-                    { feature: "อุปกรณ์", free: "—", plus: "สูงสุด 2 เครื่อง" }
+                    { feature: "ราคา", free: "ฟรี", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -852,8 +839,7 @@
                     { feature: "Tema preset", free: "✓", plus: "✓" },
                     { feature: "Warna latar & teks kustom", free: "—", plus: "✓" },
                     { feature: "Ekspor · cadangan JSON", free: "—", plus: "✓" },
-                    { feature: "Harga", free: "Gratis", plus: "$9.99" },
-                    { feature: "Perangkat", free: "—", plus: "Hingga 2" }
+                    { feature: "Harga", free: "Gratis", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -913,8 +899,7 @@
                     { feature: "प्रीसेट थीम", free: "✓", plus: "✓" },
                     { feature: "कस्टम पृष्ठभूमि और टेक्स्ट रंग", free: "—", plus: "✓" },
                     { feature: "निर्यात · JSON बैकअप", free: "—", plus: "✓" },
-                    { feature: "कीमत", free: "मुफ़्त", plus: "$9.99" },
-                    { feature: "डिवाइस", free: "—", plus: "अधिकतम 2" }
+                    { feature: "कीमत", free: "मुफ़्त", plus: "__PLUS_TIERS__" }
                 ]
             }
         ],
@@ -974,8 +959,7 @@
                     { feature: "سمات جاهزة", free: "✓", plus: "✓" },
                     { feature: "ألوان خلفية ونص مخصصة", free: "—", plus: "✓" },
                     { feature: "تصدير · نسخ احتياطي JSON", free: "—", plus: "✓" },
-                    { feature: "السعر", free: "مجاني", plus: "$9.99" },
-                    { feature: "الأجهزة", free: "—", plus: "حتى جهازين" }
+                    { feature: "السعر", free: "مجاني", plus: "__PLUS_TIERS__" }
                 ]
             }
         ]

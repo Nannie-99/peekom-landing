@@ -56,8 +56,7 @@
                 { feature: "프리셋 테마", free: "✓", plus: "✓" },
                 { feature: "커스텀 배경·글자 색", free: "—", plus: "✓" },
                 { feature: "보내기 · JSON 백업", free: "—", plus: "✓" },
-                { feature: "가격", free: "무료", plus: "$9.99" },
-                { feature: "기기 수", free: "—", plus: "최대 2대" }
+                { feature: "가격", free: "무료", plus: "__PLUS_TIERS__" }
             ]
         }
     ];
@@ -118,13 +117,65 @@
                 { feature: "Preset themes", free: "✓", plus: "✓" },
                 { feature: "Custom bg & text colors", free: "—", plus: "✓" },
                 { feature: "Export · JSON backup", free: "—", plus: "✓" },
-                { feature: "Price", free: "Free", plus: "$9.99" },
-                { feature: "Devices", free: "—", plus: "Up to 2" }
+                { feature: "Price", free: "Free", plus: "__PLUS_TIERS__" }
             ]
         }
     ];
 
-    function renderCompareCell(value, noLabel) {
+    var PLUS_TIERS_FALLBACK = {
+        single: { list: 6.99, sale: 5.99, devices: 1 },
+        double: { list: 12.99, sale: 9.99, devices: 2 },
+        family: { list: 29.99, sale: 19.99, devices: 5 }
+    };
+
+    var PLUS_TIER_ORDER = ["single", "double", "family"];
+
+    var PLUS_DEVICE_LABELS = {
+        ko: { single: "1 기기", double: "2기기", family: "5기기" },
+        en: { single: "1 device", double: "2 devices", family: "5 devices" }
+    };
+
+    function getPlusTiers() {
+        return (window.PeekomSite && window.PeekomSite.PLUS_TIERS) || PLUS_TIERS_FALLBACK;
+    }
+
+    function resolveCompareLang() {
+        var htmlLang = (document.documentElement && document.documentElement.lang) || "en";
+        return htmlLang === "ko" ? "ko" : "en";
+    }
+
+    function getTierDiscountPct(list, sale) {
+        return Math.round((1 - sale / list) * 100);
+    }
+
+    function buildPlusPriceHtml(lang) {
+        var tiers = getPlusTiers();
+        var labels = PLUS_DEVICE_LABELS[lang === "ko" ? "ko" : "en"];
+        var html = '<div class="compare-price-tiers">';
+        PLUS_TIER_ORDER.forEach(function (key) {
+            var tier = tiers[key];
+            if (!tier) return;
+            var pct = getTierDiscountPct(tier.list, tier.sale);
+            html +=
+                '<div class="compare-price-tier">' +
+                    '<div class="compare-price-tier__head">' +
+                        '<span class="compare-price-tier__label">' + labels[key] + "</span>" +
+                        '<span class="compare-price-tier__pct">' + pct + "% OFF</span>" +
+                    "</div>" +
+                    '<div class="compare-price-tier__prices">' +
+                        '<span class="pricing-was">$' + tier.list.toFixed(2) + "</span>" +
+                        '<span class="compare-price-tier__now">$' + tier.sale.toFixed(2) + "</span>" +
+                    "</div>" +
+                "</div>";
+        });
+        html += "</div>";
+        return html;
+    }
+
+    function renderCompareCell(value, noLabel, lang) {
+        if (value === "__PLUS_TIERS__") {
+            return buildPlusPriceHtml(lang || resolveCompareLang());
+        }
         if (value === "—" || value === "-" || value === "✗") {
             return '<span class="compare-no" aria-label="' + (noLabel || "Not supported") + '">✗</span>';
         }
@@ -133,11 +184,12 @@
 
     function buildMiniTable(section, d) {
         var noLabel = d.compareNoLabel || "Not supported";
+        var lang = resolveCompareLang();
         var rows = section.rows.map(function (row) {
             return (
                 "<tr><td>" + row.feature + '</td><td class="compare-cell">' +
-                renderCompareCell(row.free, noLabel) + '</td><td class="compare-cell compare-cell--plus">' +
-                renderCompareCell(row.plus, noLabel) + "</td></tr>"
+                renderCompareCell(row.free, noLabel, lang) + '</td><td class="compare-cell compare-cell--plus">' +
+                renderCompareCell(row.plus, noLabel, lang) + "</td></tr>"
             );
         }).join("");
         return (
@@ -194,12 +246,13 @@
         var sections = d.compareSections || SECTIONS_EN;
         var rows = d.compareRows && d.compareRows.length ? d.compareRows : flattenCompareRows(sections);
         var noLabel = d.compareNoLabel || "Not supported";
+        var lang = resolveCompareLang();
         var buyLink = (window.PeekomSite && window.PeekomSite.LINKS) ? window.PeekomSite.LINKS.buy : "#";
         var body = rows.map(function (row) {
             return (
                 "<tr><td>" + row.feature + '</td><td class="compare-cell">' +
-                renderCompareCell(row.free, noLabel) + '</td><td class="compare-cell compare-cell--plus">' +
-                renderCompareCell(row.plus, noLabel) + "</td></tr>"
+                renderCompareCell(row.free, noLabel, lang) + '</td><td class="compare-cell compare-cell--plus">' +
+                renderCompareCell(row.plus, noLabel, lang) + "</td></tr>"
             );
         }).join("");
         return (

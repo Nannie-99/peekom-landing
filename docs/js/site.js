@@ -3,16 +3,40 @@
 "use strict";
 
 /* ── Download URLs ── */
+const PLUS_TIERS = {
+    single: {
+        list: 6.99,
+        sale: 5.99,
+        link: "https://peekom.lemonsqueezy.com/checkout/buy/8b4a9b92-e815-43b9-916d-8072cff6c35a",
+        devices: 1
+    },
+    double: {
+        list: 12.99,
+        sale: 9.99,
+        link: "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8",
+        devices: 2
+    },
+    family: {
+        list: 29.99,
+        sale: 19.99,
+        link: "https://peekom.lemonsqueezy.com/checkout/buy/55e7b539-687f-4af0-b6bc-65196fcf9d18",
+        devices: 5
+    }
+};
+
 const LINKS = {
     win: "https://github.com/Nannie-99/peekom-landing/releases/latest/download/Peekom-Setup.exe",
     mac: "https://github.com/Nannie-99/peekom-landing/releases/latest",
-    buy: "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8",
+    buy: PLUS_TIERS.double.link,
+    buySingle: PLUS_TIERS.single.link,
+    buyDouble: PLUS_TIERS.double.link,
+    buyFamily: PLUS_TIERS.family.link,
     reviewForm: "https://forms.gle/RZVnm6pCL7CRd5AY7"
 };
 
 const WIN_SETUP_FILENAME = "Peekom-Setup.exe";
 
-const PRICING = { list: 12.99, sale: 9.99, currency: 'USD' };
+const PRICING = { list: PLUS_TIERS.double.list, sale: PLUS_TIERS.double.sale, currency: "USD" };
 
 const CONTACT_EMAIL = "hello.peekom@gmail.com";
 
@@ -430,7 +454,76 @@ const CHANGELOG = {
 };
 
 function getPromoDiscountPct() {
-    return Math.round((1 - PRICING.sale / PRICING.list) * 100);
+    return getTierDiscountPct("double");
+}
+
+function getTierDiscountPct(tier) {
+    const t = PLUS_TIERS[tier];
+    if (!t) return 0;
+    return Math.round((1 - t.sale / t.list) * 100);
+}
+
+function getPlusTierDomIds(prefix, tier) {
+    if (tier === "single") {
+        return {
+            buy: prefix + "PlusBuyBtn",
+            title: prefix + "PlusCardTitle",
+            badge: prefix + "PlusCardBadge",
+            os: prefix + "PlusCardOs",
+            meta: prefix + "PlusCardMeta",
+            pct: prefix + "PlusPct",
+            was: prefix + "PlusWas",
+            now: prefix + "PlusNow",
+            label: prefix + "PlusBuyBtnLabel"
+        };
+    }
+    const cap = tier.charAt(0).toUpperCase() + tier.slice(1);
+    return {
+        buy: prefix + "Plus" + cap + "BuyBtn",
+        title: prefix + "Plus" + cap + "CardTitle",
+        badge: prefix + "Plus" + cap + "CardBadge",
+        os: prefix + "Plus" + cap + "CardOs",
+        meta: prefix + "Plus" + cap + "CardMeta",
+        pct: prefix + "Plus" + cap + "Pct",
+        was: prefix + "Plus" + cap + "Was",
+        now: prefix + "Plus" + cap + "Now",
+        label: prefix + "Plus" + cap + "BuyBtnLabel"
+    };
+}
+
+function getPlusTierLocaleKeys(tier) {
+    const cap = tier.charAt(0).toUpperCase() + tier.slice(1);
+    return {
+        title: "heroPlus" + cap + "CardTitle",
+        meta: "heroPlus" + cap + "CardMeta"
+    };
+}
+
+function updatePlusTierCards(prefix, d) {
+    ["single", "double", "family"].forEach(function (tier) {
+        const ids = getPlusTierDomIds(prefix, tier);
+        const pricing = PLUS_TIERS[tier];
+        const localeKeys = getPlusTierLocaleKeys(tier);
+        const buyLabel = d.heroPlusBuyBtn || d.compareCta || "구입하기";
+        const osLabel = d.heroPlusCardOsCompat || "Windows / Mac 호환";
+        const badgeLabel = d.heroPlusCardBadge || "PAID";
+        const titleFallback = "Peekom Plus - " + tier.charAt(0).toUpperCase() + tier.slice(1);
+        const metaFallback = "1회 구매 · " + pricing.devices + "대 기기 · 영구 사용";
+
+        if (!document.getElementById(ids.buy)) return;
+
+        setText(ids.pct, getTierDiscountPct(tier) + "% OFF");
+        setText(ids.was, "$" + pricing.list.toFixed(2));
+        setText(ids.now, "$" + pricing.sale.toFixed(2));
+        setText(ids.title, d[localeKeys.title] || titleFallback);
+        setText(ids.badge, badgeLabel);
+        setText(ids.os, osLabel);
+        setText(ids.meta, d[localeKeys.meta] || metaFallback);
+        setText(ids.label, buyLabel);
+
+        const card = document.getElementById(ids.buy);
+        if (card) card.setAttribute("aria-label", buyLabel);
+    });
 }
 
 function buildPromoTagHtml(d, opts) {
@@ -510,36 +603,14 @@ function buildPromoSectionHeadHtml(title) {
 }
 
 function updateOfferCardSet(d, ids) {
-    if (!document.getElementById(ids.plusBuy)) return;
-    const pct = getPromoDiscountPct();
-    const buyLabel = d.heroPlusBuyBtn || d.compareCta || "구입하기";
+    if (!document.getElementById(ids.winBtn)) return;
     const downloadLabel = d.heroFreeDownloadLabel || "다운로드";
-    setText(ids.plusPct, pct + "% OFF");
-    setText(ids.plusWas, "$" + PRICING.list.toFixed(2));
-    setText(ids.plusNow, "$" + PRICING.sale.toFixed(2));
-    setText(ids.plusTitle, d.heroPlusCardTitle || "Peekom Plus");
-    setText(ids.plusBadge, d.heroPlusCardBadge || "PAID");
-    setText(ids.plusOs, d.heroPlusCardOs || "Windows");
-    setText(ids.plusMeta, d.heroPlusCardMeta || "1회 구매 · 최대 2대 기기 · 영구 사용");
-    setText(ids.plusBuyLabel, buyLabel);
-    const plusCard = document.getElementById(ids.plusBuy);
-    if (plusCard) plusCard.setAttribute("aria-label", buyLabel);
     setText(ids.winTitle, d.heroFreeCardTitle || "Peekom");
     if (ids.winBadge) setText(ids.winBadge, d.heroFreeCardBadge || "FREE");
     setText(ids.winMeta, d.heroWinCardMeta || "Windows 10 · 11 (64-bit)");
     setText(ids.winBtnLabel, downloadLabel);
     const winCard = document.getElementById(ids.winBtn);
     if (winCard) winCard.setAttribute("aria-label", downloadLabel);
-    setText(ids.macPlusTitle, d.heroMacPlusCardTitle || d.heroPlusCardTitle || "Peekom Plus");
-    setText(ids.macPlusBadge, d.heroMacPlusCardBadge || d.heroPlusCardBadge || "PAID");
-    setText(ids.macPlusOs, d.heroMacPlusCardOs || "macOS");
-    setText(ids.macPlusMeta, d.heroMacPlusCardMeta || d.heroPlusCardMeta || "1회 구매 · 최대 2대 기기 · 영구 사용");
-    setText(ids.macPlusPct, pct + "% OFF");
-    setText(ids.macPlusWas, "$" + PRICING.list.toFixed(2));
-    setText(ids.macPlusNow, "$" + PRICING.sale.toFixed(2));
-    setText(ids.macPlusBuyLabel, buyLabel);
-    const macPlusCard = document.getElementById(ids.macPlusBuy);
-    if (macPlusCard) macPlusCard.setAttribute("aria-label", buyLabel);
     setText(ids.macFreeTitle, d.heroMacFreeCardTitle || d.heroFreeCardTitle || "Peekom");
     if (ids.macFreeBadge) setText(ids.macFreeBadge, d.heroMacFreeCardBadge || d.heroFreeCardBadge || "FREE");
     setText(ids.macFreeMeta, d.heroMacFreeCardMeta || "macOS");
@@ -549,30 +620,14 @@ function updateOfferCardSet(d, ids) {
 }
 
 function updateHeroOfferCards(d) {
+    updatePlusTierCards("hero", d);
+    updatePlusTierCards("dl", d);
     updateOfferCardSet(d, {
-        plusBuy: "heroPlusBuyBtn",
-        plusPct: "heroPlusPct",
-        plusWas: "heroPlusWas",
-        plusNow: "heroPlusNow",
-        plusTitle: "heroPlusCardTitle",
-        plusBadge: "heroPlusCardBadge",
-        plusOs: "heroPlusCardOs",
-        plusMeta: "heroPlusCardMeta",
-        plusBuyLabel: "heroPlusBuyBtnLabel",
         winBtn: "heroWinBtn",
         winTitle: "heroWinCardTitle",
         winBadge: "heroFreeCardBadge",
         winMeta: "heroWinCardMeta",
         winBtnLabel: "heroWinBtnLabel",
-        macPlusBuy: "heroMacPlusBuyBtn",
-        macPlusTitle: "heroMacPlusCardTitle",
-        macPlusBadge: "heroMacPlusCardBadge",
-        macPlusOs: "heroMacPlusCardOs",
-        macPlusMeta: "heroMacPlusCardMeta",
-        macPlusPct: "heroMacPlusPct",
-        macPlusWas: "heroMacPlusWas",
-        macPlusNow: "heroMacPlusNow",
-        macPlusBuyLabel: "heroMacPlusBuyBtnLabel",
         macBtn: "heroMacBtn",
         macFreeTitle: "heroMacFreeCardTitle",
         macFreeBadge: "heroMacFreeCardBadge",
@@ -580,29 +635,11 @@ function updateHeroOfferCards(d) {
         macBtnLabel: "heroMacBtnLabel"
     });
     updateOfferCardSet(d, {
-        plusBuy: "dlPlusBuyBtn",
-        plusPct: "dlPlusPct",
-        plusWas: "dlPlusWas",
-        plusNow: "dlPlusNow",
-        plusTitle: "dlPlusCardTitle",
-        plusBadge: "dlPlusCardBadge",
-        plusOs: "dlPlusCardOs",
-        plusMeta: "dlPlusCardMeta",
-        plusBuyLabel: "dlPlusBuyBtnLabel",
         winBtn: "dlWinBtn",
         winTitle: "dlWinCardTitle",
         winBadge: "dlFreeCardBadge",
         winMeta: "dlWinCardMeta",
         winBtnLabel: "dlWinBtnLabel",
-        macPlusBuy: "dlMacPlusBuyBtn",
-        macPlusTitle: "dlMacPlusCardTitle",
-        macPlusBadge: "dlMacPlusCardBadge",
-        macPlusOs: "dlMacPlusCardOs",
-        macPlusMeta: "dlMacPlusCardMeta",
-        macPlusPct: "dlMacPlusPct",
-        macPlusWas: "dlMacPlusWas",
-        macPlusNow: "dlMacPlusNow",
-        macPlusBuyLabel: "dlMacPlusBuyBtnLabel",
         macBtn: "dlMacBtn",
         macFreeTitle: "dlMacFreeCardTitle",
         macFreeBadge: "dlMacFreeCardBadge",
@@ -705,12 +742,14 @@ const i18n = {
         heroFreeCompareNote: '<a href="features.html#compare">무료와 Plus 차이</a>를 확인하세요.',
         heroWinBtn: "Windows 다운로드", heroMacBtn: "macOS 다운로드",
         heroPlusBuyBtn: "구입하기",
-        heroPlusCardTitle: "Peekom Plus",
+        heroPlusSingleCardTitle: "Peekom Plus - Single",
+        heroPlusDoubleCardTitle: "Peekom Plus - Double",
+        heroPlusFamilyCardTitle: "Peekom Plus - Family",
         heroPlusCardBadge: "유료",
-        heroPlusCardOs: "Windows",
-        heroMacPlusCardTitle: "Peekom Plus",
-        heroMacPlusCardBadge: "유료",
-        heroPlusCardMeta: "1회 구매 · 최대 2대 기기 · 영구 사용",
+        heroPlusCardOsCompat: "Windows / Mac 호환",
+        heroPlusSingleCardMeta: "1회 구매 · 1대 기기 · 영구 사용",
+        heroPlusDoubleCardMeta: "1회 구매 · 2대 기기 · 영구 사용",
+        heroPlusFamilyCardMeta: "1회 구매 · 5대 기기 · 영구 사용",
         heroFreeCardTitle: "Peekom",
         heroFreeCardBadge: "프리웨어",
         heroMacFreeCardBadge: "프리웨어",
@@ -728,8 +767,8 @@ const i18n = {
         detectGeneric: "운영체제를 자동으로 감지하지 못했습니다. 직접 선택해 주세요.",
         featuresTitle: "기능", featuresSub: "Peekom이 하는 일을 한눈에 확인할 수 있습니다.",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "같은 앱 하나로 시작하고, Plus는 앱 안에서 잠금 해제합니다.",
-        comparePricing: '<span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> <span class="pricing-now">$' + PRICING.sale.toFixed(2) + ' USD</span> <span class="pricing-vat">(VAT 별도)</span> · <span class="pricing-launch">출시 기념 가격</span> · 1회 구매 · 최대 2대 기기 · 소버전 업데이트 포함 · 30일 환불 (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
-        guidePlusP: "1) Lemon Squeezy에서 출시 기념 $9.99 구매 → 2) 이메일 라이선스 키 수신 → 3) Peekom 실행 → 잠금 UI 또는 설정에서 키 입력 → 4) Peekom Plus + plus.png로 전환. 30일 환불: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
+        comparePricing: '<span class="pricing-was">$' + PLUS_TIERS.single.sale.toFixed(2) + '–$' + PLUS_TIERS.family.sale.toFixed(2) + '</span> <span class="pricing-vat">(VAT 별도)</span> · <span class="pricing-launch">출시 기념 가격</span> · 1회 구매 · 1~5대 기기(요금제별) · 소버전 업데이트 포함 · 30일 환불 (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
+        guidePlusP: "1) Lemon Squeezy에서 요금제 선택 후 구매 → 2) 이메일 라이선스 키 수신 → 3) Peekom 실행 → 잠금 UI 또는 설정에서 키 입력 → 4) Peekom Plus + plus.png로 전환. 30일 환불: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
         dlSub: "Peekom 하나만 설치하시면 됩니다. Plus는 앱 안에서 업그레이드합니다.",
         purchaseSuccessTitle: "Peekom Plus 구매가 완료되었습니다!",
         purchaseSuccessLead: "아래 라이선스 키를 복사한 뒤, Peekom 앱에서 Plus를 활성화해 주세요.",
@@ -742,7 +781,7 @@ const i18n = {
         purchaseSuccessDownloadBtn: "Windows 앱 다운로드",
         purchaseSuccessEmailNote: "이 키는 구매 영수증 이메일에도 포함되어 있습니다.",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-        dlPlusHint: 'Peekom Plus: 정가 <span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> → 출시 기념 <strong>$' + PRICING.sale.toFixed(2) + '</strong> (VAT 별도) · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Lemon Squeezy에서 구입</a> → 앱에서 라이선스 키 입력',
+        dlPlusHint: 'Peekom Plus: Single <strong>$' + PLUS_TIERS.single.sale.toFixed(2) + '</strong> · Double <strong>$' + PLUS_TIERS.double.sale.toFixed(2) + '</strong> · Family <strong>$' + PLUS_TIERS.family.sale.toFixed(2) + '</strong> (VAT 별도) · <a href="' + LINKS.buyDouble + '" id="dlBuyLinkInner">Lemon Squeezy에서 구입</a> → 앱에서 라이선스 키 입력',
         featureGifPending: "데모 GIF 예정",
         compareNoLabel: "미지원",
         faqSub: "Peekom 사용 중 자주 묻는 내용입니다.",
@@ -762,64 +801,123 @@ const i18n = {
             '<li><strong>절차</strong> — <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">문의 폼(또는 이메일)</a>으로 주문번호와 함께 신청 → 검토 → Lemon Squeezy 대시보드에서 환불 실행 → 카드사·결제수단에 따라 실제 반영까지 영업일이 소요될 수 있습니다.</li>' +
             "</ul>",
         faqR1q: "Peekom Plus 환불은 어떻게 신청하나요?",
-        faqR1a: '<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">문의 폼(또는 이메일)</a>으로 <strong>주문번호</strong>와 함께 신청해 주세요. 검토 후 Lemon Squeezy 대시보드에서 환불을 실행하며, 카드사·결제수단에 따라 실제 환불 반영까지 영업일이 소요될 수 있습니다.',
+        faqR1a:
+            '<p><a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">문의 폼(또는 이메일)</a>으로 <strong>주문번호</strong>와 함께 신청해 주세요.</p>' +
+            "<p>검토 후 Lemon Squeezy 대시보드에서 환불을 실행하며, 카드사·결제수단에 따라 실제 환불 반영까지 영업일이 소요될 수 있습니다.</p>",
         faqR2q: "어떤 경우에 환불받을 수 있나요?",
-        faqR2a: "구입일로부터 <strong>30일 이내</strong>라면 <strong>정상 작동 불가</strong>(앱이 정상적으로 실행·작동하지 않는 결함)와 동일 주문의 <strong>중복 결제</strong>에 대해 환불받을 수 있습니다. 단순 변심은 환불 대상이 아닙니다. 결제·환불은 공식 판매자인 Lemon Squeezy를 통해 처리됩니다.",
+        faqR2a:
+            "<p>구입일로부터 <strong>30일 이내</strong>라면 <strong>정상 작동 불가</strong>(앱이 정상적으로 실행·작동하지 않는 결함)와 동일 주문의 <strong>중복 결제</strong>에 대해 환불받을 수 있습니다.</p>" +
+            "<p>단순 변심은 환불 대상이 아닙니다.</p>" +
+            "<p>결제·환불은 공식 판매자인 Lemon Squeezy를 통해 처리됩니다.</p>",
         faqR3q: "환불 후 라이선스는 어떻게 되나요?",
-        faqR3a: "환불이 완료되면 Peekom Plus 라이선스 키가 <strong>비활성화</strong>됩니다. 다음에 온라인 상태로 앱을 실행하면 자동으로 무료 버전으로 전환되므로, 환불 신청 전에 Plus 사용 중단 여부를 확인해 주세요.",
+        faqR3a:
+            "<p>환불이 완료되면 Peekom Plus 라이선스 키가 <strong>비활성화</strong>됩니다.</p>" +
+            "<p>다음에 온라인 상태로 앱을 실행하면 자동으로 무료 버전으로 전환되므로, 환불 신청 전에 Plus 사용 중단 여부를 확인해 주세요.</p>",
         faq1q: "Peekom과 Peekom Plus의 차이는 무엇인가요?",
-        faq1a: '무료는 3개 인덱스·묶음 이동·얼음 모드·자동 접힘 딜레이·모니터 선택·서식바·이미지 삽입을 포함합니다. Peekom Plus(출시 기념 $9.99, 정가 $12.99)는 10슬롯 독립 배치, 커스텀 색·글꼴·불투명도, 왼쪽 패널, 이미지 크기 조절, 보내기 등을 앱 안에서 잠금 해제합니다. <a href="features.html#compare">상세 비교표</a>를 참고하세요.',
+        faq1a:
+            "<p>무료는 3개 인덱스·묶음 이동·얼음 모드·자동 접힘 딜레이·모니터 선택·서식바·이미지 삽입을 포함합니다.</p>" +
+            "<p>Peekom Plus(Single $5.99 · Double $9.99 · Family $19.99)는 10슬롯 독립 배치, 커스텀 색·글꼴·불투명도, 왼쪽 패널, 이미지 크기 조절, 보내기 등을 앱 안에서 잠금 해제합니다.</p>" +
+            '<p><a href="features.html#compare">상세 비교표</a>를 참고하세요.</p>',
         compareFreeName: "Peekom (무료)",
         comparePlusName: "Peekom Plus (유료)",
         compareCta: "Peekom Plus 구입",
         comparePromoBanner: "현재 출시 기념 · {pct}% 할인 중",
         faq2q: "듀얼 모니터에서 어떻게 동작하나요?",
-        faq2a: "설정 → 표시 모니터에서 현재 마우스 모니터(자동) 또는 특정 모니터를 고정할 수 있습니다. 무료·Peekom Plus 모두 사용할 수 있습니다.",
+        faq2a:
+            "<p>설정 → 표시 모니터에서 현재 마우스 모니터(자동) 또는 특정 모니터를 고정할 수 있습니다.</p>" +
+            "<p>무료·Peekom Plus 모두 사용할 수 있습니다.</p>",
         faq8q: "Peekom은 모니터 오른쪽 가장자리에서만 사용 가능한가요?",
-        faq8a: "오른쪽 가장자리는 무료로, 왼쪽 가장자리는 Peekom Plus에서 사용할 수 있습니다. 위쪽·아래쪽 가장자리는 추후 업데이트를 통해 지원할 예정입니다.",
+        faq8a:
+            "<p>오른쪽 가장자리는 무료로 사용할 수 있습니다.</p>" +
+            "<p>왼쪽 가장자리는 Peekom Plus에서 사용할 수 있습니다.</p>" +
+            "<p>위쪽·아래쪽 가장자리는 추후 업데이트를 통해 지원할 예정입니다.</p>",
         faq9q: "실수로 Peekom Plus를 삭제하면 유료 기능은 어떻게 되나요?",
         faq9a:
-            "<p>앱을 삭제해도 Lemon Squeezy에 등록된 라이선스는 그대로 남습니다. 아래 순서대로 진행하면 Peekom Plus와 모든 유료 기능을 다시 사용할 수 있습니다.</p>" +
+            "<p>앱을 삭제해도 Lemon Squeezy에 등록된 라이선스는 그대로 남습니다.</p>" +
+            "<p>아래 순서대로 진행하면 Peekom Plus와 모든 유료 기능을 다시 사용할 수 있습니다.</p>" +
             '<ul class="guide-step-list">' +
             "<li><strong>1. Peekom 재설치</strong> — <a href=\"download.html\">peekom.com</a>에서 무료 버전(<code>Peekom-Setup.exe</code>)을 다시 다운로드해 설치합니다.</li>" +
             "<li><strong>2. 라이선스 키 확인</strong> — 결제 당시 Lemon Squeezy에서 받은 영수증 이메일을 열어 <strong>[License Key]</strong>를 복사합니다. 이메일을 분실했다면 Lemon Squeezy 구매 확인(주문 내역) 페이지에서 동일 이메일로 로그인해 키를 다시 확인할 수 있습니다.</li>" +
             "<li><strong>3. 라이선스 재인증</strong> — 앱 우측 상단 톱니바퀴(설정)를 연 뒤 <strong>플러스 인증</strong>에 키를 붙여넣고 인증합니다. 즉시 앱 이름이 Peekom Plus로 바뀌고 10개 슬롯·커스텀 테마 등 유료 기능이 복구됩니다.</li>" +
             "</ul>" +
-            "<p><strong>기기 수 제한(최대 2대)</strong> — 같은 PC에서 삭제 후 재설치하면 동일 기기로 인식되어 인증 횟수에 문제가 없습니다. 컴퓨터를 바꾼 경우에는 라이선스당 최대 2대까지 등록할 수 있으므로(예: 업무 PC 1대 + 개인 PC 1대) 새 PC에서도 정상적으로 인증됩니다.</p>",
+            "<p><strong>기기 수 제한(요금제별)</strong> — 같은 PC에서 삭제 후 재설치하면 동일 기기로 인식되어 인증 횟수에 문제가 없습니다.</p>" +
+            "<p>Single 1대 · Double 2대 · Family 5대까지 등록할 수 있습니다(예: Double — 업무 PC 1대 + 개인 PC 1대).</p>",
         faq3q: "Peekom Plus 라이선스는 어떻게 인증하나요?",
-        faq3a: "Lemon Squeezy를 통해 구매한 라이선스 키를 앱 최초 실행 시 입력하면 Peekom Plus가 활성화됩니다.",
+        faq3a: "<p>Lemon Squeezy를 통해 구매한 라이선스 키를 앱 최초 실행 시 입력하면 Peekom Plus가 활성화됩니다.</p>",
         faq3bq: "한 라이선스 키로 여러 대의 PC에서 사용할 수 있나요?",
-        faq3ba: "같은 라이선스 키를 업무 PC·개인 PC에 각각 한 번씩 입력해 Peekom Plus로 쓰는 것은 가능합니다. 라이선스당 최대 2대까지 등록됩니다.",
+        faq3ba:
+            "<p>회사 PC(Windows)와 집 MacBook처럼 <strong>서로 다른 운영체제</strong>에 쓰더라도 Plus는 <strong>한 번만 구매</strong>하시면 됩니다.</p>" +
+            "<p>Windows용·macOS용 설치 파일만 다르고, <strong>같은 라이선스 키</strong>를 각 기기 설정에 입력하시면 됩니다.</p>" +
+            "<p>동시에 쓸 수 있는 기기 수는 구매하신 요금제에 따라 다릅니다.</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Single</strong> — 1대</li>" +
+            "<li><strong>Double</strong> — 2대 (예: 회사 Windows PC + 집 MacBook)</li>" +
+            "<li><strong>Family</strong> — 5대</li>" +
+            "</ul>" +
+            "<p>예: Double 요금제 → 회사 Windows PC에 Peekom 설치 후 설정에서 Plus 키 입력 → MacBook에는 macOS 버전 설치 후 <strong>같은 키</strong>를 입력합니다.</p>",
         faq3cq: "회사 PC를 바꾸거나 이직한 경우에도 계속 사용할 수 있나요?",
-        faq3ca: "Peekom Plus 라이선스는 기본적으로 최대 2대 기기에서 사용할 수 있습니다. 같은 기기에서 삭제 후 다시 설치하는 것은 가능하며, 새로운 기기로 변경이 필요한 경우에는 문의를 통해 확인 후 지원해드리고 있습니다. 상황에 따라 기존 활성화 기기 초기화 후 새 기기에서 다시 인증을 안내드릴 수 있습니다.",
+        faq3ca:
+            "<p>Peekom Plus는 요금제에 따라 1대(Single)·2대(Double)·5대(Family)까지 사용할 수 있습니다.</p>" +
+            "<p>같은 기기에서 삭제 후 다시 설치하는 것은 가능하며, 새로운 기기로 변경이 필요한 경우에는 문의를 통해 확인 후 지원해드리고 있습니다.</p>" +
+            "<p>상황에 따라 기존 활성화 기기 초기화 후 새 기기에서 다시 인증을 안내드릴 수 있습니다.</p>",
         faq3dq: "기기 변경이 필요할 때는 무엇을 보내면 되나요?",
-        faq3da: "빠른 확인을 위해 구매 시 사용한 이메일 주소, 주문번호, 라이선스 키, 그리고 기기 변경 사유를 함께 보내주시면 됩니다. 이미 2대 기기 모두 활성화된 상태라면 기존 활성 기기를 초기화한 뒤 다시 인증을 안내드릴 수 있으므로, 필요한 내용은 미리 백업해 두신 후 문의해 주세요.",
-        faq4q: "Windows 설치 시 파란 경고창이 뜹니다.",
-        faq4a: 'SmartScreen 경고는 서명되지 않은 앱에서 흔히 나타납니다. <a href="#" onclick="openModal(); return false;">설치 가이드</a>를 참고해 [추가 정보] → [실행] 순서로 진행하세요.',
+        faq3da:
+            "<p>빠른 확인을 위해 구매 시 사용한 이메일 주소, 주문번호, 라이선스 키, 그리고 기기 변경 사유를 함께 보내주시면 됩니다.</p>" +
+            "<p>요금제별 기기 한도(Single 1대 · Double 2대 · Family 5대)를 모두 사용 중이라면 기존 활성 기기를 초기화한 뒤 다시 인증을 안내드릴 수 있으므로, 필요한 내용은 미리 백업해 두신 후 문의해 주세요.</p>",
+        faq4q: 'Edge에서 "일반적으로 다운로드되지 않습니다"라는 메시지가 뜹니다.',
+        faq4a:
+            '<p>Microsoft Edge로 설치 파일을 받을 때 <strong>"일반적으로 다운로드되지 않습니다"</strong>라는 메시지가 나올 수 있습니다.</p>' +
+            "<p>새로 배포된 앱에서 흔히 나타나는 안내입니다.</p>" +
+            '<ol class="guide-step-list">' +
+            "<li>키보드 <kbd>Ctrl</kbd> + <kbd>J</kbd>로 <strong>다운로드 기록</strong> 창을 엽니다.</li>" +
+            "<li>차단된 <code>Peekom-Setup.exe</code> 항목 오른쪽 <strong>점 세 개(…)</strong>를 클릭하고 <strong>유지</strong>를 선택합니다.</li>" +
+            "<li>경고 창에서 <strong>그래도 계속</strong>을 클릭하면 설치 파일을 실행할 수 있습니다.</li>" +
+            "</ol>" +
+            '<p>같은 메시지가 반복되면 <strong>Chrome 브라우저</strong>로 다운로드를 다시 시도해 보세요.</p>' +
+            '<p>자세한 순서는 <a href="#" onclick="openModal(); return false;">설치 가이드</a>를 참고하세요.</p>',
         faq5q: "Windows 몇부터 사용할 수 있나요?",
-        faq5a: "Windows 10 및 Windows 11 (64-bit)에서 사용할 수 있습니다. 설치 파일은 64-bit 전용이며, Windows 7 / 8 / 8.1은 지원하지 않습니다. (Electron 36 기준)",
+        faq5a:
+            "<p>Windows 10 및 Windows 11 (64-bit)에서 사용할 수 있습니다.</p>" +
+            "<p>설치 파일은 64-bit 전용입니다.</p>" +
+            "<p>Windows 7 / 8 / 8.1은 지원하지 않습니다.</p>" +
+            "<p>(Electron 36 기준)</p>",
         faq6q: "인덱스를 추가했는데 설정창에 안 보여요.",
-        faq6a: "메인 화면과 설정창이 동시에 열려 있으면 목록이 잠시 어긋날 수 있습니다. 설정창을 다시 열거나 포커스를 주면 최신 인덱스 목록이 반영됩니다.",
+        faq6a:
+            "<p>메인 화면과 설정창이 동시에 열려 있으면 목록이 잠시 어긋날 수 있습니다.</p>" +
+            "<p>설정창을 다시 열거나 포커스를 주면 최신 인덱스 목록이 반영됩니다.</p>",
         faq7q: "빼꼼 인덱스(구버전)를 제거한 뒤 부팅할 때 이상한 글자·오류가 뜹니다. 어떻게 하나요?",
         faq7a:
-            "<p>구버전(빼꼼 인덱스)을 삭제했는데 <strong>자동 실행이 켜진 상태</strong>로 제거되면, Windows 시작 프로그램에 예전 실행 항목이 남아 PC를 켤 때 삭제된 파일을 찾다가 <strong>깨진 글자·오류 창</strong>이 뜰 수 있습니다.</p>" +
-            "<p><strong>Windows 11</strong></p>" +
+            "<p>구버전(빼꼼 인덱스)을 삭제했는데 <strong>자동 실행이 켜진 상태</strong>로 제거되면, 시작 프로그램·작업 표시줄·남은 폴더가 남아 PC를 켤 때마다 삭제된 파일을 찾다가 <strong>깨진 글자·오류 창</strong>이 뜰 수 있습니다.</p>" +
+            "<p>아래 순서대로 한 번만 정리해 보세요.</p>" +
+            "<p><strong>1. 지금 실행 중인 앱 완전히 끄기</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> → 작업 관리자 → 프로세스에서 빼꼼 관련 항목이 있으면 <strong>작업 끝내기</strong></li>" +
+            "<li>작업 표시줄 빼꼼 아이콘 우클릭 → <strong>작업 표시줄에서 제거</strong>(고정 해제)</li>" +
+            "</ul>" +
+            "<p><strong>2. 시작 프로그램에서 끄기</strong> (이름이 다를 수 있습니다)</p>" +
+            "<p><strong>Windows 11</strong> — 설정 → 앱 → 시작 프로그램</p>" +
+            "<p><strong>Windows 10</strong> — 작업 관리자 → 시작 프로그램 탭</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>목록에서 다음이 있으면 <strong>끔 / 사용 안 함</strong>: Peekom, Peekom Plus, 빼꼼 인덱스, com.peekom.app, 이름이 깨져 보이는 항목</li>" +
+            "<li>「설치된 앱」에 없다고 나와도 시작 프로그램에는 따로 남아 있을 수 있습니다.</li>" +
+            "</ul>" +
+            "<p><strong>3. 남은 폴더 직접 삭제</strong></p>" +
             '<ol class="guide-step-list">' +
-            "<li>설정 → 앱 → 시작 프로그램 (또는 설치된 앱 → 시작 프로그램)</li>" +
-            "<li>목록에서 「빼꼼 인덱스」 또는 비슷한 이름 찾기</li>" +
-            "<li><strong>끔(OFF)</strong>으로 변경</li>" +
+            "<li>파일 탐색기 주소창에 <code>%LocalAppData%\\Programs</code> 입력 → <strong>빼꼼</strong> 폴더가 있으면 삭제</li>" +
+            "<li><code>%AppData%\\빼꼼</code> → 통째로 삭제 (메모·설정이 들어 있을 수 있습니다. 다시 쓰지 않으실 경우만 삭제)</li>" +
+            "<li><code>%LocalAppData%</code> → 이름에 <strong>빼꼼</strong>이 있는 폴더가 있으면 삭제</li>" +
             "</ol>" +
-            "<p><strong>Windows 10</strong></p>" +
-            '<ol class="guide-step-list">' +
-            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd>로 작업 관리자 열기</li>" +
-            "<li><strong>시작 프로그램</strong> 탭</li>" +
-            "<li>「빼꼼 인덱스」 선택 → <strong>사용 안 함</strong></li>" +
-            "</ol>" +
-            "<p>위 항목을 끈 뒤 <strong>재부팅</strong>해 보세요. 더 이상 자동 실행되지 않으면 원인은 시작 프로그램 등록이었습니다. 이후 <a href=\"download.html\">Peekom(무료)</a>만 새로 설치해 사용하시면 됩니다.</p>" +
-            '<p class="privacy-doc__note">구버전 메모 내용은 Peekom과 <strong>저장 위치가 달라 자동 이전되지 않습니다.</strong> 필요한 내용은 미리 복사해 두세요.</p>',
+            "<p>삭제가 안 되면 1번에서 작업을 끝낸 뒤 다시 시도해 주세요.</p>" +
+            "<p><strong>4. 재부팅 후 확인</strong> — 위까지 하신 뒤 노트북을 다시 켜 주세요.</p>" +
+            "<p>아침에 코드·이상한 글자 창이 안 뜨고 작업 표시줄에도 빼꼼이 안 보이면 정리된 것입니다.</p>" +
+            "<p>이후 <a href=\"download.html\">Peekom(무료)</a>만 새로 설치해 사용하시면 됩니다.</p>" +
+            '<p class="privacy-doc__note">구버전 메모 내용은 Peekom과 <strong>저장 위치가 달라 자동 이전되지 않습니다.</strong></p>' +
+            '<p class="privacy-doc__note">필요한 내용은 미리 복사해 두세요.</p>',
         faq10q: "Peekom 설정(환경설정)은 어디서 열나요?",
         faq10a:
-            "작업 표시줄(트레이)의 Peekom 아이콘을 <strong>우클릭 → 환경설정</strong>으로 열 수 있습니다. 또는 트레이 아이콘을 <strong>더블클릭</strong>하거나, 바탕화면 <strong>Peekom 바로가기 더블클릭</strong>으로도 열립니다(앱이 꺼져 있으면 메모와 함께 열림). 자세한 내용은 <a href=\"help.html\">가이드</a>를 참고하세요.",
+            "<p>작업 표시줄(트레이)의 Peekom 아이콘을 <strong>우클릭 → 환경설정</strong>으로 열 수 있습니다.</p>" +
+            "<p>또는 트레이 아이콘을 <strong>더블클릭</strong>하거나, 바탕화면 <strong>Peekom 바로가기 더블클릭</strong>으로도 열립니다(앱이 꺼져 있으면 메모와 함께 열림).</p>" +
+            '<p>자세한 내용은 <a href="help.html">가이드</a>를 참고하세요.</p>',
         faq11q: "라이선스 키는 어떻게 입력하나요? 입력창 예시와 메일의 키가 달라요.",
         faq11a:
             "<p>Peekom Plus는 Lemon Squeezy 구매 확인 메일에 있는 <strong>라이선스 키 전체</strong>를 사용합니다.</p>" +
@@ -828,24 +926,30 @@ const i18n = {
             "<li>Peekom 실행 → <strong>환경설정</strong> 또는 <strong>Plus 잠금 화면</strong> → 라이선스 키 붙여넣기 → <strong>인증</strong></li>" +
             "<li>인터넷 연결 상태에서 진행 (회사망은 아래 FAQ 참고)</li>" +
             "</ol>" +
-            "<p>입력창에 보이는 <code>XXXX-XXXX-XXXX-XXXX</code>는 <strong>형식 예시</strong>일 뿐입니다. <strong>16자리만 넣지 마시고</strong>, 메일에 적힌 <strong>전체 키</strong>를 그대로 입력하세요.</p>" +
+            "<p>입력창에 보이는 <code>XXXX-XXXX-XXXX-XXXX</code>는 <strong>형식 예시</strong>일 뿐입니다.</p>" +
+            "<p><strong>16자리만 넣지 마시고</strong>, 메일에 적힌 <strong>전체 키</strong>를 그대로 입력하세요.</p>" +
             "<p>키를 잃어버리셨다면 <a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 주문 내역</a>에서 같은 이메일로 다시 확인할 수 있습니다.</p>",
         faq12q: "인터넷은 되는데 라이선스 인증이 안 됩니다. 「Lemon Squeezy 서버에 연결하지 못했습니다」가 뜹니다.",
         faq12a:
-            "<p>PC가 온라인이어도 Plus 인증은 <strong>Lemon Squeezy 서버(<code>api.lemonsqueezy.com</code>)</strong>에 별도로 접속해야 합니다. 회사 <strong>방화벽·보안 프로그램·VPN·프록시</strong>가 이 주소만 막으면 위 메시지가 나올 수 있습니다.</p>" +
+            "<p>PC가 온라인이어도 Plus 인증은 <strong>Lemon Squeezy 서버(<code>api.lemonsqueezy.com</code>)</strong>에 별도로 접속해야 합니다.</p>" +
+            "<p>회사 <strong>방화벽·보안 프로그램·VPN·프록시</strong>가 이 주소만 막으면 위 메시지가 나올 수 있습니다.</p>" +
             "<p><strong>시도해 보세요</strong></p>" +
             '<ul class="guide-step-list">' +
             "<li><strong>집 Wi‑Fi·휴대폰 핫스팟</strong> 등 다른 네트워크에서 한 번 활성화</li>" +
             "<li>IT에 <strong><code>https://api.lemonsqueezy.com</code> HTTPS(443) 허용</strong> 요청</li>" +
             "<li>회사 VPN 사용 중이면 끄거나, 허용된 VPN으로 재시도</li>" +
             "</ul>" +
-            "<p><strong>활성화 한도(최대 2대) 초과</strong> 메시지가 나오면 <a href=\"contact.html\">문의</a>로 구매 이메일·주문번호·라이선스 키를 보내 주세요. 기기 초기화를 안내해 드릴 수 있습니다.</p>" +
+            "<p><strong>활성화 한도(요금제별) 초과</strong> 메시지가 나오면 <a href=\"contact.html\">문의</a>로 구매 이메일·주문번호·라이선스 키를 보내 주세요.</p>" +
+            "<p>기기 초기화를 안내해 드릴 수 있습니다.</p>" +
             "<p>설치 파일을 다시 받아도, <strong>서버 접속이 막혀 있으면</strong> 같은 오류가 날 수 있습니다.</p>",
         faq13q: "Peekom은 프리웨어인가요? 회사 PC에 설치할 수 있나요?",
         faq13a:
-            "<p><strong>Peekom 무료 버전</strong>은 별도 라이선스 비용 없이 설치·사용할 수 있는 <strong>프리웨어(무료 소프트웨어)</strong>입니다. 유료 기능인 <strong>Peekom Plus</strong>는 선택 사항이며, 구매하지 않아도 무료 버전만으로 계속 사용할 수 있습니다.</p>" +
+            "<p><strong>Peekom 무료 버전</strong>은 별도 라이선스 비용 없이 설치·사용할 수 있는 <strong>프리웨어(무료 소프트웨어)</strong>입니다.</p>" +
+            "<p>유료 기능인 <strong>Peekom Plus</strong>는 선택 사항입니다.</p>" +
+            "<p>구매하지 않아도 무료 버전만으로 계속 사용할 수 있습니다.</p>" +
             "<p>(※ Microsoft Windows <strong>공식 인증 프로그램</strong>을 의미하는 것은 아닙니다.)</p>" +
-            "<p>회사 PC에서는 보안 정책에 따라 설치·실행 경로가 제한될 수 있습니다. Peekom은 프로그램 폴더 외에 <code>%AppData%\\Roaming\\Peekom</code>에 메모·설정을 저장하므로, IT에 아래를 함께 허용 요청해 주세요.</p>" +
+            "<p>회사 PC에서는 보안 정책에 따라 설치·실행 경로가 제한될 수 있습니다.</p>" +
+            "<p>Peekom은 프로그램 폴더 외에 <code>%AppData%\\Roaming\\Peekom</code>에 메모·설정을 저장하므로, IT에 아래를 함께 허용 요청해 주세요.</p>" +
             '<ul class="guide-step-list">' +
             "<li>공식 설치 파일: <a href=\"download.html\">peekom.com/download</a>의 <code>Peekom-Setup.exe</code></li>" +
             "<li>데이터 폴더: <code>C:\\Users\\(사용자명)\\AppData\\Roaming\\Peekom</code></li>" +
@@ -853,8 +957,11 @@ const i18n = {
             "</ul>",
         faq14q: "메모가 사라졌어요. 복구할 수 있나요?",
         faq14a:
-            "<p>Peekom은 메모를 <strong>사용 중인 PC에만 저장</strong>합니다. 서버(클라우드)에 올려 두지 않으며, 저희가 원격으로 PC 안의 메모를 조회하거나 복구해 드릴 수 없습니다.</p>" +
-            "<p><strong>자동 백업 기능은 없습니다.</strong> Peekom Plus에서는 <strong>보내기</strong>(.txt / .md / .json)나 <strong>JSON 백업·복원</strong>으로 내용을 따로 저장할 수 있지만, <strong>미리 백업해 두지 않으면</strong> PC 재시작·재설치·데이터 폴더 삭제 등 이후에는 복구가 어렵습니다.</p>" +
+            "<p>Peekom은 메모를 <strong>사용 중인 PC에만 저장</strong>합니다.</p>" +
+            "<p>서버(클라우드)에 올려 두지 않습니다.</p>" +
+            "<p>저희가 원격으로 PC 안의 메모를 조회하거나 복구해 드릴 수 없습니다.</p>" +
+            "<p><strong>자동 백업 기능은 없습니다.</strong></p>" +
+            "<p>Peekom Plus에서는 <strong>보내기</strong>(.txt / .md / .json)나 <strong>JSON 백업·복원</strong>으로 내용을 따로 저장할 수 있지만, <strong>미리 백업해 두지 않으면</strong> PC 재시작·재설치·데이터 폴더 삭제 등 이후에는 복구가 어렵습니다.</p>" +
             "<p>다음을 한 번 확인해 보세요.</p>" +
             '<ul class="guide-step-list">' +
             "<li>Peekom을 <strong>삭제 후 재설치</strong>하셨는지</li>" +
@@ -864,7 +971,8 @@ const i18n = {
             "<p>앞으로는 주기적으로 Plus <strong>JSON 백업</strong> 또는 <strong>보내기</strong>로 내용을 저장해 두시는 것을 권장합니다.</p>",
         faq15q: "Plus 구매 후 라이선스 키 메일이 오지 않아요.",
         faq15a:
-            "<p>결제 직후 Lemon Squeezy에서 <strong>구매 확인 메일</strong>이 발송됩니다. 아래를 확인해 주세요.</p>" +
+            "<p>결제 직후 Lemon Squeezy에서 <strong>구매 확인 메일</strong>이 발송됩니다.</p>" +
+            "<p>아래를 확인해 주세요.</p>" +
             '<ul class="guide-step-list">' +
             "<li><strong>스팸·프로모션·소셜</strong> 메일함</li>" +
             "<li>발신자 <strong>Lemon Squeezy</strong> 또는 제목에 <strong>Peekom / License</strong>가 포함된 메일</li>" +
@@ -880,7 +988,7 @@ const i18n = {
                 '<ul class="guide-step-list">' +
                     "<li><strong>다운로드 버튼</strong> — <a href=\"download.html\">다운로드</a> 페이지(또는 홈)에서 Windows·macOS용 설치 파일을 받습니다.</li>" +
                     "<li><strong>Peekom-Setup.exe 실행</strong> — 다운로드한 <code>Peekom-Setup.exe</code>를 더블클릭하고, 화면 안내에 따라 [다음]을 눌러 설치를 마칩니다.</li>" +
-                    '<li><strong>SmartScreen 경고가 날 때</strong> — 파란색 “인식할 수 없는 앱” 창이 뜨면 <a href="#" onclick="openModal(); return false;">설치 가이드</a>를 열고 <strong>[추가 정보]</strong> → <strong>[실행]</strong> 순서로 진행하세요.</li>' +
+                    '<li><strong>Edge 다운로드가 막힐 때</strong> — "일반적으로 다운로드되지 않습니다" 메시지가 보이면 <a href="#" onclick="openModal(); return false;">설치 가이드</a>를 열고 다운로드 기록(<kbd>Ctrl</kbd>+<kbd>J</kbd>)에서 <strong>유지</strong> → <strong>그래도 계속</strong> 순서로 진행하세요. Chrome으로 재시도할 수도 있습니다.</li>' +
                 "</ul>" +
             "</div>" +
             '<div class="guide-step">' +
@@ -930,17 +1038,17 @@ const i18n = {
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "개인정보 처리방침",
-        guideTitle: "윈도우 SmartScreen 설치 가이드",
-        step1: '다운로드 후 실행 시 <b>"인식할 수 없는 앱"</b>이라는 파란색 Windows SmartScreen 창이 뜰 수 있습니다.',
-        step2: "화면 상단의 <b>[추가 정보]</b> 글자를 클릭해 주세요.",
-        step3: "우측 하단에 나타나는 <b>[실행]</b> 버튼을 누르면 설치가 완료됩니다.",
+        guideTitle: "Edge 다운로드 차단 해제 가이드",
+        step1: 'Microsoft Edge로 설치 파일을 받을 때 <b>"일반적으로 다운로드되지 않습니다"</b>라는 메시지가 나올 수 있습니다. 새로 배포된 앱에서 흔히 나타나는 안내입니다.',
+        step2: "키보드 <kbd>Ctrl</kbd> + <kbd>J</kbd>로 <b>다운로드 기록</b> 창을 연 뒤, 차단된 <code>Peekom-Setup.exe</code> 항목 오른쪽 <b>점 세 개(…)</b>를 클릭하고 <b>유지</b>를 선택합니다.",
+        step3: "경고 창에서 <b>그래도 계속</b>을 클릭하면 설치 파일을 실행할 수 있습니다. 같은 메시지가 반복되면 <b>Chrome 브라우저</b>로 다운로드를 다시 시도해 보세요.",
         searchNoResults: "결과 없음",
         modalClose: "닫기",
         dlTitle: "다운로드",
         dlWinNote: "Windows 10 · 11 (64-bit)",
         dlWinLabel: "Windows x64 · Windows 10 · 11 (64-bit)",
         dlMacLabel: "macOS",
-        winGuideBtn: "Windows 설치 시 파란 SmartScreen 경고가 보이나요?",
+        winGuideBtn: 'Edge에서 "일반적으로 다운로드되지 않습니다"라는 메시지가 떴나요?',
         settingsGuideTitle: "설정창은 어떻게 여나요?",
         settingsGuideText: "작업표시줄 오른쪽 끝의 <strong>∧</strong> 를 눌러 Peekom 아이콘을 찾은 뒤, 아이콘을 더블클릭하거나 우클릭 → ‘설정’을 선택하세요.",
         settingsGuideThumbAria: "설정 여는 위치 확대 보기",
@@ -949,7 +1057,7 @@ const i18n = {
         promoFreeTitle: "Peekom(무료)",
         promoVat: "(VAT 별도)",
         promoLaunchLabel: "출시 기념\n프로모션가\n적용 중",
-        comparePricingExtra: " · 1회 구매 · 최대 2대 기기 · 소버전 업데이트 포함 · 30일 환불 (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
+        comparePricingExtra: " · 1회 구매 · 1~5대 기기(요금제별) · 소버전 업데이트 포함 · 30일 환불 (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
         dlPlusHintExtra: ' · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Lemon Squeezy에서 구입</a> → 앱에서 라이선스 키 입력',
         fz1Title: "테두리에서 빼꼼",
         fz1Items: [
@@ -1076,12 +1184,14 @@ const i18n = {
         heroFreeCompareNote: '<a href="features.html#compare">See free vs Plus</a>.',
         heroWinBtn: "Download for Windows", heroMacBtn: "Download for macOS",
         heroPlusBuyBtn: "Buy now",
-        heroPlusCardTitle: "Peekom Plus",
+        heroPlusSingleCardTitle: "Peekom Plus - Single",
+        heroPlusDoubleCardTitle: "Peekom Plus - Double",
+        heroPlusFamilyCardTitle: "Peekom Plus - Family",
         heroPlusCardBadge: "PAID",
-        heroPlusCardOs: "Windows",
-        heroMacPlusCardTitle: "Peekom Plus",
-        heroMacPlusCardBadge: "PAID",
-        heroPlusCardMeta: "One-time · up to 2 devices · lifetime",
+        heroPlusCardOsCompat: "Windows / Mac compatible",
+        heroPlusSingleCardMeta: "One-time · 1 device · lifetime",
+        heroPlusDoubleCardMeta: "One-time · 2 devices · lifetime",
+        heroPlusFamilyCardMeta: "One-time · 5 devices · lifetime",
         heroFreeCardTitle: "Peekom",
         heroFreeCardBadge: "FREE",
         heroMacFreeCardBadge: "FREE",
@@ -1099,11 +1209,11 @@ const i18n = {
         detectGeneric: "OS not detected — choose manually",
         featuresTitle: "Features", featuresSub: "What Peekom does at a glance.",
         compareTitle: "Peekom vs Peekom Plus", compareSub: "One app — Peekom Plus unlocks inside the app.",
-        comparePricing: '<span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> <span class="pricing-now">$' + PRICING.sale.toFixed(2) + ' USD</span> <span class="pricing-vat">(excl. VAT)</span> · <span class="pricing-launch">Launch price</span> · one-time · up to 2 devices · minor updates included · 30-day refund (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
-        guidePlusP: "1) Buy at launch price $9.99 on Lemon Squeezy → 2) Receive license key by email → 3) Open Peekom → enter key in lock UI or Settings → 4) Peekom Plus activation complete. 30-day refund: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
+        comparePricing: '<span class="pricing-was">$' + PLUS_TIERS.single.sale.toFixed(2) + '–$' + PLUS_TIERS.family.sale.toFixed(2) + '</span> <span class="pricing-vat">(excl. VAT)</span> · <span class="pricing-launch">Launch price</span> · one-time · 1–5 devices (by plan) · minor updates included · 30-day refund (<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>)',
+        guidePlusP: "1) Choose a plan on Lemon Squeezy and purchase → 2) Receive license key by email → 3) Open Peekom → enter key in lock UI or Settings → 4) Peekom Plus activation complete. 30-day refund: <a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>",
         dlSub: "Install Peekom once. Upgrade to Peekom Plus inside the app.",
         dlWin: "Peekom Setup (Windows)", dlMac: "Peekom Setup (macOS)",
-        dlPlusHint: 'Peekom Plus: Was <span class="pricing-was">$' + PRICING.list.toFixed(2) + '</span> → Launch <strong>$' + PRICING.sale.toFixed(2) + '</strong> (excl. VAT) · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Buy on Lemon Squeezy</a> → enter license key in app',
+        dlPlusHint: 'Peekom Plus: Single <strong>$' + PLUS_TIERS.single.sale.toFixed(2) + '</strong> · Double <strong>$' + PLUS_TIERS.double.sale.toFixed(2) + '</strong> · Family <strong>$' + PLUS_TIERS.family.sale.toFixed(2) + '</strong> (excl. VAT) · <a href="' + LINKS.buyDouble + '" id="dlBuyLinkInner">Buy on Lemon Squeezy</a> → enter license key in app',
         featureGifPending: "Demo GIF coming soon",
         compareNoLabel: "Not supported",
         faqSub: "Common questions about Peekom.",
@@ -1118,13 +1228,24 @@ const i18n = {
             '<li><strong>Process</strong> — Submit a request via the <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">contact form (or email)</a> with your order number → we review → we issue the refund from the Lemon Squeezy dashboard → the refund may take several business days depending on your card issuer.</li>' +
             "</ul>",
         faqR1q: "How do I request a Peekom Plus refund?",
-        faqR1a: 'Send us your <strong>order number</strong> through the <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">contact form (or email)</a>. After we review the request, we issue the refund from the Lemon Squeezy dashboard. The refund may take a few business days to appear, depending on your card issuer or payment method.',
+        faqR1a:
+            '<p>Send us your <strong>order number</strong> through the <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">contact form (or email)</a>.</p>' +
+            "<p>After we review the request, we issue the refund from the Lemon Squeezy dashboard.</p>" +
+            "<p>The refund may take a few business days to appear, depending on your card issuer or payment method.</p>",
         faqR2q: "What is eligible for a refund?",
-        faqR2a: "Within <strong>30 days</strong> of purchase, refunds are available for <strong>product malfunction</strong> (the app fails to run or work correctly) and <strong>duplicate payments</strong> for the same order. Change of mind is not eligible. Payments and refunds are handled by Lemon Squeezy, our Merchant of Record.",
+        faqR2a:
+            "<p>Within <strong>30 days</strong> of purchase, refunds are available for <strong>product malfunction</strong> (the app fails to run or work correctly) and <strong>duplicate payments</strong> for the same order.</p>" +
+            "<p>Change of mind is not eligible.</p>" +
+            "<p>Payments and refunds are handled by Lemon Squeezy, our Merchant of Record.</p>",
         faqR3q: "What happens to my license after a refund?",
-        faqR3a: "Once a refund is completed, your Peekom Plus license key is <strong>disabled</strong>. The app automatically reverts to the free version the next time it launches while online, so make sure you intend to stop using Plus before requesting a refund.",
+        faqR3a:
+            "<p>Once a refund is completed, your Peekom Plus license key is <strong>disabled</strong>.</p>" +
+            "<p>The app automatically reverts to the free version the next time it launches while online, so make sure you intend to stop using Plus before requesting a refund.</p>",
         faq1q: "What's the difference between free and Plus?",
-        faq1a: 'Free includes 3 indexes, group handle move, Ice mode, hover delay, monitor selection, formatting toolbar, and image insert. Peekom Plus (launch $9.99, list $12.99) unlocks 10 slots, custom theme, fonts, opacity, left panel, image resize, and export in-app. See the <a href="features.html#compare">comparison table</a>.',
+        faq1a:
+            "<p>Free includes 3 indexes, group handle move, Ice mode, hover delay, monitor selection, formatting toolbar, and image insert.</p>" +
+            "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) unlocks 10 slots, custom theme, fonts, opacity, left panel, image resize, and export in-app.</p>" +
+            '<p>See the <a href="features.html#compare">comparison table</a>.</p>',
         compareFreeName: "Peekom (Free)",
         comparePlusName: "Peekom Plus",
         compareCta: "Get Peekom Plus",
@@ -1136,7 +1257,7 @@ const i18n = {
                 '<ul class="guide-step-list">' +
                     '<li><strong>Download</strong> — Get the Windows or macOS installer from the <a href="download.html">Download</a> page (or home).</li>' +
                     "<li><strong>Run Peekom-Setup.exe</strong> — Double-click the installer and follow the prompts.</li>" +
-                    '<li><strong>SmartScreen warning</strong> — If a blue window appears, open the <a href="#" onclick="openModal(); return false;">install guide</a> and choose <strong>More info</strong> → <strong>Run anyway</strong>.</li>' +
+                    '<li><strong>Edge download blocked</strong> — If you see "This file isn\'t commonly downloaded," open the <a href="#" onclick="openModal(); return false;">install guide</a> and use Downloads (<kbd>Ctrl</kbd>+<kbd>J</kbd>) → <strong>Keep</strong> → <strong>Keep anyway</strong>. You can also retry in Chrome.</li>' +
                 "</ul>" +
             "</div>" +
             '<div class="guide-step">' +
@@ -1178,7 +1299,7 @@ const i18n = {
         help4t: "4. Write", help4p: "Type in the panel; add indexes and titles in Settings.",
         help5t: "5. Ice mode", help5p: "Click the <strong>Peek / Ice</strong> chip to pin the memo without hover (free & Plus).",
         help6t: "6. Settings · Plus", help6p: "Tray → Settings → Common tab to change trigger mode and shortcuts. Use the Upgrade to Plus button to enter a license key and switch branding to Peekom Plus.",
-        winGuideBtn: "See a blue SmartScreen warning when installing on Windows?",
+        winGuideBtn: 'Does Edge say the file "isn\'t commonly downloaded"?',
         settingsGuideTitle: "How do I open Settings?",
         settingsGuideText: "Click the <strong>∧</strong> at the right end of the taskbar to find the Peekom icon, then double-click it (or right-click → \u201CSettings\u201D).",
         settingsGuideThumbAria: "Zoom in on where to open Settings",
@@ -1192,52 +1313,102 @@ const i18n = {
         faqGroupInstallLabel: "Installation",
         faqGroupTroubleshootLabel: "Troubleshooting",
         faq2q: "How does dual monitor support work?",
-        faq2a: "In Settings → Display monitor, choose auto (follow mouse) or a fixed monitor. Available on Free and Plus.",
+        faq2a:
+            "<p>In Settings → Display monitor, choose auto (follow mouse) or a fixed monitor.</p>" +
+            "<p>Available on Free and Plus.</p>",
         faq8q: "Can Peekom only be used on the right edge of the monitor?",
-        faq8a: "The right edge is available on the free plan; the left edge requires Peekom Plus. Top and bottom edges are planned for a future update.",
+        faq8a:
+            "<p>The right edge is available on the free plan.</p>" +
+            "<p>The left edge requires Peekom Plus.</p>" +
+            "<p>Top and bottom edges are planned for a future update.</p>",
         faq9q: "I accidentally uninstalled Peekom Plus. What happens to my paid features?",
         faq9a:
-            "<p>Uninstalling the app does not remove your Lemon Squeezy license. Follow these steps to restore Peekom Plus and all paid features.</p>" +
+            "<p>Uninstalling the app does not remove your Lemon Squeezy license.</p>" +
+            "<p>Follow these steps to restore Peekom Plus and all paid features.</p>" +
             '<ul class="guide-step-list">' +
             "<li><strong>1. Reinstall Peekom</strong> — Download the free version (<code>Peekom-Setup.exe</code>) from <a href=\"download.html\">peekom.com</a> and install it.</li>" +
             "<li><strong>2. Find your license key</strong> — Open the Lemon Squeezy receipt email from your purchase and copy the <strong>[License Key]</strong>. If you lost the email, sign in to your Lemon Squeezy order history with the same email to view the key again.</li>" +
             "<li><strong>3. Reactivate Plus</strong> — Open Settings (gear icon, top right), paste the key under <strong>Plus activation</strong>, and confirm. The app switches to Peekom Plus and restores 10 slots, custom themes, and other Plus features.</li>" +
             "</ul>" +
-            "<p><strong>Device limit (up to 2)</strong> — Reinstalling on the same PC counts as the same device, so activation is unaffected. If you move to a new computer, each license allows up to two devices (e.g. work PC + personal PC).</p>",
+            "<p><strong>Device limit (by plan)</strong> — Reinstalling on the same PC counts as the same device.</p>" +
+            "<p>Single allows 1 device · Double 2 · Family 5 (e.g. Double — work PC + personal PC).</p>",
         faq3q: "How is Plus activated?",
-        faq3a: "Buy on Lemon Squeezy, then enter the license key in-app to unlock Peekom Plus (no reinstall).",
+        faq3a:
+            "<p>Buy on Lemon Squeezy, then enter the license key in-app to unlock Peekom Plus (no reinstall).</p>",
         faq3bq: "Can I use one license key on more than one PC?",
-        faq3ba: "Yes. Enter the same license key once on each of up to two PCs—for example, your work PC and personal PC—to use Peekom Plus on both.",
+        faq3ba:
+            "<p>Even if you use different operating systems—such as a work Windows PC and a home MacBook—you only need to <strong>purchase Plus once</strong>.</p>" +
+            "<p>Install files differ by OS, but enter the <strong>same license key</strong> in Settings on each device.</p>" +
+            "<p>How many devices you can use at once depends on your plan:</p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Single</strong> — 1 device</li>" +
+            "<li><strong>Double</strong> — 2 devices (e.g. work Windows PC + home MacBook)</li>" +
+            "<li><strong>Family</strong> — 5 devices</li>" +
+            "</ul>" +
+            "<p>Example with Double: install Peekom on your work Windows PC and enter your Plus key in Settings → install the macOS build on your MacBook and enter the <strong>same key</strong>.</p>",
         faq3cq: "Can I keep using Peekom if I change my work PC or switch jobs?",
-        faq3ca: "A Peekom Plus license can be used on up to two devices. Reinstalling on the same device is allowed. If you need to move to a new device, please contact us and we will review and assist you. Depending on the situation, we may guide you to reactivate on the new device after resetting previously activated devices.",
+        faq3ca:
+            "<p>Depending on your plan, Peekom Plus can be used on 1 device (Single), 2 (Double), or 5 (Family).</p>" +
+            "<p>Reinstalling on the same device is allowed.</p>" +
+            "<p>If you need to move to a new device, please contact us and we will review and assist you.</p>" +
+            "<p>Depending on the situation, we may guide you to reactivate on the new device after resetting previously activated devices.</p>",
         faq3dq: "What information should I send if I need a device change?",
-        faq3da: "For a faster review, please send the email address used for purchase, your order number, your license key, and the reason for the device change. If both device slots are already activated, we may need to reset the existing activated devices before reactivation, so please back up anything you need in advance before contacting us.",
-        faq4q: "A blue warning appears when installing on Windows.",
-        faq4a: 'SmartScreen warnings are common for unsigned apps. See the <a href="#" onclick="openModal(); return false;">install guide</a>: [More Info] → [Run Anyway].',
+        faq3da:
+            "<p>For a faster review, please send the email address used for purchase, your order number, your license key, and the reason for the device change.</p>" +
+            "<p>If you have used all slots for your plan (Single 1 · Double 2 · Family 5), we may need to reset existing activated devices before reactivation, so please back up anything you need in advance before contacting us.</p>",
+        faq4q: 'Microsoft Edge says the file "isn\'t commonly downloaded."',
+        faq4a:
+            '<p>When downloading the installer in <strong>Microsoft Edge</strong>, you may see <strong>"This file isn\'t commonly downloaded"</strong>.</p>' +
+            "<p>This is common for newly distributed apps.</p>" +
+            '<ol class="guide-step-list">' +
+            "<li>Press <kbd>Ctrl</kbd> + <kbd>J</kbd> to open <strong>Downloads</strong>.</li>" +
+            "<li>Next to the blocked <code>Peekom-Setup.exe</code> entry, click the <strong>three dots (…)</strong> and choose <strong>Keep</strong>.</li>" +
+            "<li>In the warning dialog, click <strong>Keep anyway</strong> to run the installer.</li>" +
+            "</ol>" +
+            '<p>If the message keeps appearing, try downloading again in <strong>Google Chrome</strong>.</p>' +
+            '<p>See the <a href="#" onclick="openModal(); return false;">install guide</a> for details.</p>',
         faq5q: "Which Windows versions are supported?",
-        faq5a: "Peekom runs on Windows 10 and 11 (64-bit). The installer is 64-bit only. Windows 7, 8, and 8.1 are not supported (Electron 36).",
+        faq5a:
+            "<p>Peekom runs on Windows 10 and 11 (64-bit).</p>" +
+            "<p>The installer is 64-bit only.</p>" +
+            "<p>Windows 7, 8, and 8.1 are not supported (Electron 36).</p>",
         faq6q: "I added an index but it doesn't show in Settings.",
-        faq6a: "Reopen Settings to refresh the list; recent versions sync automatically.",
+        faq6a:
+            "<p>Reopen Settings to refresh the list.</p>" +
+            "<p>Recent versions sync automatically.</p>",
         faq7q: "After removing the legacy app 빼꼼 인덱스, strange text or errors appear at startup. What should I do?",
         faq7a:
-            "<p>If you removed the legacy app (빼꼼 인덱스) while <strong>startup at login was still enabled</strong>, a leftover Windows startup entry may try to run a deleted file and show <strong>garbled text or an error</strong> at boot.</p>" +
-            "<p><strong>Windows 11</strong></p>" +
+            "<p>If you removed the legacy app (빼꼼 인덱스) while <strong>startup at login was still enabled</strong>, leftover startup entries, taskbar pins, or folders may try to run deleted files at boot and show <strong>garbled text or errors</strong>.</p>" +
+            "<p>Follow these steps once to clean up.</p>" +
+            "<p><strong>1. Fully quit any running instance</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> → Task Manager → end any Peekom / 빼꼼-related process</li>" +
+            "<li>Right-click the taskbar icon → <strong>Unpin from taskbar</strong></li>" +
+            "</ul>" +
+            "<p><strong>2. Turn off startup entries</strong> (names may vary)</p>" +
+            "<p><strong>Windows 11</strong> — Settings → Apps → Startup</p>" +
+            "<p><strong>Windows 10</strong> — Task Manager → Startup tab</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Disable if present: Peekom, Peekom Plus, 빼꼼 인덱스, com.peekom.app, or garbled-looking names</li>" +
+            "<li>An entry may remain in Startup even if it no longer appears under Installed apps.</li>" +
+            "</ul>" +
+            "<p><strong>3. Delete leftover folders</strong></p>" +
             '<ol class="guide-step-list">' +
-            "<li>Settings → Apps → Startup (or Installed apps → Startup)</li>" +
-            "<li>Find <strong>빼꼼 인덱스</strong> or a similar name in the list</li>" +
-            "<li>Turn it <strong>Off</strong></li>" +
+            "<li>In File Explorer, open <code>%LocalAppData%\\Programs</code> → delete any <strong>빼꼼</strong> folder</li>" +
+            "<li>Open <code>%AppData%\\빼꼼</code> → delete the folder (contains memos/settings; only if you will not use it again)</li>" +
+            "<li>Open <code>%LocalAppData%</code> → delete any folder with <strong>빼꼼</strong> in the name</li>" +
             "</ol>" +
-            "<p><strong>Windows 10</strong></p>" +
-            '<ol class="guide-step-list">' +
-            "<li>Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> to open Task Manager</li>" +
-            "<li>Open the <strong>Startup</strong> tab</li>" +
-            "<li>Select <strong>빼꼼 인덱스</strong> → <strong>Disable</strong></li>" +
-            "</ol>" +
-            "<p>Turn the entry off, then <strong>restart</strong>. If the issue stops, the cause was the startup registration. You can then install <a href=\"download.html\">Peekom (free)</a> fresh.</p>" +
-            '<p class="privacy-doc__note">Memo content from the legacy app is <strong>not migrated automatically</strong> because Peekom stores data in a different location. Copy anything you need before removing the old app.</p>',
+            "<p>If deletion fails, end tasks in step 1 and try again.</p>" +
+            "<p><strong>4. Restart and verify</strong> — Reboot your PC.</p>" +
+            "<p>If no error windows appear and Peekom is gone from the taskbar, cleanup succeeded.</p>" +
+            "<p>You can then install <a href=\"download.html\">Peekom (free)</a> fresh.</p>" +
+            '<p class="privacy-doc__note">Memo content from the legacy app is <strong>not migrated automatically</strong> because Peekom stores data in a different location.</p>' +
+            '<p class="privacy-doc__note">Copy anything you need before removing the old app.</p>',
         faq10q: "Where do I open Peekom Settings?",
         faq10a:
-            "Right-click the Peekom icon in the <strong>system tray</strong> → <strong>Settings</strong>. You can also <strong>double-click</strong> the tray icon, or <strong>double-click</strong> the desktop shortcut (if the app was closed, the memo and Settings open together). See the <a href=\"help.html\">guide</a> for details.",
+            "<p>Right-click the Peekom icon in the <strong>system tray</strong> → <strong>Settings</strong>.</p>" +
+            "<p>You can also <strong>double-click</strong> the tray icon, or <strong>double-click</strong> the desktop shortcut (if the app was closed, the memo and Settings open together).</p>" +
+            '<p>See the <a href="help.html">guide</a> for details.</p>',
         faq11q: "How do I enter my license key? The placeholder doesn't match the email key.",
         faq11a:
             "<p>Use the <strong>full license key</strong> from your Lemon Squeezy receipt email.</p>" +
@@ -1246,24 +1417,29 @@ const i18n = {
             "<li>Launch Peekom → <strong>Settings</strong> or the <strong>Plus lock screen</strong> → paste the key → <strong>Activate</strong></li>" +
             "<li>Use a working internet connection (see corporate network FAQ below if needed)</li>" +
             "</ol>" +
-            "<p>The <code>XXXX-XXXX-XXXX-XXXX</code> placeholder is only an <strong>example</strong>. Do <strong>not</strong> enter 16 characters only—paste the <strong>entire key</strong> from your email.</p>" +
+            "<p>The <code>XXXX-XXXX-XXXX-XXXX</code> placeholder is only an <strong>example</strong>.</p>" +
+            "<p>Do <strong>not</strong> enter 16 characters only—paste the <strong>entire key</strong> from your email.</p>" +
             "<p>Lost the email? Sign in at <a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy My Orders</a> with the same address.</p>",
         faq12q: "I'm online but activation fails with \"Could not reach Lemon Squeezy.\"",
         faq12a:
-            "<p>Even when your PC is online, Plus activation must reach <strong>Lemon Squeezy (<code>api.lemonsqueezy.com</code>)</strong>. Corporate <strong>firewalls, security software, VPNs, or proxies</strong> may block only that server.</p>" +
+            "<p>Even when your PC is online, Plus activation must reach <strong>Lemon Squeezy (<code>api.lemonsqueezy.com</code>)</strong>.</p>" +
+            "<p>Corporate <strong>firewalls, security software, VPNs, or proxies</strong> may block only that server.</p>" +
             "<p><strong>Try this</strong></p>" +
             '<ul class="guide-step-list">' +
             "<li>Activate once on another network (home Wi‑Fi, mobile hotspot)</li>" +
             "<li>Ask IT to allow <strong><code>https://api.lemonsqueezy.com</code> over HTTPS (443)</strong></li>" +
             "<li>Turn off a corporate VPN, or try an allowed VPN</li>" +
             "</ul>" +
-            "<p>If you see an <strong>activation limit (max 2 devices)</strong> message, <a href=\"contact.html\">contact us</a> with your purchase email, order number, and license key—we can help reset devices.</p>" +
+            "<p>If you see an <strong>activation limit (by plan)</strong> message, <a href=\"contact.html\">contact us</a> with your purchase email, order number, and license key—we can help reset devices.</p>" +
             "<p>Downloading the installer again will <strong>not</strong> fix this if the server is still blocked.</p>",
         faq13q: "Is Peekom freeware? Can I install it on a company PC?",
         faq13a:
-            "<p><strong>Peekom (free)</strong> is <strong>freeware</strong>—you can install and use it without a separate license fee. <strong>Peekom Plus</strong> is optional paid functionality.</p>" +
+            "<p><strong>Peekom (free)</strong> is <strong>freeware</strong>—you can install and use it without a separate license fee.</p>" +
+            "<p><strong>Peekom Plus</strong> is optional paid functionality.</p>" +
             "<p>(This describes the <strong>license type</strong>, not Microsoft Windows official certification.)</p>" +
-            "<p>Company PCs may restrict install or data paths. Besides the program folder, Peekom stores memos and settings under <code>%AppData%\\Roaming\\Peekom</code>. Ask IT to allow:</p>" +
+            "<p>Company PCs may restrict install or data paths.</p>" +
+            "<p>Besides the program folder, Peekom stores memos and settings under <code>%AppData%\\Roaming\\Peekom</code>.</p>" +
+            "<p>Ask IT to allow:</p>" +
             '<ul class="guide-step-list">' +
             "<li>Official installer: <code>Peekom-Setup.exe</code> from <a href=\"download.html\">peekom.com/download</a></li>" +
             "<li>Data folder: <code>C:\\Users\\(username)\\AppData\\Roaming\\Peekom</code></li>" +
@@ -1271,8 +1447,10 @@ const i18n = {
             "</ul>",
         faq14q: "My memo disappeared. Can I recover it?",
         faq14a:
-            "<p>Peekom stores memos <strong>only on your PC</strong>. There is no cloud server, and we cannot remotely view or restore your data.</p>" +
-            "<p>There is <strong>no automatic backup</strong>. Peekom Plus offers <strong>Export</strong> (.txt / .md / .json) and <strong>JSON backup/restore</strong>, but without a prior backup, recovery is difficult after reinstall, account change, or AppData cleanup.</p>" +
+            "<p>Peekom stores memos <strong>only on your PC</strong>.</p>" +
+            "<p>There is no cloud server, and we cannot remotely view or restore your data.</p>" +
+            "<p>There is <strong>no automatic backup</strong>.</p>" +
+            "<p>Peekom Plus offers <strong>Export</strong> (.txt / .md / .json) and <strong>JSON backup/restore</strong>, but without a prior backup, recovery is difficult after reinstall, account change, or AppData cleanup.</p>" +
             "<p>Please check:</p>" +
             '<ul class="guide-step-list">' +
             "<li>Did you <strong>uninstall and reinstall</strong> Peekom?</li>" +
@@ -1282,7 +1460,8 @@ const i18n = {
             "<p>We recommend periodic Plus <strong>JSON backups</strong> or <strong>Export</strong> going forward.</p>",
         faq15q: "I bought Plus but didn't receive the license key email.",
         faq15a:
-            "<p>Lemon Squeezy sends a <strong>purchase confirmation email</strong> after payment. Please check:</p>" +
+            "<p>Lemon Squeezy sends a <strong>purchase confirmation email</strong> after payment.</p>" +
+            "<p>Please check:</p>" +
             '<ul class="guide-step-list">' +
             "<li><strong>Spam, Promotions, or Social</strong> folders</li>" +
             "<li>Sender <strong>Lemon Squeezy</strong> or subject containing <strong>Peekom / License</strong></li>" +
@@ -1309,10 +1488,10 @@ const i18n = {
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "Privacy",
-        guideTitle: "Windows SmartScreen Install Guide",
-        step1: 'When running the installer, a blue SmartScreen window saying <b>"Unrecognized App"</b> may appear.',
-        step2: "Click <b>[More Info]</b> at the top of the description.",
-        step3: "Click <b>[Run Anyway]</b> at the bottom right to complete installation.",
+        guideTitle: "Edge Download Unblock Guide",
+        step1: 'When downloading in <b>Microsoft Edge</b>, you may see <b>"This file isn\'t commonly downloaded."</b> This is common for newly distributed apps.',
+        step2: "Press <kbd>Ctrl</kbd> + <kbd>J</kbd> to open <b>Downloads</b>, click the <b>three dots (…)</b> next to blocked <code>Peekom-Setup.exe</code>, and choose <b>Keep</b>.",
+        step3: "Click <b>Keep anyway</b> in the warning dialog to run the installer. If the message repeats, try downloading again in <b>Google Chrome</b>.",
         searchNoResults: "No results",
         modalClose: "Close",
         promoNote: "Price increase planned after promotion ends",
@@ -1320,7 +1499,7 @@ const i18n = {
         promoFreeTitle: "Peekom (Free)",
         promoVat: "(excl. VAT)",
         promoLaunchLabel: "Launch promo\nprice\napplied",
-        comparePricingExtra: " · one-time · up to 2 devices · minor updates included · 30-day refund (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
+        comparePricingExtra: " · one-time · 1–5 devices (by plan) · minor updates included · 30-day refund (<a href=\"mailto:" + CONTACT_EMAIL + "\">" + CONTACT_EMAIL + "</a>)",
         dlPlusHintExtra: ' · <a href="' + LINKS.buy + '" id="dlBuyLinkInner">Buy on Lemon Squeezy</a> → enter license key in app',
         markdownGuideTitle: "Notes with Markdown",
         markdownGuideBody:
@@ -1539,6 +1718,7 @@ function enrichLocaleData(data, lang) {
     next.faq6q = next.faq6q || en.faq6q;
     next.faq6a = next.faq6a || en.faq6a;
     [
+        'faq3bq', 'faq3ba', 'faq3cq', 'faq3ca', 'faq3dq', 'faq3da', 'faq4q', 'faq4a',
         'faq7q', 'faq7a', 'faq10q', 'faq10a', 'faq11q', 'faq11a',
         'faq12q', 'faq12a', 'faq13q', 'faq13a', 'faq14q', 'faq14a',
         'faq15q', 'faq15a', 'dlFreeFreewareNote',
@@ -1558,12 +1738,14 @@ function enrichLocaleData(data, lang) {
     next.heroWinBtn = next.heroWinBtn || en.heroWinBtn;
     next.heroMacBtn = next.heroMacBtn || en.heroMacBtn;
     next.heroPlusBuyBtn = next.heroPlusBuyBtn || en.heroPlusBuyBtn;
-    next.heroPlusCardTitle = next.heroPlusCardTitle || en.heroPlusCardTitle;
+    next.heroPlusSingleCardTitle = next.heroPlusSingleCardTitle || en.heroPlusSingleCardTitle;
+    next.heroPlusDoubleCardTitle = next.heroPlusDoubleCardTitle || en.heroPlusDoubleCardTitle;
+    next.heroPlusFamilyCardTitle = next.heroPlusFamilyCardTitle || en.heroPlusFamilyCardTitle;
     next.heroPlusCardBadge = next.heroPlusCardBadge || en.heroPlusCardBadge;
-    next.heroMacPlusCardTitle = next.heroMacPlusCardTitle || en.heroMacPlusCardTitle;
-    next.heroMacPlusCardBadge = next.heroMacPlusCardBadge || en.heroMacPlusCardBadge;
-    next.heroPlusCardOs = next.heroPlusCardOs || en.heroPlusCardOs;
-    next.heroPlusCardMeta = next.heroPlusCardMeta || en.heroPlusCardMeta;
+    next.heroPlusCardOsCompat = next.heroPlusCardOsCompat || en.heroPlusCardOsCompat;
+    next.heroPlusSingleCardMeta = next.heroPlusSingleCardMeta || en.heroPlusSingleCardMeta;
+    next.heroPlusDoubleCardMeta = next.heroPlusDoubleCardMeta || en.heroPlusDoubleCardMeta;
+    next.heroPlusFamilyCardMeta = next.heroPlusFamilyCardMeta || en.heroPlusFamilyCardMeta;
     next.heroFreeCardTitle = next.heroFreeCardTitle || en.heroFreeCardTitle;
     next.heroFreeCardBadge = next.heroFreeCardBadge || en.heroFreeCardBadge;
     next.heroMacFreeCardBadge = next.heroMacFreeCardBadge || en.heroMacFreeCardBadge;
@@ -1686,7 +1868,6 @@ function getLocaleData() {
         const badge = SITE_OFFER_BADGES[lang] || SITE_OFFER_BADGES.en;
         raw = Object.assign({}, i18n.en, i18n[lang] || {}, {
             heroPlusCardBadge: badge.paid,
-            heroMacPlusCardBadge: badge.paid,
             heroFreeCardBadge: badge.free,
             heroMacFreeCardBadge: badge.free
         });
@@ -1762,7 +1943,7 @@ function applyLinks() {
         el.removeAttribute("target");
     });
 
-    const macBlockedIds = ["heroMacBtn", "heroMacPlusBuyBtn", "dlMacBtn", "dlMacPlusBuyBtn"];
+    const macBlockedIds = ["heroMacBtn", "dlMacBtn"];
     macBlockedIds.forEach(function (id) {
         const el = document.getElementById(id);
         if (!el) return;
@@ -1770,11 +1951,18 @@ function applyLinks() {
         el.removeAttribute("target");
     });
 
-    const winPlusBuyIds = ["heroPlusBuyBtn", "dlPlusBuyBtn"];
-    winPlusBuyIds.forEach(function (id) {
-        const el = document.getElementById(id);
+    const plusBuyMap = [
+        { id: "heroPlusBuyBtn", link: LINKS.buySingle },
+        { id: "heroPlusDoubleBuyBtn", link: LINKS.buyDouble },
+        { id: "heroPlusFamilyBuyBtn", link: LINKS.buyFamily },
+        { id: "dlPlusBuyBtn", link: LINKS.buySingle },
+        { id: "dlPlusDoubleBuyBtn", link: LINKS.buyDouble },
+        { id: "dlPlusFamilyBuyBtn", link: LINKS.buyFamily }
+    ];
+    plusBuyMap.forEach(function (item) {
+        const el = document.getElementById(item.id);
         if (!el) return;
-        el.href = LINKS.buy;
+        el.href = item.link;
         el.target = "_blank";
         el.rel = "noopener noreferrer";
         el.removeAttribute("download");
@@ -1972,7 +2160,7 @@ function initHeroOfferActions() {
     if (heroOfferActionsBound) return;
     heroOfferActionsBound = true;
 
-    ["heroMacBtn", "heroMacPlusBuyBtn", "dlMacBtn", "dlMacPlusBuyBtn"].forEach(function (id) {
+    ["heroMacBtn", "dlMacBtn"].forEach(function (id) {
         const el = document.getElementById(id);
         if (el) el.addEventListener("click", showMacComingSoon);
     });
@@ -1988,7 +2176,7 @@ function setThemeBtnA11y(id, label) {
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el && value != null) {
-        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq7a' || id === 'faq9a' || id === 'faq10a' || id === 'faq11a' || id === 'faq12a' || id === 'faq13a' || id === 'faq14a' || id === 'faq15a' || id === 'refundPolicyBody' || id === 'faqR1a' || id === 'faqR2a' || id === 'faqR3a' || id === 'settingsGuideText') {
+        if (id === 'heroFreeCompareNote' || id === 'dlFreeCompareNote' || id === 'faq1a' || id === 'dlPlusHint' || id === 'faq2a' || id === 'faq3a' || id === 'faq3ba' || id === 'faq7a' || id === 'faq9a' || id === 'faq10a' || id === 'faq11a' || id === 'faq12a' || id === 'faq13a' || id === 'faq14a' || id === 'faq15a' || id === 'refundPolicyBody' || id === 'faqR1a' || id === 'faqR2a' || id === 'faqR3a' || id === 'settingsGuideText') {
             el.innerHTML = value;
         } else {
             el.textContent = value;
@@ -2350,14 +2538,21 @@ function syncHeroHeights() {
 window.addEventListener('resize', syncHeroHeights);
 
 function highlightOSButtons() {
-    document.querySelectorAll('[data-os]').forEach(function(btn) {
-        btn.classList.remove('btn--recommended');
+    document.querySelectorAll(".hero-offer-card--download[data-os]").forEach(function(btn) {
+        btn.classList.remove("btn--recommended");
     });
-    if (userOS === 'win' || userOS === 'mac') {
-        document.querySelectorAll('[data-os="' + userOS + '"]').forEach(function(btn) {
-            btn.classList.add('btn--recommended');
+    if (userOS === "win" || userOS === "mac") {
+        document.querySelectorAll('.hero-offer-card--download[data-os="' + userOS + '"]').forEach(function(btn) {
+            btn.classList.add("btn--recommended");
         });
     }
+    applyPlusRecommended();
+}
+
+function applyPlusRecommended() {
+    document.querySelectorAll("[data-tier]").forEach(function(btn) {
+        btn.classList.toggle("btn--recommended", btn.getAttribute("data-tier") === "double");
+    });
 }
 
 /* ── Search ── */
@@ -2486,6 +2681,7 @@ window.onload = function() {
 };
     window.PeekomSite = {
         LINKS: LINKS,
+        PLUS_TIERS: PLUS_TIERS,
         PRICING: PRICING,
         setLanguage: setLanguage,
         openModal: openModal,

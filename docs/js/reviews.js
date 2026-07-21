@@ -12,7 +12,16 @@
      * name 을 비우면 익명(Anonymous)으로 표시됩니다.
      */
     var REVIEWS = [
-        // { rating: 5, text: "Love the edge handle — opens instantly!", name: "Jamie" },
+        {
+            rating: 5,
+            text: "사이드바에 메모를 접어두었다 열어볼수 있다는게 좋네요.",
+            name: "덜줄룩스"
+        },
+        {
+            rating: 4,
+            text: 'хареса ми. хубаво ще е да може да се "лепят" и втори ред забележки.',
+            name: "익명"
+        }
     ];
 
     var reviewIndex = 0;
