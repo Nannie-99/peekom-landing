@@ -2,6 +2,11 @@ const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
+if (process.platform !== "win32") {
+  console.log("[predist] Windows 전용 정리 단계 — 현재 OS에서는 건너뜀");
+  process.exit(0);
+}
+
 const unpackedDirs = [path.join(__dirname, "..", "dist", "win-unpacked")];
 
 function sleep(ms) {

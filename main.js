@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, nativeImage, screen, shell, Tray } = require("electron");
+const { app, BrowserWindow, dialog, globalShortcut, ipcMain, Menu, nativeImage, screen, session, shell, Tray } = require("electron");
 const { pathToFileURL } = require("url");
 const fs = require("fs");
 const os = require("os");
@@ -108,21 +108,35 @@ function resolveIconPath(isPremium) {
 function resolveShellIconPath(isPremium) {
   const icoName = isPremium ? "plus.ico" : "icon.ico";
   const pngName = isPremium ? "plus.png" : "index.png";
+  // macOS는 .ico보다 .png가 안정적이다.
+  const preferPng = process.platform === "darwin";
   const candidates = app.isPackaged
-    ? [
-        path.join(process.resourcesPath, icoName),
-        path.join(process.resourcesPath, "icon.ico"),
-        path.join(process.resourcesPath, pngName)
-      ]
-  : [
-      path.join(__dirname, "build", icoName),
-      path.join(__dirname, "build", "icon.ico"),
-      path.join(__dirname, "build", pngName)
-    ];
+    ? preferPng
+      ? [
+          path.join(process.resourcesPath, pngName),
+          path.join(process.resourcesPath, icoName),
+          path.join(process.resourcesPath, "icon.ico")
+        ]
+      : [
+          path.join(process.resourcesPath, icoName),
+          path.join(process.resourcesPath, "icon.ico"),
+          path.join(process.resourcesPath, pngName)
+        ]
+    : preferPng
+      ? [
+          path.join(__dirname, "build", pngName),
+          path.join(__dirname, "build", icoName),
+          path.join(__dirname, "build", "icon.ico")
+        ]
+      : [
+          path.join(__dirname, "build", icoName),
+          path.join(__dirname, "build", "icon.ico"),
+          path.join(__dirname, "build", pngName)
+        ];
   for (const p of candidates) {
     if (fs.existsSync(p)) return p;
   }
-  return path.join(__dirname, "build", "icon.ico");
+  return path.join(__dirname, "build", preferPng ? "index.png" : "icon.ico");
 }
 
 // 창/트레이/작업표시줄에 표시되는 런타임 아이콘 경로.
@@ -146,12 +160,67 @@ function loadAppIcon(isPremium) {
   return image.isEmpty() ? undefined : image;
 }
 
+/** macOS 메뉴 막대용: 큰 PNG를 그대로 쓰면 아이콘이 안 보이거나 깨진다. */
+function loadTrayIconImage(isPremium) {
+  const base = loadAppIcon(isPremium);
+  if (!base || base.isEmpty()) return undefined;
+  const size = process.platform === "darwin" ? 18 : 16;
+  try {
+    const resized = base.resize({ width: size, height: size, quality: "best" });
+    return resized.isEmpty() ? base : resized;
+  } catch {
+    return base;
+  }
+}
+
+/**
+ * macOS Dock: 여백 없는 풀블리드 PNG는 시스템 아이콘보다 크게 보인다.
+ * 투명 패딩을 넣어 다른 Dock 아이콘과 비슷한 시각 크기로 맞춘다.
+ */
+function padImageForMacDock(image, insetRatio = 0.14) {
+  if (!image || image.isEmpty()) return image;
+  try {
+    const canvas = 256;
+    const inset = Math.max(0, Math.min(0.3, insetRatio));
+    const inner = Math.max(1, Math.round(canvas * (1 - inset * 2)));
+    const resized = image.resize({ width: inner, height: inner, quality: "best" });
+    if (resized.isEmpty()) return image;
+    const src = resized.toBitmap();
+    const out = Buffer.alloc(canvas * canvas * 4, 0);
+    const offset = Math.round((canvas - inner) / 2);
+    for (let y = 0; y < inner; y++) {
+      const srcRow = y * inner * 4;
+      const dstRow = ((y + offset) * canvas + offset) * 4;
+      src.copy(out, dstRow, srcRow, srcRow + inner * 4);
+    }
+    const padded = nativeImage.createFromBitmap(out, { width: canvas, height: canvas });
+    return padded.isEmpty() ? image : padded;
+  } catch {
+    return image;
+  }
+}
+
 /** @type {import("electron").NativeImage | undefined} */
 let APP_ICON;
+/** @type {import("electron").NativeImage | undefined} */
+let TRAY_ICON;
 let premiumActive = false;
 
 function getAppDisplayName() {
   return premiumActive ? "Peekom Plus" : "Peekom";
+}
+
+function applyMacDockIcon() {
+  if (process.platform !== "darwin" || !app.dock) return;
+  try {
+    app.dock.show();
+    const dockIcon = padImageForMacDock(APP_ICON);
+    if (dockIcon && !dockIcon.isEmpty()) {
+      app.dock.setIcon(dockIcon);
+    }
+  } catch {
+    /* ignore */
+  }
 }
 
 function getMonitorPrefsPath() {
@@ -304,12 +373,14 @@ function updateWindowsShellBranding(isPremium) {
 async function applyBrandingAsync() {
   premiumActive = license.isPremiumActive();
   APP_ICON = loadAppIcon(premiumActive);
+  TRAY_ICON = loadTrayIconImage(premiumActive);
   const name = getAppDisplayName();
   app.setName(name);
   if (process.platform === "win32") {
     app.setAppUserModelId(APP_ID);
     reapplyStartupRegistration();
   }
+  applyMacDockIcon();
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.setTitle(name);
     if (APP_ICON) mainWindow.setIcon(APP_ICON);
@@ -318,8 +389,8 @@ async function applyBrandingAsync() {
     settingsWindow.setTitle(`${name} 설정`);
     if (APP_ICON) settingsWindow.setIcon(APP_ICON);
   }
-  if (trayIcon && APP_ICON) {
-    trayIcon.setImage(APP_ICON);
+  if (trayIcon && TRAY_ICON) {
+    trayIcon.setImage(TRAY_ICON);
     trayIcon.setToolTip(name);
   }
   if (trayIcon) {
@@ -427,13 +498,27 @@ const SETTINGS_WINDOW_WIDTH = 520;
 const SETTINGS_WINDOW_HEIGHT = 640;
 /** 창 세로 드래그 시 setBounds 호출 최소 간격 (ms) */
 const NUDGE_REFRESH_MS = 24;
+// macOS: Control+Shift+↑/↓ 는 미션 컨트롤과 충돌. Cmd+M은 창 최소화와 충돌 → Cmd+Shift+M / [ / ]
+const DEFAULT_MAC_SHORTCUTS = {
+  shortcut: "Command+Shift+M",
+  shortcutSlotPrev: "Command+[",
+  shortcutSlotNext: "Command+]"
+};
+const DEFAULT_WIN_SHORTCUTS = {
+  shortcut: "CommandOrControl+Shift+M",
+  shortcutSlotPrev: "CommandOrControl+Shift+Up",
+  shortcutSlotNext: "CommandOrControl+Shift+Down"
+};
+const DEFAULT_PLATFORM_SHORTCUTS =
+  process.platform === "darwin" ? DEFAULT_MAC_SHORTCUTS : DEFAULT_WIN_SHORTCUTS;
+
 const DEFAULT_SETTINGS = {
   anchor: "middle",
   lengthMode: "long",
   triggerMode: "hover",
-  shortcut: "CommandOrControl+Shift+M",
-  shortcutSlotPrev: "CommandOrControl+Shift+Up",
-  shortcutSlotNext: "CommandOrControl+Shift+Down",
+  shortcut: DEFAULT_PLATFORM_SHORTCUTS.shortcut,
+  shortcutSlotPrev: DEFAULT_PLATFORM_SHORTCUTS.shortcutSlotPrev,
+  shortcutSlotNext: DEFAULT_PLATFORM_SHORTCUTS.shortcutSlotNext,
   manualYOffset: 0,
   panelEdge: "right"
 };
@@ -443,6 +528,8 @@ let mainWindow = null;
 /** @type {BrowserWindow | null} */
 let settingsWindow = null;
 let settingsAllowClose = false;
+/** 고급 색상 피커가 열린 동안 설정창 alwaysOnTop 재적용을 일시 중지 */
+let settingsColorPickerOpen = false;
 let followCursorDisplayInterval = null;
 let followCursorMode = true;
 let targetDisplayId = null;
@@ -522,8 +609,13 @@ function readStartupLoginState() {
 }
 
 function setStartupLoginState(openAtLogin) {
+  const enabled = Boolean(openAtLogin);
   if (process.platform === "darwin") {
-    app.setLoginItemSettings({ openAtLogin: Boolean(openAtLogin) });
+    // macOS Login Items: 백그라운드 기동 시 창이 튀지 않도록 openAsHidden 사용.
+    app.setLoginItemSettings({
+      openAtLogin: enabled,
+      openAsHidden: enabled
+    });
     return;
   }
   // 시작 프로그램 등록 이름을 무료/Plus 공통의 고정 값(APP_ID)으로 못박는다.
@@ -531,11 +623,22 @@ function setStartupLoginState(openAtLogin) {
   // 재부팅 시 자동 실행이 누락될 수 있다. getLoginItemSettings는 AppUserModelId
   // 이름으로 조회하므로 동일한 APP_ID로 맞춰 조회·등록이 항상 일치하게 한다.
   app.setLoginItemSettings({
-    openAtLogin: Boolean(openAtLogin),
+    openAtLogin: enabled,
     path: process.execPath,
     args: [STARTUP_LOGIN_ARG],
     name: APP_ID
   });
+}
+
+function wasLaunchedAtLogin() {
+  if (process.argv.includes(STARTUP_LOGIN_ARG)) return true;
+  if (process.platform !== "darwin") return false;
+  try {
+    const login = app.getLoginItemSettings();
+    return Boolean(login.wasOpenedAtLogin || login.wasOpenedAsHidden);
+  } catch {
+    return false;
+  }
 }
 
 /**
@@ -572,12 +675,13 @@ function getStartupDefaultMarkerPath() {
 }
 
 /**
- * 설치 후 최초 1회: Windows 로그인 시 자동 시작을 기본으로 켜 둔다.
- * 이렇게 하면 부팅 직후부터 앱이 백그라운드로 실행되어 트레이 아이콘이 항상 표시된다.
+ * 설치 후 최초 1회: 로그인 시 자동 시작을 기본으로 켜 둔다.
+ * 부팅 직후부터 앱이 백그라운드로 실행되어 트레이/메뉴 막대 아이콘이 항상 표시된다.
  * 사용자가 이후 설정에서 끄면 마커가 남아 다시 켜지 않으므로 사용자의 선택을 존중한다.
  */
 function applyDefaultStartupOnce() {
-  if (process.platform !== "win32" || !app.isPackaged) return;
+  if (!app.isPackaged) return;
+  if (process.platform !== "win32" && process.platform !== "darwin") return;
   try {
     const markerPath = getStartupDefaultMarkerPath();
     if (fs.existsSync(markerPath)) return;
@@ -585,7 +689,7 @@ function applyDefaultStartupOnce() {
     fs.mkdirSync(path.dirname(markerPath), { recursive: true });
     fs.writeFileSync(
       markerPath,
-      JSON.stringify({ appliedAt: new Date().toISOString() }),
+      JSON.stringify({ appliedAt: new Date().toISOString(), platform: process.platform }),
       "utf8"
     );
   } catch {
@@ -593,20 +697,7 @@ function applyDefaultStartupOnce() {
   }
 }
 
-/** 부팅 시 Windows 시작 프로그램 레지스트리 값을 렌더러에 1회 전달 */
-function pushStartupLoginSync(targetWindow) {
-  if (!targetWindow || targetWindow.isDestroyed()) return;
-  const wc = targetWindow.webContents;
-  if (!wc || wc.isDestroyed()) return;
-  try {
-    const openAtLogin = Boolean(readStartupLoginState().openAtLogin);
-    wc.send("startup:synced", { openAtLogin });
-  } catch {
-    /* ignore */
-  }
-}
-
-/** Windows 레지스트리 시작 프로그램 상태를 렌더러에 1회 전달 */
+/** OS 로그인 시작 항목 상태를 렌더러에 1회 전달 */
 function pushStartupLoginSync(targetWindow) {
   if (!targetWindow || targetWindow.isDestroyed()) return;
   const wc = targetWindow.webContents;
@@ -703,6 +794,7 @@ function updateShortcutRegistration() {
       return {
         ok: false,
         registered: false,
+        failedAccelerator: accelerator,
         message: `단축키 등록 실패: ${accelerator}`
       };
     }
@@ -775,6 +867,8 @@ function notifySettingsWindowState() {
 
 function applySettingsWindowLayerPolicy() {
   if (!isSettingsWindowOpen()) return;
+  // 네이티브 색상 패널이 떠 있는 동안에는 최상단 고정을 다시 켜지 않는다.
+  if (settingsColorPickerOpen) return;
   settingsWindow.setAlwaysOnTop(true, "screen-saver");
   // 설정창이 열려 있어도 메인(투명) 창의 빈 영역은 아래 앱으로 통과해야 한다.
   // 클릭 통과/차단은 렌더러 히트테스트(refreshPointerHitTest)가 전담하므로
@@ -855,22 +949,29 @@ function setPanelExpandedState(expanded) {
   updatePeekCollapseMonitor();
 }
 
-function getWindowDimensions(targetDisplay) {
-  const width = getCurrentPanelWidth();
-  const height = targetDisplay.bounds.height;
-  return { width, height };
+function getAttachArea(targetDisplay) {
+  if (process.platform === "darwin" && targetDisplay.workArea) {
+    return targetDisplay.workArea;
+  }
+  return targetDisplay.bounds;
 }
 
-function computeAnchoredY(displayBounds) {
-  return displayBounds.y;
+function getWindowDimensions(targetDisplay) {
+  const width = getCurrentPanelWidth();
+  const area = getAttachArea(targetDisplay);
+  return { width, height: area.height };
+}
+
+function computeAnchoredY(area) {
+  return area.y;
 }
 
 function getAttachedBounds(targetDisplay) {
-  const { bounds } = targetDisplay;
+  const area = getAttachArea(targetDisplay);
   const { width, height } = getWindowDimensions(targetDisplay);
   const edge = appSettings.panelEdge === "left" ? "left" : "right";
-  const x = edge === "left" ? bounds.x : bounds.x + bounds.width - width;
-  const y = computeAnchoredY(bounds);
+  const x = edge === "left" ? area.x : area.x + area.width - width;
+  const y = computeAnchoredY(area);
   return { x, y, width, height };
 }
 
@@ -882,15 +983,15 @@ function attachWindowToDisplay(display) {
 }
 
 function getAttachedSignature(display) {
-  const { bounds } = display;
+  const area = getAttachArea(display);
   const modeKey = followCursorMode ? "auto" : `fixed:${targetDisplayId}`;
   return [
     modeKey,
     display.id,
-    bounds.x,
-    bounds.y,
-    bounds.width,
-    bounds.height,
+    area.x,
+    area.y,
+    area.width,
+    area.height,
     appSettings.anchor,
     appSettings.lengthMode,
     appSettings.manualYOffset,
@@ -1006,6 +1107,7 @@ function createMainWindow() {
 
   refreshWindowPosition(true);
   startFollowingCursorDisplay();
+  applyMacDockIcon();
 
   mainWindow.on("closed", () => {
     stopPeekCollapseMonitor();
@@ -1102,6 +1204,7 @@ function createSettingsWindow() {
 
   settingsWindow.on("closed", () => {
     settingsWindow = null;
+    settingsColorPickerOpen = false;
     applyAlwaysOnTopPolicy();
     applyMouseIgnorePolicy(true);
     updatePeekCollapseMonitor();
@@ -1246,10 +1349,23 @@ function buildTrayMenu() {
 }
 
 function ensureTrayIcon() {
-  if (trayIcon || !APP_ICON) return;
-  trayIcon = new Tray(APP_ICON);
+  const image = TRAY_ICON || loadTrayIconImage(premiumActive) || APP_ICON;
+  if (!image || image.isEmpty()) return;
+  TRAY_ICON = image;
+  if (trayIcon) {
+    try {
+      trayIcon.setImage(image);
+    } catch {
+      /* ignore */
+    }
+    return;
+  }
+  trayIcon = new Tray(image);
   trayIcon.setToolTip(getAppDisplayName());
   trayIcon.setContextMenu(buildTrayMenu());
+  trayIcon.on("click", () => {
+    createSettingsWindow();
+  });
   trayIcon.on("double-click", () => {
     createSettingsWindow();
   });
@@ -1300,15 +1416,32 @@ if (!gotTheLock) {
     Menu.setApplicationMenu(null);
   }
 
+  // 설정창에서 Mac 설치 글꼴 목록(queryLocalFonts)을 쓸 수 있게 허용
+  try {
+    session.defaultSession.setPermissionRequestHandler((_wc, permission, callback) => {
+      if (permission === "local-fonts") {
+        callback(true);
+        return;
+      }
+      // 기존 동작 유지: 그 외는 기본 거부(이 앱은 카메라/마이크 등을 쓰지 않음)
+      callback(false);
+    });
+    session.defaultSession.setPermissionCheckHandler((_wc, permission) => permission === "local-fonts");
+  } catch (err) {
+    console.error("local-fonts permission setup failed:", err);
+  }
+
   loadMonitorPrefs();
 
   await license.verifyStoredLicense().catch(() => {});
 
   premiumActive = license.isPremiumActive();
   APP_ICON = loadAppIcon(premiumActive);
+  TRAY_ICON = loadTrayIconImage(premiumActive);
   await applyBrandingAsync().catch((err) => {
     console.error("startup branding failed:", err);
   });
+  applyMacDockIcon();
   healOrphanedStartupRegistration();
   applyDefaultStartupOnce();
 
@@ -1348,7 +1481,7 @@ if (!gotTheLock) {
   });
 
   ipcMain.handle("premium:open-buy", async () => {
-    await shell.openExternal(LEMON_BUY_URL);
+    await shell.openExternal("https://www.peekom.com/");
     return { ok: true };
   });
 
@@ -1398,8 +1531,83 @@ if (!gotTheLock) {
 
   let cachedSystemFonts = null;
 
+  function getFontCachePath() {
+    return path.join(app.getPath("userData"), "system-fonts-cache.json");
+  }
+
+  function readFontDiskCache() {
+    try {
+      const parsed = JSON.parse(fs.readFileSync(getFontCachePath(), "utf8"));
+      const fonts = normalizeFontList(Array.isArray(parsed?.fonts) ? parsed.fonts : []);
+      return fonts.length >= 10 ? fonts : null;
+    } catch {
+      return null;
+    }
+  }
+
+  function writeFontDiskCache(fonts) {
+    try {
+      fs.writeFileSync(
+        getFontCachePath(),
+        JSON.stringify({ savedAt: new Date().toISOString(), fonts }),
+        "utf8"
+      );
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function listDarwinFontFamilies(execFileAsync) {
+    // swift -e 는 매번 컴파일되어 수십 초가 걸리므로 사용하지 않는다.
+    // 디스크 캐시가 있으면 즉시 반환하고, 백그라운드에서 system_profiler로 갱신한다.
+    const diskCached = readFontDiskCache();
+
+    const refreshFromProfiler = async () => {
+      const { stdout } = await execFileAsync(
+        "/usr/sbin/system_profiler",
+        ["SPFontsDataType", "-json"],
+        { encoding: "utf8", maxBuffer: 64 * 1024 * 1024, timeout: 180000 }
+      );
+      const parsed = JSON.parse(stdout);
+      const names = [];
+      const collect = (value) => {
+        if (!value || typeof value !== "object") return;
+        if (Array.isArray(value)) {
+          value.forEach(collect);
+          return;
+        }
+        if (typeof value.family === "string") names.push(value.family);
+        Object.values(value).forEach(collect);
+      };
+      collect(parsed.SPFontsDataType || parsed);
+      const fonts = normalizeFontList(names).filter((name) => !name.startsWith("."));
+      if (fonts.length >= 10) {
+        writeFontDiskCache(fonts);
+        cachedSystemFonts = fonts;
+        return fonts;
+      }
+      return null;
+    };
+
+    if (diskCached) {
+      refreshFromProfiler().catch((err) => {
+        console.error("darwin font refresh failed:", err?.message || err);
+      });
+      return diskCached;
+    }
+
+    try {
+      const fonts = await refreshFromProfiler();
+      if (fonts) return fonts;
+    } catch (err) {
+      console.error("darwin font list failed:", err?.message || err);
+    }
+
+    return ["Apple SD Gothic Neo", "Helvetica Neue", "Arial", "Menlo", "AppleGothic", "Geneva"];
+  }
+
   ipcMain.handle("system:list-fonts", async () => {
-    if (cachedSystemFonts) {
+    if (Array.isArray(cachedSystemFonts) && cachedSystemFonts.length >= 10) {
       return { ok: true, fonts: cachedSystemFonts };
     }
     try {
@@ -1427,6 +1635,10 @@ if (!gotTheLock) {
         cachedSystemFonts = fonts.length
           ? fonts
           : ["Segoe UI", "Malgun Gothic", "Arial", "Consolas"];
+        return { ok: true, fonts: cachedSystemFonts };
+      }
+      if (process.platform === "darwin") {
+        cachedSystemFonts = await listDarwinFontFamilies(execFileAsync);
         return { ok: true, fonts: cachedSystemFonts };
       }
       cachedSystemFonts = ["Segoe UI", "Malgun Gothic", "Arial", "Consolas"];
@@ -1581,6 +1793,35 @@ if (!gotTheLock) {
     }
   });
 
+  ipcMain.handle("settings:merge-globals", async (event, globalPatch) => {
+    if (!isTrustedRenderer(event)) {
+      return { ok: false, reason: "UNTRUSTED_SENDER" };
+    }
+    if (!mainWindow || mainWindow.isDestroyed()) {
+      return { ok: false, reason: "NO_MAIN_WINDOW" };
+    }
+    if (!globalPatch || typeof globalPatch !== "object") {
+      return { ok: false, reason: "INVALID_PAYLOAD" };
+    }
+    try {
+      const merged = await mainWindow.webContents.executeJavaScript(
+        `(function(){
+          try {
+            return typeof window.__peekomMergeGlobalFromSettings === 'function'
+              ? window.__peekomMergeGlobalFromSettings(${JSON.stringify(globalPatch)})
+              : false;
+          } catch (e) {
+            return false;
+          }
+        })()`,
+        true
+      );
+      return { ok: Boolean(merged) };
+    } catch (err) {
+      return { ok: false, reason: String(err?.message || err) };
+    }
+  });
+
   ipcMain.handle("settings:notify-applied", (_, options = {}) => {
     if (typeof options.language === "string" && options.language.trim()) {
       appUiLanguage = resolveTrayLang(options.language.trim());
@@ -1614,18 +1855,25 @@ if (!gotTheLock) {
 
   ipcMain.handle("color:prepare-advanced-picker", () => {
     if (settingsWindow && !settingsWindow.isDestroyed()) {
+      // 네이티브 색상 패널이 설정창(screen-saver alwaysOnTop) 뒤에 깔리지 않도록
+      // 부모 연결을 끊고 일시적으로 최상단 고정을 해제한다.
+      settingsColorPickerOpen = true;
       settingsWindow.setParentWindow(null);
+      settingsWindow.setAlwaysOnTop(false);
     }
     return { ok: true };
   });
 
   ipcMain.handle("color:restore-advanced-picker", () => {
     if (!settingsWindow || settingsWindow.isDestroyed()) {
+      settingsColorPickerOpen = false;
       return { ok: false };
     }
+    settingsColorPickerOpen = false;
     if (mainWindow && !mainWindow.isDestroyed()) {
       settingsWindow.setParentWindow(mainWindow);
     }
+    applySettingsWindowLayerPolicy();
     settingsWindow.focus();
     applyAlwaysOnTopPolicy();
     return { ok: true };
@@ -1695,6 +1943,13 @@ if (!gotTheLock) {
 
       ipcMain.once(replyChannel, (_event, payload = {}) => {
         clearTimeout(timer);
+        if (payload?.ok && mainWindow && !mainWindow.isDestroyed()) {
+          try {
+            mainWindow.webContents.session.flushStorageData();
+          } catch {
+            /* ignore */
+          }
+        }
         resolve(payload?.ok ? { ok: true } : { ok: false, reason: payload?.reason || "WRITE_FAILED" });
       });
 
@@ -1881,7 +2136,10 @@ if (!gotTheLock) {
         return {
           ok: false,
           openAtLogin: actual,
-          message: "시작 프로그램 등록이 반영되지 않았습니다. 관리자 권한 또는 보안 프로그램을 확인해 주세요."
+          message:
+            process.platform === "darwin"
+              ? "로그인 항목 등록이 반영되지 않았습니다. 시스템 설정 → 일반 → 로그인 항목을 확인해 주세요."
+              : "시작 프로그램 등록이 반영되지 않았습니다. 관리자 권한 또는 보안 프로그램을 확인해 주세요."
         };
       }
       return { ok: true, openAtLogin: actual };
@@ -1893,9 +2151,10 @@ if (!gotTheLock) {
   createMainWindow();
   initAutoUpdater();
 
-  // 로그인 자동 실행(--autostart)이 아니면(=바로가기 더블클릭/수동 실행) 설정창을 함께 연다.
+  // 로그인 자동 실행이 아니면(=바로가기 더블클릭/수동 실행) 설정창을 함께 연다.
   // 로그인 자동 실행은 메모 본체 창만 백그라운드로 띄운다.
-  const launchedAtLogin = process.argv.includes(STARTUP_LOGIN_ARG);
+  // Windows: --autostart 인자 / macOS: Login Items 의 wasOpenedAtLogin
+  const launchedAtLogin = wasLaunchedAtLogin();
   const shouldOpenSettings = process.argv.includes("--open-settings") || !launchedAtLogin;
 
   // 첫 실행(v5 상태 없음)이거나 setupCompleted가 false면 설정창 자동 오픈

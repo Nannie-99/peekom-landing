@@ -184,6 +184,51 @@
         overflow: hidden;
       }
 
+      .adv-color-panel {
+        display: none;
+        margin-top: 6px;
+        padding-top: 6px;
+        border-top: 1px solid var(--border);
+        flex-direction: column;
+        gap: 6px;
+      }
+      .adv-color-panel.visible {
+        display: flex;
+      }
+      .adv-color-sv {
+        width: 100%;
+        height: 110px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        cursor: crosshair;
+        touch-action: none;
+      }
+      .adv-color-hue {
+        width: 100%;
+        accent-color: var(--accent);
+      }
+      .adv-color-preview-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .adv-color-preview {
+        width: 28px;
+        height: 28px;
+        border-radius: var(--radius);
+        border: 1px solid rgba(0, 0, 0, 0.12);
+        flex-shrink: 0;
+      }
+      .adv-color-hex {
+        flex: 1;
+        min-width: 0;
+        font-size: 12px;
+        padding: 4px 6px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+
       .image-lightbox {
         position: fixed;
         inset: 0;
@@ -532,11 +577,45 @@
       .field-inline > .setting-select,
       .field-inline > .setting-input,
       .field-inline > .font-size-row,
-      .field-inline > .hover-delay-stepper,
-      .field-inline > .premium-trigger-wrap {
+      .field-inline > .hover-delay-stepper {
         flex: 0 0 auto;
         width: var(--setting-control-width);
         min-width: 0;
+      }
+
+      /* Plus 뱃지가 있어도 컨트롤 본문은 메모 크기 드롭다운과 동일 너비, Plus는 같은 열 */
+      .field-inline > .premium-trigger-wrap {
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 0;
+        max-width: none;
+      }
+
+      .premium-trigger-wrap > .setting-select {
+        flex: 0 0 var(--setting-control-width);
+        width: var(--setting-control-width);
+        min-width: var(--setting-control-width);
+        max-width: var(--setting-control-width);
+        box-sizing: border-box;
+      }
+
+      /* 40% ~ 100% 까지가 메모 크기 드롭다운과 같은 너비, Plus는 바깥(다른 칩과 같은 열) */
+      .opacity-range-control {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex: 0 0 var(--setting-control-width);
+        width: var(--setting-control-width);
+        min-width: var(--setting-control-width);
+        max-width: var(--setting-control-width);
+        box-sizing: border-box;
+      }
+
+      #memoOpacityRange.setting-range {
+        flex: 1 1 auto;
+        width: auto;
+        min-width: 0;
+        max-width: none;
       }
 
       .field-stack {
@@ -833,7 +912,7 @@
       }
 
       #memoOpacityWrap .field-inline {
-        overflow: hidden;
+        overflow: visible;
         isolation: isolate;
       }
 
@@ -1268,7 +1347,8 @@
         border: 1px solid var(--border);
         border-radius: var(--radius-md);
         padding: 6px;
-        min-width: 200px;
+        min-width: 220px;
+        max-width: min(280px, 70vw);
       }
       .color-popover.visible { display: block; }
       /* 글자색(오른쪽 열) 팝오버는 설정창 오른쪽 밖으로 넘치지 않도록 오른쪽 기준으로 펼침 */
@@ -1568,11 +1648,11 @@
         <div class="bottom-left-checks">
           <label class="bottom-check-label" for="showTrayIconCheckbox">
             <input id="showTrayIconCheckbox" type="checkbox" checked />
-            트레이 아이콘 표시
+            트레이 / 메뉴 막대 아이콘 표시
           </label>
           <label class="bottom-check-label" for="runZoomitOnStartupCheckbox">
             <input id="runZoomitOnStartupCheckbox" type="checkbox" />
-            Windows 시작 시 빼꼼 플러스 자동 실행
+            시작 시 Peekom 자동 실행
           </label>
         </div>
         <div class="settings-actions">
@@ -1607,6 +1687,30 @@
       };
 
       const STATE_KEY = "ppaekkom-plus-state-v5";
+      const isMac = Boolean(window.peekom?.isMac);
+
+      function defaultPlatformShortcuts() {
+        if (isMac) {
+          return {
+            shortcut: "Command+Shift+M",
+            shortcutSlotPrev: "Command+[",
+            shortcutSlotNext: "Command+]"
+          };
+        }
+        return {
+          shortcut: "CommandOrControl+Shift+M",
+          shortcutSlotPrev: "CommandOrControl+Shift+Up",
+          shortcutSlotNext: "CommandOrControl+Shift+Down"
+        };
+      }
+
+      function defaultSlotShortcuts() {
+        const s = defaultPlatformShortcuts();
+        return {
+          shortcutSlotPrev: s.shortcutSlotPrev,
+          shortcutSlotNext: s.shortcutSlotNext
+        };
+      }
       const STATE_KEY_BACKUP = "ppaekkom-plus-state-v5-backup";
       const STATE_KEY_V4 = "ppaekkom-plus-state-v4";
       const LEGACY_V3_KEY = "ppaekkom-app-state-v3";
@@ -1655,17 +1759,20 @@
       }
 
       function normalizeMemoAspectRatio(ratio) {
-        return ratio === "1:1" ? "1:1" : "3:4";
+        if (ratio === "1:1" || ratio === "2:2") return "3:3";
+        const allowed = new Set(["3:3", "4:4", "3:4", "3:5"]);
+        return allowed.has(ratio) ? ratio : "3:3";
       }
 
       function defaultGlobal() {
+        const shortcuts = defaultPlatformShortcuts();
         return {
           anchor: "middle",
           lengthMode: "long",
           triggerMode: "hover",
-          shortcut: "CommandOrControl+Shift+M",
-          shortcutSlotPrev: "CommandOrControl+Shift+Up",
-          shortcutSlotNext: "CommandOrControl+Shift+Down",
+          shortcut: shortcuts.shortcut,
+          shortcutSlotPrev: shortcuts.shortcutSlotPrev,
+          shortcutSlotNext: shortcuts.shortcutSlotNext,
           hoverDelayMs: 300,
           manualYOffset: 0,
           openAtLogin: false,
@@ -1676,7 +1783,8 @@
           spellcheckEnabled: false,
           setupCompleted: false,
           showTrayIcon: true,
-          memoAspectRatio: "3:4",
+          memoAspectRatio: "3:3",
+          checklistStrikethrough: true,
           imageLayout: "below",
           lastOpenedSlotIndex: 0,
           memoDefaultOpacity: 100,
@@ -1704,17 +1812,48 @@
       function normalizeSlotImageEntry(raw) {
         if (!raw || typeof raw !== "object") return null;
         const dataUrl =
-          typeof raw.dataUrl === "string" && raw.dataUrl.startsWith("data:image/") ? raw.dataUrl : null;
-        if (!dataUrl) return null;
+          typeof raw.dataUrl === "string" && raw.dataUrl.startsWith("data:image/")
+            ? raw.dataUrl
+            : "";
+        const id = typeof raw.id === "string" && raw.id ? raw.id : "";
+        if (!dataUrl && !id) return null;
         return {
-          id: typeof raw.id === "string" && raw.id ? raw.id : crypto.randomUUID(),
+          id: id || crypto.randomUUID(),
           sourcePath: typeof raw.sourcePath === "string" ? raw.sourcePath : null,
           dataUrl,
           scale:
             typeof raw.scale === "number" && Number.isFinite(raw.scale)
               ? clamp(Math.round(raw.scale), 50, 150)
               : 100,
+          widthPx:
+            typeof raw.widthPx === "number" && Number.isFinite(raw.widthPx)
+              ? Math.round(raw.widthPx)
+              : undefined,
+          heightPx:
+            typeof raw.heightPx === "number" && Number.isFinite(raw.heightPx)
+              ? Math.round(raw.heightPx)
+              : undefined,
           insertedAt: typeof raw.insertedAt === "string" ? raw.insertedAt : new Date().toISOString()
+        };
+      }
+
+      function cloneStateForPersist(state) {
+        if (!state || !Array.isArray(state.slots)) return state;
+        return {
+          ...state,
+          version: 5,
+          slots: state.slots.map((slot) => {
+            if (!slot || typeof slot !== "object") return slot;
+            const next = { ...slot, imageData: null };
+            if (Array.isArray(slot.images) && slot.images.length) {
+              next.images = slot.images.map((img) => {
+                if (!img || typeof img !== "object") return img;
+                const { dataUrl, ...meta } = img;
+                return meta;
+              });
+            }
+            return next;
+          })
         };
       }
 
@@ -1938,6 +2077,7 @@
           s.global = { ...defaultGlobal(), ...s.global };
           delete s.global.imageSize;
           s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
+          s.global.checklistStrikethrough = s.global.checklistStrikethrough !== false;
           s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
           s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
           s.order = normalizeOrder(s.order, s.enabledCount);
@@ -2041,7 +2181,7 @@
       }
 
       async function saveStateAsync(state) {
-        const next = { ...state, version: 5 };
+        const next = cloneStateForPersist({ ...state, version: 5 });
         const json = JSON.stringify(next);
         let syncOk = false;
         for (let attempt = 0; attempt < 2 && !syncOk; attempt++) {
@@ -2066,8 +2206,8 @@
       async function saveAndNotifyMain(state, options = {}) {
         const { skipSettingsReload = true } = options;
         const saved = await saveStateAsync(state);
-        if (!saved.json) {
-          return { ok: false, state: saved.state };
+        if (!saved.json || !saved.syncOk) {
+          return { ok: false, state: saved.state, syncOk: saved.syncOk };
         }
         try {
           await ipcRenderer.invoke("settings:notify-applied", {
@@ -2234,6 +2374,7 @@
           appState.global.language = parsed.language;
           appState.global.pinToggleMode = parsed.pinToggleMode;
           appState.global.spellcheckEnabled = parsed.spellcheckEnabled === true;
+          appState.global.checklistStrikethrough = parsed.checklistStrikethrough !== false;
           appState.global.memoAspectRatio = parsed.memoAspectRatio;
           appState.global.memoDefaultOpacity = parsed.memoDefaultOpacity;
           appState.global.imageLayout = parsed.imageLayout;
@@ -2515,6 +2656,7 @@
           language: state.global.language,
           pinToggleMode: state.global.pinToggleMode,
           spellcheckEnabled: state.global.spellcheckEnabled === true,
+          checklistStrikethrough: state.global.checklistStrikethrough !== false,
           memoAspectRatio: state.global.memoAspectRatio,
           imageLayout: state.global.imageLayout,
           enabledCount: state.enabledCount,
@@ -2543,6 +2685,7 @@
           pinToggleMode: state.global.pinToggleMode,
           spellcheckEnabled: state.global.spellcheckEnabled === true,
           panelEdge: state.global.panelEdge,
+          checklistStrikethrough: state.global.checklistStrikethrough !== false,
           memoAspectRatio: state.global.memoAspectRatio,
           memoDefaultOpacity: state.global.memoDefaultOpacity,
           imageLayout: state.global.imageLayout,
@@ -2799,11 +2942,15 @@
         if (langSelect) langSelect.setAttribute("aria-label", ti("langLabel"));
         const trayCb = document.querySelector('label[for="showTrayIconCheckbox"]');
         if (trayCb) {
-          trayCb.childNodes[trayCb.childNodes.length - 1].textContent = ti("showTrayIcon");
+          trayCb.childNodes[trayCb.childNodes.length - 1].textContent = ti(
+            isMac ? "showMenuBarIcon" : "showTrayIcon"
+          );
         }
         const startupCb = document.querySelector('label[for="runZoomitOnStartupCheckbox"]');
         if (startupCb) {
-          startupCb.childNodes[startupCb.childNodes.length - 1].textContent = ti("runAtStartupWin");
+          startupCb.childNodes[startupCb.childNodes.length - 1].textContent = ti(
+            isMac ? "runAtStartupMac" : "runAtStartupWin"
+          );
         }
         updateSettingsTitle();
         const backupToggleBtn = document.getElementById("backupToggleBtn");
@@ -2851,8 +2998,14 @@
         if (panelEdgeHint) panelEdgeHint.textContent = ti("panelEdgeHint");
 
         setLabelFor("memoAspectSelect", "memoAspectLabel");
-        setSelectOptionText("memoAspectSelect", "1:1", "memoAspectSquare");
-        setSelectOptionText("memoAspectSelect", "3:4", "memoAspectPortrait");
+        const squareGroup = document.getElementById("memoAspectGroupSquare");
+        const rectGroup = document.getElementById("memoAspectGroupRect");
+        if (squareGroup) squareGroup.label = ti("memoSizeGroupSquare");
+        if (rectGroup) rectGroup.label = ti("memoSizeGroupRect");
+        setSelectOptionText("memoAspectSelect", "3:3", "memoSize33Default");
+        setSelectOptionText("memoAspectSelect", "4:4", "memoSize44");
+        setSelectOptionText("memoAspectSelect", "3:4", "memoSize34");
+        setSelectOptionText("memoAspectSelect", "3:5", "memoSize35");
         const memoAspectHint = panel.querySelector('[for="memoAspectSelect"]')?.closest(".field-stack")?.querySelector(".field-hint-below");
         if (memoAspectHint) memoAspectHint.textContent = ti("memoAspectHint");
 
@@ -2885,12 +3038,14 @@
           if (inp) inp.placeholder = shortcutPlaceholder;
         });
         const shortcutIndexHint = document.getElementById("shortcutIndexHint");
-        if (shortcutIndexHint) shortcutIndexHint.textContent = ti("shortcutIndexHint");
+        if (shortcutIndexHint) {
+          shortcutIndexHint.textContent = ti(isMac ? "shortcutIndexHintMac" : "shortcutIndexHint");
+        }
 
         setLabelFor("pinToggleSelect", "pinToggleLabel");
         setSelectOptionText("pinToggleSelect", "dblclick", "pinToggleDblclickDefault");
-        setSelectOptionText("pinToggleSelect", "chip", "pinToggleChipOnly");
         setSelectOptionText("pinToggleSelect", "click", "pinToggleClickMemo");
+        setSelectOptionText("pinToggleSelect", "chip", "pinToggleChipOnly");
         const pinToggleHint = panel.querySelector('[for="pinToggleSelect"]')?.closest(".field-stack")?.querySelector(".field-hint-below");
         if (pinToggleHint) pinToggleHint.textContent = ti("pinToggleRecommendHint");
 
@@ -2899,6 +3054,9 @@
         setSelectOptionText("spellcheckSelect", "off", "spellcheckOff");
         const spellcheckHint = document.getElementById("spellcheckHint");
         if (spellcheckHint) spellcheckHint.textContent = ti("spellcheckHint");
+        setLabelFor("checklistStrikeSelect", "checklistLabel");
+        setSelectOptionText("checklistStrikeSelect", "on", "checklistStrikeOn");
+        setSelectOptionText("checklistStrikeSelect", "off", "checklistStrikeOff");
 
         const resetBtn = document.getElementById("resetCommonDefaultsBtn");
         if (resetBtn) resetBtn.textContent = ti("resetCommonDefaults");
@@ -3061,6 +3219,7 @@
         if (appState.global) {
           appState.global.memoDefaultOpacity = 100;
           appState.global.panelEdge = "right";
+          appState.global.checklistStrikethrough = true;
         }
         packFreeYSlots();
       }
@@ -3136,8 +3295,10 @@
           ti("triggerShortcut"),
           ti("pinToggleDblclickDefault"),
           ti("monitorAuto"),
-          ti("memoAspectSquare"),
-          ti("memoAspectPortrait")
+          ti("memoSize33Default"),
+          ti("memoSize44"),
+          ti("memoSize34"),
+          ti("memoSize35")
         ];
         const probe = document.createElement("span");
         probe.style.cssText = "position:absolute;visibility:hidden;white-space:nowrap;font-size:14px;padding:0 8px;";
@@ -3253,6 +3414,17 @@
         }
         if (panelEdgeBadge) panelEdgeBadge.hidden = isPremium;
         if (panelEdgeWrap) panelEdgeWrap.toggleAttribute("data-premium-trigger", !isPremium);
+
+        const checklistSel = document.getElementById("checklistStrikeSelect");
+        const checklistBadge = document.getElementById("checklistStrikePremiumBadge");
+        const checklistWrap = document.getElementById("checklistStrikeTriggerWrap");
+        if (checklistSel) {
+          checklistSel.classList.toggle("premium-control-locked", !isPremium);
+          checklistSel.style.pointerEvents = isPremium ? "" : "none";
+          if (!isPremium) checklistSel.value = "on";
+        }
+        if (checklistBadge) checklistBadge.hidden = isPremium;
+        if (checklistWrap) checklistWrap.toggleAttribute("data-premium-trigger", !isPremium);
 
         for (let s = 0; s < (appState?.enabledCount || 0); s++) {
           const ySlotSel = document.getElementById(`slot${s}YSlot`);
@@ -3410,8 +3582,14 @@
               <div class="field-inline">
                 <label class="field-label" for="memoAspectSelect">${ti("memoAspectLabel")}</label>
                 <select id="memoAspectSelect" class="setting-select">
-                  <option value="1:1">${ti("memoAspectSquare")}</option>
-                  <option value="3:4">${ti("memoAspectPortrait")}</option>
+                  <optgroup id="memoAspectGroupSquare" label="${ti("memoSizeGroupSquare")}">
+                    <option value="3:3">${ti("memoSize33Default")}</option>
+                    <option value="4:4">${ti("memoSize44")}</option>
+                  </optgroup>
+                  <optgroup id="memoAspectGroupRect" label="${ti("memoSizeGroupRect")}">
+                    <option value="3:4">${ti("memoSize34")}</option>
+                    <option value="3:5">${ti("memoSize35")}</option>
+                  </optgroup>
                 </select>
               </div>
               <p class="field-hint-below">${ti("memoAspectHint")}</p>
@@ -3421,9 +3599,11 @@
               <div class="field-inline">
                 <label class="field-label" for="memoOpacityRange">${ti("memoOpacityLabel")}</label>
                 <span class="premium-trigger-wrap" id="memoOpacityTriggerWrap" data-premium-trigger="opacity">
-                  <span class="opacity-range-min">40%</span>
-                  <input id="memoOpacityRange" type="range" min="40" max="100" step="5" class="setting-range" />
-                  <span id="memoOpacityMaxLabel">100%</span>
+                  <span class="opacity-range-control">
+                    <span class="opacity-range-min">40%</span>
+                    <input id="memoOpacityRange" type="range" min="40" max="100" step="5" class="setting-range" />
+                    <span id="memoOpacityMaxLabel">100%</span>
+                  </span>
                   <span class="premium-lock-badge" id="opacityPremiumBadge" hidden>Plus</span>
                 </span>
               </div>
@@ -3474,6 +3654,7 @@
                   <input id="shortcutSlotNextInput" class="setting-input shortcut-capture-input" type="text" readonly placeholder="${ti("shortcutCapturePlaceholder")}" />
                 </div>
                 <p class="field-hint-below" id="shortcutIndexHint">${ti("shortcutIndexHint")}</p>
+                <p class="field-error hidden" id="shortcutConflictError" role="alert"></p>
               </div>
             </div>
 
@@ -3482,8 +3663,8 @@
                 <label class="field-label" for="pinToggleSelect">${ti("pinToggleLabel")}</label>
                 <select id="pinToggleSelect" class="setting-select">
                   <option value="dblclick">${ti("pinToggleDblclickDefault")}</option>
-                  <option value="chip">${ti("pinToggleChipOnly")}</option>
                   <option value="click">${ti("pinToggleClickMemo")}</option>
+                  <option value="chip">${ti("pinToggleChipOnly")}</option>
                 </select>
               </div>
               <p class="field-hint-below">${ti("pinToggleRecommendHint")}</p>
@@ -3498,6 +3679,19 @@
                 </select>
               </div>
               <p class="field-hint-below" id="spellcheckHint">${ti("spellcheckHint")}</p>
+            </div>
+
+            <div class="field-stack">
+              <div class="field-inline">
+                <label class="field-label" for="checklistStrikeSelect">${ti("checklistLabel")}</label>
+                <span class="premium-trigger-wrap" id="checklistStrikeTriggerWrap" data-premium-trigger="checklistStrike">
+                  <select id="checklistStrikeSelect" class="setting-select">
+                    <option value="on">${ti("checklistStrikeOn")}</option>
+                    <option value="off">${ti("checklistStrikeOff")}</option>
+                  </select>
+                  <span class="premium-lock-badge" id="checklistStrikePremiumBadge" hidden>Plus</span>
+                </span>
+              </div>
             </div>
 
             <section class="backup-section" id="backupSection">
@@ -3622,6 +3816,14 @@
                         <button type="button" class="color-advanced-btn" data-color-advanced="bg-${slotIndex}">${ti("colorAdvancedPicker")}</button>
                         <input type="text" class="popover-hex-input" id="bgHexInput${slotIndex}" maxlength="7" placeholder="#FFF4B8" />
                       </div>
+                      <div class="adv-color-panel" id="bgAdvPanel${slotIndex}" data-adv-panel="bg-${slotIndex}">
+                        <canvas class="adv-color-sv" width="200" height="110" data-adv-sv></canvas>
+                        <input type="range" class="adv-color-hue" min="0" max="360" value="45" data-adv-hue />
+                        <div class="adv-color-preview-row">
+                          <span class="adv-color-preview" data-adv-preview></span>
+                          <input type="text" class="adv-color-hex" maxlength="7" data-adv-hex value="#FFF4B8" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -3639,6 +3841,14 @@
                         <input type="color" class="color-input-hidden" data-custom-text="${slotIndex}" />
                         <button type="button" class="color-advanced-btn" data-color-advanced="text-${slotIndex}">${ti("colorAdvancedPicker")}</button>
                         <input type="text" class="popover-hex-input" id="textHexInput${slotIndex}" maxlength="7" placeholder="#2F3750" />
+                      </div>
+                      <div class="adv-color-panel" id="textAdvPanel${slotIndex}" data-adv-panel="text-${slotIndex}">
+                        <canvas class="adv-color-sv" width="200" height="110" data-adv-sv></canvas>
+                        <input type="range" class="adv-color-hue" min="0" max="360" value="220" data-adv-hue />
+                        <div class="adv-color-preview-row">
+                          <span class="adv-color-preview" data-adv-preview></span>
+                          <input type="text" class="adv-color-hex" maxlength="7" data-adv-hex value="#2F3750" />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -4042,7 +4252,16 @@
       }
 
       function formatShortcutDisplay(accelerator) {
-        return String(accelerator || "").replace(/CommandOrControl/g, "Ctrl");
+        let text = String(accelerator || "");
+        if (isMac) {
+          return text
+            .replace(/CommandOrControl/g, "Cmd")
+            .replace(/Command/g, "Cmd")
+            .replace(/Control/g, "Ctrl")
+            .replace(/Option/g, "Option")
+            .replace(/Alt/g, "Option");
+        }
+        return text.replace(/CommandOrControl/g, "Ctrl");
       }
 
       function formatAcceleratorFromEvent(event) {
@@ -4082,6 +4301,7 @@
           }
           const acc = formatAcceleratorFromEvent(event);
           if (!acc) return;
+          clearShortcutConflictError();
           onCaptured(acc);
           input.value = formatShortcutDisplay(acc);
           input.dataset.accelerator = acc;
@@ -4100,6 +4320,21 @@
       function getShortcutInputValue(input, fallback) {
         if (!input) return fallback;
         return input.dataset.accelerator || input.value.trim() || fallback;
+      }
+
+      function clearShortcutConflictError() {
+        const el = document.getElementById("shortcutConflictError");
+        if (!el) return;
+        el.textContent = "";
+        el.classList.add("hidden");
+      }
+
+      function showShortcutConflictError(accelerator) {
+        const el = document.getElementById("shortcutConflictError");
+        if (!el) return;
+        const key = formatShortcutDisplay(accelerator || "");
+        el.textContent = ti("shortcutConflictError").replace(/\{key\}/g, key || "?");
+        el.classList.remove("hidden");
       }
 
       function validateShortcutUniqueness() {
@@ -4129,21 +4364,24 @@
         if (shortcutRow) shortcutRow.classList.toggle("visible", isShortcut);
         if (hoverDelayRow) hoverDelayRow.classList.toggle("visible", !isShortcut);
         if (triggerHint) triggerHint.style.display = isShortcut ? "none" : "";
+        if (!isShortcut) clearShortcutConflictError();
       }
 
       function commonResetDefaults() {
+        const shortcuts = defaultPlatformShortcuts();
         return {
           monitorMode: "auto",
           monitorTargetId: null,
-          memoAspectRatio: "3:4",
+          memoAspectRatio: "3:3",
           memoDefaultOpacity: 100,
           triggerMode: "hover",
-          shortcut: "CommandOrControl+Shift+M",
-          shortcutSlotPrev: "CommandOrControl+Shift+Up",
-          shortcutSlotNext: "CommandOrControl+Shift+Down",
+          shortcut: shortcuts.shortcut,
+          shortcutSlotPrev: shortcuts.shortcutSlotPrev,
+          shortcutSlotNext: shortcuts.shortcutSlotNext,
           hoverDelayMs: 300,
           pinToggleMode: "dblclick",
           spellcheckEnabled: false,
+          checklistStrikethrough: true,
           imageLayout: "below"
         };
       }
@@ -4162,6 +4400,7 @@
         appState.global.hoverDelayMs = defaults.hoverDelayMs;
         appState.global.pinToggleMode = defaults.pinToggleMode;
         appState.global.spellcheckEnabled = defaults.spellcheckEnabled;
+        appState.global.checklistStrikethrough = defaults.checklistStrikethrough;
         appState.global.imageLayout = defaults.imageLayout;
         draftMonitorTarget = null;
         applySettingsForm();
@@ -4229,55 +4468,170 @@
           const key = btn.dataset.colorAdvanced;
           const isBg = key.startsWith("bg-");
           const slotIndex = Number(key.split("-")[1]);
-          btn.addEventListener("click", async (e) => {
+          btn.addEventListener("click", (e) => {
             e.stopPropagation();
             if (showPremiumModalIfFree()) return;
-            const inp = panelHost.querySelector(
-              isBg ? `[data-custom-bg="${slotIndex}"]` : `[data-custom-text="${slotIndex}"]`
-            );
-            if (!inp) return;
-            const popoverId = isBg ? `bgPopover${slotIndex}` : `textPopover${slotIndex}`;
-            // 현재 색을 picker 초기값으로 맞춤
-            const currentHex = isBg
-              ? (appState.slots[slotIndex].customBg || "#FFF4B8")
-              : (appState.slots[slotIndex].customText || "#2F3750");
-            inp.value = currentHex;
-
-            let restored = false;
-            const finishRestore = () => {
-              if (restored) return;
-              restored = true;
-              ipcRenderer.invoke("color:restore-advanced-picker").catch(() => {});
-            };
-            // 색을 실제로 고르면 input/change 이벤트로 적용 (bindColorScreenInputs의
-            // input 핸들러가 applyCustomColor를 호출). 여기서는 picker가 닫힐 때
-            // 창을 복원하고 HEX 라벨/입력칸을 최신값으로 갱신한다.
-            const onChange = () => {
-              applyCustomColor(slotIndex, isBg, inp.value);
-              const hexInput = document.getElementById(
-                isBg ? `bgHexInput${slotIndex}` : `textHexInput${slotIndex}`
-              );
-              if (hexInput) hexInput.value = inp.value;
-              finishRestore();
-              inp.removeEventListener("change", onChange);
-            };
-            inp.addEventListener("change", onChange);
-
-            try {
-              await ipcRenderer.invoke("color:prepare-advanced-picker");
-              if (typeof inp.showPicker === "function") {
-                inp.showPicker();
-              } else {
-                inp.click();
-              }
-            } catch {
-              finishRestore();
-              inp.removeEventListener("change", onChange);
+            const panel = document.getElementById(isBg ? `bgAdvPanel${slotIndex}` : `textAdvPanel${slotIndex}`);
+            const popover = document.getElementById(isBg ? `bgPopover${slotIndex}` : `textPopover${slotIndex}`);
+            if (!panel || !popover) return;
+            popover.classList.add("visible");
+            const willOpen = !panel.classList.contains("visible");
+            document.querySelectorAll(".adv-color-panel.visible").forEach((el) => {
+              if (el !== panel) el.classList.remove("visible");
+            });
+            panel.classList.toggle("visible", willOpen);
+            if (willOpen) {
+              const currentHex = isBg
+                ? (appState.slots[slotIndex].customBg || "#FFF4B8")
+                : (appState.slots[slotIndex].customText || "#2F3750");
+              bindEmbeddedColorPicker(panel, slotIndex, isBg, currentHex);
             }
-            // picker는 별도 창이므로, 일정 시간 뒤 사용자가 취소했더라도 창 복원 보장
-            setTimeout(finishRestore, 15000);
           });
         });
+      }
+
+      function hexToHsv(hex) {
+        const normalized = String(hex || "").trim().replace("#", "");
+        if (!/^[0-9a-fA-F]{6}$/.test(normalized)) return { h: 0, s: 0, v: 1 };
+        const r = parseInt(normalized.slice(0, 2), 16) / 255;
+        const g = parseInt(normalized.slice(2, 4), 16) / 255;
+        const b = parseInt(normalized.slice(4, 6), 16) / 255;
+        const max = Math.max(r, g, b);
+        const min = Math.min(r, g, b);
+        const d = max - min;
+        let h = 0;
+        if (d !== 0) {
+          if (max === r) h = ((g - b) / d) % 6;
+          else if (max === g) h = (b - r) / d + 2;
+          else h = (r - g) / d + 4;
+          h *= 60;
+          if (h < 0) h += 360;
+        }
+        const s = max === 0 ? 0 : d / max;
+        return { h, s, v: max };
+      }
+
+      function hsvToHex(h, s, v) {
+        const c = v * s;
+        const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+        const m = v - c;
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        if (h < 60) [r, g, b] = [c, x, 0];
+        else if (h < 120) [r, g, b] = [x, c, 0];
+        else if (h < 180) [r, g, b] = [0, c, x];
+        else if (h < 240) [r, g, b] = [0, x, c];
+        else if (h < 300) [r, g, b] = [x, 0, c];
+        else [r, g, b] = [c, 0, x];
+        const toHex = (n) =>
+          Math.round((n + m) * 255)
+            .toString(16)
+            .padStart(2, "0")
+            .toUpperCase();
+        return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+      }
+
+      function bindEmbeddedColorPicker(panel, slotIndex, isBg, initialHex) {
+        const canvas = panel.querySelector("[data-adv-sv]");
+        const hueInput = panel.querySelector("[data-adv-hue]");
+        const preview = panel.querySelector("[data-adv-preview]");
+        const hexInput = panel.querySelector("[data-adv-hex]");
+        const popoverHex = document.getElementById(isBg ? `bgHexInput${slotIndex}` : `textHexInput${slotIndex}`);
+        if (!canvas || !hueInput || !preview || !hexInput) return;
+
+        let { h, s, v } = hexToHsv(initialHex);
+        let dragging = false;
+
+        const paintSv = () => {
+          const ctx = canvas.getContext("2d");
+          const w = canvas.width;
+          const hgt = canvas.height;
+          const hueColor = hsvToHex(h, 1, 1);
+          ctx.fillStyle = hueColor;
+          ctx.fillRect(0, 0, w, hgt);
+          const white = ctx.createLinearGradient(0, 0, w, 0);
+          white.addColorStop(0, "#fff");
+          white.addColorStop(1, "rgba(255,255,255,0)");
+          ctx.fillStyle = white;
+          ctx.fillRect(0, 0, w, hgt);
+          const black = ctx.createLinearGradient(0, 0, 0, hgt);
+          black.addColorStop(0, "rgba(0,0,0,0)");
+          black.addColorStop(1, "#000");
+          ctx.fillStyle = black;
+          ctx.fillRect(0, 0, w, hgt);
+          const x = s * w;
+          const y = (1 - v) * hgt;
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = "#fff";
+          ctx.beginPath();
+          ctx.arc(x, y, 5, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.strokeStyle = "rgba(0,0,0,0.55)";
+          ctx.beginPath();
+          ctx.arc(x, y, 6, 0, Math.PI * 2);
+          ctx.stroke();
+        };
+
+        const commit = (recordRecent) => {
+          const hex = hsvToHex(h, s, v);
+          preview.style.background = hex;
+          hexInput.value = hex;
+          if (popoverHex) popoverHex.value = hex;
+          hueInput.value = String(Math.round(h));
+          applyCustomColor(slotIndex, isBg, hex, recordRecent);
+          paintSv();
+          refreshApplyButton();
+        };
+
+        const pickFromEvent = (event) => {
+          const rect = canvas.getBoundingClientRect();
+          const x = Math.min(Math.max(event.clientX - rect.left, 0), rect.width);
+          const y = Math.min(Math.max(event.clientY - rect.top, 0), rect.height);
+          s = rect.width ? x / rect.width : 0;
+          v = rect.height ? 1 - y / rect.height : 1;
+          commit(false);
+        };
+
+        if (!panel.dataset.pickerBound) {
+          panel.dataset.pickerBound = "1";
+          canvas.addEventListener("pointerdown", (event) => {
+            dragging = true;
+            canvas.setPointerCapture(event.pointerId);
+            pickFromEvent(event);
+          });
+          canvas.addEventListener("pointermove", (event) => {
+            if (!dragging) return;
+            pickFromEvent(event);
+          });
+          canvas.addEventListener("pointerup", () => {
+            dragging = false;
+            commit(true);
+          });
+          canvas.addEventListener("pointercancel", () => {
+            dragging = false;
+          });
+          hueInput.addEventListener("input", () => {
+            h = Number(hueInput.value) || 0;
+            commit(false);
+          });
+          hueInput.addEventListener("change", () => commit(true));
+          hexInput.addEventListener("change", () => {
+            let raw = hexInput.value.trim();
+            if (!raw.startsWith("#")) raw = `#${raw}`;
+            if (!/^#[0-9A-Fa-f]{6}$/.test(raw)) {
+              hexInput.value = hsvToHex(h, s, v);
+              return;
+            }
+            ({ h, s, v } = hexToHsv(raw));
+            commit(true);
+          });
+        }
+
+        hueInput.value = String(Math.round(h));
+        hexInput.value = /^#[0-9A-Fa-f]{6}$/.test(initialHex) ? initialHex.toUpperCase() : hsvToHex(h, s, v);
+        preview.style.background = hexInput.value;
+        paintSv();
       }
 
       function openPalette(popoverId, recentGridId, recentKey, currentHex, onPick) {
@@ -4682,11 +5036,11 @@
         setShortcutInputValue(document.getElementById("shortcutInput"), appState.global.shortcut);
         setShortcutInputValue(
           document.getElementById("shortcutSlotPrevInput"),
-          appState.global.shortcutSlotPrev || "CommandOrControl+Shift+Up"
+          appState.global.shortcutSlotPrev || defaultSlotShortcuts().shortcutSlotPrev
         );
         setShortcutInputValue(
           document.getElementById("shortcutSlotNextInput"),
-          appState.global.shortcutSlotNext || "CommandOrControl+Shift+Down"
+          appState.global.shortcutSlotNext || defaultSlotShortcuts().shortcutSlotNext
         );
         const hoverDelayInput = document.getElementById("hoverDelayInput");
         if (hoverDelayInput) {
@@ -4701,6 +5055,11 @@
         const spellcheckSelect = document.getElementById("spellcheckSelect");
         if (spellcheckSelect) {
           spellcheckSelect.value = appState.global.spellcheckEnabled === true ? "on" : "off";
+        }
+        const checklistStrikeSelect = document.getElementById("checklistStrikeSelect");
+        if (checklistStrikeSelect) {
+          checklistStrikeSelect.value =
+            appState.global.checklistStrikethrough === false ? "off" : "on";
         }
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
@@ -4751,15 +5110,15 @@
         if (appState.global.triggerMode === "shortcut") {
           appState.global.shortcut = getShortcutInputValue(
             document.getElementById("shortcutInput"),
-            "CommandOrControl+Shift+M"
+            defaultPlatformShortcuts().shortcut
           );
           appState.global.shortcutSlotPrev = getShortcutInputValue(
             document.getElementById("shortcutSlotPrevInput"),
-            "CommandOrControl+Shift+Up"
+            defaultSlotShortcuts().shortcutSlotPrev
           );
           appState.global.shortcutSlotNext = getShortcutInputValue(
             document.getElementById("shortcutSlotNextInput"),
-            "CommandOrControl+Shift+Down"
+            defaultSlotShortcuts().shortcutSlotNext
           );
         }
         const hoverDelayInput = document.getElementById("hoverDelayInput");
@@ -4775,6 +5134,12 @@
         const spellcheckSelect = document.getElementById("spellcheckSelect");
         if (spellcheckSelect) {
           appState.global.spellcheckEnabled = spellcheckSelect.value === "on";
+        }
+        const checklistStrikeSelect = document.getElementById("checklistStrikeSelect");
+        if (checklistStrikeSelect) {
+          appState.global.checklistStrikethrough = isPremium
+            ? checklistStrikeSelect.value !== "off"
+            : true;
         }
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
@@ -4865,22 +5230,59 @@
         return Array.from(trimmed).length <= 64;
       }
 
-      async function populateFontSelects() {
-        if (!cachedSystemFonts) {
+      async function loadSystemFontFamilies() {
+        const uniq = [];
+        const seen = new Set();
+        const pushAll = (list) => {
+          for (const raw of list || []) {
+            if (!isValidFontOptionName(raw)) continue;
+            const key = raw.trim().toLowerCase();
+            if (seen.has(key)) continue;
+            seen.add(key);
+            uniq.push(raw.trim());
+          }
+        };
+
+        // 1) Chromium Local Font Access (Mac에서 가장 빠르고 확실)
+        if (typeof window.queryLocalFonts === "function") {
           try {
-            const result = await ipcRenderer.invoke("system:list-fonts");
-            cachedSystemFonts = (result?.fonts && Array.isArray(result.fonts))
-              ? result.fonts.filter(isValidFontOptionName)
-              : [];
-          } catch {
-            cachedSystemFonts = [];
+            const localFonts = await window.queryLocalFonts();
+            pushAll(localFonts.map((f) => f.family).filter(Boolean));
+          } catch (err) {
+            console.error("queryLocalFonts failed", err);
           }
         }
-        const fonts = cachedSystemFonts;
+
+        // 2) 메인 프로세스 시스템 글꼴 열거 (폴백/보강)
+        try {
+          const result = await ipcRenderer.invoke("system:list-fonts");
+          if (result?.fonts && Array.isArray(result.fonts)) {
+            pushAll(result.fonts);
+          }
+        } catch (err) {
+          console.error("system:list-fonts failed", err);
+        }
+
+        uniq.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+        return uniq;
+      }
+
+      async function populateFontSelects() {
+        if (!cachedSystemFonts || cachedSystemFonts.length < 10) {
+          cachedSystemFonts = await loadSystemFontFamilies();
+        }
+        const fonts = cachedSystemFonts || [];
         for (let s = 0; s < appState.enabledCount; s++) {
           const sel = document.getElementById(`slot${s}FontFamily`);
-          if (!sel || sel.dataset.fontsLoaded) continue;
+          if (!sel) continue;
+          // 이전에 글꼴이 거의 안 채워진 채로 잠긴 경우 다시 채운다.
+          if (sel.dataset.fontsLoaded === "1" && sel.options.length > 8) continue;
           const current = appState.slots[s].fontFamily || "";
+          sel.innerHTML = "";
+          const defaultOpt = document.createElement("option");
+          defaultOpt.value = "";
+          defaultOpt.textContent = ti("fontSystemDefault");
+          sel.appendChild(defaultOpt);
           ensureFontFamilyOption(sel, current);
           fonts.forEach((name) => {
             if (Array.from(sel.options).some((opt) => opt.value === name)) return;
@@ -4889,7 +5291,7 @@
             opt.textContent = name;
             sel.appendChild(opt);
           });
-          sel.dataset.fontsLoaded = "1";
+          sel.dataset.fontsLoaded = fonts.length >= 10 ? "1" : "0";
           sel.value = current;
           updateFontFamilyPreview(s);
         }
@@ -4948,12 +5350,7 @@
         try {
           await populateFontSelects();
           readSettingsForm();
-
-          try {
-            await ipcRenderer.invoke("memo:flush");
-          } catch {
-            /* ignore */
-          }
+          markSettingsLocalMutation();
 
           clearAllSlotLabelErrors();
           for (let s = 0; s < appState.enabledCount; s++) {
@@ -4990,9 +5387,11 @@
           try {
             const result = await ipcRenderer.invoke("settings:update", payload);
             if (result?.shortcutStatus?.ok === false) {
+              showShortcutConflictError(result.shortcutStatus.failedAccelerator || "");
               setStatus(ti("statusShortcutFail"), 5000);
               return;
             }
+            clearShortcutConflictError();
           } catch (err) {
             console.error(err);
             setStatus(ti("statusApplyError"), 5000);
@@ -5015,9 +5414,23 @@
           appState.global.monitorTargetId = draftMonitorTarget;
           appState.global.setupCompleted = true;
 
+          // memo:flush는 메인 창 전체 상태를 저장한다. 메인이 아직 예전 global을
+          // 들고 있으면 새 설정이 디스크에 덮어써진 뒤 재부팅 시 되돌아간다.
+          // flush 전에 메인 메모리의 global을 먼저 맞춘다.
+          try {
+            await ipcRenderer.invoke("settings:merge-globals", appState.global);
+          } catch {
+            /* ignore */
+          }
+          try {
+            await ipcRenderer.invoke("memo:flush");
+          } catch {
+            /* ignore */
+          }
+
           await refreshSlotMemosFromDisk();
           const saved = await saveStateAsync({ ...appState, version: 5 });
-          if (!saved.json) {
+          if (!saved.json || !saved.syncOk) {
             setStatus(ti("applySyncFail"), 5000);
             return;
           }

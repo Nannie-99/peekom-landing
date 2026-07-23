@@ -1,6 +1,6 @@
 {
   "name": "peekom",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "Peekom — edge memo app with optional Plus upgrade",
   "main": "main.js",
   "scripts": {
@@ -8,9 +8,12 @@
     "dev": "electron .",
     "pack": "electron-builder --dir",
     "predist": "node scripts/generate-icon-ico.mjs && node scripts/prepare-dist.js",
+    "predist:mac": "node scripts/generate-icon-ico.mjs && node scripts/generate-icon-icns.mjs",
     "dist": "npm run predist && electron-builder --win nsis",
     "dist:win": "electron-builder --win nsis",
     "dist:win:unsigned": "set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder --win nsis",
+    "dist:mac": "npm run predist:mac && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --universal",
+    "dist:mac:arm64": "npm run predist:mac && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --arm64",
     "dist:publish": "electron-builder --win nsis --publish always"
   },
   "keywords": [
@@ -93,6 +96,37 @@
         }
       ],
       "artifactName": "Peekom-Setup.${ext}"
+    },
+    "mac": {
+      "icon": "icon.icns",
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "artifactName": "Peekom-macOS.${ext}",
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false,
+      "identity": null
+    },
+    "dmg": {
+      "title": "Peekom",
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
     },
     "nsis": {
       "oneClick": false,

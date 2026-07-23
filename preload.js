@@ -12,6 +12,7 @@ const ALLOWED_INVOKE = new Set([
   "shared-state:get",
   "shared-state:set",
   "memo:flush",
+  "settings:merge-globals",
   "settings:update",
   "settings:notify-applied",
   "settings:notify-changed",
@@ -83,6 +84,9 @@ function assertSendAllowed(channel) {
 }
 
 contextBridge.exposeInMainWorld("peekom", {
+  platform: process.platform,
+  isMac: process.platform === "darwin",
+  isWin: process.platform === "win32",
   invoke(channel, ...args) {
     assertAllowed(ALLOWED_INVOKE, channel);
     return ipcRenderer.invoke(channel, ...args);
