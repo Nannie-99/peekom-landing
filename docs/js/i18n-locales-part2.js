@@ -12,9 +12,9 @@ Object.assign(window.PeekomI18nLocales, {
         searchPlaceholder: "Buscar...",
         heroTitleMain: "Peekom",
         heroTagline: "La app de notas en el borde vuelve como <strong>Peekom</strong>.<br>Notas ligeras y rápidas en el borde de la pantalla—manténgase organizado sin interrumpir su trabajo o presentación.",
-        heroPlusNote: 'Tras instalar la app gratuita, actualice a Peekom Plus en Ajustes.<br><a href="features.html#compare">Ver gratis vs Plus</a> en la tabla comparativa.',
+        heroPlusNote: 'Tras instalar la app gratuita, actualice a Peekom Plus en Ajustes.<br><a href="/features/#compare">Ver gratis vs Plus</a> en la tabla comparativa.',
         heroUpgradeNote: "Tras instalar la app gratuita, actualice a Peekom Plus en Ajustes.",
-        heroFreeCompareNote: '<a href="features.html#compare">Ver gratis vs Plus</a>.',
+        heroFreeCompareNote: '<a href="/features/#compare">Ver gratis vs Plus</a>.',
         heroWinBtn: "Descargar para Windows", heroMacBtn: "Descargar para macOS",
         heroPlusBuyBtn: "Comprar ahora",
         heroPlusCardTitle: "Peekom Plus",
@@ -27,7 +27,7 @@ Object.assign(window.PeekomI18nLocales, {
         heroFreeCardBadge: "FREE",
         heroMacFreeCardBadge: "FREE",
         heroWinCardMeta: "Windows 10 · 11 (64 bits)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "Descargar",
         carouselCap1: "Mango en el borde del monitor",
         carouselCap2: "Abrir memo con clic o atajo",
@@ -65,7 +65,7 @@ Object.assign(window.PeekomI18nLocales, {
         faqR3q: "¿Qué ocurre con mi licencia tras el reembolso?",
         faqR3a: "Una vez completado el reembolso, tu clave de licencia de Peekom Plus se <strong>desactiva</strong>. La app vuelve automáticamente a la versión gratuita la próxima vez que se inicie con conexión, así que asegúrate de querer dejar de usar Plus antes de solicitar el reembolso.",
         faq1q: "¿Cuál es la diferencia entre gratis y Plus?",
-        faq1a: 'Gratis incluye 3 índices, mover mango en grupo, modo ICE, retardo al pasar el cursor, selección de monitor, Markdown, barra de formato e inserción de imágenes. Peekom Plus (lanzamiento $9.99, lista $12.99) desbloquea 10 ranuras, tema personalizado, fuentes, opacidad, redimensionar imágenes y exportar en la app. Consulte la <a href="features.html#compare">tabla comparativa</a>.',
+        faq1a: 'Gratis incluye 3 índices, mover mango en grupo, modo ICE, retardo al pasar el cursor, selección de monitor, Markdown, barra de formato e inserción de imágenes. Peekom Plus (lanzamiento $9.99, lista $12.99) desbloquea 10 ranuras, tema personalizado, fuentes, opacidad, redimensionar imágenes y exportar en la app. Consulte la <a href="/features/#compare">tabla comparativa</a>.',
         compareFreeName: "Peekom (Gratis)",
         comparePlusName: "Peekom Plus",
         compareCta: "Obtener Peekom Plus",
@@ -75,7 +75,7 @@ Object.assign(window.PeekomI18nLocales, {
             '<div class="guide-step">' +
                 "<h3>1. Instalar</h3>" +
                 '<ul class="guide-step-list">' +
-                    '<li><strong>Descargar</strong> — Obtenga el instalador de Windows o macOS en la página <a href="download.html">Descargar</a> (o inicio).</li>' +
+                    '<li><strong>Descargar</strong> — Obtenga el instalador de Windows o macOS en la página <a href="/download/">Descargar</a> (o inicio).</li>' +
                     "<li><strong>Ejecutar Peekom-Setup.exe</strong> — Haga doble clic en el instalador y siga las indicaciones.</li>" +
                     '<li><strong>Advertencia SmartScreen</strong> — Si aparece una ventana azul, abra la <a href="#" onclick="openModal(); return false;">guía de instalación</a> y elija <strong>Más información</strong> → <strong>Ejecutar de todos modos</strong>.</li>' +
                 "</ul>" +
@@ -137,7 +137,7 @@ Object.assign(window.PeekomI18nLocales, {
         faq9a:
             "<p>Desinstalar la app no elimina su licencia en Lemon Squeezy. Siga estos pasos para restaurar Peekom Plus y todas las funciones de pago.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Reinstalar Peekom</strong> — Descargue la versión gratuita (<code>Peekom-Setup.exe</code>) desde <a href=\"download.html\">peekom.com</a> e instálela.</li>" +
+            "<li><strong>1. Reinstalar Peekom</strong> — Descargue la versión gratuita (<code>Peekom-Setup.exe</code>) desde <a href=\"/download/\">peekom.com</a> e instálela.</li>" +
             "<li><strong>2. Encontrar la clave de licencia</strong> — Abra el correo de recibo de Lemon Squeezy de su compra y copie la <strong>[License Key]</strong>. Si perdió el correo, inicie sesión en el historial de pedidos de Lemon Squeezy con el mismo email para verla de nuevo.</li>" +
             "<li><strong>3. Reactivar Plus</strong> — Abra Ajustes (icono de engranaje, arriba a la derecha), pegue la clave en <strong>Activación Plus</strong> y confirme. La app cambiará a Peekom Plus y restaurará 10 ranuras, temas personalizados y demás funciones de pago.</li>" +
             "</ul>" +
@@ -294,9 +294,9 @@ Object.assign(window.PeekomI18nLocales, {
         searchPlaceholder: "Rechercher...",
         heroTitleMain: "Peekom",
         heroTagline: "L'app de mémos sur le bord est de retour sous <strong>Peekom</strong>.<br>Des notes légères et rapides au bord de l'écran—restez organisé sans interrompre votre travail ou votre présentation.",
-        heroPlusNote: 'Après avoir installé l\'app gratuite, passez à Peekom Plus dans les Réglages.<br><a href="features.html#compare">Voir gratuit vs Plus</a> dans le tableau comparatif.',
+        heroPlusNote: 'Après avoir installé l\'app gratuite, passez à Peekom Plus dans les Réglages.<br><a href="/features/#compare">Voir gratuit vs Plus</a> dans le tableau comparatif.',
         heroUpgradeNote: "Après avoir installé l'app gratuite, passez à Peekom Plus dans les Réglages.",
-        heroFreeCompareNote: '<a href="features.html#compare">Voir gratuit vs Plus</a>.',
+        heroFreeCompareNote: '<a href="/features/#compare">Voir gratuit vs Plus</a>.',
         heroWinBtn: "Télécharger pour Windows", heroMacBtn: "Télécharger pour macOS",
         heroPlusBuyBtn: "Acheter",
         heroPlusCardTitle: "Peekom Plus",
@@ -309,7 +309,7 @@ Object.assign(window.PeekomI18nLocales, {
         heroFreeCardBadge: "FREE",
         heroMacFreeCardBadge: "FREE",
         heroWinCardMeta: "Windows 10 · 11 (64 bits)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "Télécharger",
         carouselCap1: "Poignée au bord de l'écran",
         carouselCap2: "Ouvrir le mémo par clic ou raccourci",
@@ -347,7 +347,7 @@ Object.assign(window.PeekomI18nLocales, {
         faqR3q: "Que devient ma licence après un remboursement ?",
         faqR3a: "Une fois le remboursement effectué, votre clé de licence Peekom Plus est <strong>désactivée</strong>. L'app revient automatiquement à la version gratuite au prochain lancement en ligne ; assurez-vous donc de vouloir cesser d'utiliser Plus avant de demander un remboursement.",
         faq1q: "Quelle est la différence entre gratuit et Plus ?",
-        faq1a: 'Le gratuit inclut 3 index, déplacement groupé de la poignée, mode ICE, délai au survol, sélection du moniteur, Markdown, barre de formatage et insertion d\'images. Peekom Plus (lancement 9,99 $, tarif 12,99 $) débloque 10 emplacements, thème personnalisé, polices, opacité, redimensionnement d\'images et export dans l\'app. Consultez le <a href="features.html#compare">tableau comparatif</a>.',
+        faq1a: 'Le gratuit inclut 3 index, déplacement groupé de la poignée, mode ICE, délai au survol, sélection du moniteur, Markdown, barre de formatage et insertion d\'images. Peekom Plus (lancement 9,99 $, tarif 12,99 $) débloque 10 emplacements, thème personnalisé, polices, opacité, redimensionnement d\'images et export dans l\'app. Consultez le <a href="/features/#compare">tableau comparatif</a>.',
         compareFreeName: "Peekom (Gratuit)",
         comparePlusName: "Peekom Plus",
         compareCta: "Obtenir Peekom Plus",
@@ -357,7 +357,7 @@ Object.assign(window.PeekomI18nLocales, {
             '<div class="guide-step">' +
                 "<h3>1. Installer</h3>" +
                 '<ul class="guide-step-list">' +
-                    '<li><strong>Télécharger</strong> — Obtenez l\'installateur Windows ou macOS sur la page <a href="download.html">Télécharger</a> (ou accueil).</li>' +
+                    '<li><strong>Télécharger</strong> — Obtenez l\'installateur Windows ou macOS sur la page <a href="/download/">Télécharger</a> (ou accueil).</li>' +
                     "<li><strong>Exécuter Peekom-Setup.exe</strong> — Double-cliquez sur l'installateur et suivez les instructions.</li>" +
                     '<li><strong>Avertissement SmartScreen</strong> — Si une fenêtre bleue apparaît, ouvrez le <a href="#" onclick="openModal(); return false;">guide d\'installation</a> et choisissez <strong>Informations complémentaires</strong> → <strong>Exécuter quand même</strong>.</li>' +
                 "</ul>" +
@@ -419,7 +419,7 @@ Object.assign(window.PeekomI18nLocales, {
         faq9a:
             "<p>La désinstallation de l'app ne supprime pas votre licence Lemon Squeezy. Suivez ces étapes pour restaurer Peekom Plus et toutes les fonctionnalités payantes.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Réinstaller Peekom</strong> — Téléchargez la version gratuite (<code>Peekom-Setup.exe</code>) sur <a href=\"download.html\">peekom.com</a> et installez-la.</li>" +
+            "<li><strong>1. Réinstaller Peekom</strong> — Téléchargez la version gratuite (<code>Peekom-Setup.exe</code>) sur <a href=\"/download/\">peekom.com</a> et installez-la.</li>" +
             "<li><strong>2. Retrouver la clé de licence</strong> — Ouvrez l'e-mail de reçu Lemon Squeezy de votre achat et copiez la <strong>[License Key]</strong>. Si vous avez perdu l'e-mail, connectez-vous à l'historique des commandes Lemon Squeezy avec le même e-mail pour la revoir.</li>" +
             "<li><strong>3. Réactiver Plus</strong> — Ouvrez Réglages (icône engrenage, en haut à droite), collez la clé dans <strong>Activation Plus</strong> et confirmez. L'app repasse en Peekom Plus et restaure 10 emplacements, thèmes personnalisés et autres fonctions payantes.</li>" +
             "</ul>" +
@@ -576,9 +576,9 @@ Object.assign(window.PeekomI18nLocales, {
         searchPlaceholder: "Suchen...",
         heroTitleMain: "Peekom",
         heroTagline: "Die Rand-Memo-App ist zurück als <strong>Peekom</strong>.<br>Leichte, schnelle Notizen am Bildschirmrand—bleiben Sie organisiert, ohne Ihren Arbeits- oder Präsentationsfluss zu unterbrechen.",
-        heroPlusNote: 'Nach der Installation der kostenlosen App upgraden Sie in den Einstellungen auf Peekom Plus.<br><a href="features.html#compare">Kostenlos vs Plus</a> in der Vergleichstabelle ansehen.',
+        heroPlusNote: 'Nach der Installation der kostenlosen App upgraden Sie in den Einstellungen auf Peekom Plus.<br><a href="/features/#compare">Kostenlos vs Plus</a> in der Vergleichstabelle ansehen.',
         heroUpgradeNote: "Nach der Installation der kostenlosen App upgraden Sie in den Einstellungen auf Peekom Plus.",
-        heroFreeCompareNote: '<a href="features.html#compare">Kostenlos vs Plus ansehen</a>.',
+        heroFreeCompareNote: '<a href="/features/#compare">Kostenlos vs Plus ansehen</a>.',
         heroWinBtn: "Für Windows herunterladen", heroMacBtn: "Für macOS herunterladen",
         heroPlusBuyBtn: "Jetzt kaufen",
         heroPlusCardTitle: "Peekom Plus",
@@ -591,7 +591,7 @@ Object.assign(window.PeekomI18nLocales, {
         heroFreeCardBadge: "FREE",
         heroMacFreeCardBadge: "FREE",
         heroWinCardMeta: "Windows 10 · 11 (64-Bit)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "Herunterladen",
         carouselCap1: "Griff am Monitorrand",
         carouselCap2: "Memo per Klick oder Tastenkürzel öffnen",
@@ -629,7 +629,7 @@ Object.assign(window.PeekomI18nLocales, {
         faqR3q: "Was passiert nach einer Rückerstattung mit meiner Lizenz?",
         faqR3a: "Nach Abschluss der Rückerstattung wird Ihr Peekom Plus Lizenzschlüssel <strong>deaktiviert</strong>. Die App wechselt beim nächsten Online-Start automatisch zur kostenlosen Version – stellen Sie daher vor dem Antrag sicher, dass Sie Plus nicht mehr nutzen möchten.",
         faq1q: "Was ist der Unterschied zwischen kostenlos und Plus?",
-        faq1a: 'Kostenlos umfasst 3 Indexe, Gruppen-Griffverschiebung, ICE-Modus, Hover-Verzögerung, Monitorauswahl, Markdown, Formatierungsleiste und Bildeinfügung. Peekom Plus (Einführung 9,99 $, Listenpreis 12,99 $) schaltet 10 Slots, eigenes Theme, Schriftarten, Deckkraft, Bildgrößenänderung und Export in der App frei. Siehe die <a href="features.html#compare">Vergleichstabelle</a>.',
+        faq1a: 'Kostenlos umfasst 3 Indexe, Gruppen-Griffverschiebung, ICE-Modus, Hover-Verzögerung, Monitorauswahl, Markdown, Formatierungsleiste und Bildeinfügung. Peekom Plus (Einführung 9,99 $, Listenpreis 12,99 $) schaltet 10 Slots, eigenes Theme, Schriftarten, Deckkraft, Bildgrößenänderung und Export in der App frei. Siehe die <a href="/features/#compare">Vergleichstabelle</a>.',
         compareFreeName: "Peekom (Kostenlos)",
         comparePlusName: "Peekom Plus",
         compareCta: "Peekom Plus holen",
@@ -639,7 +639,7 @@ Object.assign(window.PeekomI18nLocales, {
             '<div class="guide-step">' +
                 "<h3>1. Installation</h3>" +
                 '<ul class="guide-step-list">' +
-                    '<li><strong>Herunterladen</strong> — Holen Sie das Windows- oder macOS-Installationsprogramm von der Seite <a href="download.html">Download</a> (oder Startseite).</li>' +
+                    '<li><strong>Herunterladen</strong> — Holen Sie das Windows- oder macOS-Installationsprogramm von der Seite <a href="/download/">Download</a> (oder Startseite).</li>' +
                     "<li><strong>Peekom-Setup.exe ausführen</strong> — Doppelklicken Sie auf das Installationsprogramm und folgen Sie den Anweisungen.</li>" +
                     '<li><strong>SmartScreen-Warnung</strong> — Wenn ein blaues Fenster erscheint, öffnen Sie die <a href="#" onclick="openModal(); return false;">Installationsanleitung</a> und wählen Sie <strong>Weitere Informationen</strong> → <strong>Trotzdem ausführen</strong>.</li>' +
                 "</ul>" +
@@ -701,7 +701,7 @@ Object.assign(window.PeekomI18nLocales, {
         faq9a:
             "<p>Die Deinstallation der App löscht Ihre Lemon-Squeezy-Lizenz nicht. Folgen Sie diesen Schritten, um Peekom Plus und alle kostenpflichtigen Funktionen wiederherzustellen.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Peekom neu installieren</strong> — Laden Sie die kostenlose Version (<code>Peekom-Setup.exe</code>) von <a href=\"download.html\">peekom.com</a> herunter und installieren Sie sie.</li>" +
+            "<li><strong>1. Peekom neu installieren</strong> — Laden Sie die kostenlose Version (<code>Peekom-Setup.exe</code>) von <a href=\"/download/\">peekom.com</a> herunter und installieren Sie sie.</li>" +
             "<li><strong>2. Lizenzschlüssel finden</strong> — Öffnen Sie die Lemon-Squeezy-Beleg-E-Mail Ihres Kaufs und kopieren Sie den <strong>[License Key]</strong>. Bei verlorener E-Mail melden Sie sich mit derselben Adresse in der Lemon-Squeezy-Bestellhistorie an, um den Schlüssel erneut zu sehen.</li>" +
             "<li><strong>3. Plus erneut aktivieren</strong> — Öffnen Sie Einstellungen (Zahnradsymbol oben rechts), fügen Sie den Schlüssel unter <strong>Plus-Aktivierung</strong> ein und bestätigen Sie. Die App wechselt sofort zu Peekom Plus und stellt 10 Slots, benutzerdefinierte Themes und weitere Plus-Funktionen wieder her.</li>" +
             "</ul>" +
@@ -858,9 +858,9 @@ Object.assign(window.PeekomI18nLocales, {
         searchPlaceholder: "Pesquisar...",
         heroTitleMain: "Peekom",
         heroTagline: "O app de memos na borda está de volta como <strong>Peekom</strong>.<br>Notas leves e rápidas na borda da tela—mantenha-se organizado sem interromper seu trabalho ou apresentação.",
-        heroPlusNote: 'Após instalar o app gratuito, atualize para Peekom Plus em Configurações.<br><a href="features.html#compare">Ver grátis vs Plus</a> na tabela comparativa.',
+        heroPlusNote: 'Após instalar o app gratuito, atualize para Peekom Plus em Configurações.<br><a href="/features/#compare">Ver grátis vs Plus</a> na tabela comparativa.',
         heroUpgradeNote: "Após instalar o app gratuito, atualize para Peekom Plus em Configurações.",
-        heroFreeCompareNote: '<a href="features.html#compare">Ver grátis vs Plus</a>.',
+        heroFreeCompareNote: '<a href="/features/#compare">Ver grátis vs Plus</a>.',
         heroWinBtn: "Baixar para Windows", heroMacBtn: "Baixar para macOS",
         heroPlusBuyBtn: "Comprar agora",
         heroPlusCardTitle: "Peekom Plus",
@@ -873,7 +873,7 @@ Object.assign(window.PeekomI18nLocales, {
         heroFreeCardBadge: "FREE",
         heroMacFreeCardBadge: "FREE",
         heroWinCardMeta: "Windows 10 · 11 (64 bits)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "Baixar",
         carouselCap1: "Alça na borda do monitor",
         carouselCap2: "Abrir memo por clique ou atalho",
@@ -911,7 +911,7 @@ Object.assign(window.PeekomI18nLocales, {
         faqR3q: "O que acontece com a minha licença após o reembolso?",
         faqR3a: "Concluído o reembolso, sua chave de licença do Peekom Plus é <strong>desativada</strong>. O app volta automaticamente para a versão gratuita na próxima inicialização on-line, então confirme que deseja parar de usar o Plus antes de solicitar o reembolso.",
         faq1q: "Qual é a diferença entre grátis e Plus?",
-        faq1a: 'O grátis inclui 3 índices, mover alça em grupo, modo ICE, atraso ao passar o mouse, seleção de monitor, Markdown, barra de formatação e inserção de imagens. Peekom Plus (lançamento $9.99, lista $12.99) desbloqueia 10 slots, tema personalizado, fontes, opacidade, redimensionar imagens e exportar no app. Veja a <a href="features.html#compare">tabela comparativa</a>.',
+        faq1a: 'O grátis inclui 3 índices, mover alça em grupo, modo ICE, atraso ao passar o mouse, seleção de monitor, Markdown, barra de formatação e inserção de imagens. Peekom Plus (lançamento $9.99, lista $12.99) desbloqueia 10 slots, tema personalizado, fontes, opacidade, redimensionar imagens e exportar no app. Veja a <a href="/features/#compare">tabela comparativa</a>.',
         compareFreeName: "Peekom (Grátis)",
         comparePlusName: "Peekom Plus",
         compareCta: "Obter Peekom Plus",
@@ -921,7 +921,7 @@ Object.assign(window.PeekomI18nLocales, {
             '<div class="guide-step">' +
                 "<h3>1. Instalar</h3>" +
                 '<ul class="guide-step-list">' +
-                    '<li><strong>Baixar</strong> — Obtenha o instalador do Windows ou macOS na página <a href="download.html">Download</a> (ou início).</li>' +
+                    '<li><strong>Baixar</strong> — Obtenha o instalador do Windows ou macOS na página <a href="/download/">Download</a> (ou início).</li>' +
                     "<li><strong>Executar Peekom-Setup.exe</strong> — Clique duas vezes no instalador e siga as instruções.</li>" +
                     '<li><strong>Aviso SmartScreen</strong> — Se aparecer uma janela azul, abra o <a href="#" onclick="openModal(); return false;">guia de instalação</a> e escolha <strong>Mais informações</strong> → <strong>Executar mesmo assim</strong>.</li>' +
                 "</ul>" +
@@ -983,7 +983,7 @@ Object.assign(window.PeekomI18nLocales, {
         faq9a:
             "<p>Desinstalar o app não remove sua licença no Lemon Squeezy. Siga estes passos para restaurar o Peekom Plus e todos os recursos pagos.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Reinstalar o Peekom</strong> — Baixe a versão gratuita (<code>Peekom-Setup.exe</code>) em <a href=\"download.html\">peekom.com</a> e instale.</li>" +
+            "<li><strong>1. Reinstalar o Peekom</strong> — Baixe a versão gratuita (<code>Peekom-Setup.exe</code>) em <a href=\"/download/\">peekom.com</a> e instale.</li>" +
             "<li><strong>2. Encontrar a chave de licença</strong> — Abra o e-mail de recibo do Lemon Squeezy da sua compra e copie a <strong>[License Key]</strong>. Se perdeu o e-mail, entre no histórico de pedidos do Lemon Squeezy com o mesmo e-mail para vê-la novamente.</li>" +
             "<li><strong>3. Reativar o Plus</strong> — Abra Configurações (ícone de engrenagem, canto superior direito), cole a chave em <strong>Ativação Plus</strong> e confirme. O app muda para Peekom Plus e restaura 10 slots, temas personalizados e demais recursos pagos.</li>" +
             "</ul>" +

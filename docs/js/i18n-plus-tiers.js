@@ -21,7 +21,7 @@ var PATCH = {
         faq1a:
             "<p>無料版には3インデックス、グループ移動、ICE モード、ホバー遅延、モニター選択、書式バー、画像挿入が含まれます。</p>" +
             "<p>Peekom Plus（Single $5.99 · Double $9.99 · Family $19.99）は10スロット、カスタムテーマ、フォント、不透明度、左パネル、画像リサイズ、書き出しをアプリ内でアンロックします。</p>" +
-            '<p><a href="features.html#compare">比較表</a>をご覧ください。</p>',
+            '<p><a href="/features/#compare">比較表</a>をご覧ください。</p>',
         faq3bq: "1つのライセンスキーを複数の PC で使えますか？",
         faq3ba:
             "<p>会社の Windows PC と自宅の MacBook など、<strong>OS が異なる端末</strong>でも Plus は <strong>1回の購入</strong>で足ります。</p>" +
@@ -79,14 +79,14 @@ var PATCH = {
             "<p>削除できない場合は手順1でタスクを終了してから再試行してください。</p>" +
             "<p><strong>4. 再起動して確認</strong> — PC を再起動します。</p>" +
             "<p>エラーが出ずタスクバーに 빼꼼 がなければ完了です。</p>" +
-            "<p>その後 <a href=\"download.html\">Peekom（無料）</a>を新規インストールしてください。</p>" +
+            "<p>その後 <a href=\"/download/\">Peekom（無料）</a>を新規インストールしてください。</p>" +
             '<p class="privacy-doc__note">旧版のメモは Peekom と<strong>保存場所が異なるため自動移行されません。</strong></p>' +
             '<p class="privacy-doc__note">必要な内容は事前にコピーしてください。</p>',
         faq9a:
             "<p>アプリをアンインストールしても Lemon Squeezy のライセンスは残ります。</p>" +
             "<p>次の手順で Peekom Plus と有料機能を復元できます。</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Peekom を再インストール</strong> — <a href=\"download.html\">peekom.com</a> から無料版（<code>Peekom-Setup.exe</code>）をダウンロードしてインストール</li>" +
+            "<li><strong>1. Peekom を再インストール</strong> — <a href=\"/download/\">peekom.com</a> から無料版（<code>Peekom-Setup.exe</code>）をダウンロードしてインストール</li>" +
             "<li><strong>2. ライセンスキーを確認</strong> — Lemon Squeezy の購入確認メールから <strong>[License Key]</strong> をコピー。メールを紛失した場合は <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 注文履歴</a>で同じメールアドレスから再確認</li>" +
             "<li><strong>3. Plus を再有効化</strong> — 設定（歯車）を開き <strong>Plus 認証</strong>にキーを貼り付けて確定。10スロット・カスタムテーマなどが復元されます</li>" +
             "</ul>" +
@@ -101,7 +101,7 @@ var PATCH = {
             "<li>IT に <strong><code>https://api.lemonsqueezy.com</code> の HTTPS（443）許可</strong>を依頼</li>" +
             "<li>社内 VPN をオフにするか、許可された VPN で再試行</li>" +
             "</ul>" +
-            "<p><strong>有効化上限（プラン別）</strong>のメッセージが出た場合は <a href=\"contact.html\">お問い合わせ</a>で購入メール・注文番号・ライセンスキーをお送りください。端末リセットをお手伝いします。</p>" +
+            "<p><strong>有効化上限（プラン別）</strong>のメッセージが出た場合は <a href=\"/contact/\">お問い合わせ</a>で購入メール・注文番号・ライセンスキーをお送りください。端末リセットをお手伝いします。</p>" +
             "<p>インストーラーを再ダウンロードしても、サーバーがブロックされていれば同じエラーになります。</p>",
         winGuideBtn: 'Edge で「このファイルは一般的にダウンロードされていません」と表示されますか？',
         guideTitle: "Edge ダウンロード解除ガイド",
@@ -126,7 +126,7 @@ var PATCH = {
         faq1a:
             "<p>免费版包含 3 个索引、分组移动、ICE 模式、悬停延迟、显示器选择、格式工具栏和图片插入。</p>" +
             "<p>Peekom Plus（Single $5.99 · Double $9.99 · Family $19.99）在应用内解锁 10 个槽位、自定义主题、字体、透明度、左侧面板、图片缩放和导出。</p>" +
-            '<p>请参阅 <a href="features.html#compare">对比表</a>。</p>',
+            '<p>请参阅 <a href="/features/#compare">对比表</a>。</p>',
         faq3bq: "一个许可证密钥可以在多台 PC 上使用吗？",
         faq3ba:
             "<p>即使您使用不同的操作系统——例如公司 Windows PC 和家里 MacBook——也只需 <strong>购买一次 Plus</strong>。</p>" +
@@ -184,14 +184,14 @@ var PATCH = {
             "<p>若无法删除，请先完成步骤 1 结束任务后重试。</p>" +
             "<p><strong>4. 重启并确认</strong> — 重启电脑。</p>" +
             "<p>若无错误窗口且任务栏无 빼꼼，则清理成功。</p>" +
-            "<p>然后可全新安装 <a href=\"download.html\">Peekom（免费版）</a>。</p>" +
+            "<p>然后可全新安装 <a href=\"/download/\">Peekom（免费版）</a>。</p>" +
             '<p class="privacy-doc__note">旧版备忘录<strong>不会自动迁移</strong>，因为 Peekom 使用不同的存储位置。</p>' +
             '<p class="privacy-doc__note">删除前请复制所需内容。</p>',
         faq9a:
             "<p>卸载应用不会删除您在 Lemon Squeezy 的许可证。</p>" +
             "<p>按以下步骤恢复 Peekom Plus 及所有付费功能。</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. 重新安装 Peekom</strong> — 从 <a href=\"download.html\">peekom.com</a> 下载免费版（<code>Peekom-Setup.exe</code>）并安装。</li>" +
+            "<li><strong>1. 重新安装 Peekom</strong> — 从 <a href=\"/download/\">peekom.com</a> 下载免费版（<code>Peekom-Setup.exe</code>）并安装。</li>" +
             "<li><strong>2. 查找许可证密钥</strong> — 打开 Lemon Squeezy 购买确认邮件，复制 <strong>[License Key]</strong>。若邮件丢失，请用相同邮箱登录 <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 订单历史</a>查看。</li>" +
             "<li><strong>3. 重新激活 Plus</strong> — 打开设置（齿轮图标），在 <strong>Plus 激活</strong>中粘贴密钥并确认。应用将恢复 10 槽位、自定义主题等 Plus 功能。</li>" +
             "</ul>" +
@@ -206,7 +206,7 @@ var PATCH = {
             "<li>请 IT 允许 <strong><code>https://api.lemonsqueezy.com</code> 的 HTTPS（443）</strong></li>" +
             "<li>关闭公司 VPN，或使用允许的 VPN 重试</li>" +
             "</ul>" +
-            "<p>若出现 <strong>激活上限（按套餐）</strong> 提示，请 <a href=\"contact.html\">联系我们</a>并提供购买邮箱、订单号和许可证密钥——我们可协助重置设备。</p>" +
+            "<p>若出现 <strong>激活上限（按套餐）</strong> 提示，请 <a href=\"/contact/\">联系我们</a>并提供购买邮箱、订单号和许可证密钥——我们可协助重置设备。</p>" +
             "<p>若服务器仍被拦截，重新下载安装程序<strong>无法</strong>解决此问题。</p>",
         winGuideBtn: 'Edge 是否提示文件「并不常见下载」？',
         guideTitle: "Edge 下载解除拦截指南",
@@ -231,7 +231,7 @@ var PATCH = {
         faq1a:
             "<p>免費版包含 3 個索引、群組移動、ICE 模式、懸停延遲、螢幕選擇、格式工具列和圖片插入。</p>" +
             "<p>Peekom Plus（Single $5.99 · Double $9.99 · Family $19.99）在應用程式內解鎖 10 個槽位、自訂主題、字型、透明度、左側面板、圖片縮放和匯出。</p>" +
-            '<p>請參閱 <a href="features.html#compare">比較表</a>。</p>',
+            '<p>請參閱 <a href="/features/#compare">比較表</a>。</p>',
         faq3bq: "一組授權金鑰可以在多台 PC 上使用嗎？",
         faq3ba:
             "<p>即使您使用不同的作業系統——例如公司 Windows PC 和家裡 MacBook——也只需 <strong>購買一次 Plus</strong>。</p>" +
@@ -289,14 +289,14 @@ var PATCH = {
             "<p>若無法刪除，請先完成步驟 1 結束工作後重試。</p>" +
             "<p><strong>4. 重新啟動並確認</strong> — 重新開機。</p>" +
             "<p>若無錯誤視窗且工作列無 빼꼼，則清理成功。</p>" +
-            "<p>然後可全新安裝 <a href=\"download.html\">Peekom（免費版）</a>。</p>" +
+            "<p>然後可全新安裝 <a href=\"/download/\">Peekom（免費版）</a>。</p>" +
             '<p class="privacy-doc__note">舊版備忘錄<strong>不會自動移轉</strong>，因為 Peekom 使用不同的儲存位置。</p>' +
             '<p class="privacy-doc__note">移除前請複製所需內容。</p>',
         faq9a:
             "<p>解除安裝應用程式不會刪除您在 Lemon Squeezy 的授權。</p>" +
             "<p>依下列步驟還原 Peekom Plus 及所有付費功能。</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. 重新安裝 Peekom</strong> — 從 <a href=\"download.html\">peekom.com</a> 下載免費版（<code>Peekom-Setup.exe</code>）並安裝。</li>" +
+            "<li><strong>1. 重新安裝 Peekom</strong> — 從 <a href=\"/download/\">peekom.com</a> 下載免費版（<code>Peekom-Setup.exe</code>）並安裝。</li>" +
             "<li><strong>2. 查找授權金鑰</strong> — 開啟 Lemon Squeezy 購買確認郵件，複製 <strong>[License Key]</strong>。若郵件遺失，請用相同電子郵件登入 <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 訂單紀錄</a>查看。</li>" +
             "<li><strong>3. 重新啟用 Plus</strong> — 開啟設定（齒輪圖示），在 <strong>Plus 啟用</strong>中貼上金鑰並確認。應用程式將還原 10 槽位、自訂主題等 Plus 功能。</li>" +
             "</ul>" +
@@ -311,7 +311,7 @@ var PATCH = {
             "<li>請 IT 允許 <strong><code>https://api.lemonsqueezy.com</code> 的 HTTPS（443）</strong></li>" +
             "<li>關閉公司 VPN，或使用允許的 VPN 重試</li>" +
             "</ul>" +
-            "<p>若出現 <strong>啟用上限（依方案）</strong> 提示，請 <a href=\"contact.html\">聯絡我們</a>並提供購買電子郵件、訂單編號和授權金鑰——我們可協助重設裝置。</p>" +
+            "<p>若出現 <strong>啟用上限（依方案）</strong> 提示，請 <a href=\"/contact/\">聯絡我們</a>並提供購買電子郵件、訂單編號和授權金鑰——我們可協助重設裝置。</p>" +
             "<p>若伺服器仍被封鎖，重新下載安裝程式<strong>無法</strong>解決此問題。</p>",
         winGuideBtn: 'Edge 是否提示檔案「並不常見下載」？',
         guideTitle: "Edge 下載解除封鎖指南",
@@ -336,7 +336,7 @@ var PATCH = {
         faq1a:
             "<p>La versión gratuita incluye 3 índices, movimiento de grupo, modo ICE, retardo al pasar el cursor, selección de monitor, barra de formato e inserción de imágenes.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) desbloquea 10 ranuras, tema personalizado, fuentes, opacidad, panel izquierdo, redimensionado de imágenes y exportación en la app.</p>" +
-            '<p>Consulta la <a href="features.html#compare">tabla comparativa</a>.</p>',
+            '<p>Consulta la <a href="/features/#compare">tabla comparativa</a>.</p>',
         faq3bq: "¿Puedo usar una clave de licencia en más de un PC?",
         faq3ba:
             "<p>Aunque uses sistemas distintos —por ejemplo, un PC Windows del trabajo y un MacBook en casa— solo necesitas <strong>comprar Plus una vez</strong>.</p>" +
@@ -394,14 +394,14 @@ var PATCH = {
             "<p>Si no puedes eliminar, finaliza tareas del paso 1 e inténtalo de nuevo.</p>" +
             "<p><strong>4. Reinicia y comprueba</strong> — Reinicia el PC.</p>" +
             "<p>Si no hay ventanas de error y 빼꼼 no está en la barra, la limpieza fue correcta.</p>" +
-            "<p>Luego instala <a href=\"download.html\">Peekom (gratis)</a> de nuevo.</p>" +
+            "<p>Luego instala <a href=\"/download/\">Peekom (gratis)</a> de nuevo.</p>" +
             '<p class="privacy-doc__note">El contenido de la app antigua <strong>no se migra automáticamente</strong> porque Peekom guarda los datos en otra ubicación.</p>' +
             '<p class="privacy-doc__note">Copia lo que necesites antes de eliminar la app antigua.</p>',
         faq9a:
             "<p>Desinstalar la app no elimina tu licencia de Lemon Squeezy.</p>" +
             "<p>Sigue estos pasos para restaurar Peekom Plus y todas las funciones de pago.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Reinstala Peekom</strong> — Descarga la versión gratuita (<code>Peekom-Setup.exe</code>) en <a href=\"download.html\">peekom.com</a> e instálala.</li>" +
+            "<li><strong>1. Reinstala Peekom</strong> — Descarga la versión gratuita (<code>Peekom-Setup.exe</code>) en <a href=\"/download/\">peekom.com</a> e instálala.</li>" +
             "<li><strong>2. Encuentra tu clave</strong> — Abre el correo de Lemon Squeezy y copia <strong>[License Key]</strong>. Si perdiste el correo, inicia sesión en <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Mis pedidos de Lemon Squeezy</a> con el mismo email.</li>" +
             "<li><strong>3. Reactiva Plus</strong> — Abre Ajustes (icono de engranaje), pega la clave en <strong>Activación Plus</strong> y confirma. Se restauran 10 ranuras, temas personalizados y demás funciones Plus.</li>" +
             "</ul>" +
@@ -416,7 +416,7 @@ var PATCH = {
             "<li>Pide a IT permitir <strong><code>https://api.lemonsqueezy.com</code> por HTTPS (443)</strong></li>" +
             "<li>Desactiva la VPN corporativa o prueba una VPN permitida</li>" +
             "</ul>" +
-            "<p>Si ves un mensaje de <strong>límite de activación (según plan)</strong>, <a href=\"contact.html\">contáctanos</a> con email de compra, número de pedido y clave — podemos ayudarte a restablecer dispositivos.</p>" +
+            "<p>Si ves un mensaje de <strong>límite de activación (según plan)</strong>, <a href=\"/contact/\">contáctanos</a> con email de compra, número de pedido y clave — podemos ayudarte a restablecer dispositivos.</p>" +
             "<p>Volver a descargar el instalador <strong>no</strong> soluciona el problema si el servidor sigue bloqueado.</p>",
         winGuideBtn: '¿Edge dice que el archivo «no se descarga habitualmente»?',
         guideTitle: "Guía para desbloquear descargas en Edge",
@@ -441,7 +441,7 @@ var PATCH = {
         faq1a:
             "<p>La version gratuite inclut 3 index, déplacement groupé, mode ICE, délai au survol, sélection d'écran, barre de formatage et insertion d'images.</p>" +
             "<p>Peekom Plus (Single 5,99 $ · Double 9,99 $ · Family 19,99 $) débloque 10 emplacements, thème personnalisé, polices, opacité, panneau gauche, redimensionnement d'images et export dans l'app.</p>" +
-            '<p>Consultez le <a href="features.html#compare">tableau comparatif</a>.</p>',
+            '<p>Consultez le <a href="/features/#compare">tableau comparatif</a>.</p>',
         faq3bq: "Puis-je utiliser une clé de licence sur plusieurs PC ?",
         faq3ba:
             "<p>Même avec des systèmes différents — par ex. un PC Windows pro et un MacBook perso — vous n'avez besoin d'<strong>acheter Plus qu'une seule fois</strong>.</p>" +
@@ -499,14 +499,14 @@ var PATCH = {
             "<p>Si la suppression échoue, terminez les tâches à l'étape 1 et réessayez.</p>" +
             "<p><strong>4. Redémarrez et vérifiez</strong> — Redémarrez le PC.</p>" +
             "<p>Sans fenêtres d'erreur et sans 빼꼼 dans la barre, le nettoyage est réussi.</p>" +
-            "<p>Installez ensuite <a href=\"download.html\">Peekom (gratuit)</a> à neuf.</p>" +
+            "<p>Installez ensuite <a href=\"/download/\">Peekom (gratuit)</a> à neuf.</p>" +
             '<p class="privacy-doc__note">Le contenu de l\'ancienne app <strong>n\'est pas migré automatiquement</strong> car Peekom stocke les données ailleurs.</p>' +
             '<p class="privacy-doc__note">Copiez ce dont vous avez besoin avant de supprimer l\'ancienne app.</p>',
         faq9a:
             "<p>Désinstaller l'app ne supprime pas votre licence Lemon Squeezy.</p>" +
             "<p>Suivez ces étapes pour restaurer Peekom Plus et toutes les fonctions payantes.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Réinstallez Peekom</strong> — Téléchargez la version gratuite (<code>Peekom-Setup.exe</code>) sur <a href=\"download.html\">peekom.com</a> et installez-la.</li>" +
+            "<li><strong>1. Réinstallez Peekom</strong> — Téléchargez la version gratuite (<code>Peekom-Setup.exe</code>) sur <a href=\"/download/\">peekom.com</a> et installez-la.</li>" +
             "<li><strong>2. Retrouvez votre clé</strong> — Ouvrez l'e-mail Lemon Squeezy et copiez <strong>[License Key]</strong>. E-mail perdu ? Connectez-vous à <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Mes commandes Lemon Squeezy</a> avec le même e-mail.</li>" +
             "<li><strong>3. Réactivez Plus</strong> — Ouvrez Réglages (icône engrenage), collez la clé sous <strong>Activation Plus</strong> et confirmez. 10 emplacements, thèmes personnalisés et autres fonctions Plus sont restaurés.</li>" +
             "</ul>" +
@@ -521,7 +521,7 @@ var PATCH = {
             "<li>Demandez à l'IT d'autoriser <strong><code>https://api.lemonsqueezy.com</code> en HTTPS (443)</strong></li>" +
             "<li>Désactivez le VPN d'entreprise ou essayez un VPN autorisé</li>" +
             "</ul>" +
-            "<p>Si vous voyez un message de <strong>limite d'activation (selon l'offre)</strong>, <a href=\"contact.html\">contactez-nous</a> avec e-mail d'achat, numéro de commande et clé — nous pouvons réinitialiser les appareils.</p>" +
+            "<p>Si vous voyez un message de <strong>limite d'activation (selon l'offre)</strong>, <a href=\"/contact/\">contactez-nous</a> avec e-mail d'achat, numéro de commande et clé — nous pouvons réinitialiser les appareils.</p>" +
             "<p>Retélécharger l'installateur <strong>ne</strong> résout pas le problème si le serveur reste bloqué.</p>",
         winGuideBtn: 'Edge indique-t-il que le fichier « n\'est pas couramment téléchargé » ?',
         guideTitle: "Guide de déblocage des téléchargements Edge",
@@ -546,7 +546,7 @@ var PATCH = {
         faq1a:
             "<p>Die kostenlose Version umfasst 3 Indexe, Gruppenverschiebung, ICE-Modus, Hover-Verzögerung, Monitorauswahl, Formatleiste und Bildeinfügung.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) schaltet 10 Slots, individuelles Theme, Schriftarten, Deckkraft, linkes Panel, Bildgröße und Export in der App frei.</p>" +
-            '<p>Siehe die <a href="features.html#compare">Vergleichstabelle</a>.</p>',
+            '<p>Siehe die <a href="/features/#compare">Vergleichstabelle</a>.</p>',
         faq3bq: "Kann ich einen Lizenzschlüssel auf mehr als einem PC nutzen?",
         faq3ba:
             "<p>Auch bei unterschiedlichen Betriebssystemen — z. B. Windows-PC der Arbeit und MacBook zu Hause — reicht <strong>ein Plus-Kauf</strong>.</p>" +
@@ -604,14 +604,14 @@ var PATCH = {
             "<p>Schlägt das Löschen fehl, beenden Sie Aufgaben aus Schritt 1 und versuchen Sie es erneut.</p>" +
             "<p><strong>4. Neu starten und prüfen</strong> — PC neu starten.</p>" +
             "<p>Keine Fehlerfenster und kein 빼꼼 in der Taskleiste bedeutet Erfolg.</p>" +
-            "<p>Dann <a href=\"download.html\">Peekom (kostenlos)</a> neu installieren.</p>" +
+            "<p>Dann <a href=\"/download/\">Peekom (kostenlos)</a> neu installieren.</p>" +
             '<p class="privacy-doc__note">Inhalte der Legacy-App werden <strong>nicht automatisch migriert</strong>, da Peekom Daten woanders speichert.</p>' +
             '<p class="privacy-doc__note">Kopieren Sie Nötiges vor dem Entfernen der alten App.</p>',
         faq9a:
             "<p>Deinstallieren entfernt Ihre Lemon-Squeezy-Lizenz nicht.</p>" +
             "<p>So stellen Sie Peekom Plus und alle Plus-Funktionen wieder her:</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Peekom neu installieren</strong> — Kostenlose Version (<code>Peekom-Setup.exe</code>) von <a href=\"download.html\">peekom.com</a> herunterladen und installieren.</li>" +
+            "<li><strong>1. Peekom neu installieren</strong> — Kostenlose Version (<code>Peekom-Setup.exe</code>) von <a href=\"/download/\">peekom.com</a> herunterladen und installieren.</li>" +
             "<li><strong>2. Lizenzschlüssel finden</strong> — Lemon-Squeezy-E-Mail öffnen und <strong>[License Key]</strong> kopieren. E-Mail verloren? Bei <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy Meine Bestellungen</a> mit derselben E-Mail anmelden.</li>" +
             "<li><strong>3. Plus reaktivieren</strong> — Einstellungen (Zahnrad) öffnen, Schlüssel unter <strong>Plus-Aktivierung</strong> einfügen und bestätigen. 10 Slots, Themes und weitere Plus-Funktionen werden wiederhergestellt.</li>" +
             "</ul>" +
@@ -626,7 +626,7 @@ var PATCH = {
             "<li>IT bitten, <strong><code>https://api.lemonsqueezy.com</code> per HTTPS (443)</strong> freizugeben</li>" +
             "<li>Firmen-VPN ausschalten oder erlaubtes VPN testen</li>" +
             "</ul>" +
-            "<p>Bei <strong>Aktivierungslimit (je nach Tarif)</strong> <a href=\"contact.html\">kontaktieren</a> Sie uns mit Kauf-E-Mail, Bestellnummer und Schlüssel — wir können Geräte zurücksetzen.</p>" +
+            "<p>Bei <strong>Aktivierungslimit (je nach Tarif)</strong> <a href=\"/contact/\">kontaktieren</a> Sie uns mit Kauf-E-Mail, Bestellnummer und Schlüssel — wir können Geräte zurücksetzen.</p>" +
             "<p>Installer erneut laden <strong>hilft nicht</strong>, wenn der Server weiter blockiert ist.</p>",
         winGuideBtn: 'Zeigt Edge an, die Datei werde „nicht häufig heruntergeladen“?',
         guideTitle: "Edge: Download-Blockade aufheben",
@@ -651,7 +651,7 @@ var PATCH = {
         faq1a:
             "<p>A versão gratuita inclui 3 índices, movimento em grupo, modo ICE, atraso ao passar o mouse, seleção de monitor, barra de formatação e inserção de imagens.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) desbloqueia 10 slots, tema personalizado, fontes, opacidade, painel esquerdo, redimensionamento de imagens e exportação no app.</p>" +
-            '<p>Veja a <a href="features.html#compare">tabela comparativa</a>.</p>',
+            '<p>Veja a <a href="/features/#compare">tabela comparativa</a>.</p>',
         faq3bq: "Posso usar uma chave de licença em mais de um PC?",
         faq3ba:
             "<p>Mesmo com sistemas diferentes — por ex. PC Windows do trabalho e MacBook em casa — basta <strong>comprar Plus uma vez</strong>.</p>" +
@@ -709,14 +709,14 @@ var PATCH = {
             "<p>Se não conseguir excluir, encerre tarefas do passo 1 e tente de novo.</p>" +
             "<p><strong>4. Reinicie e verifique</strong> — Reinicie o PC.</p>" +
             "<p>Sem janelas de erro e sem 빼꼼 na barra, a limpeza foi bem-sucedida.</p>" +
-            "<p>Depois instale <a href=\"download.html\">Peekom (grátis)</a> novamente.</p>" +
+            "<p>Depois instale <a href=\"/download/\">Peekom (grátis)</a> novamente.</p>" +
             '<p class="privacy-doc__note">O conteúdo do app antigo <strong>não é migrado automaticamente</strong> porque o Peekom armazena dados em outro local.</p>' +
             '<p class="privacy-doc__note">Copie o que precisar antes de remover o app antigo.</p>',
         faq9a:
             "<p>Desinstalar o app não remove sua licença Lemon Squeezy.</p>" +
             "<p>Siga estes passos para restaurar o Peekom Plus e todos os recursos pagos.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Reinstale o Peekom</strong> — Baixe a versão gratuita (<code>Peekom-Setup.exe</code>) em <a href=\"download.html\">peekom.com</a> e instale.</li>" +
+            "<li><strong>1. Reinstale o Peekom</strong> — Baixe a versão gratuita (<code>Peekom-Setup.exe</code>) em <a href=\"/download/\">peekom.com</a> e instale.</li>" +
             "<li><strong>2. Encontre sua chave</strong> — Abra o e-mail Lemon Squeezy e copie <strong>[License Key]</strong>. Perdeu o e-mail? Entre em <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Meus pedidos Lemon Squeezy</a> com o mesmo e-mail.</li>" +
             "<li><strong>3. Reative o Plus</strong> — Abra Configurações (ícone de engrenagem), cole a chave em <strong>Ativação Plus</strong> e confirme. 10 slots, temas personalizados e outros recursos Plus são restaurados.</li>" +
             "</ul>" +
@@ -731,7 +731,7 @@ var PATCH = {
             "<li>Peça ao TI para permitir <strong><code>https://api.lemonsqueezy.com</code> via HTTPS (443)</strong></li>" +
             "<li>Desative VPN corporativa ou teste VPN permitida</li>" +
             "</ul>" +
-            "<p>Se vir mensagem de <strong>limite de ativação (conforme plano)</strong>, <a href=\"contact.html\">contacte-nos</a> com e-mail de compra, pedido e chave — podemos redefinir dispositivos.</p>" +
+            "<p>Se vir mensagem de <strong>limite de ativação (conforme plano)</strong>, <a href=\"/contact/\">contacte-nos</a> com e-mail de compra, pedido e chave — podemos redefinir dispositivos.</p>" +
             "<p>Baixar o instalador de novo <strong>não</strong> resolve se o servidor continuar bloqueado.</p>",
         winGuideBtn: 'O Edge diz que o arquivo «não é baixado com frequência»?',
         guideTitle: "Guia para desbloquear download no Edge",
@@ -756,7 +756,7 @@ var PATCH = {
         faq1a:
             "<p>La versione gratuita include 3 indici, spostamento gruppo, modalità ICE, ritardo hover, selezione monitor, barra formattazione e inserimento immagini.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) sblocca 10 slot, tema personalizzato, font, opacità, pannello sinistro, ridimensionamento immagini ed export nell'app.</p>" +
-            '<p>Vedi la <a href="features.html#compare">tabella comparativa</a>.</p>',
+            '<p>Vedi la <a href="/features/#compare">tabella comparativa</a>.</p>',
         faq3bq: "Posso usare una chiave di licenza su più PC?",
         faq3ba:
             "<p>Anche con sistemi diversi — ad es. PC Windows lavoro e MacBook casa — basta <strong>acquistare Plus una volta</strong>.</p>" +
@@ -814,14 +814,14 @@ var PATCH = {
             "<p>Se l'eliminazione fallisce, termina i processi al passo 1 e riprova.</p>" +
             "<p><strong>4. Riavvia e verifica</strong> — Riavvia il PC.</p>" +
             "<p>Nessuna finestra di errore e nessun 빼꼼 nella barra significa pulizia riuscita.</p>" +
-            "<p>Poi installa <a href=\"download.html\">Peekom (gratuito)</a> da zero.</p>" +
+            "<p>Poi installa <a href=\"/download/\">Peekom (gratuito)</a> da zero.</p>" +
             '<p class="privacy-doc__note">I contenuti dell\'app legacy <strong>non vengono migrati automaticamente</strong> perché Peekom salva i dati altrove.</p>' +
             '<p class="privacy-doc__note">Copia ciò che ti serve prima di rimuovere la vecchia app.</p>',
         faq9a:
             "<p>Disinstallare l'app non rimuove la licenza Lemon Squeezy.</p>" +
             "<p>Segui questi passaggi per ripristinare Peekom Plus e tutte le funzioni a pagamento.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Reinstalla Peekom</strong> — Scarica la versione gratuita (<code>Peekom-Setup.exe</code>) da <a href=\"download.html\">peekom.com</a> e installala.</li>" +
+            "<li><strong>1. Reinstalla Peekom</strong> — Scarica la versione gratuita (<code>Peekom-Setup.exe</code>) da <a href=\"/download/\">peekom.com</a> e installala.</li>" +
             "<li><strong>2. Trova la chiave</strong> — Apri l'email Lemon Squeezy e copia <strong>[License Key]</strong>. Email persa? Accedi a <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">I miei ordini Lemon Squeezy</a> con la stessa email.</li>" +
             "<li><strong>3. Riattiva Plus</strong> — Apri Impostazioni (icona ingranaggio), incolla la chiave in <strong>Attivazione Plus</strong> e conferma. 10 slot, temi personalizzati e altre funzioni Plus vengono ripristinati.</li>" +
             "</ul>" +
@@ -836,7 +836,7 @@ var PATCH = {
             "<li>Chiedi all'IT di consentire <strong><code>https://api.lemonsqueezy.com</code> via HTTPS (443)</strong></li>" +
             "<li>Disattiva VPN aziendale o prova VPN consentita</li>" +
             "</ul>" +
-            "<p>Se vedi un messaggio di <strong>limite attivazione (in base al piano)</strong>, <a href=\"contact.html\">contattaci</a> con email acquisto, ordine e chiave — possiamo reimpostare i dispositivi.</p>" +
+            "<p>Se vedi un messaggio di <strong>limite attivazione (in base al piano)</strong>, <a href=\"/contact/\">contattaci</a> con email acquisto, ordine e chiave — possiamo reimpostare i dispositivi.</p>" +
             "<p>Riscaricare l'installer <strong>non</strong> risolve se il server resta bloccato.</p>",
         winGuideBtn: 'Edge indica che il file «non viene scaricato di frequente»?',
         guideTitle: "Guida sblocco download Edge",
@@ -861,7 +861,7 @@ var PATCH = {
         faq1a:
             "<p>Бесплатная версия включает 3 индекса, групповое перемещение, режим ICE, задержку наведения, выбор монитора, панель форматирования и вставку изображений.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) открывает 10 слотов, свою тему, шрифты, прозрачность, левую панель, изменение размера изображений и экспорт в приложении.</p>" +
-            '<p>См. <a href="features.html#compare">таблицу сравнения</a>.</p>',
+            '<p>См. <a href="/features/#compare">таблицу сравнения</a>.</p>',
         faq3bq: "Можно ли использовать один ключ лицензии на нескольких ПК?",
         faq3ba:
             "<p>Даже при разных ОС — например, рабочий Windows и домашний MacBook — достаточно <strong>купить Plus один раз</strong>.</p>" +
@@ -919,14 +919,14 @@ var PATCH = {
             "<p>Если удаление не удаётся, завершите задачи из шага 1 и повторите.</p>" +
             "<p><strong>4. Перезагрузите и проверьте</strong> — Перезагрузите ПК.</p>" +
             "<p>Нет окон ошибок и нет 빼꼼 на панели — очистка успешна.</p>" +
-            "<p>Затем установите <a href=\"download.html\">Peekom (бесплатно)</a> заново.</p>" +
+            "<p>Затем установите <a href=\"/download/\">Peekom (бесплатно)</a> заново.</p>" +
             '<p class="privacy-doc__note">Содержимое старого приложения <strong>не переносится автоматически</strong>, так как Peekom хранит данные в другом месте.</p>' +
             '<p class="privacy-doc__note">Скопируйте нужное перед удалением старого приложения.</p>',
         faq9a:
             "<p>Удаление приложения не отменяет лицензию Lemon Squeezy.</p>" +
             "<p>Выполните эти шаги, чтобы восстановить Peekom Plus и все платные функции.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Переустановите Peekom</strong> — Скачайте бесплатную версию (<code>Peekom-Setup.exe</code>) с <a href=\"download.html\">peekom.com</a> и установите.</li>" +
+            "<li><strong>1. Переустановите Peekom</strong> — Скачайте бесплатную версию (<code>Peekom-Setup.exe</code>) с <a href=\"/download/\">peekom.com</a> и установите.</li>" +
             "<li><strong>2. Найдите ключ</strong> — Откройте письмо Lemon Squeezy и скопируйте <strong>[License Key]</strong>. Потеряли письмо? Войдите в <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Мои заказы Lemon Squeezy</a> с тем же email.</li>" +
             "<li><strong>3. Повторно активируйте Plus</strong> — Откройте Настройки (шестерёнка), вставьте ключ в <strong>Активация Plus</strong> и подтвердите. Восстанавливаются 10 слотов, темы и другие функции Plus.</li>" +
             "</ul>" +
@@ -941,7 +941,7 @@ var PATCH = {
             "<li>Попросите IT разрешить <strong><code>https://api.lemonsqueezy.com</code> по HTTPS (443)</strong></li>" +
             "<li>Отключите корпоративный VPN или используйте разрешённый VPN</li>" +
             "</ul>" +
-            "<p>При сообщении о <strong>лимите активации (по тарифу)</strong> <a href=\"contact.html\">свяжитесь с нами</a> с email покупки, номером заказа и ключом — поможем сбросить устройства.</p>" +
+            "<p>При сообщении о <strong>лимите активации (по тарифу)</strong> <a href=\"/contact/\">свяжитесь с нами</a> с email покупки, номером заказа и ключом — поможем сбросить устройства.</p>" +
             "<p>Повторная загрузка установщика <strong>не</strong> поможет, если сервер по-прежнему заблокирован.</p>",
         winGuideBtn: 'Edge сообщает, что файл «редко скачивается»?',
         guideTitle: "Как разблокировать загрузку в Edge",
@@ -966,7 +966,7 @@ var PATCH = {
         faq1a:
             "<p>Bản miễn phí gồm 3 chỉ mục, di chuyển nhóm, chế độ ICE, độ trễ hover, chọn màn hình, thanh định dạng và chèn ảnh.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) mở khóa 10 slot, chủ đề tùy chỉnh, phông chữ, độ mờ, bảng trái, thay đổi kích thước ảnh và xuất trong app.</p>" +
-            '<p>Xem <a href="features.html#compare">bảng so sánh</a>.</p>',
+            '<p>Xem <a href="/features/#compare">bảng so sánh</a>.</p>',
         faq3bq: "Tôi có thể dùng một khóa bản quyền trên nhiều PC không?",
         faq3ba:
             "<p>Dù dùng hệ điều hành khác nhau — ví dụ PC Windows công ty và MacBook ở nhà — bạn chỉ cần <strong>mua Plus một lần</strong>.</p>" +
@@ -1024,14 +1024,14 @@ var PATCH = {
             "<p>Nếu không xóa được, kết thúc tác vụ ở bước 1 rồi thử lại.</p>" +
             "<p><strong>4. Khởi động lại và kiểm tra</strong> — Khởi động lại PC.</p>" +
             "<p>Không còn cửa sổ lỗi và không còn 빼꼼 trên taskbar là thành công.</p>" +
-            "<p>Sau đó cài mới <a href=\"download.html\">Peekom (miễn phí)</a>.</p>" +
+            "<p>Sau đó cài mới <a href=\"/download/\">Peekom (miễn phí)</a>.</p>" +
             '<p class="privacy-doc__note">Nội dung app cũ <strong>không tự động chuyển</strong> vì Peekom lưu dữ liệu ở vị trí khác.</p>' +
             '<p class="privacy-doc__note">Sao chép nội dung cần thiết trước khi gỡ app cũ.</p>',
         faq9a:
             "<p>Gỡ app không xóa bản quyền Lemon Squeezy của bạn.</p>" +
             "<p>Làm theo các bước sau để khôi phục Peekom Plus và mọi tính năng trả phí.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Cài lại Peekom</strong> — Tải bản miễn phí (<code>Peekom-Setup.exe</code>) từ <a href=\"download.html\">peekom.com</a> và cài.</li>" +
+            "<li><strong>1. Cài lại Peekom</strong> — Tải bản miễn phí (<code>Peekom-Setup.exe</code>) từ <a href=\"/download/\">peekom.com</a> và cài.</li>" +
             "<li><strong>2. Tìm khóa bản quyền</strong> — Mở email Lemon Squeezy và sao chép <strong>[License Key]</strong>. Mất email? Đăng nhập <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Đơn hàng Lemon Squeezy</a> bằng cùng email.</li>" +
             "<li><strong>3. Kích hoạt lại Plus</strong> — Mở Cài đặt (biểu tượng bánh răng), dán khóa vào <strong>Kích hoạt Plus</strong> và xác nhận. Khôi phục 10 slot, chủ đề tùy chỉnh và tính năng Plus khác.</li>" +
             "</ul>" +
@@ -1046,7 +1046,7 @@ var PATCH = {
             "<li>Nhờ IT cho phép <strong><code>https://api.lemonsqueezy.com</code> qua HTTPS (443)</strong></li>" +
             "<li>Tắt VPN công ty hoặc thử VPN được phép</li>" +
             "</ul>" +
-            "<p>Nếu thấy thông báo <strong>giới hạn kích hoạt (theo gói)</strong>, <a href=\"contact.html\">liên hệ</a> với email mua, số đơn và khóa — chúng tôi có thể đặt lại thiết bị.</p>" +
+            "<p>Nếu thấy thông báo <strong>giới hạn kích hoạt (theo gói)</strong>, <a href=\"/contact/\">liên hệ</a> với email mua, số đơn và khóa — chúng tôi có thể đặt lại thiết bị.</p>" +
             "<p>Tải lại trình cài <strong>không</strong> sửa được nếu máy chủ vẫn bị chặn.</p>",
         winGuideBtn: 'Edge có báo tệp «không được tải xuống phổ biến» không?',
         guideTitle: "Hướng dẫn bỏ chặn tải xuống Edge",
@@ -1071,7 +1071,7 @@ var PATCH = {
         faq1a:
             "<p>เวอร์ชันฟรีมี 3 ดัชนี การย้ายกลุ่ม โหมด ICE หน่วง hover เลือกจอ แถบจัดรูปแบบ และแทรกรูป</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) ปลดล็อก 10 ช่อง ธีมกำหนดเอง ฟอนต์ ความโปร่งใส แผงซ้าย ปรับขนาดรูป และส่งออกในแอป</p>" +
-            '<p>ดู <a href="features.html#compare">ตารางเปรียบเทียบ</a></p>',
+            '<p>ดู <a href="/features/#compare">ตารางเปรียบเทียบ</a></p>',
         faq3bq: "ใช้คีย์ใบอนุญาตเดียวกันบนหลาย PC ได้ไหม?",
         faq3ba:
             "<p>แม้ใช้ระบบต่างกัน — เช่น PC Windows ที่ทำงานกับ MacBook ที่บ้าน — คุณ <strong>ซื้อ Plus ครั้งเดียว</strong>ก็พอ</p>" +
@@ -1129,14 +1129,14 @@ var PATCH = {
             "<p>หากลบไม่ได้ จบงานในขั้น 1 แล้วลองใหม่</p>" +
             "<p><strong>4. รีสตาร์ทและตรวจสอบ</strong> — รีสตาร์ท PC</p>" +
             "<p>ไม่มีหน้าต่างข้อผิดพลาดและไม่มี 빼꼼 ในแถบงาน แสดงว่าสำเร็จ</p>" +
-            "<p>จากนั้นติดตั้ง <a href=\"download.html\">Peekom (ฟรี)</a> ใหม่</p>" +
+            "<p>จากนั้นติดตั้ง <a href=\"/download/\">Peekom (ฟรี)</a> ใหม่</p>" +
             '<p class="privacy-doc__note">เนื้อหาแอปเก่า <strong>ไม่ย้ายอัตโนมัติ</strong> เพราะ Peekom เก็บข้อมูลคนละที่</p>' +
             '<p class="privacy-doc__note">คัดลอกสิ่งที่ต้องการก่อนลบแอปเก่า</p>',
         faq9a:
             "<p>ถอนการติดตั้งไม่ลบใบอนุญาต Lemon Squeezy ของคุณ</p>" +
             "<p>ทำตามขั้นตอนเพื่อกู้คืน Peekom Plus และฟีเจอร์เสียเงินทั้งหมด</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. ติดตั้ง Peekom ใหม่</strong> — ดาวน์โหลดเวอร์ชันฟรี (<code>Peekom-Setup.exe</code>) จาก <a href=\"download.html\">peekom.com</a> และติดตั้ง</li>" +
+            "<li><strong>1. ติดตั้ง Peekom ใหม่</strong> — ดาวน์โหลดเวอร์ชันฟรี (<code>Peekom-Setup.exe</code>) จาก <a href=\"/download/\">peekom.com</a> และติดตั้ง</li>" +
             "<li><strong>2. หาคีย์ใบอนุญาต</strong> — เปิดอีเมล Lemon Squeezy และคัดลอก <strong>[License Key]</strong> หากอีเมลหาย ลงชื่อ <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">คำสั่งซื้อ Lemon Squeezy</a> ด้วยอีเมลเดิม</li>" +
             "<li><strong>3. เปิดใช้ Plus อีกครั้ง</strong> — เปิดการตั้งค่า (ไอคอนเฟือง) วางคีย์ใน <strong>เปิดใช้ Plus</strong> และยืนยัน กู้คืน 10 ช่อง ธีมกำหนดเอง และฟีเจอร์ Plus อื่นๆ</li>" +
             "</ul>" +
@@ -1151,7 +1151,7 @@ var PATCH = {
             "<li>ขอ IT อนุญาต <strong><code>https://api.lemonsqueezy.com</code> ผ่าน HTTPS (443)</strong></li>" +
             "<li>ปิด VPN บริษัทหรือลอง VPN ที่อนุญาต</li>" +
             "</ul>" +
-            "<p>หากเห็นข้อความ <strong>ขีดจำกัดการเปิดใช้ (ตามแพ็ก)</strong> <a href=\"contact.html\">ติดต่อเรา</a> พร้อมอีเมลซื้อ หมายเลขคำสั่งซื้อ และคีย์ — เราช่วยรีเซ็ตอุปกรณ์ได้</p>" +
+            "<p>หากเห็นข้อความ <strong>ขีดจำกัดการเปิดใช้ (ตามแพ็ก)</strong> <a href=\"/contact/\">ติดต่อเรา</a> พร้อมอีเมลซื้อ หมายเลขคำสั่งซื้อ และคีย์ — เราช่วยรีเซ็ตอุปกรณ์ได้</p>" +
             "<p>ดาวน์โหลดตัวติดตั้งใหม่ <strong>ไม่</strong>แก้ปัญหาหากเซิร์ฟเวอร์ยังถูกบล็อก</p>",
         winGuideBtn: 'Edge บอกว่าไฟล์ «ไม่ได้รับการดาวน์โหลดบ่อย» หรือไม่?',
         guideTitle: "คู่มือปลดบล็อกดาวน์โหลด Edge",
@@ -1176,7 +1176,7 @@ var PATCH = {
         faq1a:
             "<p>Versi gratis mencakup 3 indeks, gerak grup, mode ICE, delay hover, pilihan monitor, toolbar format, dan sisip gambar.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) membuka 10 slot, tema kustom, font, opacity, panel kiri, ubah ukuran gambar, dan ekspor di app.</p>" +
-            '<p>Lihat <a href="features.html#compare">tabel perbandingan</a>.</p>',
+            '<p>Lihat <a href="/features/#compare">tabel perbandingan</a>.</p>',
         faq3bq: "Bisakah satu kunci lisensi dipakai di lebih dari satu PC?",
         faq3ba:
             "<p>Meski OS berbeda — mis. PC Windows kantor dan MacBook rumah — Anda cukup <strong>beli Plus sekali</strong>.</p>" +
@@ -1234,14 +1234,14 @@ var PATCH = {
             "<p>Jika gagal hapus, akhiri tugas langkah 1 lalu coba lagi.</p>" +
             "<p><strong>4. Restart dan verifikasi</strong> — Restart PC.</p>" +
             "<p>Tanpa jendela error dan tanpa 빼꼼 di taskbar berarti berhasil.</p>" +
-            "<p>Lalu instal <a href=\"download.html\">Peekom (gratis)</a> baru.</p>" +
+            "<p>Lalu instal <a href=\"/download/\">Peekom (gratis)</a> baru.</p>" +
             '<p class="privacy-doc__note">Isi app lama <strong>tidak dimigrasi otomatis</strong> karena Peekom menyimpan data di lokasi berbeda.</p>' +
             '<p class="privacy-doc__note">Salin yang diperlukan sebelum hapus app lama.</p>',
         faq9a:
             "<p>Uninstall tidak menghapus lisensi Lemon Squeezy Anda.</p>" +
             "<p>Ikuti langkah ini untuk pulihkan Peekom Plus dan semua fitur berbayar.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Instal ulang Peekom</strong> — Unduh versi gratis (<code>Peekom-Setup.exe</code>) dari <a href=\"download.html\">peekom.com</a> dan instal.</li>" +
+            "<li><strong>1. Instal ulang Peekom</strong> — Unduh versi gratis (<code>Peekom-Setup.exe</code>) dari <a href=\"/download/\">peekom.com</a> dan instal.</li>" +
             "<li><strong>2. Temukan kunci lisensi</strong> — Buka email Lemon Squeezy dan salin <strong>[License Key]</strong>. Email hilang? Masuk <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Pesanan Lemon Squeezy</a> dengan email yang sama.</li>" +
             "<li><strong>3. Aktivasi ulang Plus</strong> — Buka Pengaturan (ikon gear), tempel kunci di <strong>Aktivasi Plus</strong> dan konfirmasi. Pulihkan 10 slot, tema kustom, dan fitur Plus lainnya.</li>" +
             "</ul>" +
@@ -1256,7 +1256,7 @@ var PATCH = {
             "<li>Minta IT izinkan <strong><code>https://api.lemonsqueezy.com</code> via HTTPS (443)</strong></li>" +
             "<li>Matikan VPN perusahaan atau coba VPN yang diizinkan</li>" +
             "</ul>" +
-            "<p>Jika muncul pesan <strong>batas aktivasi (sesuai paket)</strong>, <a href=\"contact.html\">hubungi kami</a> dengan email pembelian, nomor pesanan, dan kunci — kami bisa reset perangkat.</p>" +
+            "<p>Jika muncul pesan <strong>batas aktivasi (sesuai paket)</strong>, <a href=\"/contact/\">hubungi kami</a> dengan email pembelian, nomor pesanan, dan kunci — kami bisa reset perangkat.</p>" +
             "<p>Unduh ulang installer <strong>tidak</strong> memperbaiki jika server masih diblokir.</p>",
         winGuideBtn: 'Apakah Edge mengatakan file «jarang diunduh»?',
         guideTitle: "Panduan buka blokir unduhan Edge",
@@ -1281,7 +1281,7 @@ var PATCH = {
         faq1a:
             "<p>मुफ्त संस्करण में 3 इंडेक्स, समूह स्थानांतरण, ICE मोड, होवर विलंब, मॉनिटर चयन, फ़ॉर्मेट टूलबार और छवि सम्मिलन शामिल हैं।</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) ऐप में 10 स्लॉट, कस्टम थीम, फ़ॉन्ट, अपारदर्शिता, बायाँ पैनल, छवि आकार बदलना और निर्यात अनलॉक करता है।</p>" +
-            '<p><a href="features.html#compare">तुलना तालिका</a> देखें।</p>',
+            '<p><a href="/features/#compare">तुलना तालिका</a> देखें।</p>',
         faq3bq: "क्या एक लाइसेंस कुंजी कई PC पर उपयोग की जा सकती है?",
         faq3ba:
             "<p>भले ही OS अलग हों — जैसे ऑफिस Windows PC और घर का MacBook — Plus <strong>एक बार खरीद</strong> पर्याप्त है।</p>" +
@@ -1339,14 +1339,14 @@ var PATCH = {
             "<p>हटाना असफल हो तो चरण 1 में कार्य समाप्त कर पुनः प्रयास करें।</p>" +
             "<p><strong>4. रीस्टार्ट और जाँच</strong> — PC रीबूट करें।</p>" +
             "<p>कोई त्रुटि विंडो न हो और टास्कबार में 빼꼼 न हो तो सफल।</p>" +
-            "<p>फिर <a href=\"download.html\">Peekom (मुफ्त)</a> नया इंस्टॉल करें।</p>" +
+            "<p>फिर <a href=\"/download/\">Peekom (मुफ्त)</a> नया इंस्टॉल करें।</p>" +
             '<p class="privacy-doc__note">पुरानी ऐप की सामग्री <strong>स्वतः स्थानांतरित नहीं</strong> होती क्योंकि Peekom डेटा अलग स्थान पर रखता है।</p>' +
             '<p class="privacy-doc__note">हटाने से पहले आवश्यक सामग्री कॉपी करें।</p>',
         faq9a:
             "<p>ऐप अनइंस्टॉल करने से Lemon Squeezy लाइसेंस नहीं हटता।</p>" +
             "<p>Peekom Plus और सभी paid फीचर पुनर्स्थापित करने के लिए:</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Peekom पुनः इंस्टॉल</strong> — <a href=\"download.html\">peekom.com</a> से मुफ्त (<code>Peekom-Setup.exe</code>) डाउनलोड कर इंस्टॉल करें।</li>" +
+            "<li><strong>1. Peekom पुनः इंस्टॉल</strong> — <a href=\"/download/\">peekom.com</a> से मुफ्त (<code>Peekom-Setup.exe</code>) डाउनलोड कर इंस्टॉल करें।</li>" +
             "<li><strong>2. लाइसेंस कुंजी खोजें</strong> — Lemon Squeezy ईमेल से <strong>[License Key]</strong> कॉपी करें। ईमेल खो गया? <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy My Orders</a> में उसी ईमेल से लॉगिन करें।</li>" +
             "<li><strong>3. Plus पुनः सक्रिय</strong> — Settings (गियर) खोलें, <strong>Plus activation</strong> में कुंजी पेस्ट कर पुष्टि करें। 10 स्लॉट, कस्टम थीम आदि पुनर्स्थापित।</li>" +
             "</ul>" +
@@ -1361,7 +1361,7 @@ var PATCH = {
             "<li>IT से <strong><code>https://api.lemonsqueezy.com</code> HTTPS (443)</strong> अनुमति माँगें</li>" +
             "<li>कॉर्पोरेट VPN बंद करें या अनुमत VPN आज़माएँ</li>" +
             "</ul>" +
-            "<p><strong>सक्रियण सीमा (प्लान अनुसार)</strong> संदेश पर <a href=\"contact.html\">संपर्क</a> करें — खरीद ईमेल, ऑर्डर नंबर, कुंजी के साथ; डिवाइस रीसेट में सहायता।</p>" +
+            "<p><strong>सक्रियण सीमा (प्लान अनुसार)</strong> संदेश पर <a href=\"/contact/\">संपर्क</a> करें — खरीद ईमेल, ऑर्डर नंबर, कुंजी के साथ; डिवाइस रीसेट में सहायता।</p>" +
             "<p>इंस्टॉलर पुनः डाउनलोड <strong>नहीं</strong> सुधारेगा यदि सर्वर अभी भी ब्लॉक है।</p>",
         winGuideBtn: 'क्या Edge कहता है फ़ाइल «आमतौर पर डाउनलोड नहीं की जाती»?',
         guideTitle: "Edge डाउनलोड अनब्लॉक गाइड",
@@ -1386,7 +1386,7 @@ var PATCH = {
         faq1a:
             "<p>النسخة المجانية تشمل 3 فهارس، نقل المجموعة، وضع ICE، تأخير التمرير، اختيار الشاشة، شريط التنسيق وإدراج الصور.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) يفتح 10 خانات، سمة مخصصة، خطوط، شفافية، اللوحة اليسرى، تغيير حجم الصور والتصدير داخل التطبيق.</p>" +
-            '<p>راجع <a href="features.html#compare">جدول المقارنة</a>.</p>',
+            '<p>راجع <a href="/features/#compare">جدول المقارنة</a>.</p>',
         faq3bq: "هل يمكنني استخدام مفتاح ترخيص واحد على أكثر من جهاز PC؟",
         faq3ba:
             "<p>حتى مع أنظمة مختلفة — مثل PC Windows للعمل وMacBook في المنزل — تحتاج فقط <strong>شراء Plus مرة واحدة</strong>.</p>" +
@@ -1444,14 +1444,14 @@ var PATCH = {
             "<p>إن فشل الحذف، أنهِ المهام في الخطوة 1 وحاول مجددًا.</p>" +
             "<p><strong>4. أعد التشغيل وتحقق</strong> — أعد تشغيل PC.</p>" +
             "<p>بدون نوافذ خطأ وبدون 빼꼼 في شريط المهام = نجاح.</p>" +
-            "<p>ثم ثبّت <a href=\"download.html\">Peekom (مجاني)</a> من جديد.</p>" +
+            "<p>ثم ثبّت <a href=\"/download/\">Peekom (مجاني)</a> من جديد.</p>" +
             '<p class="privacy-doc__note">محتوى التطبيق القديم <strong>لا يُنقل تلقائيًا</strong> لأن Peekom يخزّن البيانات في مكان مختلف.</p>' +
             '<p class="privacy-doc__note">انسخ ما تحتاجه قبل إزالة التطبيق القديم.</p>',
         faq9a:
             "<p>إلغاء التثبيت لا يزيل ترخيص Lemon Squeezy.</p>" +
             "<p>اتبع هذه الخطوات لاستعادة Peekom Plus وجميع الميزات المدفوعة.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. أعد تثبيت Peekom</strong> — حمّل النسخة المجانية (<code>Peekom-Setup.exe</code>) من <a href=\"download.html\">peekom.com</a> وثبّتها.</li>" +
+            "<li><strong>1. أعد تثبيت Peekom</strong> — حمّل النسخة المجانية (<code>Peekom-Setup.exe</code>) من <a href=\"/download/\">peekom.com</a> وثبّتها.</li>" +
             "<li><strong>2. اعثر على مفتاح الترخيص</strong> — افتح بريد Lemon Squeezy وانسخ <strong>[License Key]</strong>. فقدت البريد؟ سجّل الدخول إلى <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy My Orders</a> بنفس البريد.</li>" +
             "<li><strong>3. أعد تفعيل Plus</strong> — افتح Settings (أيقونة الترس)، الصق المفتاح تحت <strong>Plus activation</strong> وأكد. تُستعاد 10 خانات والسمات المخصصة وميزات Plus.</li>" +
             "</ul>" +
@@ -1466,7 +1466,7 @@ var PATCH = {
             "<li>اطلب من IT السماح بـ <strong><code>https://api.lemonsqueezy.com</code> عبر HTTPS (443)</strong></li>" +
             "<li>أوقف VPN الشركة أو جرّب VPN مسموحًا</li>" +
             "</ul>" +
-            "<p>عند رسالة <strong>حد التفعيل (حسب الخطة)</strong>، <a href=\"contact.html\">تواصل</a> معنا ببريد الشراء ورقم الطلب والمفتاح — يمكننا إعادة تعيين الأجهزة.</p>" +
+            "<p>عند رسالة <strong>حد التفعيل (حسب الخطة)</strong>، <a href=\"/contact/\">تواصل</a> معنا ببريد الشراء ورقم الطلب والمفتاح — يمكننا إعادة تعيين الأجهزة.</p>" +
             "<p>إعادة تنزيل المثبّت <strong>لن</strong> تحل المشكلة إذا بقي الخادم محجوبًا.</p>",
         winGuideBtn: 'هل يقول Edge إن الملف «لا يُحمَّل بشكل شائع»؟',
         guideTitle: "دليل إلغاء حظر التنزيل في Edge",

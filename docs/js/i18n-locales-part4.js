@@ -17,9 +17,9 @@ Object.assign(window.PeekomI18nLocales, {
         searchPlaceholder: "Cari...",
         heroTitleMain: "Peekom",
         heroTagline: "Aplikasi memo tepi layar kembali sebagai <strong>Peekom</strong>.<br>Catatan ringan dan cepat di tepi layar—tetap teratur tanpa mengganggu alur kerja atau presentasi.",
-        heroPlusNote: "Setelah memasang aplikasi gratis, tingkatkan ke Peekom Plus di Pengaturan.<br><a href=\"features.html#compare\">Lihat perbandingan gratis vs Plus</a> di tabel perbandingan.",
+        heroPlusNote: "Setelah memasang aplikasi gratis, tingkatkan ke Peekom Plus di Pengaturan.<br><a href=\"/features/#compare\">Lihat perbandingan gratis vs Plus</a> di tabel perbandingan.",
         heroUpgradeNote: "Setelah memasang aplikasi gratis, tingkatkan ke Peekom Plus di Pengaturan.",
-        heroFreeCompareNote: "<a href=\"features.html#compare\">Lihat gratis vs Plus</a>.",
+        heroFreeCompareNote: "<a href=\"/features/#compare\">Lihat gratis vs Plus</a>.",
         heroWinBtn: "Unduh untuk Windows",
         heroMacBtn: "Unduh untuk macOS",
         heroPlusBuyBtn: "Beli sekarang",
@@ -33,7 +33,7 @@ Object.assign(window.PeekomI18nLocales, {
         heroFreeCardBadge: "GRATIS",
         heroMacFreeCardBadge: "GRATIS",
         heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "Unduh",
         carouselCap1: "Pegangan tepi di monitor Anda",
         carouselCap2: "Buka memo lewat klik atau pintasan",
@@ -74,14 +74,14 @@ Object.assign(window.PeekomI18nLocales, {
         faqR3q: "Apa yang terjadi pada lisensi saya setelah pengembalian dana?",
         faqR3a: "Setelah pengembalian dana selesai, kunci lisensi Peekom Plus Anda <strong>dinonaktifkan</strong>. Aplikasi otomatis kembali ke versi gratis saat berikutnya diluncurkan dalam keadaan online, jadi pastikan Anda memang ingin berhenti menggunakan Plus sebelum meminta pengembalian dana.",
         faq1q: "Apa bedanya versi gratis dan Plus?",
-        faq1a: "Gratis mencakup 3 indeks, pemindahan pegangan grup, ICE mode, penundaan hover, pemilihan monitor, Markdown, bilah pemformatan, dan sisipan gambar. Peekom Plus (peluncuran $9.99, normal $12.99) membuka 10 slot, tema kustom, font, opasitas, ubah ukuran gambar, dan ekspor di aplikasi. Lihat <a href=\"features.html#compare\">tabel perbandingan</a>.",
+        faq1a: "Gratis mencakup 3 indeks, pemindahan pegangan grup, ICE mode, penundaan hover, pemilihan monitor, Markdown, bilah pemformatan, dan sisipan gambar. Peekom Plus (peluncuran $9.99, normal $12.99) membuka 10 slot, tema kustom, font, opasitas, ubah ukuran gambar, dan ekspor di aplikasi. Lihat <a href=\"/features/#compare\">tabel perbandingan</a>.",
         compareFreeName: "Peekom (Gratis)",
         comparePlusName: "Peekom Plus",
         compareCta: "Dapatkan Peekom Plus",
         comparePromoBanner: "Promo peluncuran · diskon {pct}% sekarang",
         helpTitle: "Panduan",
         helpSub: "Mulai menggunakan Peekom.",
-        guideStartBody: "<div class=\"guide-step\"><h3>1. Instal</h3><ul class=\"guide-step-list\"><li><strong>Unduh</strong> — Dapatkan installer Windows atau macOS dari halaman <a href=\"download.html\">Unduh</a> (atau beranda).</li><li><strong>Run Peekom-Setup.exe</strong> — Klik dua kali installer dan ikuti petunjuk.</li><li><strong>SmartScreen warning</strong> — Jika jendela biru muncul, buka <a href=\"#\" onclick=\"openModal(); return false;\">panduan instal</a> dan pilih <strong>Info lebih lanjut</strong> → <strong>Jalankan tetap</strong>.</li></ul></div><div class=\"guide-step\"><h3>2. Pengaturan umum &amp; per indeks</h3><p class=\"guide-step-lead\">Klik kanan ikon baki → <strong>Pengaturan</strong>.</p><h4 class=\"guide-step-sub\">Pengaturan umum</h4><ul class=\"guide-step-list\"><li>Pilih <strong>monitor tampilan</strong> (otomatis atau tetap)</li><li><strong>Mode pemicu</strong> — <strong>Kontrol mouse</strong> / <strong>Kontrol pintasan</strong>; sesuaikan tiga pintasan (buka/tutup, indeks sebelumnya/berikutnya)</li><li><strong>Penundaan lipat otomatis</strong> pegangan (default 0,3 dtk, bisa diatur di Pengaturan)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> Font kustom, opasitas default, cadangan/pulihkan JSON, ekspor (.txt/.md/.json), dan lainnya.</div><h4 class=\"guide-step-sub\">Pengaturan per indeks</h4><ul class=\"guide-step-list\"><li>Tambah/hapus <strong>indeks</strong> (3 gratis)</li><li>Atur <strong>judul dan warna</strong> per indeks</li><li>Pilih <strong>rasio aspek</strong> memo (1:1 / 3:4)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> Hingga 10 slot dengan posisi pegangan independen.</div></div><div class=\"guide-step\"><h3>3. Menulis memo</h3><ul class=\"guide-step-list\"><li><strong>Reposisi</strong> — Seret pegangan tepi ke ketinggian yang Anda inginkan.</li><li><strong>Peek / ICE</strong> — Alihkan di bagian atas memo. Peek dibuka lewat klik atau pintasan; ICE tetap disematkan.</li><li><strong>Sesuaikan teks</strong> — Gunakan Markdown, bilah alat, dan gambar. Lihat <a href=\"#guide-edit\">Pengeditan</a> di bawah.</li></ul></div><div class=\"guide-step guide-step--last\"><h3>4. Tingkatkan ke Peekom Plus</h3><ul class=\"guide-step-list\"><li>Masukkan kunci lisensi lewat tombol <strong>Tingkatkan ke Plus</strong> di aplikasi (atau jendela <strong>Pengaturan</strong> saat pertama kali dibuka).</li><li>Lihat <a href=\"#guide-plus\">Aktifkan Plus</a> untuk langkah demi langkah.</li></ul></div>",
+        guideStartBody: "<div class=\"guide-step\"><h3>1. Instal</h3><ul class=\"guide-step-list\"><li><strong>Unduh</strong> — Dapatkan installer Windows atau macOS dari halaman <a href=\"/download/\">Unduh</a> (atau beranda).</li><li><strong>Run Peekom-Setup.exe</strong> — Klik dua kali installer dan ikuti petunjuk.</li><li><strong>SmartScreen warning</strong> — Jika jendela biru muncul, buka <a href=\"#\" onclick=\"openModal(); return false;\">panduan instal</a> dan pilih <strong>Info lebih lanjut</strong> → <strong>Jalankan tetap</strong>.</li></ul></div><div class=\"guide-step\"><h3>2. Pengaturan umum &amp; per indeks</h3><p class=\"guide-step-lead\">Klik kanan ikon baki → <strong>Pengaturan</strong>.</p><h4 class=\"guide-step-sub\">Pengaturan umum</h4><ul class=\"guide-step-list\"><li>Pilih <strong>monitor tampilan</strong> (otomatis atau tetap)</li><li><strong>Mode pemicu</strong> — <strong>Kontrol mouse</strong> / <strong>Kontrol pintasan</strong>; sesuaikan tiga pintasan (buka/tutup, indeks sebelumnya/berikutnya)</li><li><strong>Penundaan lipat otomatis</strong> pegangan (default 0,3 dtk, bisa diatur di Pengaturan)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> Font kustom, opasitas default, cadangan/pulihkan JSON, ekspor (.txt/.md/.json), dan lainnya.</div><h4 class=\"guide-step-sub\">Pengaturan per indeks</h4><ul class=\"guide-step-list\"><li>Tambah/hapus <strong>indeks</strong> (3 gratis)</li><li>Atur <strong>judul dan warna</strong> per indeks</li><li>Pilih <strong>rasio aspek</strong> memo (1:1 / 3:4)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> Hingga 10 slot dengan posisi pegangan independen.</div></div><div class=\"guide-step\"><h3>3. Menulis memo</h3><ul class=\"guide-step-list\"><li><strong>Reposisi</strong> — Seret pegangan tepi ke ketinggian yang Anda inginkan.</li><li><strong>Peek / ICE</strong> — Alihkan di bagian atas memo. Peek dibuka lewat klik atau pintasan; ICE tetap disematkan.</li><li><strong>Sesuaikan teks</strong> — Gunakan Markdown, bilah alat, dan gambar. Lihat <a href=\"#guide-edit\">Pengeditan</a> di bawah.</li></ul></div><div class=\"guide-step guide-step--last\"><h3>4. Tingkatkan ke Peekom Plus</h3><ul class=\"guide-step-list\"><li>Masukkan kunci lisensi lewat tombol <strong>Tingkatkan ke Plus</strong> di aplikasi (atau jendela <strong>Pengaturan</strong> saat pertama kali dibuka).</li><li>Lihat <a href=\"#guide-plus\">Aktifkan Plus</a> untuk langkah demi langkah.</li></ul></div>",
         help1t: "1. Instal",
         help1p: "Unduh dan jalankan Peekom Setup. SmartScreen mungkin muncul di Windows.",
         help2t: "2. Buka memo",
@@ -115,7 +115,7 @@ Object.assign(window.PeekomI18nLocales, {
         faq9a:
             "<p>Menghapus aplikasi tidak membatalkan lisensi Lemon Squeezy Anda. Ikuti langkah berikut untuk memulihkan Peekom Plus dan semua fitur berbayar.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Instal ulang Peekom</strong> — Unduh versi gratis (<code>Peekom-Setup.exe</code>) dari <a href=\"download.html\">peekom.com</a> dan instal.</li>" +
+            "<li><strong>1. Instal ulang Peekom</strong> — Unduh versi gratis (<code>Peekom-Setup.exe</code>) dari <a href=\"/download/\">peekom.com</a> dan instal.</li>" +
             "<li><strong>2. Temukan kunci lisensi</strong> — Buka email tanda terima Lemon Squeezy saat pembelian dan salin <strong>[License Key]</strong>. Jika email hilang, masuk ke riwayat pesanan Lemon Squeezy dengan email yang sama untuk melihatnya lagi.</li>" +
             "<li><strong>3. Aktifkan ulang Plus</strong> — Buka Pengaturan (ikon roda gigi kanan atas), tempel kunci di <strong>Aktivasi Plus</strong>, lalu konfirmasi. Aplikasi berubah menjadi Peekom Plus dan memulihkan 10 slot, tema kustom, dan fitur berbayar lainnya.</li>" +
             "</ul>" +
@@ -279,9 +279,9 @@ Object.assign(window.PeekomI18nLocales, {
         searchPlaceholder: "खोजें...",
         heroTitleMain: "Peekom",
         heroTagline: "किनारे की मेमो ऐप <strong>Peekom</strong> के रूप में लौट आई है।<br>स्क्रीन किनारे पर हल्की, तेज़ नोट्स—काम या प्रेज़ेंटेशन की लय बिना टूटे व्यवस्थित रहें।",
-        heroPlusNote: "मुफ़्त ऐप इंस्टॉल करने के बाद, सेटिंग्स में Peekom Plus में अपग्रेड करें।<br><a href=\"features.html#compare\">मुफ़्त बनाम Plus</a> तुलना तालिका में देखें।",
+        heroPlusNote: "मुफ़्त ऐप इंस्टॉल करने के बाद, सेटिंग्स में Peekom Plus में अपग्रेड करें।<br><a href=\"/features/#compare\">मुफ़्त बनाम Plus</a> तुलना तालिका में देखें।",
         heroUpgradeNote: "मुफ़्त ऐप इंस्टॉल करने के बाद, सेटिंग्स में Peekom Plus में अपग्रेड करें।",
-        heroFreeCompareNote: "<a href=\"features.html#compare\">मुफ़्त बनाम Plus देखें</a>।",
+        heroFreeCompareNote: "<a href=\"/features/#compare\">मुफ़्त बनाम Plus देखें</a>।",
         heroWinBtn: "Windows के लिए डाउनलोड",
         heroMacBtn: "macOS के लिए डाउनलोड",
         heroPlusBuyBtn: "अभी खरीदें",
@@ -295,7 +295,7 @@ Object.assign(window.PeekomI18nLocales, {
         heroFreeCardBadge: "मुफ़्त",
         heroMacFreeCardBadge: "मुफ़्त",
         heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "डाउनलोड",
         carouselCap1: "आपके मॉनिटर पर किनारे का हैंडल",
         carouselCap2: "क्लिक या शॉर्टकट से मेमो खोलें",
@@ -336,14 +336,14 @@ Object.assign(window.PeekomI18nLocales, {
         faqR3q: "रिफ़ंड के बाद मेरे लाइसेंस का क्या होता है?",
         faqR3a: "रिफ़ंड पूरा होने पर आपकी Peekom Plus लाइसेंस कुंजी <strong>निष्क्रिय</strong> कर दी जाती है। अगली बार ऑनलाइन शुरू होने पर ऐप स्वतः मुफ़्त संस्करण पर लौट आता है, इसलिए रिफ़ंड का अनुरोध करने से पहले सुनिश्चित करें कि आप Plus का उपयोग बंद करना चाहते हैं।",
         faq1q: "मुफ़्त और Plus में क्या अंतर है?",
-        faq1a: "मुफ़्त में 3 इंडेक्स, ग्रुप हैंडल मूव, ICE mode, होवर विलंब, मॉनिटर चयन, Markdown, फ़ॉर्मेटिंग टूलबार और इमेज इन्सर्ट शामिल हैं। Peekom Plus (लॉन्च $9.99, सूची $12.99) 10 स्लॉट, कस्टम थीम, फ़ॉन्ट, अपारदर्शिता, इमेज रीसाइज़ और ऐप में एक्सपोर्ट अनलॉक करता है। <a href=\"features.html#compare\">तुलना तालिका</a> देखें।",
+        faq1a: "मुफ़्त में 3 इंडेक्स, ग्रुप हैंडल मूव, ICE mode, होवर विलंब, मॉनिटर चयन, Markdown, फ़ॉर्मेटिंग टूलबार और इमेज इन्सर्ट शामिल हैं। Peekom Plus (लॉन्च $9.99, सूची $12.99) 10 स्लॉट, कस्टम थीम, फ़ॉन्ट, अपारदर्शिता, इमेज रीसाइज़ और ऐप में एक्सपोर्ट अनलॉक करता है। <a href=\"/features/#compare\">तुलना तालिका</a> देखें।",
         compareFreeName: "Peekom (मुफ़्त)",
         comparePlusName: "Peekom Plus",
         compareCta: "Peekom Plus प्राप्त करें",
         comparePromoBanner: "लॉन्च प्रोमो · अभी {pct}% छूट",
         helpTitle: "गाइड",
         helpSub: "Peekom के साथ शुरुआत करें।",
-        guideStartBody: "<div class=\"guide-step\"><h3>1. इंस्टॉल</h3><ul class=\"guide-step-list\"><li><strong>डाउनलोड</strong> — <a href=\"download.html\">डाउनलोड</a> पेज (या होम) से Windows या macOS इंस्टॉलर प्राप्त करें।</li><li><strong>Run Peekom-Setup.exe</strong> — इंस्टॉलर पर डबल-क्लिक करें और संकेतों का पालन करें।</li><li><strong>SmartScreen warning</strong> — यदि नीली विंडो दिखे, <a href=\"#\" onclick=\"openModal(); return false;\">इंस्टॉल गाइड</a> खोलें और <strong>अधिक जानकारी</strong> → <strong>फिर भी चलाएँ</strong> चुनें।</li></ul></div><div class=\"guide-step\"><h3>2. सामान्य और प्रति-इंडेक्स सेटिंग्स</h3><p class=\"guide-step-lead\">ट्रे आइकन पर राइट-क्लिक → <strong>सेटिंग्स</strong>।</p><h4 class=\"guide-step-sub\">सामान्य सेटिंग्स</h4><ul class=\"guide-step-list\"><li><strong>डिस्प्ले मॉनिटर</strong> चुनें (ऑटो या फ़िक्स्ड)</li><li><strong>ट्रिगर मोड</strong> — <strong>माउस नियंत्रण</strong> / <strong>शॉर्टकट नियंत्रण</strong>; तीन शॉर्टकट (टॉगल, पिछला/अगला इंडेक्स) कस्टमाइज़ करें</li><li>हैंडल <strong>ऑटो-कोलैप्स विलंब</strong> (डिफ़ॉल्ट 0.3s, सेटिंग्स में समायोज्य)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> कस्टम फ़ॉन्ट, डिफ़ॉल्ट अपारदर्शिता, JSON बैकअप/रिस्टोर, एक्सपोर्ट (.txt/.md/.json), और अधिक।</div><h4 class=\"guide-step-sub\">प्रति-इंडेक्स सेटिंग्स</h4><ul class=\"guide-step-list\"><li><strong>इंडेक्स</strong> जोड़ें/हटाएँ (3 मुफ़्त)</li><li>प्रति इंडेक्स <strong>शीर्षक और रंग</strong> सेट करें</li><li>मेमो <strong>पहलू अनुपात</strong> चुनें (1:1 / 3:4)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> स्वतंत्र हैंडल स्थितियों के साथ अधिकतम 10 स्लॉट।</div></div><div class=\"guide-step\"><h3>3. मेमो लिखें</h3><ul class=\"guide-step-list\"><li><strong>स्थिति बदलें</strong> — किनारे के हैंडल को पसंदीदा ऊँचाई पर खींचें।</li><li><strong>Peek / ICE</strong> — मेमो के ऊपर टॉगल करें। Peek क्लिक या शॉर्टकट से खुलता है; ICE पिन रहता है।</li><li><strong>टेक्स्ट कस्टमाइज़ करें</strong> — Markdown, टूलबार और इमेज का उपयोग करें। नीचे <a href=\"#guide-edit\">संपादन</a> देखें।</li></ul></div><div class=\"guide-step guide-step--last\"><h3>4. Peekom Plus में अपग्रेड</h3><ul class=\"guide-step-list\"><li>ऐप में <strong>Plus में अपग्रेड</strong> बटन (या पहली बार लॉन्च पर <strong>सेटिंग्स</strong> विंडो) से लाइसेंस कुंजी दर्ज करें।</li><li>चरण-दर-चरण के लिए <a href=\"#guide-plus\">Plus सक्रिय करें</a> देखें।</li></ul></div>",
+        guideStartBody: "<div class=\"guide-step\"><h3>1. इंस्टॉल</h3><ul class=\"guide-step-list\"><li><strong>डाउनलोड</strong> — <a href=\"/download/\">डाउनलोड</a> पेज (या होम) से Windows या macOS इंस्टॉलर प्राप्त करें।</li><li><strong>Run Peekom-Setup.exe</strong> — इंस्टॉलर पर डबल-क्लिक करें और संकेतों का पालन करें।</li><li><strong>SmartScreen warning</strong> — यदि नीली विंडो दिखे, <a href=\"#\" onclick=\"openModal(); return false;\">इंस्टॉल गाइड</a> खोलें और <strong>अधिक जानकारी</strong> → <strong>फिर भी चलाएँ</strong> चुनें।</li></ul></div><div class=\"guide-step\"><h3>2. सामान्य और प्रति-इंडेक्स सेटिंग्स</h3><p class=\"guide-step-lead\">ट्रे आइकन पर राइट-क्लिक → <strong>सेटिंग्स</strong>।</p><h4 class=\"guide-step-sub\">सामान्य सेटिंग्स</h4><ul class=\"guide-step-list\"><li><strong>डिस्प्ले मॉनिटर</strong> चुनें (ऑटो या फ़िक्स्ड)</li><li><strong>ट्रिगर मोड</strong> — <strong>माउस नियंत्रण</strong> / <strong>शॉर्टकट नियंत्रण</strong>; तीन शॉर्टकट (टॉगल, पिछला/अगला इंडेक्स) कस्टमाइज़ करें</li><li>हैंडल <strong>ऑटो-कोलैप्स विलंब</strong> (डिफ़ॉल्ट 0.3s, सेटिंग्स में समायोज्य)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> कस्टम फ़ॉन्ट, डिफ़ॉल्ट अपारदर्शिता, JSON बैकअप/रिस्टोर, एक्सपोर्ट (.txt/.md/.json), और अधिक।</div><h4 class=\"guide-step-sub\">प्रति-इंडेक्स सेटिंग्स</h4><ul class=\"guide-step-list\"><li><strong>इंडेक्स</strong> जोड़ें/हटाएँ (3 मुफ़्त)</li><li>प्रति इंडेक्स <strong>शीर्षक और रंग</strong> सेट करें</li><li>मेमो <strong>पहलू अनुपात</strong> चुनें (1:1 / 3:4)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> स्वतंत्र हैंडल स्थितियों के साथ अधिकतम 10 स्लॉट।</div></div><div class=\"guide-step\"><h3>3. मेमो लिखें</h3><ul class=\"guide-step-list\"><li><strong>स्थिति बदलें</strong> — किनारे के हैंडल को पसंदीदा ऊँचाई पर खींचें।</li><li><strong>Peek / ICE</strong> — मेमो के ऊपर टॉगल करें। Peek क्लिक या शॉर्टकट से खुलता है; ICE पिन रहता है।</li><li><strong>टेक्स्ट कस्टमाइज़ करें</strong> — Markdown, टूलबार और इमेज का उपयोग करें। नीचे <a href=\"#guide-edit\">संपादन</a> देखें।</li></ul></div><div class=\"guide-step guide-step--last\"><h3>4. Peekom Plus में अपग्रेड</h3><ul class=\"guide-step-list\"><li>ऐप में <strong>Plus में अपग्रेड</strong> बटन (या पहली बार लॉन्च पर <strong>सेटिंग्स</strong> विंडो) से लाइसेंस कुंजी दर्ज करें।</li><li>चरण-दर-चरण के लिए <a href=\"#guide-plus\">Plus सक्रिय करें</a> देखें।</li></ul></div>",
         help1t: "1. इंस्टॉल",
         help1p: "Peekom Setup डाउनलोड करें और चलाएँ। Windows पर SmartScreen दिख सकता है।",
         help2t: "2. मेमो खोलें",
@@ -377,7 +377,7 @@ Object.assign(window.PeekomI18nLocales, {
         faq9a:
             "<p>ऐप हटाने से आपका Lemon Squeezy लाइसेंस रद्द नहीं होता। Peekom Plus और सभी भुगतान सुविधाएँ पुनर्स्थापित करने के लिए ये चरण अपनाएँ।</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Peekom पुनः इंस्टॉल करें</strong> — <a href=\"download.html\">peekom.com</a> से मुफ़्त संस्करण (<code>Peekom-Setup.exe</code>) डाउनलोड करके इंस्टॉल करें।</li>" +
+            "<li><strong>1. Peekom पुनः इंस्टॉल करें</strong> — <a href=\"/download/\">peekom.com</a> से मुफ़्त संस्करण (<code>Peekom-Setup.exe</code>) डाउनलोड करके इंस्टॉल करें।</li>" +
             "<li><strong>2. लाइसेंस कुंजी खोजें</strong> — खरीद पर Lemon Squeezy की रसीद ईमेल खोलें और <strong>[License Key]</strong> कॉपी करें। ईमेल खो गई हो तो उसी ईमेल से Lemon Squeezy ऑर्डर इतिहास में लॉग इन करके देखें।</li>" +
             "<li><strong>3. Plus पुनः सक्रिय करें</strong> — सेटिंग्स (ऊपर दाएँ गियर आइकन) खोलें, <strong>Plus सक्रियण</strong> में कुंजी चिपकाएँ और पुष्टि करें। ऐप Peekom Plus बन जाएगा और 10 स्लॉट, कस्टम थीम आदि पुनर्स्थापित होंगे।</li>" +
             "</ul>" +
@@ -541,9 +541,9 @@ Object.assign(window.PeekomI18nLocales, {
         searchPlaceholder: "بحث...",
         heroTitleMain: "Peekom",
         heroTagline: "تطبيق الملاحظات على الحافة عاد باسم <strong>Peekom</strong>.<br>ملاحظات خفيفة وسريعة على حافة الشاشة—ابقَ منظّمًا دون مقاطعة عملك أو عرضك.",
-        heroPlusNote: "بعد تثبيت التطبيق المجاني، قم بالترقية إلى Peekom Plus من الإعدادات.<br><a href=\"features.html#compare\">اطّلع على المجاني مقابل Plus</a> في جدول المقارنة.",
+        heroPlusNote: "بعد تثبيت التطبيق المجاني، قم بالترقية إلى Peekom Plus من الإعدادات.<br><a href=\"/features/#compare\">اطّلع على المجاني مقابل Plus</a> في جدول المقارنة.",
         heroUpgradeNote: "بعد تثبيت التطبيق المجاني، قم بالترقية إلى Peekom Plus من الإعدادات.",
-        heroFreeCompareNote: "<a href=\"features.html#compare\">اطّلع على المجاني مقابل Plus</a>.",
+        heroFreeCompareNote: "<a href=\"/features/#compare\">اطّلع على المجاني مقابل Plus</a>.",
         heroWinBtn: "تنزيل لـ Windows",
         heroMacBtn: "تنزيل لـ macOS",
         heroPlusBuyBtn: "اشترِ الآن",
@@ -557,7 +557,7 @@ Object.assign(window.PeekomI18nLocales, {
         heroFreeCardBadge: "مجاني",
         heroMacFreeCardBadge: "مجاني",
         heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "تنزيل",
         carouselCap1: "مقبض على حافة الشاشة",
         carouselCap2: "افتح الملاحظة بالنقر أو الاختصار",
@@ -598,14 +598,14 @@ Object.assign(window.PeekomI18nLocales, {
         faqR3q: "ماذا يحدث للترخيص بعد الاسترداد؟",
         faqR3a: "بعد اكتمال الاسترداد، يتم <strong>تعطيل</strong> مفتاح ترخيص Peekom Plus. يعود التطبيق تلقائيًا إلى النسخة المجانية في المرة التالية التي يعمل فيها عبر الإنترنت، لذا تأكد من رغبتك في التوقف عن استخدام Plus قبل طلب الاسترداد.",
         faq1q: "ما الفرق بين المجاني وPlus؟",
-        faq1a: "يشمل المجاني 3 فهارس ونقل مقبض المجموعة وICE mode وتأخير التمرير واختيار الشاشة وMarkdown وشريط التنسيق وإدراج الصور. يفعّل Peekom Plus (إطلاق $9.99، سعر $12.99) 10 فتحات وسمة مخصصة وخطوط وشفافية وتغيير حجم الصور والتصدير داخل التطبيق. راجع <a href=\"features.html#compare\">جدول المقارنة</a>.",
+        faq1a: "يشمل المجاني 3 فهارس ونقل مقبض المجموعة وICE mode وتأخير التمرير واختيار الشاشة وMarkdown وشريط التنسيق وإدراج الصور. يفعّل Peekom Plus (إطلاق $9.99، سعر $12.99) 10 فتحات وسمة مخصصة وخطوط وشفافية وتغيير حجم الصور والتصدير داخل التطبيق. راجع <a href=\"/features/#compare\">جدول المقارنة</a>.",
         compareFreeName: "Peekom (مجاني)",
         comparePlusName: "Peekom Plus",
         compareCta: "احصل على Peekom Plus",
         comparePromoBanner: "عرض الإطلاق · خصم {pct}% الآن",
         helpTitle: "الدليل",
         helpSub: "ابدأ مع Peekom.",
-        guideStartBody: "<div class=\"guide-step\"><h3>1. التثبيت</h3><ul class=\"guide-step-list\"><li><strong>تنزيل</strong> — احصل على مثبّت Windows أو macOS من صفحة <a href=\"download.html\">التنزيل</a> (أو الصفحة الرئيسية).</li><li><strong>Run Peekom-Setup.exe</strong> — انقر مرتين على المثبّت واتبع التعليمات.</li><li><strong>SmartScreen warning</strong> — إذا ظهرت نافذة زرقاء، افتح <a href=\"#\" onclick=\"openModal(); return false;\">دليل التثبيت</a> واختر <strong>مزيد من المعلومات</strong> → <strong>تشغيل على أي حال</strong>.</li></ul></div><div class=\"guide-step\"><h3>2. الإعدادات العامة وإعدادات كل فهرس</h3><p class=\"guide-step-lead\">انقر بزر الماوس الأيمن على أيقونة الدرج → <strong>الإعدادات</strong>.</p><h4 class=\"guide-step-sub\">الإعدادات العامة</h4><ul class=\"guide-step-list\"><li>اختر <strong>شاشة العرض</strong> (تلقائي أو ثابت)</li><li><strong>وضع التفعيل</strong> — <strong>تحكم بالماوس</strong> / <strong>تحكم بالاختصار</strong>؛ خصّص ثلاثة اختصارات (فتح/إغلاق، الفهرس السابق/التالي)</li><li><strong>تأخير الطي التلقائي</strong> للمقبض (افتراضي 0.3 ث، قابل للتعديل في الإعدادات)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> خطوط مخصصة وشفافية افتراضية ونسخ/استعادة JSON وتصدير (.txt/.md/.json) والمزيد.</div><h4 class=\"guide-step-sub\">إعدادات كل فهرس</h4><ul class=\"guide-step-list\"><li>إضافة/إزالة <strong>فهارس</strong> (3 مجانًا)</li><li>تعيين <strong>العنوان واللون</strong> لكل فهرس</li><li>اختر <strong>نسبة العرض</strong> للملاحظة (1:1 / 3:4)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> حتى 10 فتحات بمواضع مقابض مستقلة.</div></div><div class=\"guide-step\"><h3>3. كتابة الملاحظات</h3><ul class=\"guide-step-list\"><li><strong>إعادة الموضع</strong> — اسحب مقبض الحافة إلى الارتفاع المفضل.</li><li><strong>Peek / ICE</strong> — بدّل من أعلى الملاحظة. يفتح Peek بالنقر أو الاختصار؛ يبقى ICE مثبتًا.</li><li><strong>تخصيص النص</strong> — استخدم Markdown وشريط الأدوات والصور. راجع <a href=\"#guide-edit\">التحرير</a> أدناه.</li></ul></div><div class=\"guide-step guide-step--last\"><h3>4. الترقية إلى Peekom Plus</h3><ul class=\"guide-step-list\"><li>أدخل مفتاح الترخيص عبر زر <strong>الترقية إلى Plus</strong> في التطبيق (أو نافذة <strong>الإعدادات</strong> عند أول تشغيل).</li><li>راجع <a href=\"#guide-plus\">تفعيل Plus</a> للخطوات التفصيلية.</li></ul></div>",
+        guideStartBody: "<div class=\"guide-step\"><h3>1. التثبيت</h3><ul class=\"guide-step-list\"><li><strong>تنزيل</strong> — احصل على مثبّت Windows أو macOS من صفحة <a href=\"/download/\">التنزيل</a> (أو الصفحة الرئيسية).</li><li><strong>Run Peekom-Setup.exe</strong> — انقر مرتين على المثبّت واتبع التعليمات.</li><li><strong>SmartScreen warning</strong> — إذا ظهرت نافذة زرقاء، افتح <a href=\"#\" onclick=\"openModal(); return false;\">دليل التثبيت</a> واختر <strong>مزيد من المعلومات</strong> → <strong>تشغيل على أي حال</strong>.</li></ul></div><div class=\"guide-step\"><h3>2. الإعدادات العامة وإعدادات كل فهرس</h3><p class=\"guide-step-lead\">انقر بزر الماوس الأيمن على أيقونة الدرج → <strong>الإعدادات</strong>.</p><h4 class=\"guide-step-sub\">الإعدادات العامة</h4><ul class=\"guide-step-list\"><li>اختر <strong>شاشة العرض</strong> (تلقائي أو ثابت)</li><li><strong>وضع التفعيل</strong> — <strong>تحكم بالماوس</strong> / <strong>تحكم بالاختصار</strong>؛ خصّص ثلاثة اختصارات (فتح/إغلاق، الفهرس السابق/التالي)</li><li><strong>تأخير الطي التلقائي</strong> للمقبض (افتراضي 0.3 ث، قابل للتعديل في الإعدادات)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> خطوط مخصصة وشفافية افتراضية ونسخ/استعادة JSON وتصدير (.txt/.md/.json) والمزيد.</div><h4 class=\"guide-step-sub\">إعدادات كل فهرس</h4><ul class=\"guide-step-list\"><li>إضافة/إزالة <strong>فهارس</strong> (3 مجانًا)</li><li>تعيين <strong>العنوان واللون</strong> لكل فهرس</li><li>اختر <strong>نسبة العرض</strong> للملاحظة (1:1 / 3:4)</li></ul><div class=\"guide-plus-card\"><span class=\"guide-plus-card__label\">Plus</span> حتى 10 فتحات بمواضع مقابض مستقلة.</div></div><div class=\"guide-step\"><h3>3. كتابة الملاحظات</h3><ul class=\"guide-step-list\"><li><strong>إعادة الموضع</strong> — اسحب مقبض الحافة إلى الارتفاع المفضل.</li><li><strong>Peek / ICE</strong> — بدّل من أعلى الملاحظة. يفتح Peek بالنقر أو الاختصار؛ يبقى ICE مثبتًا.</li><li><strong>تخصيص النص</strong> — استخدم Markdown وشريط الأدوات والصور. راجع <a href=\"#guide-edit\">التحرير</a> أدناه.</li></ul></div><div class=\"guide-step guide-step--last\"><h3>4. الترقية إلى Peekom Plus</h3><ul class=\"guide-step-list\"><li>أدخل مفتاح الترخيص عبر زر <strong>الترقية إلى Plus</strong> في التطبيق (أو نافذة <strong>الإعدادات</strong> عند أول تشغيل).</li><li>راجع <a href=\"#guide-plus\">تفعيل Plus</a> للخطوات التفصيلية.</li></ul></div>",
         help1t: "1. التثبيت",
         help1p: "نزّل وشغّل Peekom Setup. قد يظهر SmartScreen على Windows.",
         help2t: "2. افتح ملاحظة",
@@ -639,7 +639,7 @@ Object.assign(window.PeekomI18nLocales, {
         faq9a:
             "<p>إلغاء تثبيت التطبيق لا يلغي ترخيص Lemon Squeezy. اتبع الخطوات التالية لاستعادة Peekom Plus وجميع الميزات المدفوعة.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. إعادة تثبيت Peekom</strong> — حمّل النسخة المجانية (<code>Peekom-Setup.exe</code>) من <a href=\"download.html\">peekom.com</a> وثبّتها.</li>" +
+            "<li><strong>1. إعادة تثبيت Peekom</strong> — حمّل النسخة المجانية (<code>Peekom-Setup.exe</code>) من <a href=\"/download/\">peekom.com</a> وثبّتها.</li>" +
             "<li><strong>2. العثور على مفتاح الترخيص</strong> — افتح بريد إيصال Lemon Squeezy عند الشراء وانسخ <strong>[License Key]</strong>. إذا فقدت البريد، سجّل الدخول إلى سجل الطلبات في Lemon Squeezy بنفس البريد لعرضه مجددًا.</li>" +
             "<li><strong>3. إعادة تفعيل Plus</strong> — افتح الإعدادات (أيقونة الترس أعلى اليمين)، الصق المفتاح في <strong>تفعيل Plus</strong> وأكّد. يتحول التطبيق إلى Peekom Plus ويستعيد 10 فتحات والسمات المخصصة وغيرها من الميزات المدفوعة.</li>" +
             "</ul>" +

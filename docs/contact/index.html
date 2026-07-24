@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Peekom 연락처 — 버그 리포트, 기능 제안, 라이선스 문의.">
+    <title>Peekom — 연락</title>
+    <link rel="stylesheet" href="/css/site.css">
+    <script src="/js/theme.js"></script>
+</head>
+<body data-page="contact">
+    <header class="topbar">
+        <div class="topbar__brand">
+            <a href="/">
+                <img src="/images/index.png" alt="Peekom" id="brandIcon">
+                <span>Peekom</span>
+            </a>
+        </div>
+        <nav class="navbar">
+            <ul class="navbar__links">
+                <li><a href="/" data-nav="home" id="navHome">홈</a></li>
+                <li><a href="/features/" data-nav="features" id="navFeatures">기능</a></li>
+                <li><a href="/download/" data-nav="download" id="navDownload">다운로드</a></li>
+                <li><a href="/help/" data-nav="help" id="navHelp">가이드</a></li>
+                <li><a href="/faq/" data-nav="faq" id="navFaq">자주 묻는 질문</a></li>
+                <li><a href="/contact/" data-nav="contact" id="navContact">연락</a></li>
+            </ul>
+                        <div class="navbar__right">
+                <div class="theme-switch" role="group" aria-label="테마" id="themeSwitch">
+                    <button type="button" class="theme-switch__btn" data-theme-value="light" aria-pressed="false" id="themeLightBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="dark" aria-pressed="false" id="themeDarkBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button type="button" class="theme-switch__btn" data-theme-value="auto" aria-pressed="false" id="themeAutoBtn">
+                        <svg class="theme-switch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M8 20h8M12 16v4"/><path d="M7 10h4M13 10h4M7 13h10"/></svg>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="section" id="contact">
+            <h2 class="section-title" id="contactTitle">연락</h2>
+            <p class="section-sub" id="contactSub">문의 및 피드백을 보내주세요.</p>
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <span class="contact-card__icon" aria-hidden="true">&#128172;</span>
+                    <h3 class="contact-card__title" id="contactFeedbackTitle">피드백 보내기</h3>
+                    <p class="contact-card__desc" id="contactFeedbackDesc">버그 신고, 기능 제안, 라이선스 문의</p>
+                    <a class="contact-card__btn" href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener" id="contactFeedbackBtn">피드백 폼 열기</a>
+                </div>
+                <div class="contact-card">
+                    <span class="contact-card__icon" aria-hidden="true">&#11088;</span>
+                    <h3 class="contact-card__title" id="contactReviewTitle">후기 남기기</h3>
+                    <p class="contact-card__desc" id="contactReviewDesc">사용 경험을 들려주세요. 홈페이지에 소개될 수 있어요.</p>
+                    <a class="contact-card__btn" href="https://forms.gle/RZVnm6pCL7CRd5AY7" target="_blank" rel="noopener" id="contactReviewBtn">후기 폼 열기</a>
+                </div>
+                <div class="contact-card">
+                    <span class="contact-card__icon" aria-hidden="true">&#9993;</span>
+                    <h3 class="contact-card__title" id="contactEmailTitle">이메일 연락</h3>
+                    <p class="contact-card__desc" id="contactEmailDesc">직접 연락이 필요할 때</p>
+                    <a class="contact-card__btn contact-card__btn--ghost" href="mailto:hello.peekom@gmail.com" id="contactEmail">hello.peekom@gmail.com</a>
+                </div>
+            </div>
+            <p class="contact-note" id="contactNote">문의는 영업일 기준 10일 이내에 답변드리도록 노력하겠습니다. 이메일보다 구글 폼이 더 빠르게 전달되니 가능하면 폼을 이용해 주세요.</p>
+            <div class="page-cta-strip" id="pageCtaStrip"></div>
+        </section>
+    </main>
+        <footer class="footer">
+        <div class="footer__bar">
+            <p class="footer__copy">
+                <span id="footerCopy">&copy; 2026. Peekom All rights reserved.</span>
+                &nbsp;&middot;&nbsp;
+                <a href="/privacy/" id="footerPrivacy">개인정보 처리방침</a>
+            </p>
+            <div class="footer__controls">
+                <svg class="footer__lang-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <select class="lang-select lang-select--footer" id="langSelect" onchange="setLanguage(this.value)" aria-label="Language"></select>
+            </div>
+        </div>
+    </footer>
+    <script src="/js/compare.js"></script>
+    <script src="/js/compare-locales.js"></script>
+    <script src="/js/i18n-locales-part1.js"></script>
+    <script src="/js/i18n-locales-part2.js"></script>
+    <script src="/js/i18n-locales-part3.js"></script>
+    <script src="/js/i18n-locales-part4.js"></script>
+    <script src="/js/i18n-site-extra.js"></script>
+    <script src="/js/i18n-plus-tiers.js"></script>
+    <script src="/js/i18n-privacy.js"></script>
+    <script src="/js/site.js"></script>
+</body>
+</html>

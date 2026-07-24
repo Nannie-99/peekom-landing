@@ -26,7 +26,7 @@ const PLUS_TIERS = {
 
 const LINKS = {
     win: "https://github.com/Nannie-99/peekom-landing/releases/latest/download/Peekom-Setup.exe",
-    mac: "https://github.com/Nannie-99/peekom-landing/releases/latest",
+    mac: "https://github.com/Nannie-99/peekom-landing/releases/latest/download/Peekom-macOS.dmg",
     buy: PLUS_TIERS.double.link,
     buySingle: PLUS_TIERS.single.link,
     buyDouble: PLUS_TIERS.double.link,
@@ -35,6 +35,7 @@ const LINKS = {
 };
 
 const WIN_SETUP_FILENAME = "Peekom-Setup.exe";
+const MAC_DMG_FILENAME = "Peekom-macOS.dmg";
 
 const PRICING = { list: PLUS_TIERS.double.list, sale: PLUS_TIERS.double.sale, currency: "USD" };
 
@@ -42,9 +43,16 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 
 const RELEASE_HISTORY = [
     {
+        version: "1.2.3",
+        date: "2026/07/24",
+        latest: true,
+        macAvailable: true,
+        winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.3/Peekom-Setup.exe",
+        macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.3/Peekom-macOS.dmg"
+    },
+    {
         version: "1.2.2",
         date: "2026/07/11",
-        latest: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.2/Peekom-Setup.exe",
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.2/Peekom-macOS.dmg"
     },
@@ -61,6 +69,25 @@ const RELEASE_HISTORY = [
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-macOS.dmg"
     }
 ];
+
+const CHANGELOG_V123 = {
+    ko: [
+        "Plus: 인덱스에 이미지를 여러 장 넣은 뒤 재부팅해도 이미지가 유지되도록 수정",
+        "설정 변경이 재실행·재부팅 후에도 더 안정적으로 유지되도록 개선",
+        "첫 줄 텍스트 정렬이 어긋나던 문제 수정",
+        "macOS: 메뉴 막대 아이콘·Dock 아이콘 표시 개선",
+        "macOS: 시스템 글꼴 목록·고급 색상 선택 사용성 개선",
+        "macOS 정식 배포 (Universal: Intel · Apple Silicon)"
+    ],
+    en: [
+        "Plus: Fixed multi-image memos losing images after reboot",
+        "Settings now persist more reliably across relaunch/reboot",
+        "Fixed first-line text alignment issues",
+        "macOS: Improved menu bar and Dock icon appearance",
+        "macOS: Better system font list and advanced color picker",
+        "macOS signed & notarized Universal release (Intel · Apple Silicon)"
+    ]
+};
 
 const CHANGELOG_V122 = {
     ko: [
@@ -424,10 +451,12 @@ const CHANGELOG_V120 = {
 };
 
 function buildChangelogForLang(lang) {
+    const v123 = CHANGELOG_V123[lang] || CHANGELOG_V123.en;
     const v122 = CHANGELOG_V122[lang] || CHANGELOG_V122.en;
     const v121 = CHANGELOG_V121[lang] || CHANGELOG_V121.en;
     const v120 = CHANGELOG_V120[lang] || CHANGELOG_V120.en;
     return [
+        { version: "1.2.3", date: "2026.07.24", items: v123 },
         { version: "1.2.2", date: "2026.07.11", items: v122 },
         { version: "1.2.1", date: "2026.07.01", items: v121 },
         { version: "1.2.0", date: "2026.06.26", items: v120 }
@@ -670,15 +699,19 @@ function renderVersionHistory(d) {
     if (!host) return;
     const latestLabel = d.versionLatest || "Latest";
     const winLabel = d.versionWin || "Setup (x64)";
-    const macLabel = d.versionMacSoon || "Coming soon";
+    const macDownloadLabel = d.versionMac || "macOS";
+    const macSoonLabel = d.versionMacSoon || "Coming soon";
     const rows = RELEASE_HISTORY.map(function (r) {
         const badge = r.latest ? ' <span class="badge-latest">' + latestLabel + '</span>' : "";
+        const macCell = r.macAvailable
+            ? '<td><span class="os-icon">Mac</span> <a href="' + r.macUrl + '" target="_blank" rel="noopener">' + macDownloadLabel + "</a></td>"
+            : '<td><span class="version-na" title="' + macSoonLabel + '" aria-label="' + macSoonLabel + '">&#10007;</span></td>';
         return (
             "<tr>" +
                 "<td><strong>v" + r.version + "</strong>" + badge + "</td>" +
                 "<td>" + r.date + "</td>" +
                 '<td><span class="os-icon">Win</span> <a href="' + r.winUrl + '" target="_blank" rel="noopener">' + winLabel + "</a></td>" +
-                '<td><span class="version-na" title="' + macLabel + '" aria-label="' + macLabel + '">&#10007;</span></td>' +
+                macCell +
             "</tr>"
         );
     }).join("");
@@ -737,9 +770,9 @@ const i18n = {
         searchPlaceholder: "검색...",
         heroTitleMain: "Peekom",
         heroTagline: "빼꼼 인덱스가 <strong>Peekom</strong>으로 돌아왔습니다.<br>가볍고 빠르게—업무 흐름을 이어가세요.",
-        heroPlusNote: '무료 앱 설치 후 설정에서 Peekom Plus로 업그레이드할 수 있습니다.<br><a href="features.html#compare">기능 표에서 무료·Plus 차이</a>를 확인하세요.',
+        heroPlusNote: '무료 앱 설치 후 설정에서 Peekom Plus로 업그레이드할 수 있습니다.<br><a href="/features/#compare">기능 표에서 무료·Plus 차이</a>를 확인하세요.',
         heroUpgradeNote: "무료 앱 설치 후 설정에서 Peekom Plus로 업그레이드할 수 있습니다.",
-        heroFreeCompareNote: '<a href="features.html#compare">무료와 Plus 차이</a>를 확인하세요.',
+        heroFreeCompareNote: '<a href="/features/#compare">무료와 Plus 차이</a>를 확인하세요.',
         heroWinBtn: "Windows 다운로드", heroMacBtn: "macOS 다운로드",
         heroPlusBuyBtn: "구입하기",
         heroPlusSingleCardTitle: "Peekom Plus - Single",
@@ -754,7 +787,7 @@ const i18n = {
         heroFreeCardBadge: "프리웨어",
         heroMacFreeCardBadge: "프리웨어",
         heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "다운로드",
         carouselCap1: "모니터 가장자리 손잡이",
         carouselCap2: "클릭·단축키로 메모 열기",
@@ -817,7 +850,7 @@ const i18n = {
         faq1a:
             "<p>무료는 3개 인덱스·묶음 이동·얼음 모드·자동 접힘 딜레이·모니터 선택·서식바·이미지 삽입을 포함합니다.</p>" +
             "<p>Peekom Plus(Single $5.99 · Double $9.99 · Family $19.99)는 10슬롯 독립 배치, 커스텀 색·글꼴·불투명도, 왼쪽 패널, 이미지 크기 조절, 보내기 등을 앱 안에서 잠금 해제합니다.</p>" +
-            '<p><a href="features.html#compare">상세 비교표</a>를 참고하세요.</p>',
+            '<p><a href="/features/#compare">상세 비교표</a>를 참고하세요.</p>',
         compareFreeName: "Peekom (무료)",
         comparePlusName: "Peekom Plus (유료)",
         compareCta: "Peekom Plus 구입",
@@ -836,7 +869,7 @@ const i18n = {
             "<p>앱을 삭제해도 Lemon Squeezy에 등록된 라이선스는 그대로 남습니다.</p>" +
             "<p>아래 순서대로 진행하면 Peekom Plus와 모든 유료 기능을 다시 사용할 수 있습니다.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Peekom 재설치</strong> — <a href=\"download.html\">peekom.com</a>에서 무료 버전(<code>Peekom-Setup.exe</code>)을 다시 다운로드해 설치합니다.</li>" +
+            "<li><strong>1. Peekom 재설치</strong> — <a href=\"/download/\">peekom.com</a>에서 무료 버전(<code>Peekom-Setup.exe</code>)을 다시 다운로드해 설치합니다.</li>" +
             "<li><strong>2. 라이선스 키 확인</strong> — 결제 당시 Lemon Squeezy에서 받은 영수증 이메일을 열어 <strong>[License Key]</strong>를 복사합니다. 이메일을 분실했다면 Lemon Squeezy 구매 확인(주문 내역) 페이지에서 동일 이메일로 로그인해 키를 다시 확인할 수 있습니다.</li>" +
             "<li><strong>3. 라이선스 재인증</strong> — 앱 우측 상단 톱니바퀴(설정)를 연 뒤 <strong>플러스 인증</strong>에 키를 붙여넣고 인증합니다. 즉시 앱 이름이 Peekom Plus로 바뀌고 10개 슬롯·커스텀 테마 등 유료 기능이 복구됩니다.</li>" +
             "</ul>" +
@@ -910,14 +943,14 @@ const i18n = {
             "<p>삭제가 안 되면 1번에서 작업을 끝낸 뒤 다시 시도해 주세요.</p>" +
             "<p><strong>4. 재부팅 후 확인</strong> — 위까지 하신 뒤 노트북을 다시 켜 주세요.</p>" +
             "<p>아침에 코드·이상한 글자 창이 안 뜨고 작업 표시줄에도 빼꼼이 안 보이면 정리된 것입니다.</p>" +
-            "<p>이후 <a href=\"download.html\">Peekom(무료)</a>만 새로 설치해 사용하시면 됩니다.</p>" +
+            "<p>이후 <a href=\"/download/\">Peekom(무료)</a>만 새로 설치해 사용하시면 됩니다.</p>" +
             '<p class="privacy-doc__note">구버전 메모 내용은 Peekom과 <strong>저장 위치가 달라 자동 이전되지 않습니다.</strong></p>' +
             '<p class="privacy-doc__note">필요한 내용은 미리 복사해 두세요.</p>',
         faq10q: "Peekom 설정(환경설정)은 어디서 열나요?",
         faq10a:
             "<p>작업 표시줄(트레이)의 Peekom 아이콘을 <strong>우클릭 → 환경설정</strong>으로 열 수 있습니다.</p>" +
             "<p>또는 트레이 아이콘을 <strong>더블클릭</strong>하거나, 바탕화면 <strong>Peekom 바로가기 더블클릭</strong>으로도 열립니다(앱이 꺼져 있으면 메모와 함께 열림).</p>" +
-            '<p>자세한 내용은 <a href="help.html">가이드</a>를 참고하세요.</p>',
+            '<p>자세한 내용은 <a href="/help/">가이드</a>를 참고하세요.</p>',
         faq11q: "라이선스 키는 어떻게 입력하나요? 입력창 예시와 메일의 키가 달라요.",
         faq11a:
             "<p>Peekom Plus는 Lemon Squeezy 구매 확인 메일에 있는 <strong>라이선스 키 전체</strong>를 사용합니다.</p>" +
@@ -939,7 +972,7 @@ const i18n = {
             "<li>IT에 <strong><code>https://api.lemonsqueezy.com</code> HTTPS(443) 허용</strong> 요청</li>" +
             "<li>회사 VPN 사용 중이면 끄거나, 허용된 VPN으로 재시도</li>" +
             "</ul>" +
-            "<p><strong>활성화 한도(요금제별) 초과</strong> 메시지가 나오면 <a href=\"contact.html\">문의</a>로 구매 이메일·주문번호·라이선스 키를 보내 주세요.</p>" +
+            "<p><strong>활성화 한도(요금제별) 초과</strong> 메시지가 나오면 <a href=\"/contact/\">문의</a>로 구매 이메일·주문번호·라이선스 키를 보내 주세요.</p>" +
             "<p>기기 초기화를 안내해 드릴 수 있습니다.</p>" +
             "<p>설치 파일을 다시 받아도, <strong>서버 접속이 막혀 있으면</strong> 같은 오류가 날 수 있습니다.</p>",
         faq13q: "Peekom은 프리웨어인가요? 회사 PC에 설치할 수 있나요?",
@@ -951,7 +984,7 @@ const i18n = {
             "<p>회사 PC에서는 보안 정책에 따라 설치·실행 경로가 제한될 수 있습니다.</p>" +
             "<p>Peekom은 프로그램 폴더 외에 <code>%AppData%\\Roaming\\Peekom</code>에 메모·설정을 저장하므로, IT에 아래를 함께 허용 요청해 주세요.</p>" +
             '<ul class="guide-step-list">' +
-            "<li>공식 설치 파일: <a href=\"download.html\">peekom.com/download</a>의 <code>Peekom-Setup.exe</code></li>" +
+            "<li>공식 설치 파일: <a href=\"/download/\">peekom.com/download</a>의 <code>Peekom-Setup.exe</code></li>" +
             "<li>데이터 폴더: <code>C:\\Users\\(사용자명)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus 인증 시: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -979,14 +1012,14 @@ const i18n = {
             "<li>결제 시 입력한 <strong>이메일 주소</strong>가 맞는지 (회사·개인 메일 혼동 여부)</li>" +
             "</ul>" +
             "<p><a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 주문 내역</a>에서 결제에 사용한 이메일로 로그인하면 주문·라이선스 키를 다시 볼 수 있습니다.</p>" +
-            "<p>그래도 찾기 어려우시면 <a href=\"contact.html\">문의</a>로 <strong>구매 이메일·결제 일시·영수증</strong>을 보내 주시면 확인 후 안내해 드리겠습니다.</p>",
+            "<p>그래도 찾기 어려우시면 <a href=\"/contact/\">문의</a>로 <strong>구매 이메일·결제 일시·영수증</strong>을 보내 주시면 확인 후 안내해 드리겠습니다.</p>",
         dlFreeFreewareNote: "무료 버전은 프리웨어(Freeware)이며, Peekom Plus는 선택 사항입니다.",
         helpTitle: "가이드", helpSub: "Peekom을 빠르게 시작하는 방법을 안내합니다.",
         guideStartBody:
             '<div class="guide-step">' +
                 "<h3>1. 설치하기</h3>" +
                 '<ul class="guide-step-list">' +
-                    "<li><strong>다운로드 버튼</strong> — <a href=\"download.html\">다운로드</a> 페이지(또는 홈)에서 Windows·macOS용 설치 파일을 받습니다.</li>" +
+                    "<li><strong>다운로드 버튼</strong> — <a href=\"/download/\">다운로드</a> 페이지(또는 홈)에서 Windows·macOS용 설치 파일을 받습니다.</li>" +
                     "<li><strong>Peekom-Setup.exe 실행</strong> — 다운로드한 <code>Peekom-Setup.exe</code>를 더블클릭하고, 화면 안내에 따라 [다음]을 눌러 설치를 마칩니다.</li>" +
                     '<li><strong>Edge 다운로드가 막힐 때</strong> — "일반적으로 다운로드되지 않습니다" 메시지가 보이면 <a href="#" onclick="openModal(); return false;">설치 가이드</a>를 열고 다운로드 기록(<kbd>Ctrl</kbd>+<kbd>J</kbd>)에서 <strong>유지</strong> → <strong>그래도 계속</strong> 순서로 진행하세요. Chrome으로 재시도할 수도 있습니다.</li>' +
                 "</ul>" +
@@ -1169,7 +1202,7 @@ const i18n = {
         versionColMac: "macOS",
         versionLatest: "최신",
         versionWin: "64-bit",
-        versionMac: "macOS",
+        versionMac: "Universal",
         versionMacSoon: "출시 예정",
         changelogTitle: "변경 기록",
         linkChangelog: "Changelog / Releases", linkPrev: "Previous Versions", linkSmartScreen: "SmartScreen Guide"
@@ -1179,9 +1212,9 @@ const i18n = {
         searchPlaceholder: "Search...",
         heroTitleMain: "Peekom",
         heroTagline: "The edge memo app is back as <strong>Peekom</strong>.<br>Light, fast notes at your screen edge—stay organized without breaking your work or presentation flow.",
-        heroPlusNote: 'After installing the free app, upgrade to Peekom Plus in Settings.<br><a href="features.html#compare">See free vs Plus</a> in the comparison table.',
+        heroPlusNote: 'After installing the free app, upgrade to Peekom Plus in Settings.<br><a href="/features/#compare">See free vs Plus</a> in the comparison table.',
         heroUpgradeNote: "After installing the free app, upgrade to Peekom Plus in Settings.",
-        heroFreeCompareNote: '<a href="features.html#compare">See free vs Plus</a>.',
+        heroFreeCompareNote: '<a href="/features/#compare">See free vs Plus</a>.',
         heroWinBtn: "Download for Windows", heroMacBtn: "Download for macOS",
         heroPlusBuyBtn: "Buy now",
         heroPlusSingleCardTitle: "Peekom Plus - Single",
@@ -1196,7 +1229,7 @@ const i18n = {
         heroFreeCardBadge: "FREE",
         heroMacFreeCardBadge: "FREE",
         heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-        heroMacFreeCardMeta: "macOS",
+        heroMacFreeCardMeta: "macOS (Universal)",
         heroFreeDownloadLabel: "Download",
         carouselCap1: "Edge handle on your monitor",
         carouselCap2: "Open memo via click or shortcut",
@@ -1245,7 +1278,7 @@ const i18n = {
         faq1a:
             "<p>Free includes 3 indexes, group handle move, Ice mode, hover delay, monitor selection, formatting toolbar, and image insert.</p>" +
             "<p>Peekom Plus (Single $5.99 · Double $9.99 · Family $19.99) unlocks 10 slots, custom theme, fonts, opacity, left panel, image resize, and export in-app.</p>" +
-            '<p>See the <a href="features.html#compare">comparison table</a>.</p>',
+            '<p>See the <a href="/features/#compare">comparison table</a>.</p>',
         compareFreeName: "Peekom (Free)",
         comparePlusName: "Peekom Plus",
         compareCta: "Get Peekom Plus",
@@ -1255,7 +1288,7 @@ const i18n = {
             '<div class="guide-step">' +
                 "<h3>1. Install</h3>" +
                 '<ul class="guide-step-list">' +
-                    '<li><strong>Download</strong> — Get the Windows or macOS installer from the <a href="download.html">Download</a> page (or home).</li>' +
+                    '<li><strong>Download</strong> — Get the Windows or macOS installer from the <a href="/download/">Download</a> page (or home).</li>' +
                     "<li><strong>Run Peekom-Setup.exe</strong> — Double-click the installer and follow the prompts.</li>" +
                     '<li><strong>Edge download blocked</strong> — If you see "This file isn\'t commonly downloaded," open the <a href="#" onclick="openModal(); return false;">install guide</a> and use Downloads (<kbd>Ctrl</kbd>+<kbd>J</kbd>) → <strong>Keep</strong> → <strong>Keep anyway</strong>. You can also retry in Chrome.</li>' +
                 "</ul>" +
@@ -1326,7 +1359,7 @@ const i18n = {
             "<p>Uninstalling the app does not remove your Lemon Squeezy license.</p>" +
             "<p>Follow these steps to restore Peekom Plus and all paid features.</p>" +
             '<ul class="guide-step-list">' +
-            "<li><strong>1. Reinstall Peekom</strong> — Download the free version (<code>Peekom-Setup.exe</code>) from <a href=\"download.html\">peekom.com</a> and install it.</li>" +
+            "<li><strong>1. Reinstall Peekom</strong> — Download the free version (<code>Peekom-Setup.exe</code>) from <a href=\"/download/\">peekom.com</a> and install it.</li>" +
             "<li><strong>2. Find your license key</strong> — Open the Lemon Squeezy receipt email from your purchase and copy the <strong>[License Key]</strong>. If you lost the email, sign in to your Lemon Squeezy order history with the same email to view the key again.</li>" +
             "<li><strong>3. Reactivate Plus</strong> — Open Settings (gear icon, top right), paste the key under <strong>Plus activation</strong>, and confirm. The app switches to Peekom Plus and restores 10 slots, custom themes, and other Plus features.</li>" +
             "</ul>" +
@@ -1401,14 +1434,14 @@ const i18n = {
             "<p>If deletion fails, end tasks in step 1 and try again.</p>" +
             "<p><strong>4. Restart and verify</strong> — Reboot your PC.</p>" +
             "<p>If no error windows appear and Peekom is gone from the taskbar, cleanup succeeded.</p>" +
-            "<p>You can then install <a href=\"download.html\">Peekom (free)</a> fresh.</p>" +
+            "<p>You can then install <a href=\"/download/\">Peekom (free)</a> fresh.</p>" +
             '<p class="privacy-doc__note">Memo content from the legacy app is <strong>not migrated automatically</strong> because Peekom stores data in a different location.</p>' +
             '<p class="privacy-doc__note">Copy anything you need before removing the old app.</p>',
         faq10q: "Where do I open Peekom Settings?",
         faq10a:
             "<p>Right-click the Peekom icon in the <strong>system tray</strong> → <strong>Settings</strong>.</p>" +
             "<p>You can also <strong>double-click</strong> the tray icon, or <strong>double-click</strong> the desktop shortcut (if the app was closed, the memo and Settings open together).</p>" +
-            '<p>See the <a href="help.html">guide</a> for details.</p>',
+            '<p>See the <a href="/help/">guide</a> for details.</p>',
         faq11q: "How do I enter my license key? The placeholder doesn't match the email key.",
         faq11a:
             "<p>Use the <strong>full license key</strong> from your Lemon Squeezy receipt email.</p>" +
@@ -1430,7 +1463,7 @@ const i18n = {
             "<li>Ask IT to allow <strong><code>https://api.lemonsqueezy.com</code> over HTTPS (443)</strong></li>" +
             "<li>Turn off a corporate VPN, or try an allowed VPN</li>" +
             "</ul>" +
-            "<p>If you see an <strong>activation limit (by plan)</strong> message, <a href=\"contact.html\">contact us</a> with your purchase email, order number, and license key—we can help reset devices.</p>" +
+            "<p>If you see an <strong>activation limit (by plan)</strong> message, <a href=\"/contact/\">contact us</a> with your purchase email, order number, and license key—we can help reset devices.</p>" +
             "<p>Downloading the installer again will <strong>not</strong> fix this if the server is still blocked.</p>",
         faq13q: "Is Peekom freeware? Can I install it on a company PC?",
         faq13a:
@@ -1441,7 +1474,7 @@ const i18n = {
             "<p>Besides the program folder, Peekom stores memos and settings under <code>%AppData%\\Roaming\\Peekom</code>.</p>" +
             "<p>Ask IT to allow:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Official installer: <code>Peekom-Setup.exe</code> from <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Official installer: <code>Peekom-Setup.exe</code> from <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Data folder: <code>C:\\Users\\(username)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>For Plus activation: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -1468,12 +1501,12 @@ const i18n = {
             "<li>The <strong>email address</strong> used at checkout (work vs personal)</li>" +
             "</ul>" +
             "<p>Sign in at <a href=\"https://app.lemonsqueezy.com/my-orders\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy My Orders</a> with that email to view your key again.</p>" +
-            "<p>Still stuck? <a href=\"contact.html\">Contact us</a> with your <strong>purchase email, payment time, and receipt</strong>.</p>",
+            "<p>Still stuck? <a href=\"/contact/\">Contact us</a> with your <strong>purchase email, payment time, and receipt</strong>.</p>",
         dlFreeFreewareNote: "Peekom (free) is freeware; Plus is optional.",
         heroFreeCardBadge: "Freeware",
         heroMacFreeCardBadge: "Freeware",
         heroWinCardMeta: "Windows 10 · 11 (64-bit) · Freeware",
-        heroMacFreeCardMeta: "macOS · Freeware",
+        heroMacFreeCardMeta: "macOS (Universal)",
         compareColFeature: "Feature",
         contactTitle: "Contact", contactSub: "Send us your feedback.",
         contactFeedbackTitle: "Send feedback",
@@ -1888,12 +1921,12 @@ function getLocaleData() {
 
 function getSearchSections(d) {
     return [
-        { label: d.navHome, href: 'index.html', keywords: 'home peekom 홈' },
-        { label: d.navFeatures || 'Features', href: 'features.html', keywords: 'features function compare plus free 비교 peekom plus' },
-        { label: d.navDownload, href: 'download.html', keywords: 'download windows mac setup 다운로드' },
-        { label: d.navFaq, href: 'faq.html', keywords: 'faq license smartscreen 자주 묻는 질문' },
-        { label: d.navHelp, href: 'help.html', keywords: 'guide help install shortcut 마크다운 서식바' },
-        { label: d.navContact, href: 'contact.html', keywords: 'contact email support 연락' }
+        { label: d.navHome, href: '/', keywords: 'home peekom 홈' },
+        { label: d.navFeatures || 'Features', href: '/features/', keywords: 'features function compare plus free 비교 peekom plus' },
+        { label: d.navDownload, href: '/download/', keywords: 'download windows mac setup 다운로드' },
+        { label: d.navFaq, href: '/faq/', keywords: 'faq license smartscreen 자주 묻는 질문' },
+        { label: d.navHelp, href: '/help/', keywords: 'guide help install shortcut 마크다운 서식바' },
+        { label: d.navContact, href: '/contact/', keywords: 'contact email support 연락' }
     ];
 }
 
@@ -1943,11 +1976,12 @@ function applyLinks() {
         el.removeAttribute("target");
     });
 
-    const macBlockedIds = ["heroMacBtn", "dlMacBtn"];
-    macBlockedIds.forEach(function (id) {
+    const macDownloadIds = ["heroMacBtn", "dlMacBtn"];
+    macDownloadIds.forEach(function (id) {
         const el = document.getElementById(id);
         if (!el) return;
-        el.href = "#";
+        el.href = LINKS.mac;
+        el.setAttribute("download", MAC_DMG_FILENAME);
         el.removeAttribute("target");
     });
 
@@ -2159,11 +2193,7 @@ var heroOfferActionsBound = false;
 function initHeroOfferActions() {
     if (heroOfferActionsBound) return;
     heroOfferActionsBound = true;
-
-    ["heroMacBtn", "dlMacBtn"].forEach(function (id) {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener("click", showMacComingSoon);
-    });
+    // Mac/Windows free cards are direct download links (href set in applyLinks).
 }
 
 function setThemeBtnA11y(id, label) {
@@ -2256,10 +2286,10 @@ function renderPageCtaStrip(d) {
         actions += '<a href="' + LINKS.buy + '" class="btn btn--buy btn--plus" target="_blank" rel="noopener">' + d.compareCta + "</a>";
     }
     if (page === "features" || page === "faq" || page === "help" || page === "download") {
-        actions += '<a href="features.html#compare" class="btn">' + d.pageCtaCompare + "</a>";
+        actions += '<a href="/features/#compare" class="btn">' + d.pageCtaCompare + "</a>";
     }
     if (page !== "download") {
-        actions += '<a href="download.html" class="btn">' + d.pageCtaDownload + "</a>";
+        actions += '<a href="/download/" class="btn">' + d.pageCtaDownload + "</a>";
     }
     host.innerHTML =
         '<div class="page-cta-strip__text">' +
@@ -2278,7 +2308,7 @@ function renderPrivacyPage(d) {
     const backEl = document.getElementById("privacyBackLink");
     if (backEl && d.privacyBackLink) {
         backEl.textContent = d.privacyBackLink;
-        backEl.href = "index.html";
+        backEl.href = "/";
     }
 }
 
@@ -2579,7 +2609,7 @@ function runSearch(query) {
         const kw = (item.getAttribute('data-search') || '') + ' ' + text;
         if (kw.includes(q)) {
             const qEl = item.querySelector('[id^="faq"][id$="q"]');
-            hits.push({ label: qEl ? qEl.textContent : text.slice(0, 60), href: 'faq.html' });
+            hits.push({ label: qEl ? qEl.textContent : text.slice(0, 60), href: '/faq/' });
             setFaqAccordionOpen(item, true);
         }
     });

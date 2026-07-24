@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const htmlPath = path.join(__dirname, "..", "index.html");
+const htmlPath = path.join(__dirname, "..", "/");
 const lines = fs.readFileSync(htmlPath, "utf8").split(/\r?\n/);
 let s = lines.slice(1319, 2786).map((l) => l.replace(/^        /, "")).join("\n");
 

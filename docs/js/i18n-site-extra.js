@@ -23,11 +23,11 @@ var EXTRA = {
             "<li><strong>スタートアップ</strong>タブを開く</li>" +
             "<li>「빼꼼 인덱스」を選択 → <strong>無効にする</strong></li>" +
             "</ol>" +
-            "<p>項目をオフにしてから <strong>再起動</strong>してください。問題が止まれば原因はスタートアップ登録です。その後 <a href=\"download.html\">Peekom（無料）</a>を新規インストールしてご利用ください。</p>" +
+            "<p>項目をオフにしてから <strong>再起動</strong>してください。問題が止まれば原因はスタートアップ登録です。その後 <a href=\"/download/\">Peekom（無料）</a>を新規インストールしてご利用ください。</p>" +
             '<p class="privacy-doc__note">旧版のメモ内容は Peekom と<strong>保存場所が異なるため自動移行されません。</strong>必要な内容は事前にコピーしてください。</p>',
         faq10q: "Peekom の設定はどこから開きますか？",
         faq10a:
-            "タスクバー（トレイ）の Peekom アイコンを <strong>右クリック → 設定</strong>で開けます。<strong>ダブルクリック</strong>、またはデスクトップの <strong>Peekom ショートカットをダブルクリック</strong>でも開けます（アプリが終了している場合はメモと一緒に開きます）。詳しくは <a href=\"help.html\">ガイド</a>をご覧ください。",
+            "タスクバー（トレイ）の Peekom アイコンを <strong>右クリック → 設定</strong>で開けます。<strong>ダブルクリック</strong>、またはデスクトップの <strong>Peekom ショートカットをダブルクリック</strong>でも開けます（アプリが終了している場合はメモと一緒に開きます）。詳しくは <a href=\"/help/\">ガイド</a>をご覧ください。",
         faq11q: "ライセンスキーはどう入力しますか？入力欄の例とメールのキーが違います。",
         faq11a:
             "<p>Peekom Plus では Lemon Squeezy の購入確認メールにある <strong>ライセンスキー全体</strong>を使います。</p>" +
@@ -47,7 +47,7 @@ var EXTRA = {
             "<li>IT に <strong><code>https://api.lemonsqueezy.com</code> の HTTPS（443）許可</strong>を依頼</li>" +
             "<li>社内 VPN 利用中ならオフにするか、許可された VPN で再試行</li>" +
             "</ul>" +
-            "<p><strong>有効化上限（最大 2 台）</strong>のメッセージが出た場合は <a href=\"contact.html\">お問い合わせ</a>で購入メール・注文番号・ライセンスキーをお送りください。端末のリセットをご案内できます。</p>" +
+            "<p><strong>有効化上限（最大 2 台）</strong>のメッセージが出た場合は <a href=\"/contact/\">お問い合わせ</a>で購入メール・注文番号・ライセンスキーをお送りください。端末のリセットをご案内できます。</p>" +
             "<p>インストーラーを再ダウンロードしても、<strong>サーバー接続がブロックされている</strong>限り同じエラーになります。</p>",
         faq13q: "Peekom はフリーウェアですか？会社 PC にインストールできますか？",
         faq13a:
@@ -55,7 +55,7 @@ var EXTRA = {
             "<p>（※ Microsoft Windows の<strong>公式認証プログラム</strong>を指すものではありません。）</p>" +
             "<p>会社 PC ではセキュリティ方針によりインストール・保存先が制限されることがあります。Peekom はプログラムフォルダ以外に <code>%AppData%\\Roaming\\Peekom</code> にメモと設定を保存するため、IT に以下の許可も依頼してください。</p>" +
             '<ul class="guide-step-list">' +
-            "<li>公式インストーラー: <a href=\"download.html\">peekom.com/download</a> の <code>Peekom-Setup.exe</code></li>" +
+            "<li>公式インストーラー: <a href=\"/download/\">peekom.com/download</a> の <code>Peekom-Setup.exe</code></li>" +
             "<li>データフォルダ: <code>C:\\Users\\(ユーザー名)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus 認証時: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -79,7 +79,7 @@ var EXTRA = {
             "<li>決済時に入力した <strong>メールアドレス</strong>が正しいか（会社・個人の取り違え）</li>" +
             "</ul>" +
             "<p><a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy の注文履歴</a>で決済に使ったメールでログインすると、注文とライセンスキーを再確認できます。</p>" +
-            "<p>それでも見つからない場合は <a href=\"contact.html\">お問い合わせ</a>で <strong>購入メール・決済日時・領収書</strong>をお送りください。確認のうえご案内します。</p>"
+            "<p>それでも見つからない場合は <a href=\"/contact/\">お問い合わせ</a>で <strong>購入メール・決済日時・領収書</strong>をお送りください。確認のうえご案内します。</p>"
     },
     "zh-CN": {
         settingsGuideTitle: "如何打开设置？",
@@ -101,11 +101,11 @@ var EXTRA = {
             "<li>打开<strong>启动</strong>选项卡</li>" +
             "<li>选择「빼꼼 인덱스」→ <strong>禁用</strong></li>" +
             "</ol>" +
-            "<p>关闭该条目后<strong>重启</strong>电脑。若问题消失，原因即为启动项残留。之后可重新安装 <a href=\"download.html\">Peekom（免费版）</a>使用。</p>" +
+            "<p>关闭该条目后<strong>重启</strong>电脑。若问题消失，原因即为启动项残留。之后可重新安装 <a href=\"/download/\">Peekom（免费版）</a>使用。</p>" +
             '<p class="privacy-doc__note">旧版备忘录与 Peekom <strong>存储位置不同，不会自动迁移。</strong>请先复制需要保留的内容。</p>',
         faq10q: "在哪里打开 Peekom 设置？",
         faq10a:
-            "在任务栏（托盘）的 Peekom 图标上<strong>右键 → 设置</strong>即可打开。也可<strong>双击</strong>托盘图标，或<strong>双击</strong>桌面 Peekom 快捷方式（若应用已关闭，会连同备忘录一起打开）。详见<a href=\"help.html\">使用指南</a>。",
+            "在任务栏（托盘）的 Peekom 图标上<strong>右键 → 设置</strong>即可打开。也可<strong>双击</strong>托盘图标，或<strong>双击</strong>桌面 Peekom 快捷方式（若应用已关闭，会连同备忘录一起打开）。详见<a href=\"/help/\">使用指南</a>。",
         faq11q: "如何输入许可证密钥？输入框示例与邮件中的密钥不一致。",
         faq11a:
             "<p>Peekom Plus 请使用 Lemon Squeezy 购买确认邮件中的<strong>完整许可证密钥</strong>。</p>" +
@@ -125,7 +125,7 @@ var EXTRA = {
             "<li>请 IT 允许 <strong><code>https://api.lemonsqueezy.com</code> 的 HTTPS（443）</strong></li>" +
             "<li>若使用公司 VPN，请关闭或改用已允许的 VPN 重试</li>" +
             "</ul>" +
-            "<p>若出现<strong>激活上限（最多 2 台设备）</strong>提示，请通过 <a href=\"contact.html\">联系我们</a>提供购买邮箱、订单号与许可证密钥，我们可协助重置设备。</p>" +
+            "<p>若出现<strong>激活上限（最多 2 台设备）</strong>提示，请通过 <a href=\"/contact/\">联系我们</a>提供购买邮箱、订单号与许可证密钥，我们可协助重置设备。</p>" +
             "<p>重新下载安装包<strong>无法</strong>解决服务器仍被拦截的情况。</p>",
         faq13q: "Peekom 是免费软件吗？可以在公司电脑上安装吗？",
         faq13a:
@@ -133,7 +133,7 @@ var EXTRA = {
             "<p>（※ 并非指 Microsoft Windows <strong>官方认证计划</strong>。）</p>" +
             "<p>公司电脑可能因安全策略限制安装或数据路径。除程序文件夹外，Peekom 还会在 <code>%AppData%\\Roaming\\Peekom</code> 保存备忘录与设置，请一并向 IT 申请允许：</p>" +
             '<ul class="guide-step-list">' +
-            "<li>官方安装包：<a href=\"download.html\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code></li>" +
+            "<li>官方安装包：<a href=\"/download/\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code></li>" +
             "<li>数据文件夹：<code>C:\\Users\\(用户名)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus 激活：<code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -157,7 +157,7 @@ var EXTRA = {
             "<li>结账时填写的<strong>邮箱地址</strong>是否正确（工作/个人邮箱是否弄混）</li>" +
             "</ul>" +
             "<p>使用付款邮箱登录 <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 订单记录</a>可再次查看订单与密钥。</p>" +
-            "<p>仍找不到？请通过 <a href=\"contact.html\">联系我们</a>提供<strong>购买邮箱、付款时间与收据</strong>，我们会协助确认。</p>"
+            "<p>仍找不到？请通过 <a href=\"/contact/\">联系我们</a>提供<strong>购买邮箱、付款时间与收据</strong>，我们会协助确认。</p>"
     },
     "zh-TW": {
         settingsGuideTitle: "如何開啟設定？",
@@ -179,11 +179,11 @@ var EXTRA = {
             "<li>開啟<strong>啟動</strong>索引標籤</li>" +
             "<li>選取「빼꼼 인덱스」→ <strong>停用</strong></li>" +
             "</ol>" +
-            "<p>關閉該項目後<strong>重新啟動</strong>電腦。若問題消失，原因即為啟動項目殘留。之後可重新安裝 <a href=\"download.html\">Peekom（免費版）</a>使用。</p>" +
+            "<p>關閉該項目後<strong>重新啟動</strong>電腦。若問題消失，原因即為啟動項目殘留。之後可重新安裝 <a href=\"/download/\">Peekom（免費版）</a>使用。</p>" +
             '<p class="privacy-doc__note">舊版備忘錄與 Peekom <strong>儲存位置不同，不會自動移轉。</strong>請先複製需要保留的內容。</p>',
         faq10q: "在哪裡開啟 Peekom 設定？",
         faq10a:
-            "在工作列（系統匣）的 Peekom 圖示上<strong>右鍵 → 設定</strong>即可開啟。也可<strong>雙擊</strong>系統匣圖示，或<strong>雙擊</strong>桌面 Peekom 捷徑（若應用程式已關閉，會連同備忘錄一起開啟）。詳見<a href=\"help.html\">使用指南</a>。",
+            "在工作列（系統匣）的 Peekom 圖示上<strong>右鍵 → 設定</strong>即可開啟。也可<strong>雙擊</strong>系統匣圖示，或<strong>雙擊</strong>桌面 Peekom 捷徑（若應用程式已關閉，會連同備忘錄一起開啟）。詳見<a href=\"/help/\">使用指南</a>。",
         faq11q: "如何輸入授權金鑰？輸入框範例與郵件中的金鑰不一致。",
         faq11a:
             "<p>Peekom Plus 請使用 Lemon Squeezy 購買確認郵件中的<strong>完整授權金鑰</strong>。</p>" +
@@ -203,7 +203,7 @@ var EXTRA = {
             "<li>請 IT 允許 <strong><code>https://api.lemonsqueezy.com</code> 的 HTTPS（443）</strong></li>" +
             "<li>若使用公司 VPN，請關閉或改用已允許的 VPN 重試</li>" +
             "</ul>" +
-            "<p>若出現<strong>啟用上限（最多 2 台裝置）</strong>訊息，請透過 <a href=\"contact.html\">聯絡我們</a>提供購買信箱、訂單編號與授權金鑰，我們可協助重設裝置。</p>" +
+            "<p>若出現<strong>啟用上限（最多 2 台裝置）</strong>訊息，請透過 <a href=\"/contact/\">聯絡我們</a>提供購買信箱、訂單編號與授權金鑰，我們可協助重設裝置。</p>" +
             "<p>重新下載安裝程式<strong>無法</strong>解決伺服器仍被封鎖的情況。</p>",
         faq13q: "Peekom 是免費軟體嗎？可以在公司電腦上安裝嗎？",
         faq13a:
@@ -211,7 +211,7 @@ var EXTRA = {
             "<p>（※ 並非指 Microsoft Windows <strong>官方認證計畫</strong>。）</p>" +
             "<p>公司電腦可能因安全政策限制安裝或資料路徑。除程式資料夾外，Peekom 還會在 <code>%AppData%\\Roaming\\Peekom</code> 儲存備忘錄與設定，請一併向 IT 申請允許：</p>" +
             '<ul class="guide-step-list">' +
-            "<li>官方安裝程式：<a href=\"download.html\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code></li>" +
+            "<li>官方安裝程式：<a href=\"/download/\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code></li>" +
             "<li>資料資料夾：<code>C:\\Users\\(使用者名稱)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus 啟用：<code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -235,7 +235,7 @@ var EXTRA = {
             "<li>結帳時填寫的<strong>電子郵件地址</strong>是否正確（工作/個人信箱是否弄混）</li>" +
             "</ul>" +
             "<p>使用付款信箱登入 <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy 訂單記錄</a>可再次查看訂單與金鑰。</p>" +
-            "<p>仍找不到？請透過 <a href=\"contact.html\">聯絡我們</a>提供<strong>購買信箱、付款時間與收據</strong>，我們會協助確認。</p>"
+            "<p>仍找不到？請透過 <a href=\"/contact/\">聯絡我們</a>提供<strong>購買信箱、付款時間與收據</strong>，我們會協助確認。</p>"
     },
     es: {
         settingsGuideTitle: "¿Cómo abro la configuración?",
@@ -257,11 +257,11 @@ var EXTRA = {
             "<li>Abre la pestaña <strong>Inicio</strong></li>" +
             "<li>Selecciona <strong>빼꼼 인덱스</strong> → <strong>Deshabilitar</strong></li>" +
             "</ol>" +
-            "<p>Desactiva la entrada y <strong>reinicia</strong>. Si el problema desaparece, la causa era el arranque automático. Luego instala <a href=\"download.html\">Peekom (gratis)</a> de nuevo.</p>" +
+            "<p>Desactiva la entrada y <strong>reinicia</strong>. Si el problema desaparece, la causa era el arranque automático. Luego instala <a href=\"/download/\">Peekom (gratis)</a> de nuevo.</p>" +
             '<p class="privacy-doc__note">Las notas de la app antigua <strong>no se migran automáticamente</strong> porque Peekom guarda los datos en otra ubicación. Copia lo que necesites antes de eliminarla.</p>',
         faq10q: "¿Dónde abro la configuración de Peekom?",
         faq10a:
-            "Clic derecho en el icono de Peekom en la <strong>bandeja del sistema</strong> → <strong>Configuración</strong>. También puedes <strong>hacer doble clic</strong> en el icono de la bandeja o <strong>doble clic</strong> en el acceso directo del escritorio (si la app estaba cerrada, se abren la nota y la configuración). Consulta la <a href=\"help.html\">guía</a> para más detalles.",
+            "Clic derecho en el icono de Peekom en la <strong>bandeja del sistema</strong> → <strong>Configuración</strong>. También puedes <strong>hacer doble clic</strong> en el icono de la bandeja o <strong>doble clic</strong> en el acceso directo del escritorio (si la app estaba cerrada, se abren la nota y la configuración). Consulta la <a href=\"/help/\">guía</a> para más detalles.",
         faq11q: "¿Cómo introduzco la clave de licencia? El ejemplo del campo no coincide con el correo.",
         faq11a:
             "<p>Usa la <strong>clave de licencia completa</strong> del correo de confirmación de Lemon Squeezy.</p>" +
@@ -281,7 +281,7 @@ var EXTRA = {
             "<li>Pide a IT permitir <strong><code>https://api.lemonsqueezy.com</code> por HTTPS (443)</strong></li>" +
             "<li>Desactiva la VPN corporativa o prueba con una VPN permitida</li>" +
             "</ul>" +
-            "<p>Si aparece el límite de <strong>activación (máx. 2 dispositivos)</strong>, <a href=\"contact.html\">contáctanos</a> con el email de compra, número de pedido y clave; podemos ayudarte a restablecer dispositivos.</p>" +
+            "<p>Si aparece el límite de <strong>activación (máx. 2 dispositivos)</strong>, <a href=\"/contact/\">contáctanos</a> con el email de compra, número de pedido y clave; podemos ayudarte a restablecer dispositivos.</p>" +
             "<p>Volver a descargar el instalador <strong>no</strong> soluciona el bloqueo del servidor.</p>",
         faq13q: "¿Peekom es freeware? ¿Puedo instalarlo en un PC de empresa?",
         faq13a:
@@ -289,7 +289,7 @@ var EXTRA = {
             "<p>(Se refiere al <strong>tipo de licencia</strong>, no a la certificación oficial de Microsoft Windows.)</p>" +
             "<p>En PCs corporativos puede haber restricciones. Además de la carpeta del programa, Peekom guarda notas y ajustes en <code>%AppData%\\Roaming\\Peekom</code>. Pide a IT que permita:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> en <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> en <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Carpeta de datos: <code>C:\\Users\\(usuario)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Activación Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -313,7 +313,7 @@ var EXTRA = {
             "<li>El <strong>email</strong> usado al pagar (¿trabajo o personal?)</li>" +
             "</ul>" +
             "<p>Inicia sesión en <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Mis pedidos de Lemon Squeezy</a> con ese email para ver la clave de nuevo.</p>" +
-            "<p>¿Sigues sin encontrarla? <a href=\"contact.html\">Contáctanos</a> con tu <strong>email de compra, fecha de pago y recibo</strong>.</p>"
+            "<p>¿Sigues sin encontrarla? <a href=\"/contact/\">Contáctanos</a> con tu <strong>email de compra, fecha de pago y recibo</strong>.</p>"
     },
     fr: {
         settingsGuideTitle: "Comment ouvrir les paramètres ?",
@@ -335,11 +335,11 @@ var EXTRA = {
             "<li>Onglet <strong>Démarrage</strong></li>" +
             "<li>Sélectionnez <strong>빼꼼 인덱스</strong> → <strong>Désactiver</strong></li>" +
             "</ol>" +
-            "<p>Désactivez l’entrée puis <strong>redémarrez</strong>. Si le problème disparaît, la cause était l’inscription au démarrage. Installez ensuite <a href=\"download.html\">Peekom (gratuit)</a> à neuf.</p>" +
+            "<p>Désactivez l’entrée puis <strong>redémarrez</strong>. Si le problème disparaît, la cause était l’inscription au démarrage. Installez ensuite <a href=\"/download/\">Peekom (gratuit)</a> à neuf.</p>" +
             '<p class="privacy-doc__note">Les notes de l’ancienne app ne sont <strong>pas migrées automatiquement</strong> : Peekom stocke les données ailleurs. Copiez ce dont vous avez besoin avant de supprimer l’ancienne version.</p>',
         faq10q: "Où ouvrir les paramètres Peekom ?",
         faq10a:
-            "Clic droit sur l’icône Peekom dans la <strong>zone de notification</strong> → <strong>Paramètres</strong>. Vous pouvez aussi <strong>double-cliquer</strong> sur l’icône ou <strong>double-cliquer</strong> le raccourci bureau (si l’app était fermée, la note et les paramètres s’ouvrent ensemble). Voir le <a href=\"help.html\">guide</a> pour plus de détails.",
+            "Clic droit sur l’icône Peekom dans la <strong>zone de notification</strong> → <strong>Paramètres</strong>. Vous pouvez aussi <strong>double-cliquer</strong> sur l’icône ou <strong>double-cliquer</strong> le raccourci bureau (si l’app était fermée, la note et les paramètres s’ouvrent ensemble). Voir le <a href=\"/help/\">guide</a> pour plus de détails.",
         faq11q: "Comment saisir la clé de licence ? L’exemple du champ ne correspond pas à l’e-mail.",
         faq11a:
             "<p>Utilisez la <strong>clé de licence complète</strong> de l’e-mail de confirmation Lemon Squeezy.</p>" +
@@ -359,7 +359,7 @@ var EXTRA = {
             "<li>Demandez à l’IT d’autoriser <strong><code>https://api.lemonsqueezy.com</code> en HTTPS (443)</strong></li>" +
             "<li>Désactivez le VPN d’entreprise ou réessayez avec un VPN autorisé</li>" +
             "</ul>" +
-            "<p>Message de <strong>limite d’activation (2 appareils max)</strong> ? <a href=\"contact.html\">Contactez-nous</a> avec l’e-mail d’achat, le n° de commande et la clé — nous pouvons réinitialiser les appareils.</p>" +
+            "<p>Message de <strong>limite d’activation (2 appareils max)</strong> ? <a href=\"/contact/\">Contactez-nous</a> avec l’e-mail d’achat, le n° de commande et la clé — nous pouvons réinitialiser les appareils.</p>" +
             "<p>Retélécharger l’installateur <strong>ne résout pas</strong> un blocage serveur.</p>",
         faq13q: "Peekom est-il un freeware ? Puis-je l’installer sur un PC professionnel ?",
         faq13a:
@@ -367,7 +367,7 @@ var EXTRA = {
             "<p>(Il s’agit du <strong>type de licence</strong>, pas de la certification officielle Microsoft Windows.)</p>" +
             "<p>Sur un PC d’entreprise, l’installation ou les chemins de données peuvent être restreints. Outre le dossier programme, Peekom enregistre notes et réglages dans <code>%AppData%\\Roaming\\Peekom</code>. Demandez à l’IT d’autoriser :</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installateur officiel : <code>Peekom-Setup.exe</code> sur <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Installateur officiel : <code>Peekom-Setup.exe</code> sur <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Dossier de données : <code>C:\\Users\\(nom)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Activation Plus : <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -391,7 +391,7 @@ var EXTRA = {
             "<li>L’<strong>adresse e-mail</strong> utilisée au paiement (pro vs perso)</li>" +
             "</ul>" +
             "<p>Connectez-vous sur <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Mes commandes Lemon Squeezy</a> avec cet e-mail pour revoir la clé.</p>" +
-            "<p>Toujours bloqué ? <a href=\"contact.html\">Contactez-nous</a> avec votre <strong>e-mail d’achat, date de paiement et reçu</strong>.</p>"
+            "<p>Toujours bloqué ? <a href=\"/contact/\">Contactez-nous</a> avec votre <strong>e-mail d’achat, date de paiement et reçu</strong>.</p>"
     },
     de: {
         settingsGuideTitle: "Wie öffne ich die Einstellungen?",
@@ -413,11 +413,11 @@ var EXTRA = {
             "<li>Register <strong>Autostart</strong></li>" +
             "<li><strong>빼꼼 인덱스</strong> wählen → <strong>Deaktivieren</strong></li>" +
             "</ol>" +
-            "<p>Eintrag deaktivieren und <strong>neu starten</strong>. Verschwindet das Problem, war der Autostart die Ursache. Danach <a href=\"download.html\">Peekom (kostenlos)</a> neu installieren.</p>" +
+            "<p>Eintrag deaktivieren und <strong>neu starten</strong>. Verschwindet das Problem, war der Autostart die Ursache. Danach <a href=\"/download/\">Peekom (kostenlos)</a> neu installieren.</p>" +
             '<p class="privacy-doc__note">Notizen der alten App werden <strong>nicht automatisch übernommen</strong>, da Peekom Daten woanders speichert. Kopieren Sie Wichtiges vor dem Entfernen.</p>',
         faq10q: "Wo öffne ich die Peekom-Einstellungen?",
         faq10a:
-            "Rechtsklick auf das Peekom-Symbol im <strong>Infobereich</strong> → <strong>Einstellungen</strong>. Oder <strong>Doppelklick</strong> auf das Tray-Symbol bzw. <strong>Doppelklick</strong> auf die Desktop-Verknüpfung (war die App geschlossen, öffnen sich Notiz und Einstellungen). Details in der <a href=\"help.html\">Anleitung</a>.",
+            "Rechtsklick auf das Peekom-Symbol im <strong>Infobereich</strong> → <strong>Einstellungen</strong>. Oder <strong>Doppelklick</strong> auf das Tray-Symbol bzw. <strong>Doppelklick</strong> auf die Desktop-Verknüpfung (war die App geschlossen, öffnen sich Notiz und Einstellungen). Details in der <a href=\"/help/\">Anleitung</a>.",
         faq11q: "Wie gebe ich den Lizenzschlüssel ein? Das Platzhalter-Beispiel passt nicht zur E-Mail.",
         faq11a:
             "<p>Verwenden Sie den <strong>vollständigen Lizenzschlüssel</strong> aus der Lemon-Squeezy-Kaufbestätigung.</p>" +
@@ -437,7 +437,7 @@ var EXTRA = {
             "<li>IT um Freigabe von <strong><code>https://api.lemonsqueezy.com</code> per HTTPS (443)</strong> bitten</li>" +
             "<li>Firmen-VPN ausschalten oder erlaubtes VPN nutzen</li>" +
             "</ul>" +
-            "<p>Meldung <strong>Aktivierungslimit (max. 2 Geräte)</strong>? <a href=\"contact.html\">Kontakt</a> mit Kauf-E-Mail, Bestellnummer und Schlüssel — wir helfen beim Zurücksetzen.</p>" +
+            "<p>Meldung <strong>Aktivierungslimit (max. 2 Geräte)</strong>? <a href=\"/contact/\">Kontakt</a> mit Kauf-E-Mail, Bestellnummer und Schlüssel — wir helfen beim Zurücksetzen.</p>" +
             "<p>Installer erneut laden hilft <strong>nicht</strong>, wenn der Server blockiert bleibt.</p>",
         faq13q: "Ist Peekom Freeware? Darf ich es auf einem Firmen-PC installieren?",
         faq13a:
@@ -445,7 +445,7 @@ var EXTRA = {
             "<p>(Gemeint ist der <strong>Lizenztyp</strong>, nicht die offizielle Microsoft-Windows-Zertifizierung.)</p>" +
             "<p>Auf Firmen-PCs können Installation und Datenpfade eingeschränkt sein. Neben dem Programmordner speichert Peekom in <code>%AppData%\\Roaming\\Peekom</code>. Bitte IT um Freigabe von:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Offiziellem Installer: <code>Peekom-Setup.exe</code> von <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Offiziellem Installer: <code>Peekom-Setup.exe</code> von <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Datenordner: <code>C:\\Users\\(Benutzername)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus-Aktivierung: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -469,7 +469,7 @@ var EXTRA = {
             "<li><strong>E-Mail-Adresse</strong> beim Checkout (Firma vs. privat verwechselt?)</li>" +
             "</ul>" +
             "<p>Bei <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy Meine Bestellungen</a> mit dieser E-Mail anmelden, um den Schlüssel erneut zu sehen.</p>" +
-            "<p>Noch nicht gefunden? <a href=\"contact.html\">Kontakt</a> mit <strong>Kauf-E-Mail, Zahlungszeitpunkt und Beleg</strong>.</p>"
+            "<p>Noch nicht gefunden? <a href=\"/contact/\">Kontakt</a> mit <strong>Kauf-E-Mail, Zahlungszeitpunkt und Beleg</strong>.</p>"
     },
     pt: {
         settingsGuideTitle: "Como abro as configurações?",
@@ -491,11 +491,11 @@ var EXTRA = {
             "<li>Separador <strong>Arranque</strong></li>" +
             "<li>Selecione <strong>빼꼼 인덱스</strong> → <strong>Desativar</strong></li>" +
             "</ol>" +
-            "<p>Desative a entrada e <strong>reinicie</strong>. Se o problema parar, a causa era o arranque automático. Depois instale <a href=\"download.html\">Peekom (grátis)</a> de novo.</p>" +
+            "<p>Desative a entrada e <strong>reinicie</strong>. Se o problema parar, a causa era o arranque automático. Depois instale <a href=\"/download/\">Peekom (grátis)</a> de novo.</p>" +
             '<p class="privacy-doc__note">As notas da app antiga <strong>não migram automaticamente</strong> — o Peekom guarda dados noutro local. Copie o que precisar antes de remover.</p>',
         faq10q: "Onde abro as configurações do Peekom?",
         faq10a:
-            "Clique com o botão direito no ícone do Peekom na <strong>bandeja do sistema</strong> → <strong>Configurações</strong>. Também pode <strong>clicar duas vezes</strong> no ícone da bandeja ou <strong>duplo clique</strong> no atalho do ambiente de trabalho (se a app estava fechada, abrem-se a nota e as configurações). Veja o <a href=\"help.html\">guia</a> para detalhes.",
+            "Clique com o botão direito no ícone do Peekom na <strong>bandeja do sistema</strong> → <strong>Configurações</strong>. Também pode <strong>clicar duas vezes</strong> no ícone da bandeja ou <strong>duplo clique</strong> no atalho do ambiente de trabalho (se a app estava fechada, abrem-se a nota e as configurações). Veja o <a href=\"/help/\">guia</a> para detalhes.",
         faq11q: "Como introduzo a chave de licença? O exemplo do campo não coincide com o e-mail.",
         faq11a:
             "<p>Use a <strong>chave de licença completa</strong> do e-mail de confirmação Lemon Squeezy.</p>" +
@@ -515,7 +515,7 @@ var EXTRA = {
             "<li>Peça à IT para permitir <strong><code>https://api.lemonsqueezy.com</code> em HTTPS (443)</strong></li>" +
             "<li>Desligue a VPN corporativa ou use uma VPN permitida</li>" +
             "</ul>" +
-            "<p>Mensagem de <strong>limite de ativação (máx. 2 dispositivos)</strong>? <a href=\"contact.html\">Contacte-nos</a> com e-mail de compra, n.º de encomenda e chave.</p>" +
+            "<p>Mensagem de <strong>limite de ativação (máx. 2 dispositivos)</strong>? <a href=\"/contact/\">Contacte-nos</a> com e-mail de compra, n.º de encomenda e chave.</p>" +
             "<p>Transferir o instalador de novo <strong>não resolve</strong> se o servidor continuar bloqueado.</p>",
         faq13q: "O Peekom é freeware? Posso instalar num PC da empresa?",
         faq13a:
@@ -523,7 +523,7 @@ var EXTRA = {
             "<p>(Refere-se ao <strong>tipo de licença</strong>, não à certificação oficial Microsoft Windows.)</p>" +
             "<p>Em PCs corporativos a instalação ou caminhos de dados podem ser restritos. Além da pasta do programa, o Peekom guarda em <code>%AppData%\\Roaming\\Peekom</code>. Peça à IT para permitir:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> em <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> em <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Pasta de dados: <code>C:\\Users\\(utilizador)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Ativação Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -547,7 +547,7 @@ var EXTRA = {
             "<li>O <strong>e-mail</strong> usado no checkout (trabalho vs. pessoal)</li>" +
             "</ul>" +
             "<p>Inicie sessão em <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">As minhas encomendas Lemon Squeezy</a> com esse e-mail para ver a chave outra vez.</p>" +
-            "<p>Ainda sem sucesso? <a href=\"contact.html\">Contacte-nos</a> com <strong>e-mail de compra, data de pagamento e recibo</strong>.</p>"
+            "<p>Ainda sem sucesso? <a href=\"/contact/\">Contacte-nos</a> com <strong>e-mail de compra, data de pagamento e recibo</strong>.</p>"
     },
     it: {
         settingsGuideTitle: "Come apro le impostazioni?",
@@ -569,11 +569,11 @@ var EXTRA = {
             "<li>Scheda <strong>Avvio</strong></li>" +
             "<li>Seleziona <strong>빼꼼 인덱스</strong> → <strong>Disabilita</strong></li>" +
             "</ol>" +
-            "<p>Disattiva la voce e <strong>riavvia</strong>. Se il problema scompare, la causa era l’avvio automatico. Poi installa <a href=\"download.html\">Peekom (gratuito)</a> da capo.</p>" +
+            "<p>Disattiva la voce e <strong>riavvia</strong>. Se il problema scompare, la causa era l’avvio automatico. Poi installa <a href=\"/download/\">Peekom (gratuito)</a> da capo.</p>" +
             '<p class="privacy-doc__note">Le note della vecchia app <strong>non vengono migrate automaticamente</strong> perché Peekom salva i dati altrove. Copia ciò che ti serve prima di rimuoverla.</p>',
         faq10q: "Dove apro le impostazioni di Peekom?",
         faq10a:
-            "Tasto destro sull’icona Peekom nella <strong>area di notifica</strong> → <strong>Impostazioni</strong>. Puoi anche <strong>fare doppio clic</strong> sull’icona o <strong>doppio clic</strong> sul collegamento desktop (se l’app era chiusa, si aprono nota e impostazioni). Vedi la <a href=\"help.html\">guida</a> per i dettagli.",
+            "Tasto destro sull’icona Peekom nella <strong>area di notifica</strong> → <strong>Impostazioni</strong>. Puoi anche <strong>fare doppio clic</strong> sull’icona o <strong>doppio clic</strong> sul collegamento desktop (se l’app era chiusa, si aprono nota e impostazioni). Vedi la <a href=\"/help/\">guida</a> per i dettagli.",
         faq11q: "Come inserisco la chiave di licenza? L’esempio nel campo non coincide con l’e-mail.",
         faq11a:
             "<p>Usa la <strong>chiave di licenza completa</strong> dall’e-mail di conferma Lemon Squeezy.</p>" +
@@ -593,7 +593,7 @@ var EXTRA = {
             "<li>Chiedi all’IT di consentire <strong><code>https://api.lemonsqueezy.com</code> in HTTPS (443)</strong></li>" +
             "<li>Disattiva la VPN aziendale o riprova con una VPN consentita</li>" +
             "</ul>" +
-            "<p>Messaggio <strong>limite attivazione (max 2 dispositivi)</strong>? <a href=\"contact.html\">Contattaci</a> con e-mail d’acquisto, numero ordine e chiave.</p>" +
+            "<p>Messaggio <strong>limite attivazione (max 2 dispositivi)</strong>? <a href=\"/contact/\">Contattaci</a> con e-mail d’acquisto, numero ordine e chiave.</p>" +
             "<p>Scaricare di nuovo l’installer <strong>non risolve</strong> se il server resta bloccato.</p>",
         faq13q: "Peekom è freeware? Posso installarlo su un PC aziendale?",
         faq13a:
@@ -601,7 +601,7 @@ var EXTRA = {
             "<p>(Si intende il <strong>tipo di licenza</strong>, non la certificazione ufficiale Microsoft Windows.)</p>" +
             "<p>Sui PC aziendali installazione e percorsi dati possono essere limitati. Oltre alla cartella programma, Peekom salva in <code>%AppData%\\Roaming\\Peekom</code>. Chiedi all’IT di autorizzare:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installer ufficiale: <code>Peekom-Setup.exe</code> da <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Installer ufficiale: <code>Peekom-Setup.exe</code> da <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Cartella dati: <code>C:\\Users\\(utente)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Attivazione Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -625,7 +625,7 @@ var EXTRA = {
             "<li>L’<strong>e-mail</strong> usata al checkout (lavoro vs. personale)</li>" +
             "</ul>" +
             "<p>Accedi a <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">I miei ordini Lemon Squeezy</a> con quell’e-mail per rivedere la chiave.</p>" +
-            "<p>Ancora niente? <a href=\"contact.html\">Contattaci</a> con <strong>e-mail d’acquisto, data pagamento e ricevuta</strong>.</p>"
+            "<p>Ancora niente? <a href=\"/contact/\">Contattaci</a> con <strong>e-mail d’acquisto, data pagamento e ricevuta</strong>.</p>"
     },
     ru: {
         settingsGuideTitle: "Как открыть настройки?",
@@ -647,11 +647,11 @@ var EXTRA = {
             "<li>Вкладка <strong>Автозагрузка</strong></li>" +
             "<li>Выберите <strong>빼꼼 인덱스</strong> → <strong>Отключить</strong></li>" +
             "</ol>" +
-            "<p>Отключите запись и <strong>перезагрузите</strong> ПК. Если проблема исчезла, причина была в автозапуске. Затем установите <a href=\"download.html\">Peekom (бесплатно)</a> заново.</p>" +
+            "<p>Отключите запись и <strong>перезагрузите</strong> ПК. Если проблема исчезла, причина была в автозапуске. Затем установите <a href=\"/download/\">Peekom (бесплатно)</a> заново.</p>" +
             '<p class="privacy-doc__note">Заметки из старого приложения <strong>не переносятся автоматически</strong> — Peekom хранит данные в другом месте. Скопируйте нужное заранее.</p>',
         faq10q: "Где открыть настройки Peekom?",
         faq10a:
-            "Правый щелчок по значку Peekom в <strong>области уведомлений</strong> → <strong>Настройки</strong>. Также можно <strong>дважды щёлкнуть</strong> по значку в трее или <strong>дважды щёлкнуть</strong> ярлык на рабочем столе (если приложение было закрыто, откроются заметка и настройки). Подробнее в <a href=\"help.html\">руководстве</a>.",
+            "Правый щелчок по значку Peekom в <strong>области уведомлений</strong> → <strong>Настройки</strong>. Также можно <strong>дважды щёлкнуть</strong> по значку в трее или <strong>дважды щёлкнуть</strong> ярлык на рабочем столе (если приложение было закрыто, откроются заметка и настройки). Подробнее в <a href=\"/help/\">руководстве</a>.",
         faq11q: "Как ввести лицензионный ключ? Пример в поле не совпадает с письмом.",
         faq11a:
             "<p>Используйте <strong>полный лицензионный ключ</strong> из письма подтверждения Lemon Squeezy.</p>" +
@@ -671,7 +671,7 @@ var EXTRA = {
             "<li>Попросить IT разрешить <strong><code>https://api.lemonsqueezy.com</code> по HTTPS (443)</strong></li>" +
             "<li>Отключить корпоративный VPN или использовать разрешённый</li>" +
             "</ul>" +
-            "<p>Сообщение о <strong>лимите активации (макс. 2 устройства)</strong>? <a href=\"contact.html\">Напишите нам</a> с email покупки, номером заказа и ключом.</p>" +
+            "<p>Сообщение о <strong>лимите активации (макс. 2 устройства)</strong>? <a href=\"/contact/\">Напишите нам</a> с email покупки, номером заказа и ключом.</p>" +
             "<p>Повторная загрузка установщика <strong>не поможет</strong>, если сервер по-прежнему заблокирован.</p>",
         faq13q: "Peekom — это freeware? Можно ли установить на рабочий ПК?",
         faq13a:
@@ -679,7 +679,7 @@ var EXTRA = {
             "<p>(Речь о <strong>типе лицензии</strong>, а не об официальной сертификации Microsoft Windows.)</p>" +
             "<p>На рабочих ПК установка и пути данных могут быть ограничены. Кроме папки программы Peekom сохраняет данные в <code>%AppData%\\Roaming\\Peekom</code>. Попросите IT разрешить:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Официальный установщик: <code>Peekom-Setup.exe</code> с <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Официальный установщик: <code>Peekom-Setup.exe</code> с <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Папка данных: <code>C:\\Users\\(имя)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Активация Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -703,7 +703,7 @@ var EXTRA = {
             "<li><strong>Email</strong> при оплате (рабочий vs личный)</li>" +
             "</ul>" +
             "<p>Войдите на <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Мои заказы Lemon Squeezy</a> с этим email, чтобы снова увидеть ключ.</p>" +
-            "<p>Всё ещё не нашли? <a href=\"contact.html\">Напишите нам</a> с <strong>email покупки, датой оплаты и чеком</strong>.</p>"
+            "<p>Всё ещё не нашли? <a href=\"/contact/\">Напишите нам</a> с <strong>email покупки, датой оплаты и чеком</strong>.</p>"
     },
     vi: {
         settingsGuideTitle: "Mở Cài đặt ở đâu?",
@@ -725,11 +725,11 @@ var EXTRA = {
             "<li>Tab <strong>Khởi động</strong></li>" +
             "<li>Chọn <strong>빼꼼 인덱스</strong> → <strong>Vô hiệu hóa</strong></li>" +
             "</ol>" +
-            "<p>Tắt mục đó rồi <strong>khởi động lại</strong>. Nếu hết lỗi, nguyên nhân là mục khởi động cũ. Sau đó cài mới <a href=\"download.html\">Peekom (miễn phí)</a>.</p>" +
+            "<p>Tắt mục đó rồi <strong>khởi động lại</strong>. Nếu hết lỗi, nguyên nhân là mục khởi động cũ. Sau đó cài mới <a href=\"/download/\">Peekom (miễn phí)</a>.</p>" +
             '<p class="privacy-doc__note">Ghi chú từ app cũ <strong>không tự chuyển sang</strong> vì Peekom lưu ở vị trí khác. Hãy sao chép nội dung cần giữ trước khi gỡ.</p>',
         faq10q: "Mở Cài đặt Peekom ở đâu?",
         faq10a:
-            "Chuột phải biểu tượng Peekom ở <strong>khay hệ thống</strong> → <strong>Cài đặt</strong>. Cũng có thể <strong>nhấp đúp</strong> biểu tượng khay hoặc <strong>nhấp đúp</strong> lối tắt trên màn hình (nếu app đang tắt, ghi chú và Cài đặt mở cùng lúc). Xem <a href=\"help.html\">hướng dẫn</a> để biết thêm.",
+            "Chuột phải biểu tượng Peekom ở <strong>khay hệ thống</strong> → <strong>Cài đặt</strong>. Cũng có thể <strong>nhấp đúp</strong> biểu tượng khay hoặc <strong>nhấp đúp</strong> lối tắt trên màn hình (nếu app đang tắt, ghi chú và Cài đặt mở cùng lúc). Xem <a href=\"/help/\">hướng dẫn</a> để biết thêm.",
         faq11q: "Nhập khóa bản quyền thế nào? Ví dụ trong ô không khớp email.",
         faq11a:
             "<p>Dùng <strong>toàn bộ khóa bản quyền</strong> trong email xác nhận Lemon Squeezy.</p>" +
@@ -749,7 +749,7 @@ var EXTRA = {
             "<li>Nhờ IT cho phép <strong><code>https://api.lemonsqueezy.com</code> qua HTTPS (443)</strong></li>" +
             "<li>Tắt VPN công ty hoặc dùng VPN được phép</li>" +
             "</ul>" +
-            "<p>Thông báo <strong>giới hạn kích hoạt (tối đa 2 thiết bị)</strong>? <a href=\"contact.html\">Liên hệ</a> kèm email mua, mã đơn và khóa bản quyền.</p>" +
+            "<p>Thông báo <strong>giới hạn kích hoạt (tối đa 2 thiết bị)</strong>? <a href=\"/contact/\">Liên hệ</a> kèm email mua, mã đơn và khóa bản quyền.</p>" +
             "<p>Tải lại installer <strong>không</strong> sửa được nếu máy chủ vẫn bị chặn.</p>",
         faq13q: "Peekom có phải freeware không? Cài trên PC công ty được không?",
         faq13a:
@@ -757,7 +757,7 @@ var EXTRA = {
             "<p>(Ý nói <strong>loại giấy phép</strong>, không phải chứng nhận chính thức Microsoft Windows.)</p>" +
             "<p>PC công ty có thể hạn chế cài đặt hoặc đường dẫn dữ liệu. Ngoài thư mục chương trình, Peekom lưu tại <code>%AppData%\\Roaming\\Peekom</code>. Nhờ IT cho phép:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installer chính thức: <code>Peekom-Setup.exe</code> tại <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Installer chính thức: <code>Peekom-Setup.exe</code> tại <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Thư mục dữ liệu: <code>C:\\Users\\(tên)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Kích hoạt Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -781,7 +781,7 @@ var EXTRA = {
             "<li><strong>Email</strong> dùng khi thanh toán (nhầm công ty/cá nhân?)</li>" +
             "</ul>" +
             "<p>Đăng nhập <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Đơn hàng Lemon Squeezy</a> bằng email đó để xem lại khóa.</p>" +
-            "<p>Vẫn không thấy? <a href=\"contact.html\">Liên hệ</a> kèm <strong>email mua, thời gian thanh toán và biên lai</strong>.</p>"
+            "<p>Vẫn không thấy? <a href=\"/contact/\">Liên hệ</a> kèm <strong>email mua, thời gian thanh toán và biên lai</strong>.</p>"
     },
     th: {
         settingsGuideTitle: "เปิดการตั้งค่าที่ไหน?",
@@ -803,11 +803,11 @@ var EXTRA = {
             "<li>แท็บ <strong>เริ่มต้น</strong></li>" +
             "<li>เลือก <strong>빼꼼 인덱스</strong> → <strong>ปิดใช้งาน</strong></li>" +
             "</ol>" +
-            "<p>ปิดรายการแล้ว <strong>รีสตาร์ท</strong> หากปัญหาหาย สาเหตุคือการลงทะเบียนเริ่มต้น จากนั้นติดตั้ง <a href=\"download.html\">Peekom (ฟรี)</a> ใหม่</p>" +
+            "<p>ปิดรายการแล้ว <strong>รีสตาร์ท</strong> หากปัญหาหาย สาเหตุคือการลงทะเบียนเริ่มต้น จากนั้นติดตั้ง <a href=\"/download/\">Peekom (ฟรี)</a> ใหม่</p>" +
             '<p class="privacy-doc__note">บันทึกจากแอปเก่า <strong>ไม่ย้ายอัตโนมัติ</strong> เพราะ Peekom เก็บข้อมูลคนละที่ คัดลอกสิ่งที่ต้องการก่อนลบ</p>',
         faq10q: "เปิดการตั้งค่า Peekom ที่ไหน?",
         faq10a:
-            "คลิกขวาไอคอน Peekom ใน <strong>ถาดระบบ</strong> → <strong>การตั้งค่า</strong> หรือ <strong>ดับเบิลคลิก</strong> ไอคอนถาด หรือ <strong>ดับเบิลคลิก</strong> ทางลัดบนเดสก์ท็อป (หากแอปปิดอยู่ จะเปิดบันทึกและการตั้งค่าพร้อมกัน) ดู<a href=\"help.html\">คู่มือ</a>เพิ่มเติม",
+            "คลิกขวาไอคอน Peekom ใน <strong>ถาดระบบ</strong> → <strong>การตั้งค่า</strong> หรือ <strong>ดับเบิลคลิก</strong> ไอคอนถาด หรือ <strong>ดับเบิลคลิก</strong> ทางลัดบนเดสก์ท็อป (หากแอปปิดอยู่ จะเปิดบันทึกและการตั้งค่าพร้อมกัน) ดู<a href=\"/help/\">คู่มือ</a>เพิ่มเติม",
         faq11q: "ใส่คีย์ใบอนุญาตอย่างไร? ตัวอย่างในช่องไม่ตรงกับอีเมล",
         faq11a:
             "<p>ใช้ <strong>คีย์ใบอนุญาตทั้งหมด</strong> จากอีเมลยืนยัน Lemon Squeezy</p>" +
@@ -827,7 +827,7 @@ var EXTRA = {
             "<li>ขอ IT อนุญาต <strong><code>https://api.lemonsqueezy.com</code> ผ่าน HTTPS (443)</strong></li>" +
             "<li>ปิด VPN บริษัท หรือลอง VPN ที่อนุญาต</li>" +
             "</ul>" +
-            "<p>ข้อความ <strong>ขีดจำกัดการเปิดใช้ (สูงสุด 2 เครื่อง)</strong>? <a href=\"contact.html\">ติดต่อเรา</a> พร้อมอีเมลซื้อ เลขคำสั่งซื้อ และคีย์</p>" +
+            "<p>ข้อความ <strong>ขีดจำกัดการเปิดใช้ (สูงสุด 2 เครื่อง)</strong>? <a href=\"/contact/\">ติดต่อเรา</a> พร้อมอีเมลซื้อ เลขคำสั่งซื้อ และคีย์</p>" +
             "<p>ดาวน์โหลดตัวติดตั้งใหม่ <strong>ไม่ช่วย</strong> หากเซิร์ฟเวอร์ยังถูกบล็อก</p>",
         faq13q: "Peekom เป็น freeware ไหม? ติดตั้งบน PC บริษัทได้หรือไม่?",
         faq13a:
@@ -835,7 +835,7 @@ var EXTRA = {
             "<p>(หมายถึง<strong>ประเภทใบอนุญาต</strong> ไม่ใช่การรับรองอย่างเป็นทางการของ Microsoft Windows)</p>" +
             "<p>PC บริษัทอาจจำกัดการติดตั้งหรือพาธข้อมูล นอกโฟลเดอร์โปรแกรม Peekom เก็บที่ <code>%AppData%\\Roaming\\Peekom</code> ขอ IT อนุญาต:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>ตัวติดตั้งอย่างเป็นทางการ: <code>Peekom-Setup.exe</code> จาก <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>ตัวติดตั้งอย่างเป็นทางการ: <code>Peekom-Setup.exe</code> จาก <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>โฟลเดอร์ข้อมูล: <code>C:\\Users\\(ชื่อผู้ใช้)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>เปิดใช้ Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -859,7 +859,7 @@ var EXTRA = {
             "<li><strong>อีเมล</strong>ที่ใช้ชำระเงิน (สับสนงาน/ส่วนตัว?)</li>" +
             "</ul>" +
             "<p>เข้าสู่ระบบ <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">คำสั่งซื้อ Lemon Squeezy</a> ด้วยอีเมลนั้นเพื่อดูคีย์อีกครั้ง</p>" +
-            "<p>ยังหาไม่เจอ? <a href=\"contact.html\">ติดต่อเรา</a> พร้อม<strong>อีเมลซื้อ เวลาชำระ และใบเสร็จ</strong></p>"
+            "<p>ยังหาไม่เจอ? <a href=\"/contact/\">ติดต่อเรา</a> พร้อม<strong>อีเมลซื้อ เวลาชำระ และใบเสร็จ</strong></p>"
     },
     id: {
         settingsGuideTitle: "Bagaimana cara membuka Pengaturan?",
@@ -881,11 +881,11 @@ var EXTRA = {
             "<li>Tab <strong>Startup</strong></li>" +
             "<li>Pilih <strong>빼꼼 인덱스</strong> → <strong>Nonaktifkan</strong></li>" +
             "</ol>" +
-            "<p>Nonaktifkan entri lalu <strong>restart</strong>. Jika masalah berhenti, penyebabnya adalah startup otomatis. Lalu pasang <a href=\"download.html\">Peekom (gratis)</a> baru.</p>" +
+            "<p>Nonaktifkan entri lalu <strong>restart</strong>. Jika masalah berhenti, penyebabnya adalah startup otomatis. Lalu pasang <a href=\"/download/\">Peekom (gratis)</a> baru.</p>" +
             '<p class="privacy-doc__note">Catatan dari app lama <strong>tidak dipindahkan otomatis</strong> karena Peekom menyimpan di lokasi berbeda. Salin yang diperlukan sebelum menghapus.</p>',
         faq10q: "Di mana saya membuka Pengaturan Peekom?",
         faq10a:
-            "Klik kanan ikon Peekom di <strong>system tray</strong> → <strong>Pengaturan</strong>. Anda juga bisa <strong>klik dua kali</strong> ikon tray atau <strong>klik dua kali</strong> pintasan desktop (jika app tertutup, catatan dan Pengaturan terbuka bersamaan). Lihat <a href=\"help.html\">panduan</a> untuk detail.",
+            "Klik kanan ikon Peekom di <strong>system tray</strong> → <strong>Pengaturan</strong>. Anda juga bisa <strong>klik dua kali</strong> ikon tray atau <strong>klik dua kali</strong> pintasan desktop (jika app tertutup, catatan dan Pengaturan terbuka bersamaan). Lihat <a href=\"/help/\">panduan</a> untuk detail.",
         faq11q: "Bagaimana memasukkan kunci lisensi? Contoh di kolom tidak cocok dengan email.",
         faq11a:
             "<p>Gunakan <strong>seluruh kunci lisensi</strong> dari email konfirmasi Lemon Squeezy.</p>" +
@@ -905,7 +905,7 @@ var EXTRA = {
             "<li>Minta IT mengizinkan <strong><code>https://api.lemonsqueezy.com</code> lewat HTTPS (443)</strong></li>" +
             "<li>Matikan VPN kantor atau coba VPN yang diizinkan</li>" +
             "</ul>" +
-            "<p>Pesan <strong>batas aktivasi (maks. 2 perangkat)</strong>? <a href=\"contact.html\">Hubungi kami</a> dengan email pembelian, nomor pesanan, dan kunci.</p>" +
+            "<p>Pesan <strong>batas aktivasi (maks. 2 perangkat)</strong>? <a href=\"/contact/\">Hubungi kami</a> dengan email pembelian, nomor pesanan, dan kunci.</p>" +
             "<p>Unduh installer lagi <strong>tidak</strong> memperbaiki jika server masih diblokir.</p>",
         faq13q: "Apakah Peekom freeware? Bisa dipasang di PC kantor?",
         faq13a:
@@ -913,7 +913,7 @@ var EXTRA = {
             "<p>(Maksudnya <strong>jenis lisensi</strong>, bukan sertifikasi resmi Microsoft Windows.)</p>" +
             "<p>PC kantor bisa membatasi instalasi atau path data. Selain folder program, Peekom menyimpan di <code>%AppData%\\Roaming\\Peekom</code>. Minta IT mengizinkan:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installer resmi: <code>Peekom-Setup.exe</code> dari <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>Installer resmi: <code>Peekom-Setup.exe</code> dari <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>Folder data: <code>C:\\Users\\(nama)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Aktivasi Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -937,7 +937,7 @@ var EXTRA = {
             "<li><strong>Alamat email</strong> saat checkout (kerja vs pribadi)</li>" +
             "</ul>" +
             "<p>Masuk ke <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Pesanan Lemon Squeezy</a> dengan email itu untuk melihat kunci lagi.</p>" +
-            "<p>Masih belum ketemu? <a href=\"contact.html\">Hubungi kami</a> dengan <strong>email pembelian, waktu bayar, dan kuitansi</strong>.</p>"
+            "<p>Masih belum ketemu? <a href=\"/contact/\">Hubungi kami</a> dengan <strong>email pembelian, waktu bayar, dan kuitansi</strong>.</p>"
     },
     hi: {
         settingsGuideTitle: "सेटिंग्स कैसे खोलें?",
@@ -959,11 +959,11 @@ var EXTRA = {
             "<li><strong>स्टार्टअप</strong> टैब</li>" +
             "<li><strong>빼꼼 인덱스</strong> चुनें → <strong>अक्षम करें</strong></li>" +
             "</ol>" +
-            "<p>प्रविष्टि बंद करके <strong>रीस्टार्ट</strong> करें। समस्या रुक जाए तो कारण स्टार्टअप पंजीकरण था। फिर <a href=\"download.html\">Peekom (मुफ़्त)</a> नए सिरे से इंस्टॉल करें।</p>" +
+            "<p>प्रविष्टि बंद करके <strong>रीस्टार्ट</strong> करें। समस्या रुक जाए तो कारण स्टार्टअप पंजीकरण था। फिर <a href=\"/download/\">Peekom (मुफ़्त)</a> नए सिरे से इंस्टॉल करें।</p>" +
             '<p class="privacy-doc__note">पुराने ऐप की नोट्स <strong>अपने आप नहीं जातीं</strong> क्योंकि Peekom डेटा अलग जगह रखता है। हटाने से पहले ज़रूरी सामग्री कॉपी कर लें।</p>',
         faq10q: "Peekom सेटिंग्स कहाँ खोलें?",
         faq10a:
-            "<strong>सिस्टम ट्रे</strong> में Peekom आइकन पर राइट-क्लिक → <strong>सेटिंग्स</strong>। आप <strong>डबल-क्लिक</strong> भी कर सकते हैं ट्रे आइकन पर, या डेस्कटॉप शॉर्टकट <strong>डबल-क्लिक</strong> (ऐप बंद हो तो नोट और सेटिंग्स साथ खुलती हैं)। विवरण के लिए <a href=\"help.html\">गाइड</a> देखें।",
+            "<strong>सिस्टम ट्रे</strong> में Peekom आइकन पर राइट-क्लिक → <strong>सेटिंग्स</strong>। आप <strong>डबल-क्लिक</strong> भी कर सकते हैं ट्रे आइकन पर, या डेस्कटॉप शॉर्टकट <strong>डबल-क्लिक</strong> (ऐप बंद हो तो नोट और सेटिंग्स साथ खुलती हैं)। विवरण के लिए <a href=\"/help/\">गाइड</a> देखें।",
         faq11q: "लाइसेंस कुंजी कैसे दर्ज करें? फ़ील्ड का उदाहरण ईमेल से मेल नहीं खाता।",
         faq11a:
             "<p>Lemon Squeezy पुष्टि ईमेल की <strong>पूरी लाइसेंस कुंजी</strong> उपयोग करें।</p>" +
@@ -983,7 +983,7 @@ var EXTRA = {
             "<li>IT से <strong><code>https://api.lemonsqueezy.com</code> HTTPS (443)</strong> अनुमति माँगें</li>" +
             "<li>कॉर्पोरेट VPN बंद करें या अनुमत VPN से फिर कोशिश करें</li>" +
             "</ul>" +
-            "<p><strong>सक्रियण सीमा (अधिकतम 2 डिवाइस)</strong> संदेश? <a href=\"contact.html\">संपर्क करें</a> — खरीद ईमेल, ऑर्डर नंबर और कुंजी भेजें।</p>" +
+            "<p><strong>सक्रियण सीमा (अधिकतम 2 डिवाइस)</strong> संदेश? <a href=\"/contact/\">संपर्क करें</a> — खरीद ईमेल, ऑर्डर नंबर और कुंजी भेजें।</p>" +
             "<p>इंस्टॉलर दोबारा डाउनलोड करने से <strong>कोई फ़ायदा नहीं</strong> अगर सर्वर अभी भी ब्लॉक है।</p>",
         faq13q: "क्या Peekom freeware है? कंपनी PC पर इंस्टॉल कर सकते हैं?",
         faq13a:
@@ -991,7 +991,7 @@ var EXTRA = {
             "<p>(यह <strong>लाइसेंस प्रकार</strong> है, Microsoft Windows की आधिकारिक प्रमाणन नहीं।)</p>" +
             "<p>कंपनी PC पर इंस्टॉल या डेटा पथ प्रतिबंधित हो सकते हैं। प्रोग्राम फ़ोल्डर के अलावा Peekom <code>%AppData%\\Roaming\\Peekom</code> में सहेजता है। IT से अनुमति माँगें:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>आधिकारिक इंस्टॉलर: <a href=\"download.html\">peekom.com/download</a> का <code>Peekom-Setup.exe</code></li>" +
+            "<li>आधिकारिक इंस्टॉलर: <a href=\"/download/\">peekom.com/download</a> का <code>Peekom-Setup.exe</code></li>" +
             "<li>डेटा फ़ोल्डर: <code>C:\\Users\\(उपयोगकर्ता)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus सक्रियण: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -1015,7 +1015,7 @@ var EXTRA = {
             "<li>चेकआउट पर दिया <strong>ईमेल पता</strong> (ऑफिस/निजी भ्रम?)</li>" +
             "</ul>" +
             "<p><a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">Lemon Squeezy My Orders</a> पर उस ईमेल से साइन इन करके कुंजी फिर देखें।</p>" +
-            "<p>फिर भी न मिले? <a href=\"contact.html\">संपर्क करें</a> — <strong>खरीद ईमेल, भुगतान समय और रसीद</strong> भेजें।</p>"
+            "<p>फिर भी न मिले? <a href=\"/contact/\">संपर्क करें</a> — <strong>खरीद ईमेल, भुगतान समय और रसीद</strong> भेजें।</p>"
     },
     ar: {
         settingsGuideTitle: "كيف أفتح الإعدادات؟",
@@ -1037,11 +1037,11 @@ var EXTRA = {
             "<li>علامة تبويب <strong>بدء التشغيل</strong></li>" +
             "<li>اختر <strong>빼꼼 인덱스</strong> → <strong>تعطيل</strong></li>" +
             "</ol>" +
-            "<p>عطّل الإدخال ثم <strong>أعد التشغيل</strong>. إذا توقفت المشكلة، فالسبب كان تسجيل بدء التشغيل. ثم ثبّت <a href=\"download.html\">Peekom (مجاني)</a> من جديد.</p>" +
+            "<p>عطّل الإدخال ثم <strong>أعد التشغيل</strong>. إذا توقفت المشكلة، فالسبب كان تسجيل بدء التشغيل. ثم ثبّت <a href=\"/download/\">Peekom (مجاني)</a> من جديد.</p>" +
             '<p class="privacy-doc__note">ملاحظات التطبيق القديم <strong>لا تُنقل تلقائيًا</strong> لأن Peekom يخزّن البيانات في مكان مختلف. انسخ ما تحتاجه قبل الإزالة.</p>',
         faq10q: "أين أفتح إعدادات Peekom؟",
         faq10a:
-            "انقر بزر الماوس الأيمن على أيقونة Peekom في <strong>صينية النظام</strong> → <strong>الإعدادات</strong>. يمكنك أيضًا <strong>النقر المزدوج</strong> على أيقونة الصينية أو <strong>النقر المزدوج</strong> على اختصار سطح المكتب (إذا كان التطبيق مغلقًا، تُفتح الملاحظة والإعدادات معًا). راجع <a href=\"help.html\">الدليل</a> للتفاصيل.",
+            "انقر بزر الماوس الأيمن على أيقونة Peekom في <strong>صينية النظام</strong> → <strong>الإعدادات</strong>. يمكنك أيضًا <strong>النقر المزدوج</strong> على أيقونة الصينية أو <strong>النقر المزدوج</strong> على اختصار سطح المكتب (إذا كان التطبيق مغلقًا، تُفتح الملاحظة والإعدادات معًا). راجع <a href=\"/help/\">الدليل</a> للتفاصيل.",
         faq11q: "كيف أُدخل مفتاح الترخيص؟ المثال في الحقل لا يطابق المفتاح في البريد.",
         faq11a:
             "<p>استخدم <strong>مفتاح الترخيص الكامل</strong> من بريد تأكيد Lemon Squeezy.</p>" +
@@ -1061,7 +1061,7 @@ var EXTRA = {
             "<li>اطلب من IT السماح بـ <strong><code>https://api.lemonsqueezy.com</code> عبر HTTPS (443)</strong></li>" +
             "<li>أوقف VPN الشركة أو جرّب VPN مسموحًا</li>" +
             "</ul>" +
-            "<p>رسالة <strong>حد التفعيل (جهازان كحد أقصى)</strong>؟ <a href=\"contact.html\">تواصل معنا</a> مع بريد الشراء ورقم الطلب والمفتاح.</p>" +
+            "<p>رسالة <strong>حد التفعيل (جهازان كحد أقصى)</strong>؟ <a href=\"/contact/\">تواصل معنا</a> مع بريد الشراء ورقم الطلب والمفتاح.</p>" +
             "<p>إعادة تنزيل المثبّت <strong>لن</strong> تحل المشكلة إذا بقي الخادم محجوبًا.</p>",
         faq13q: "هل Peekom برنامج مجاني (freeware)؟ هل يمكن تثبيته على جهاز الشركة؟",
         faq13a:
@@ -1069,7 +1069,7 @@ var EXTRA = {
             "<p>(يقصد <strong>نوع الترخيص</strong>، وليس شهادة Microsoft Windows الرسمية.)</p>" +
             "<p>قد تُقيَّد التثبيت أو مسارات البيانات على أجهزة الشركة. بجانب مجلد البرنامج، يخزّن Peekom في <code>%AppData%\\Roaming\\Peekom</code>. اطلب من IT السماح بـ:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>المثبّت الرسمي: <code>Peekom-Setup.exe</code> من <a href=\"download.html\">peekom.com/download</a></li>" +
+            "<li>المثبّت الرسمي: <code>Peekom-Setup.exe</code> من <a href=\"/download/\">peekom.com/download</a></li>" +
             "<li>مجلد البيانات: <code>C:\\Users\\(اسم المستخدم)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>تفعيل Plus: <code>https://api.lemonsqueezy.com</code></li>" +
             "</ul>",
@@ -1093,7 +1093,7 @@ var EXTRA = {
             "<li><strong>البريد</strong> المستخدم عند الدفع (عمل مقابل شخصي)</li>" +
             "</ul>" +
             "<p>سجّل الدخول إلى <a href=\"" + ORDER + "\" target=\"_blank\" rel=\"noopener\">طلبات Lemon Squeezy</a> بنفس البريد لعرض المفتاح مجددًا.</p>" +
-            "<p>ما زلت عالقًا؟ <a href=\"contact.html\">تواصل معنا</a> مع <strong>بريد الشراء ووقت الدفع والإيصال</strong>.</p>"
+            "<p>ما زلت عالقًا؟ <a href=\"/contact/\">تواصل معنا</a> مع <strong>بريد الشراء ووقت الدفع والإيصال</strong>.</p>"
     }
 };
 window.PeekomI18nLocales = window.PeekomI18nLocales || {};

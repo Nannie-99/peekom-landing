@@ -7,9 +7,9 @@ window.PeekomI18nLocales.ja = {
     searchPlaceholder: "検索...",
     heroTitleMain: "Peekom",
     heroTagline: "エッジメモアプリが <strong>Peekom</strong> として戻りました。<br>軽くて速い—作業や発表の流れを邪魔しません。",
-    heroPlusNote: '無料アプリをインストール後、設定から Peekom Plus にアップグレードできます。<br><a href="features.html#compare">機能比較表で無料と Plus の違い</a>をご確認ください。',
+    heroPlusNote: '無料アプリをインストール後、設定から Peekom Plus にアップグレードできます。<br><a href="/features/#compare">機能比較表で無料と Plus の違い</a>をご確認ください。',
     heroUpgradeNote: "無料アプリをインストール後、設定から Peekom Plus にアップグレードできます。",
-    heroFreeCompareNote: '<a href="features.html#compare">無料と Plus の違い</a>をご確認ください。',
+    heroFreeCompareNote: '<a href="/features/#compare">無料と Plus の違い</a>をご確認ください。',
     heroWinBtn: "Windows 版をダウンロード", heroMacBtn: "macOS 版をダウンロード",
     heroPlusBuyBtn: "購入する",
     heroPlusCardTitle: "Peekom Plus",
@@ -22,7 +22,7 @@ window.PeekomI18nLocales.ja = {
     heroFreeCardBadge: "無料",
     heroMacFreeCardBadge: "無料",
     heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-    heroMacFreeCardMeta: "macOS",
+    heroMacFreeCardMeta: "macOS (Universal)",
     heroFreeDownloadLabel: "ダウンロード",
     carouselCap1: "モニター端のハンドル",
     carouselCap2: "クリック・ショートカットでメモを開く",
@@ -60,7 +60,7 @@ window.PeekomI18nLocales.ja = {
     faqR3q: "返金後、ライセンスはどうなりますか？",
     faqR3a: "返金が完了すると Peekom Plus ライセンスキーは<strong>無効化</strong>されます。次回オンラインでアプリを起動すると自動的に無料版へ戻るため、返金を申請する前に Plus の利用を停止してよいかご確認ください。",
     faq1q: "無料版と Peekom Plus の違いは何ですか？",
-    faq1a: '無料版には3インデックス、グループ移動、ICE モード、ホバー遅延、モニター選択、Markdown、書式バー、画像挿入が含まれます。Peekom Plus（発売記念 $9.99、通常 $12.99）は10スロット、カスタムテーマ、フォント、不透明度、画像リサイズ、エクスポートをアプリ内でアンロックします。<a href="features.html#compare">比較表</a>をご覧ください。',
+    faq1a: '無料版には3インデックス、グループ移動、ICE モード、ホバー遅延、モニター選択、Markdown、書式バー、画像挿入が含まれます。Peekom Plus（発売記念 $9.99、通常 $12.99）は10スロット、カスタムテーマ、フォント、不透明度、画像リサイズ、エクスポートをアプリ内でアンロックします。<a href="/features/#compare">比較表</a>をご覧ください。',
     compareFreeName: "Peekom (無料)",
     comparePlusName: "Peekom Plus",
     compareCta: "Peekom Plus を入手",
@@ -70,7 +70,7 @@ window.PeekomI18nLocales.ja = {
         '<div class="guide-step">' +
             "<h3>1. インストール</h3>" +
             '<ul class="guide-step-list">' +
-                '<li><strong>ダウンロード</strong> — <a href="download.html">ダウンロード</a>ページ（またはホーム）から Windows・macOS 用インストーラーを取得します。</li>' +
+                '<li><strong>ダウンロード</strong> — <a href="/download/">ダウンロード</a>ページ（またはホーム）から Windows・macOS 用インストーラーを取得します。</li>' +
                 "<li><strong>Peekom-Setup.exe を実行</strong> — インストーラーをダブルクリックし、画面の案内に従ってインストールを完了します。</li>" +
                 '<li><strong>SmartScreen 警告が出る場合</strong> — 青いウィンドウが表示されたら、<a href="#" onclick="openModal(); return false;">インストールガイド</a>を開き、<strong>[詳細情報]</strong> → <strong>[実行]</strong> の順に進めてください。</li>' +
             "</ul>" +
@@ -132,7 +132,7 @@ window.PeekomI18nLocales.ja = {
     faq9a:
         "<p>アプリを削除しても Lemon Squeezy に登録されたライセンスは残ります。次の手順で Peekom Plus とすべての有料機能を復元できます。</p>" +
         '<ul class="guide-step-list">' +
-        "<li><strong>1. Peekom を再インストール</strong> — <a href=\"download.html\">peekom.com</a> から無料版（<code>Peekom-Setup.exe</code>）をダウンロードしてインストールします。</li>" +
+        "<li><strong>1. Peekom を再インストール</strong> — <a href=\"/download/\">peekom.com</a> から無料版（<code>Peekom-Setup.exe</code>）をダウンロードしてインストールします。</li>" +
         "<li><strong>2. ライセンスキーを確認</strong> — 購入時に Lemon Squeezy から届いた領収メールを開き、<strong>[License Key]</strong> をコピーします。メールを紛失した場合は、Lemon Squeezy の注文履歴に同じメールでログインしてキーを再確認できます。</li>" +
         "<li><strong>3. ライセンスを再認証</strong> — アプリ右上の歯車（設定）を開き、<strong>Plus 認証</strong>にキーを貼り付けて認証します。すぐにアプリ名が Peekom Plus に変わり、10 スロット・カスタムテーマなど有料機能が復元されます。</li>" +
         "</ul>" +
@@ -288,9 +288,9 @@ window.PeekomI18nLocales["zh-CN"] = {
     searchPlaceholder: "搜索...",
     heroTitleMain: "Peekom",
     heroTagline: "边缘备忘应用以 <strong>Peekom</strong> 回归。<br>轻量快速——不打断您的工作或演示节奏。",
-    heroPlusNote: '安装免费应用后，可在设置中升级到 Peekom Plus。<br>在<a href="features.html#compare">功能对比表</a>中查看免费版与 Plus 的区别。',
+    heroPlusNote: '安装免费应用后，可在设置中升级到 Peekom Plus。<br>在<a href="/features/#compare">功能对比表</a>中查看免费版与 Plus 的区别。',
     heroUpgradeNote: "安装免费应用后，可在设置中升级到 Peekom Plus。",
-    heroFreeCompareNote: '<a href="features.html#compare">查看免费版与 Plus 的区别</a>。',
+    heroFreeCompareNote: '<a href="/features/#compare">查看免费版与 Plus 的区别</a>。',
     heroWinBtn: "下载 Windows 版", heroMacBtn: "下载 macOS 版",
     heroPlusBuyBtn: "立即购买",
     heroPlusCardTitle: "Peekom Plus",
@@ -303,7 +303,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     heroFreeCardBadge: "免费",
     heroMacFreeCardBadge: "免费",
     heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-    heroMacFreeCardMeta: "macOS",
+    heroMacFreeCardMeta: "macOS (Universal)",
     heroFreeDownloadLabel: "下载",
     carouselCap1: "显示器边缘手柄",
     carouselCap2: "点击或快捷键打开备忘",
@@ -341,7 +341,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     faqR3q: "退款后许可证会怎样？",
     faqR3a: "退款完成后，您的 Peekom Plus 许可证密钥将被<strong>停用</strong>。应用在下次联网启动时会自动恢复为免费版，因此在申请退款前请确认您确实要停止使用 Plus。",
     faq1q: "免费版与 Peekom Plus 有什么区别？",
-    faq1a: '免费版包含3个索引、分组移动、ICE 模式、悬停延迟、显示器选择、Markdown、格式工具栏和图片插入。Peekom Plus（首发 $9.99，原价 $12.99）在应用内解锁10个槽位、自定义主题、字体、透明度、图片缩放和导出。请参阅<a href="features.html#compare">对比表</a>。',
+    faq1a: '免费版包含3个索引、分组移动、ICE 模式、悬停延迟、显示器选择、Markdown、格式工具栏和图片插入。Peekom Plus（首发 $9.99，原价 $12.99）在应用内解锁10个槽位、自定义主题、字体、透明度、图片缩放和导出。请参阅<a href="/features/#compare">对比表</a>。',
     compareFreeName: "Peekom (免费)",
     comparePlusName: "Peekom Plus",
     compareCta: "获取 Peekom Plus",
@@ -351,7 +351,7 @@ window.PeekomI18nLocales["zh-CN"] = {
         '<div class="guide-step">' +
             "<h3>1. 安装</h3>" +
             '<ul class="guide-step-list">' +
-                '<li><strong>下载</strong> — 从<a href="download.html">下载</a>页面（或首页）获取 Windows 或 macOS 安装包。</li>' +
+                '<li><strong>下载</strong> — 从<a href="/download/">下载</a>页面（或首页）获取 Windows 或 macOS 安装包。</li>' +
                 "<li><strong>运行 Peekom-Setup.exe</strong> — 双击安装程序并按提示完成安装。</li>" +
                 '<li><strong>SmartScreen 警告</strong> — 如出现蓝色窗口，请打开<a href="#" onclick="openModal(); return false;">安装指南</a>，依次选择 <strong>[更多信息]</strong> → <strong>[仍要运行]</strong>。</li>' +
             "</ul>" +
@@ -413,7 +413,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     faq9a:
         "<p>卸载应用不会取消您在 Lemon Squeezy 的许可证。按以下步骤可恢复 Peekom Plus 及所有付费功能。</p>" +
         '<ul class="guide-step-list">' +
-        "<li><strong>1. 重新安装 Peekom</strong> — 从 <a href=\"download.html\">peekom.com</a> 下载免费版（<code>Peekom-Setup.exe</code>）并安装。</li>" +
+        "<li><strong>1. 重新安装 Peekom</strong> — 从 <a href=\"/download/\">peekom.com</a> 下载免费版（<code>Peekom-Setup.exe</code>）并安装。</li>" +
         "<li><strong>2. 查找许可证密钥</strong> — 打开购买时 Lemon Squeezy 发送的收据邮件，复制 <strong>[License Key]</strong>。若邮件丢失，可用同一邮箱登录 Lemon Squeezy 订单记录页面重新查看。</li>" +
         "<li><strong>3. 重新认证</strong> — 点击应用右上角的齿轮（设置），在 <strong>Plus 认证</strong> 中粘贴密钥并确认。应用将立即变为 Peekom Plus，恢复 10 个槽位、自定义主题等付费功能。</li>" +
         "</ul>" +
@@ -569,9 +569,9 @@ window.PeekomI18nLocales["zh-TW"] = {
     searchPlaceholder: "搜尋...",
     heroTitleMain: "Peekom",
     heroTagline: "邊緣備忘應用程式以 <strong>Peekom</strong> 回歸。<br>輕量快速——不打斷您的工作或簡報節奏。",
-    heroPlusNote: '安裝免費應用程式後，可在設定中升級到 Peekom Plus。<br>在<a href="features.html#compare">功能比較表</a>中查看免費版與 Plus 的差異。',
+    heroPlusNote: '安裝免費應用程式後，可在設定中升級到 Peekom Plus。<br>在<a href="/features/#compare">功能比較表</a>中查看免費版與 Plus 的差異。',
     heroUpgradeNote: "安裝免費應用程式後，可在設定中升級到 Peekom Plus。",
-    heroFreeCompareNote: '<a href="features.html#compare">查看免費版與 Plus 的差異</a>。',
+    heroFreeCompareNote: '<a href="/features/#compare">查看免費版與 Plus 的差異</a>。',
     heroWinBtn: "下載 Windows 版", heroMacBtn: "下載 macOS 版",
     heroPlusBuyBtn: "立即購買",
     heroPlusCardTitle: "Peekom Plus",
@@ -584,7 +584,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     heroFreeCardBadge: "免費",
     heroMacFreeCardBadge: "免費",
     heroWinCardMeta: "Windows 10 · 11 (64-bit)",
-    heroMacFreeCardMeta: "macOS",
+    heroMacFreeCardMeta: "macOS (Universal)",
     heroFreeDownloadLabel: "下載",
     carouselCap1: "螢幕邊緣手柄",
     carouselCap2: "點擊或快捷鍵開啟備忘",
@@ -622,7 +622,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     faqR3q: "退款後授權會如何？",
     faqR3a: "退款完成後，您的 Peekom Plus 授權金鑰將被<strong>停用</strong>。應用程式在下次連線啟動時會自動還原為免費版，因此在申請退款前請確認您確實要停止使用 Plus。",
     faq1q: "免費版與 Peekom Plus 有什麼不同？",
-    faq1a: '免費版包含3個索引、群組移動、ICE 模式、懸停延遲、螢幕選擇、Markdown、格式工具列和圖片插入。Peekom Plus（首發 $9.99，原價 $12.99）在應用程式內解鎖10個槽位、自訂主題、字型、透明度、圖片縮放和匯出。請參閱<a href="features.html#compare">比較表</a>。',
+    faq1a: '免費版包含3個索引、群組移動、ICE 模式、懸停延遲、螢幕選擇、Markdown、格式工具列和圖片插入。Peekom Plus（首發 $9.99，原價 $12.99）在應用程式內解鎖10個槽位、自訂主題、字型、透明度、圖片縮放和匯出。請參閱<a href="/features/#compare">比較表</a>。',
     compareFreeName: "Peekom (免費)",
     comparePlusName: "Peekom Plus",
     compareCta: "取得 Peekom Plus",
@@ -632,7 +632,7 @@ window.PeekomI18nLocales["zh-TW"] = {
         '<div class="guide-step">' +
             "<h3>1. 安裝</h3>" +
             '<ul class="guide-step-list">' +
-                '<li><strong>下載</strong> — 從<a href="download.html">下載</a>頁面（或首頁）取得 Windows 或 macOS 安裝檔。</li>' +
+                '<li><strong>下載</strong> — 從<a href="/download/">下載</a>頁面（或首頁）取得 Windows 或 macOS 安裝檔。</li>' +
                 "<li><strong>執行 Peekom-Setup.exe</strong> — 雙擊安裝程式並依提示完成安裝。</li>" +
                 '<li><strong>SmartScreen 警告</strong> — 如出現藍色視窗，請開啟<a href="#" onclick="openModal(); return false;">安裝指南</a>，依序選擇 <strong>[詳細資訊]</strong> → <strong>[仍要執行]</strong>。</li>' +
             "</ul>" +
@@ -694,7 +694,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     faq9a:
         "<p>解除安裝應用程式不會取消您在 Lemon Squeezy 的授權。依下列步驟可恢復 Peekom Plus 與所有付費功能。</p>" +
         '<ul class="guide-step-list">' +
-        "<li><strong>1. 重新安裝 Peekom</strong> — 從 <a href=\"download.html\">peekom.com</a> 下載免費版（<code>Peekom-Setup.exe</code>）並安裝。</li>" +
+        "<li><strong>1. 重新安裝 Peekom</strong> — 從 <a href=\"/download/\">peekom.com</a> 下載免費版（<code>Peekom-Setup.exe</code>）並安裝。</li>" +
         "<li><strong>2. 查詢授權金鑰</strong> — 開啟購買時 Lemon Squeezy 寄送的收據郵件，複製 <strong>[License Key]</strong>。若郵件遺失，可用相同電子郵件登入 Lemon Squeezy 訂單紀錄頁面重新查看。</li>" +
         "<li><strong>3. 重新認證</strong> — 點選應用程式右上角的齒輪（設定），在 <strong>Plus 認證</strong> 貼上金鑰並確認。應用程式將立即變為 Peekom Plus，恢復 10 個槽位、自訂主題等付費功能。</li>" +
         "</ul>" +
