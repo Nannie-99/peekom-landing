@@ -72,7 +72,9 @@ const RELEASE_HISTORY = [
 
 const CHANGELOG_V123 = {
     ko: [
-        "Plus: 인덱스에 이미지를 여러 장 넣은 뒤 재부팅해도 이미지가 유지되도록 수정",
+        "Peekom Plus: 인덱스에 이미지를 여러 장 넣은 뒤 재부팅해도 이미지가 유지되도록 수정",
+        "Peekom Plus: 체크리스트 취소선 켜기/끄기 추가",
+        "글자 크기 조절 시 텍스트 색상이 저장되지 않던 오류 개선",
         "설정 변경이 재실행·재부팅 후에도 더 안정적으로 유지되도록 개선",
         "첫 줄 텍스트 정렬이 어긋나던 문제 수정",
         "macOS: 메뉴 막대 아이콘·Dock 아이콘 표시 개선",
@@ -80,7 +82,9 @@ const CHANGELOG_V123 = {
         "macOS 정식 배포 (Universal: Intel · Apple Silicon)"
     ],
     en: [
-        "Plus: Fixed multi-image memos losing images after reboot",
+        "Peekom Plus: Fixed multi-image memos losing images after reboot",
+        "Peekom Plus: Checklist strikethrough on/off",
+        "Fixed text color not saving when changing font size",
         "Settings now persist more reliably across relaunch/reboot",
         "Fixed first-line text alignment issues",
         "macOS: Improved menu bar and Dock icon appearance",
