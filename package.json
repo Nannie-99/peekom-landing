@@ -12,8 +12,9 @@
     "dist": "npm run predist && electron-builder --win nsis",
     "dist:win": "electron-builder --win nsis",
     "dist:win:unsigned": "set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder --win nsis",
-    "dist:mac": "npm run predist:mac && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --universal",
-    "dist:mac:arm64": "npm run predist:mac && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --arm64",
+    "dist:mac": "bash scripts/dist-mac.sh",
+    "dist:mac:arm64": "ARCH=arm64 bash scripts/dist-mac.sh",
+    "dist:mac:unsigned": "npm run predist:mac && CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder --mac dmg --universal -c.mac.identity=null -c.mac.notarize=false",
     "dist:publish": "electron-builder --win nsis --publish always"
   },
   "keywords": [
@@ -100,18 +101,31 @@
     "mac": {
       "icon": "icon.icns",
       "category": "public.app-category.productivity",
+      "identity": "NANGYEONG HEO (XVWG95T72G)",
       "target": [
         {
           "target": "dmg",
           "arch": [
             "universal"
           ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
         }
       ],
       "artifactName": "Peekom-macOS.${ext}",
-      "hardenedRuntime": false,
+      "hardenedRuntime": true,
       "gatekeeperAssess": false,
-      "identity": null
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "sign": "scripts/mac-sign.js",
+      "timestamp": "http://timestamp.apple.com/ts01",
+      "notarize": {
+        "teamId": "XVWG95T72G"
+      }
     },
     "dmg": {
       "title": "Peekom",
