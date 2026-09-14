@@ -2241,7 +2241,7 @@
 
         .faq-refund-list {
             margin: 0;
-            padding-left: 18px;
+            padding-inline-start: 18px;
         }
 
         .faq-refund-list li {
@@ -2250,6 +2250,20 @@
 
         .faq-refund-list li:last-child {
             margin-bottom: 0;
+        }
+
+        .faq-refund-list ul {
+            margin: 6px 0 0;
+            padding-inline-start: 18px;
+            list-style: disc;
+        }
+
+        .faq-refund-list ul li {
+            margin-bottom: 5px;
+        }
+
+        .faq-refund-policy__body ul + p {
+            margin-top: 12px;
         }
 
         .faq-group {

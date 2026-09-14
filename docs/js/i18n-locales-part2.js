@@ -50,20 +50,93 @@ Object.assign(window.PeekomI18nLocales, {
         faqSub: "Preguntas frecuentes sobre Peekom.",
         refundPolicyTitle: "Política de reembolso de Peekom Plus",
         refundPolicyBody:
-            "<p>Los pagos y reembolsos de Peekom Plus los procesa Lemon Squeezy, nuestro comerciante registrado (Merchant of Record).</p>" +
+            "<p>Los pagos y reembolsos de Peekom Plus los procesa <strong>Lemon Squeezy</strong>, nuestro comerciante registrado (Merchant of Record).</p>" +
             '<ul class="faq-refund-list">' +
-            "<li><strong>Plazo</strong> — Se aceptan solicitudes dentro de los <strong>30 días</strong> posteriores a la compra.</li>" +
-            "<li><strong>Casos con reembolso</strong> — Mal funcionamiento del producto (la app no se ejecuta o no funciona correctamente) y pagos duplicados del mismo pedido.</li>" +
-            "<li><strong>Sin reembolso</strong> — Cambio de opinión.</li>" +
-            "<li><strong>Licencia tras el reembolso</strong> — Una vez reembolsado, tu clave de licencia de Peekom Plus se desactiva y la app vuelve a la versión gratuita en su próximo inicio en línea.</li>" +
-            '<li><strong>Proceso</strong> — Envía una solicitud a través del <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulario de contacto (o correo)</a> con tu número de pedido → la revisamos → emitimos el reembolso desde el panel de Lemon Squeezy → según tu emisor de tarjeta, puede tardar varios días hábiles en reflejarse.</li>' +
+            "<li><strong>Plazo de solicitud</strong> — Revisamos las solicitudes enviadas dentro de los <strong>30 días</strong> posteriores a la compra.</li>" +
+            "<li><strong>Casos con derecho a reembolso</strong> — Reembolsamos lo siguiente:" +
+            "<ul>" +
+            "<li>Un <strong>defecto del producto</strong>: la app no se abre o no funciona correctamente.</li>" +
+            "<li>Un <strong>pago duplicado</strong> del mismo pedido.</li>" +
+            "</ul></li>" +
+            "<li><strong>Casos sin derecho a reembolso</strong> — No podemos reembolsar lo siguiente:" +
+            "<ul>" +
+            "<li><strong>Cambio de opinión</strong> después de la compra.</li>" +
+            "<li><strong>Cambio de plan</strong>, por ejemplo Single ↔ Double/Family. No ofrecemos mejoras pagando solo la diferencia. Si necesitas más dispositivos, tienes que <strong>comprar el plan superior por separado</strong>; el plan original no se reembolsa automáticamente y no se abona ninguna diferencia de precio.</li>" +
+            "<li><strong>Un reembolso cuando la licencia ya se ha activado.</strong> «Activated» (activada) significa que la clave se verificó correctamente y quedó registrada para poder usar Plus en ese dispositivo. Una activación correcta demuestra que el producto funciona, por lo que <strong>no se considera un defecto del producto</strong>.</li>" +
+            "<li><strong>Problemas causados únicamente por tu entorno</strong>: el firewall de una empresa o un centro educativo, un programa de seguridad, una red totalmente aislada (sin internet), descargas de GitHub bloqueadas o el bloqueo de <code>api.lemonsqueezy.com</code>. Esto se aplica especialmente si la licencia <strong>ya está activada</strong>.</li>" +
+            "<li><strong>Las molestias por el límite de dispositivos o por cambiar de PC.</strong> Si necesitas pasar a otro dispositivo, <a href=\"/contact/\">escríbenos</a>: podemos desactivar el dispositivo anterior por ti.</li>" +
+            "</ul></li>" +
+            "</ul>" +
+            "<p><strong>Antes de comprar (activación y red)</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>La <strong>primera activación de Plus</strong> necesita conexión a internet y acceso a <code>https://api.lemonsqueezy.com</code>.</li>" +
+            "<li>Aunque las páginas web normales se abran, la activación puede fallar si solo esa dirección está bloqueada.</li>" +
+            "<li>Un PC que se usa exclusivamente en una <strong>red totalmente aislada (sin internet)</strong> puede que no se pueda activar.</li>" +
+            "<li>El instalador está alojado en GitHub Releases, así que la descarga puede fallar donde github.com esté bloqueado.</li>" +
+            "<li>Si piensas usar Peekom solo en un PC de empresa, te recomendamos comprobar los puntos anteriores antes de comprar.</li>" +
+            "</ul>" +
+            "<p><strong>Si tu entorno impide usar Plus: así lo revisamos</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>La compra se hizo en los últimos <strong>30 días</strong>, y</li>" +
+            "<li>la licencia está <strong>Inactive (0 dispositivos activados)</strong>, o se trata de un defecto del producto o de un pago duplicado, y</li>" +
+            "<li>nos escribes con tu número de pedido y una descripción: entonces <strong>revisamos el caso de forma individual</strong>.</li>" +
+            "<li>Sin embargo, si la licencia <strong>ya está activada</strong> y el único motivo es la red de la empresa, por regla general no hay derecho a reembolso.</li>" +
+            "</ul>" +
+            "<p><strong>Tu licencia y el proceso de reembolso</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li><strong>Licencia</strong> — Una vez completado el reembolso, tu clave de licencia de Peekom Plus se desactiva y la app vuelve a la versión gratuita la próxima vez que se inicie con conexión.</li>" +
+            '<li><strong>Cómo solicitarlo</strong> — Usa el <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulario de contacto (o correo)</a> e incluye tu <strong>Order #</strong> (número de pedido) y una breve descripción. Añadir la dirección de correo que usaste para pagar nos ayuda a encontrar el pedido más rápido. No podemos localizar un pedido solo con un número de teléfono.</li>' +
+            "<li><strong>Tramitación</strong> — Tras la revisión emitimos el reembolso desde el panel de Lemon Squeezy; según tu emisor de tarjeta o método de pago, puede tardar varios días hábiles en aparecer.</li>" +
             "</ul>",
         faqR1q: "¿Cómo solicito un reembolso de Peekom Plus?",
-        faqR1a: 'Envíanos tu <strong>número de pedido</strong> a través del <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulario de contacto (o correo)</a>. Tras revisar la solicitud, emitimos el reembolso desde el panel de Lemon Squeezy. Según tu emisor de tarjeta o método de pago, puede tardar varios días hábiles en aparecer.',
+        faqR1a:
+            '<p>Envía tu <strong>Order #</strong> (número de pedido) a través del <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulario de contacto (o correo)</a>.</p>' +
+            "<p>Añadir la <strong>dirección de correo que usaste para pagar</strong> nos ayuda a encontrar tu pedido más rápido. No podemos localizar un pedido solo con un número de teléfono.</p>" +
+            "<p>Cuéntanos también qué ha pasado (la app no se abre, un pago duplicado, etc.).</p>" +
+            "<p>Si la solicitud cumple los requisitos, emitimos el reembolso desde el panel de Lemon Squeezy. Según tu emisor de tarjeta o método de pago, puede tardar unos días hábiles en aparecer.</p>",
         faqR2q: "¿Qué casos tienen derecho a reembolso?",
-        faqR2a: "Dentro de los <strong>30 días</strong> posteriores a la compra, hay reembolso por <strong>mal funcionamiento del producto</strong> (la app no se ejecuta o no funciona correctamente) y por <strong>pagos duplicados</strong> del mismo pedido. El cambio de opinión no da derecho a reembolso. Los pagos y reembolsos los gestiona Lemon Squeezy, nuestro comerciante registrado.",
+        faqR2a:
+            "<p><strong>Con derecho a reembolso</strong> — La compra se hizo en los últimos <strong>30 días</strong> y se trata de un <strong>defecto del producto</strong> (la app no se abre o no funciona correctamente) o de un <strong>pago duplicado</strong> del mismo pedido.</p>" +
+            "<p><strong>Sin derecho a reembolso</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Cambio de opinión.</strong></li>" +
+            "<li><strong>Cambio de plan</strong> (Single ↔ Double/Family): no hay mejora pagando la diferencia y el plan superior debe comprarse por separado.</li>" +
+            "<li>Un reembolso cuando la licencia <strong>ya se ha activado</strong>.</li>" +
+            "<li>Problemas causados <strong>únicamente por tu entorno</strong>, como el firewall de una empresa o un centro educativo, una red sin internet o descargas de GitHub bloqueadas, especialmente si la licencia <strong>ya está activada</strong>.</li>" +
+            "<li>Las molestias por el límite de dispositivos o por cambiar de PC: escríbenos y te ayudamos a mover los dispositivos.</li>" +
+            "</ul>" +
+            "<p>Si estás dentro de los 30 días posteriores a la compra y la licencia está <strong>Inactive (0 dispositivos activados)</strong>, escríbenos con tu número de pedido y una descripción y <strong>revisaremos</strong> el caso de forma individual.</p>" +
+            "<p>Los pagos y reembolsos los gestiona Lemon Squeezy, nuestro comerciante registrado (Merchant of Record).</p>",
         faqR3q: "¿Qué ocurre con mi licencia tras el reembolso?",
-        faqR3a: "Una vez completado el reembolso, tu clave de licencia de Peekom Plus se <strong>desactiva</strong>. La app vuelve automáticamente a la versión gratuita la próxima vez que se inicie con conexión, así que asegúrate de querer dejar de usar Plus antes de solicitar el reembolso.",
+        faqR3a:
+            "<p>Una vez completado el reembolso, tu clave de licencia de Peekom Plus queda <strong>desactivada</strong>.</p>" +
+            "<p>La app vuelve automáticamente a la <strong>versión gratuita</strong> la próxima vez que se inicie con conexión, y las funciones exclusivas de Plus dejan de funcionar.</p>" +
+            "<p>Tus notas siguen en tu PC, pero vuelves al conjunto de funciones gratuitas (3 índices, etc.), así que exporta lo que necesites <strong>antes</strong> de solicitar el reembolso.</p>" +
+            "<p>Asegúrate de que quieres dejar de usar Plus antes de enviar la solicitud.</p>",
+        faqR4q: "¿Puedo usar Peekom Plus detrás del firewall de una empresa o en una red sin internet?",
+        faqR4a:
+            "<p>La versión gratuita funciona sin conexión a internet.</p>" +
+            "<p>Sin embargo, la <strong>primera activación de Plus</strong> necesita conexión a internet y acceso a <code>https://api.lemonsqueezy.com</code> por HTTPS (443).</p>" +
+            "<p>Aunque las páginas web normales se abran, la activación puede fallar si solo esa dirección está bloqueada, y un PC que se usa exclusivamente en una <strong>red totalmente aislada (sin internet)</strong> puede que no se pueda activar.</p>" +
+            "<p>El instalador también está alojado en GitHub Releases, así que la descarga puede fallar donde github.com esté bloqueado.</p>" +
+            "<p><strong>Prueba esto</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Activa una vez en otra red</strong>, como el wifi de casa o un punto de acceso del móvil. Después de la activación puedes usar Plus sin internet (la licencia se vuelve a comprobar cada vez que estés en línea).</li>" +
+            "<li>Pide a tu departamento de IT que permita <code>https://api.lemonsqueezy.com</code> por <strong>HTTPS (443)</strong>.</li>" +
+            "<li>Si usas una VPN o un proxy corporativos, desactívalos un momento o vuelve a intentarlo en una red permitida.</li>" +
+            "</ul>" +
+            "<p><strong>Compruébalo antes de comprar.</strong> Si piensas usar Peekom solo en un PC de empresa, estas restricciones pueden impedir la activación. Un reembolso solicitado <strong>después de activar la licencia</strong>, cuando el único motivo es la red de la empresa, no tiene derecho a reembolso.</p>",
+        faqR5q: "¿Puedo obtener un reembolso después de activar la licencia?",
+        faqR5a:
+            "<p>Por regla general, <strong>no: no tiene derecho a reembolso.</strong></p>" +
+            "<p><strong>Activated</strong> (activada) significa que la clave se verificó correctamente y quedó registrada para poder usar Plus en ese dispositivo. Una activación correcta demuestra que el producto funciona, por lo que <strong>no se considera un defecto del producto</strong>.</p>" +
+            "<p>Incluso después de la activación, sí reembolsamos lo siguiente:</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Un <strong>defecto del producto</strong>: la app no se abre o no funciona correctamente.</li>" +
+            "<li>Un <strong>pago duplicado</strong> del mismo pedido.</li>" +
+            "</ul>" +
+            "<p>Si <strong>todavía no</strong> has activado (licencia <strong>Inactive</strong>, 0 dispositivos activados) y estás dentro de los 30 días posteriores a la compra, <a href=\"/contact/\">escríbenos</a> con tu número de pedido y una descripción y revisaremos el caso de forma individual.</p>" +
+            "<p>Si lo único que necesitas es pasar a otro dispositivo, podemos <strong>desactivar el dispositivo anterior</strong> en lugar de hacer un reembolso.</p>",
         faq1q: "¿Cuál es la diferencia entre gratis y Plus?",
         faq1a: 'Gratis incluye 3 índices, mover mango en grupo, modo ICE, retardo al pasar el cursor, selección de monitor, Markdown, barra de formato e inserción de imágenes. Peekom Plus (lanzamiento $9.99, lista $12.99) desbloquea 10 ranuras, tema personalizado, fuentes, opacidad, redimensionar imágenes y exportar en la app. Consulte la <a href="/features/#compare">tabla comparativa</a>.',
         compareFreeName: "Peekom (Gratis)",
@@ -143,13 +216,16 @@ Object.assign(window.PeekomI18nLocales, {
             "</ul>" +
             "<p><strong>Límite de dispositivos (hasta 2)</strong> — Reinstalar en el mismo PC cuenta como el mismo dispositivo, sin afectar la activación. Si cambia de ordenador, cada licencia permite hasta dos dispositivos (p. ej., PC de trabajo + PC personal).</p>",
         faq3q: "¿Cómo se activa Plus?",
-        faq3a: "Compre en Lemon Squeezy y luego introduzca la clave de licencia en la app para desbloquear Peekom Plus (sin reinstalar).",
+        faq3a:
+            "<p>Instale primero la <strong>app gratuita</strong> y luego introduzca en Ajustes o en la pantalla de bloqueo de Plus la clave de licencia que compró en Lemon Squeezy. No hay un instalador aparte para Plus ni es necesario reinstalar.</p>" +
+            "<p>La <strong>primera activación necesita conexión a internet</strong> y acceso a <code>https://api.lemonsqueezy.com</code>. Después puede seguir usando Plus sin conexión.</p>" +
+            "<p>Cuando la activación se completa, la licencia queda registrada como <strong>Activated</strong> (activada) en ese dispositivo. Después de la activación, por regla general no hay reembolso por cambio de opinión, cambio de plan ni restricciones de la red de la empresa, así que lea antes la política de reembolso de arriba.</p>",
         faq3bq: "¿Puedo usar una clave de licencia en más de un PC?",
         faq3ba: "Sí. Puede introducir la misma clave de licencia de 16 caracteres una vez en cada uno de hasta dos PC—por ejemplo, su PC de trabajo y personal—para usar Peekom Plus en ambos.",
         faq3cq: "¿Puedo seguir usándolo si cambio el PC del trabajo o me mudo de empresa?",
-        faq3ca: "Una licencia de Peekom Plus puede usarse en hasta dos dispositivos. Reinstalar en el mismo dispositivo está permitido. Si necesita pasar a un nuevo dispositivo, contáctenos y le ayudaremos tras revisar su caso. Según la situación, podemos guiarle para reactivar en el nuevo dispositivo tras restablecer los dispositivos activados anteriormente.",
+        faq3ca: "Según su plan, Peekom Plus puede usarse en 1 dispositivo (Single), 2 (Double) o 5 (Family). Reinstalar en el mismo dispositivo está permitido. Si necesita pasar a un nuevo dispositivo, contáctenos y le ayudaremos tras revisar su caso. Según la situación, podemos guiarle para reactivar en el nuevo dispositivo tras restablecer los dispositivos activados anteriormente. El límite de dispositivos o el cambio de PC, por sí solos, <strong>no dan derecho a reembolso</strong>, pero con mucho gusto le ayudamos a mover los dispositivos desactivando el anterior: solo tiene que contactarnos.",
         faq3dq: "¿Qué información debo enviar si necesito cambiar de dispositivo?",
-        faq3da: "Para una revisión más rápida, envíe el correo usado en la compra, el número de pedido, la clave de licencia y el motivo del cambio. Si ambos dispositivos ya están activados, puede que debamos restablecer los dispositivos activados antes de la reactivación; haga una copia de seguridad de lo necesario antes de contactarnos.",
+        faq3da: "Para una revisión más rápida, envíe el correo usado en la compra, el número de pedido, la clave de licencia y el motivo del cambio de dispositivo. Si ya está usando todas las plazas de su plan (Single 1 · Double 2 · Family 5), puede que debamos restablecer los dispositivos activados antes de la reactivación; haga una copia de seguridad de lo necesario antes de contactarnos. El límite de dispositivos o el cambio de PC, por sí solos, <strong>no dan derecho a reembolso</strong>, pero si nos contacta le ayudamos a mover los dispositivos desactivando el anterior.",
         faq4q: "Aparece una advertencia azul al instalar en Windows.",
         faq4a: 'Las advertencias SmartScreen son comunes en apps sin firmar. Consulte la <a href="#" onclick="openModal(); return false;">guía de instalación</a>: [Más información] → [Ejecutar de todos modos].',
         faq5q: "¿Qué versiones de Windows son compatibles?",
@@ -332,20 +408,93 @@ Object.assign(window.PeekomI18nLocales, {
         faqSub: "Questions fréquentes sur Peekom.",
         refundPolicyTitle: "Politique de remboursement de Peekom Plus",
         refundPolicyBody:
-            "<p>Les paiements et remboursements de Peekom Plus sont traités par Lemon Squeezy, notre revendeur officiel (Merchant of Record).</p>" +
+            "<p>Les paiements et les remboursements de Peekom Plus sont traités par <strong>Lemon Squeezy</strong>, notre revendeur officiel (Merchant of Record).</p>" +
             '<ul class="faq-refund-list">' +
-            "<li><strong>Délai</strong> — Les demandes sont acceptées dans les <strong>30 jours</strong> suivant l'achat.</li>" +
-            "<li><strong>Cas remboursables</strong> — Dysfonctionnement du produit (l'app ne se lance pas ou ne fonctionne pas correctement) et paiements en double pour la même commande.</li>" +
-            "<li><strong>Non remboursable</strong> — Changement d'avis.</li>" +
-            "<li><strong>Licence après remboursement</strong> — Une fois remboursée, votre clé de licence Peekom Plus est désactivée et l'app revient à la version gratuite à son prochain lancement en ligne.</li>" +
-            '<li><strong>Procédure</strong> — Envoyez une demande via le <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulaire de contact (ou e-mail)</a> avec votre numéro de commande → nous l\'examinons → nous effectuons le remboursement depuis le tableau de bord Lemon Squeezy → selon votre émetteur de carte, plusieurs jours ouvrés peuvent être nécessaires.</li>' +
+            "<li><strong>Délai de demande</strong> — Nous examinons les demandes envoyées dans les <strong>30 jours</strong> suivant l'achat.</li>" +
+            "<li><strong>Cas remboursables</strong> — Nous remboursons les situations suivantes :" +
+            "<ul>" +
+            "<li>Un <strong>défaut du produit</strong> : l'app ne se lance pas ou ne fonctionne pas correctement.</li>" +
+            "<li>Un <strong>paiement en double</strong> pour la même commande.</li>" +
+            "</ul></li>" +
+            "<li><strong>Cas non remboursables</strong> — Nous ne pouvons pas rembourser les situations suivantes :" +
+            "<ul>" +
+            "<li><strong>Un changement d'avis</strong> après l'achat.</li>" +
+            "<li><strong>Un changement de formule</strong>, par exemple Single ↔ Double/Family. Nous ne proposons pas de mise à niveau au prorata. Si vous avez besoin de plus d'appareils, vous devez <strong>acheter la formule supérieure séparément</strong> ; la formule initiale n'est pas remboursée automatiquement et aucune différence de prix n'est créditée.</li>" +
+            "<li><strong>Un remboursement après l'activation de la licence.</strong> « Activated » (activée) signifie que la clé a été vérifiée avec succès et enregistrée pour permettre d'utiliser Plus sur cet appareil. Une activation réussie montre que le produit fonctionne : ce n'est donc <strong>pas considéré comme un défaut du produit</strong>.</li>" +
+            "<li><strong>Les problèmes liés uniquement à votre environnement</strong> : pare-feu d'entreprise ou d'école, logiciel de sécurité, réseau totalement isolé (sans internet), téléchargements GitHub bloqués ou blocage de <code>api.lemonsqueezy.com</code>. C'est particulièrement vrai lorsque la licence est <strong>déjà activée</strong>.</li>" +
+            "<li><strong>La gêne liée au nombre d'appareils autorisés ou au remplacement d'un PC.</strong> Si vous devez passer à un autre appareil, <a href=\"/contact/\">contactez-nous</a> : nous pouvons désactiver l'ancien appareil pour vous.</li>" +
+            "</ul></li>" +
+            "</ul>" +
+            "<p><strong>Avant d'acheter (activation et réseau)</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>La <strong>première activation de Plus</strong> nécessite une connexion internet et l'accès à <code>https://api.lemonsqueezy.com</code>.</li>" +
+            "<li>Même si les sites web habituels s'ouvrent, l'activation peut échouer si seule cette adresse est bloquée.</li>" +
+            "<li>Un PC utilisé exclusivement sur un <strong>réseau totalement isolé (sans internet)</strong> peut ne pas pouvoir être activé du tout.</li>" +
+            "<li>Le programme d'installation est hébergé sur GitHub Releases : le téléchargement peut donc échouer là où github.com est bloqué.</li>" +
+            "<li>Si vous prévoyez d'utiliser Peekom uniquement sur un PC professionnel, nous vous conseillons de vérifier les points ci-dessus avant d'acheter.</li>" +
+            "</ul>" +
+            "<p><strong>Si votre environnement empêche d'utiliser Plus — comment nous examinons la demande</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>L'achat a été effectué dans les <strong>30 derniers jours</strong>, et</li>" +
+            "<li>la licence est <strong>Inactive (0 appareil activé)</strong>, ou il s'agit d'un défaut du produit ou d'un paiement en double, et</li>" +
+            "<li>vous nous écrivez avec votre numéro de commande et une description : nous <strong>examinons alors le cas individuellement</strong>.</li>" +
+            "<li>En revanche, si la licence est <strong>déjà activée</strong> et que le réseau de l'entreprise est le seul motif, la demande n'est en principe pas remboursable.</li>" +
+            "</ul>" +
+            "<p><strong>Votre licence et la procédure de remboursement</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li><strong>Licence</strong> — Une fois le remboursement effectué, votre clé de licence Peekom Plus est désactivée et l'app revient à la version gratuite au prochain lancement en ligne.</li>" +
+            "<li><strong>Comment faire la demande</strong> — Utilisez le <a href=\"https://forms.gle/fbzSb2Gf1THnFwGD6\" target=\"_blank\" rel=\"noopener\">formulaire de contact (ou e-mail)</a> et indiquez votre <strong>Order #</strong> (numéro de commande) ainsi qu'une brève description. Ajouter l'adresse e-mail utilisée pour le paiement nous aide à retrouver la commande plus vite. Nous ne pouvons pas retrouver une commande à partir d'un simple numéro de téléphone.</li>" +
+            "<li><strong>Traitement</strong> — Après examen, nous effectuons le remboursement depuis le tableau de bord Lemon Squeezy ; selon votre émetteur de carte ou votre moyen de paiement, plusieurs jours ouvrés peuvent être nécessaires avant qu'il apparaisse.</li>" +
             "</ul>",
         faqR1q: "Comment demander un remboursement Peekom Plus ?",
-        faqR1a: 'Envoyez-nous votre <strong>numéro de commande</strong> via le <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulaire de contact (ou e-mail)</a>. Après examen, nous effectuons le remboursement depuis le tableau de bord Lemon Squeezy. Selon votre émetteur de carte ou moyen de paiement, plusieurs jours ouvrés peuvent être nécessaires.',
+        faqR1a:
+            "<p>Envoyez votre <strong>Order #</strong> (numéro de commande) via le <a href=\"https://forms.gle/fbzSb2Gf1THnFwGD6\" target=\"_blank\" rel=\"noopener\">formulaire de contact (ou e-mail)</a>.</p>" +
+            "<p>Ajouter l'<strong>adresse e-mail utilisée pour le paiement</strong> nous aide à retrouver votre commande plus vite. Nous ne pouvons pas retrouver une commande à partir d'un simple numéro de téléphone.</p>" +
+            "<p>Décrivez aussi ce qui s'est passé (l'app ne se lance pas, un paiement en double, etc.).</p>" +
+            "<p>Si la demande est éligible, nous effectuons le remboursement depuis le tableau de bord Lemon Squeezy. Selon votre émetteur de carte ou votre moyen de paiement, quelques jours ouvrés peuvent être nécessaires avant qu'il apparaisse.</p>",
         faqR2q: "Quels cas donnent droit à un remboursement ?",
-        faqR2a: "Dans les <strong>30 jours</strong> suivant l'achat, un remboursement est possible en cas de <strong>dysfonctionnement du produit</strong> (l'app ne se lance pas ou ne fonctionne pas correctement) et de <strong>paiements en double</strong> pour la même commande. Un changement d'avis n'y donne pas droit. Les paiements et remboursements sont gérés par Lemon Squeezy, notre revendeur officiel.",
+        faqR2a:
+            "<p><strong>Remboursable</strong> — L'achat a été effectué dans les <strong>30 jours</strong> et il s'agit d'un <strong>défaut du produit</strong> (l'app ne se lance pas ou ne fonctionne pas correctement) ou d'un <strong>paiement en double</strong> pour la même commande.</p>" +
+            "<p><strong>Non remboursable</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Un changement d'avis.</strong></li>" +
+            "<li><strong>Un changement de formule</strong> (Single ↔ Double/Family) : il n'y a pas de mise à niveau au prorata et la formule supérieure doit être achetée séparément.</li>" +
+            "<li>Un remboursement lorsque la licence est <strong>déjà activée</strong>.</li>" +
+            "<li>Les problèmes liés <strong>uniquement à votre environnement</strong> : pare-feu d'entreprise ou d'école, réseau sans internet, téléchargements GitHub bloqués — surtout lorsque la licence est <strong>déjà activée</strong>.</li>" +
+            "<li>La gêne liée au nombre d'appareils autorisés ou au remplacement d'un PC : contactez-nous plutôt, nous pouvons vous aider à changer d'appareil.</li>" +
+            "</ul>" +
+            "<p>Si vous êtes dans les 30 jours suivant l'achat et que la licence est <strong>Inactive (0 appareil activé)</strong>, écrivez-nous avec votre numéro de commande et une description : nous <strong>examinerons</strong> le cas individuellement.</p>" +
+            "<p>Les paiements et remboursements sont gérés par Lemon Squeezy, notre revendeur officiel (Merchant of Record).</p>",
         faqR3q: "Que devient ma licence après un remboursement ?",
-        faqR3a: "Une fois le remboursement effectué, votre clé de licence Peekom Plus est <strong>désactivée</strong>. L'app revient automatiquement à la version gratuite au prochain lancement en ligne ; assurez-vous donc de vouloir cesser d'utiliser Plus avant de demander un remboursement.",
+        faqR3a:
+            "<p>Une fois le remboursement effectué, votre clé de licence Peekom Plus est <strong>désactivée</strong>.</p>" +
+            "<p>L'app revient automatiquement à la <strong>version gratuite</strong> au prochain lancement en ligne, et les fonctions réservées à Plus cessent de fonctionner.</p>" +
+            "<p>Vos mémos restent sur votre PC, mais vous retrouvez les fonctions de la version gratuite (3 index, etc.) : exportez donc ce dont vous avez besoin <strong>avant</strong> de demander le remboursement.</p>" +
+            "<p>Assurez-vous de vouloir cesser d'utiliser Plus avant d'envoyer votre demande.</p>",
+        faqR4q: "Puis-je utiliser Peekom Plus derrière un pare-feu d'entreprise ou sur un réseau sans internet ?",
+        faqR4a:
+            "<p>La version gratuite fonctionne sans connexion internet.</p>" +
+            "<p>En revanche, la <strong>première activation de Plus</strong> nécessite une connexion internet et l'accès à <code>https://api.lemonsqueezy.com</code> en HTTPS (443).</p>" +
+            "<p>Même si les sites web habituels s'ouvrent, l'activation peut échouer si seule cette adresse est bloquée, et un PC utilisé exclusivement sur un <strong>réseau totalement isolé (sans internet)</strong> peut ne pas pouvoir être activé du tout.</p>" +
+            "<p>Le programme d'installation est également hébergé sur GitHub Releases : le téléchargement lui-même peut donc échouer là où github.com est bloqué.</p>" +
+            "<p><strong>Essayez ceci</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Activez une fois sur un autre réseau</strong>, par exemple le Wi‑Fi de votre domicile ou un partage de connexion mobile. Après l'activation, vous pouvez utiliser Plus sans internet (la licence est revérifiée dès que vous êtes de nouveau en ligne).</li>" +
+            "<li>Demandez à votre service informatique d'autoriser <code>https://api.lemonsqueezy.com</code> en <strong>HTTPS (443)</strong>.</li>" +
+            "<li>Si vous utilisez un VPN ou un proxy d'entreprise, désactivez-le un instant ou réessayez sur un réseau autorisé.</li>" +
+            "</ul>" +
+            "<p><strong>Vérifiez avant d'acheter.</strong> Si vous prévoyez d'utiliser Peekom uniquement sur un PC professionnel, ces restrictions peuvent empêcher l'activation. Un remboursement demandé <strong>après l'activation de la licence</strong>, lorsque le réseau de l'entreprise est le seul motif, n'est pas remboursable.</p>",
+        faqR5q: "Puis-je être remboursé après avoir activé ma licence ?",
+        faqR5a:
+            "<p>En principe, <strong>non : la demande n'est pas remboursable.</strong></p>" +
+            "<p><strong>Activated</strong> (activée) signifie que la clé a été vérifiée avec succès et enregistrée pour permettre d'utiliser Plus sur cet appareil. Une activation réussie montre que le produit fonctionne : ce n'est donc <strong>pas considéré comme un défaut du produit</strong>.</p>" +
+            "<p>Même après l'activation, nous remboursons les cas suivants :</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Un <strong>défaut du produit</strong> : l'app ne se lance pas ou ne fonctionne pas correctement.</li>" +
+            "<li>Un <strong>paiement en double</strong> pour la même commande.</li>" +
+            "</ul>" +
+            "<p>Si vous n'avez <strong>pas encore</strong> activé (licence <strong>Inactive</strong>, 0 appareil activé) et que vous êtes dans les 30 jours suivant l'achat, <a href=\"/contact/\">contactez-nous</a> avec votre numéro de commande et une description : nous examinerons le cas individuellement.</p>" +
+            "<p>Si vous avez simplement besoin de passer à un autre appareil, nous pouvons <strong>désactiver l'ancien appareil</strong> au lieu de rembourser.</p>",
         faq1q: "Quelle est la différence entre gratuit et Plus ?",
         faq1a: 'Le gratuit inclut 3 index, déplacement groupé de la poignée, mode ICE, délai au survol, sélection du moniteur, Markdown, barre de formatage et insertion d\'images. Peekom Plus (lancement 9,99 $, tarif 12,99 $) débloque 10 emplacements, thème personnalisé, polices, opacité, redimensionnement d\'images et export dans l\'app. Consultez le <a href="/features/#compare">tableau comparatif</a>.',
         compareFreeName: "Peekom (Gratuit)",
@@ -425,13 +574,16 @@ Object.assign(window.PeekomI18nLocales, {
             "</ul>" +
             "<p><strong>Limite d'appareils (jusqu'à 2)</strong> — Réinstaller sur le même PC compte comme le même appareil, sans impact sur l'activation. Si vous changez d'ordinateur, chaque licence permet jusqu'à deux appareils (p. ex. PC professionnel + PC personnel).</p>",
         faq3q: "Comment activer Plus ?",
-        faq3a: "Achetez sur Lemon Squeezy, puis saisissez la clé de licence dans l'app pour débloquer Peekom Plus (sans réinstallation).",
+        faq3a:
+            "<p>Installez d'abord l'<strong>app gratuite</strong>, puis saisissez dans les Réglages ou sur l'écran de verrouillage Plus la clé de licence achetée sur Lemon Squeezy. Il n'y a pas d'installateur Plus distinct et aucune réinstallation n'est nécessaire.</p>" +
+            "<p>La <strong>première activation nécessite une connexion internet</strong> et l'accès à <code>https://api.lemonsqueezy.com</code>. Ensuite, vous pouvez continuer à utiliser Plus hors ligne.</p>" +
+            "<p>Une fois l'activation réussie, la licence est enregistrée comme <strong>Activated</strong> (activée) sur cet appareil. Après l'activation, les remboursements pour changement d'avis, changement de formule ou restrictions du réseau d'entreprise ne sont en principe pas possibles : merci de lire d'abord la politique de remboursement ci-dessus.</p>",
         faq3bq: "Puis-je utiliser une clé de licence sur plusieurs PC ?",
         faq3ba: "Oui. Vous pouvez saisir la même clé de licence à 16 caractères une fois sur chacun de deux PC au maximum—par exemple, PC professionnel et personnel—pour utiliser Peekom Plus sur les deux.",
         faq3cq: "Puis-je continuer à l'utiliser si je change de PC professionnel ou de poste ?",
-        faq3ca: "Une licence Peekom Plus peut être utilisée sur jusqu'à deux appareils. La réinstallation sur le même appareil est autorisée. Si vous devez passer à un nouvel appareil, contactez-nous : nous examinerons votre demande et vous aiderons. Selon la situation, nous pourrons réinitialiser les appareils déjà activés avant une réactivation sur le nouvel appareil.",
+        faq3ca: "Selon votre formule, Peekom Plus peut être utilisé sur 1 appareil (Single), 2 (Double) ou 5 (Family). La réinstallation sur le même appareil est autorisée. Si vous devez passer à un nouvel appareil, contactez-nous : nous examinerons votre demande et vous aiderons. Selon la situation, nous pourrons réinitialiser les appareils déjà activés avant une réactivation sur le nouvel appareil. Le nombre d'appareils autorisés ou le remplacement d'un PC ne donnent à eux seuls <strong>pas droit à un remboursement</strong>, mais nous vous aidons volontiers à changer d'appareil en désactivant l'ancien : il suffit de nous contacter.",
         faq3dq: "Quelles informations envoyer pour un changement d'appareil ?",
-        faq3da: "Pour un traitement plus rapide, envoyez l'adresse e-mail utilisée à l'achat, le numéro de commande, la clé de licence et la raison du changement. Si les deux appareils sont déjà activés, nous pourrons réinitialiser les appareils actifs avant la réactivation ; sauvegardez vos données avant de nous contacter.",
+        faq3da: "Pour un traitement plus rapide, envoyez l'adresse e-mail utilisée à l'achat, le numéro de commande, la clé de licence et la raison du changement d'appareil. Si vous utilisez déjà toutes les places de votre formule (Single 1 · Double 2 · Family 5), nous devrons peut-être réinitialiser les appareils actifs avant la réactivation : sauvegardez donc vos données avant de nous contacter. Le nombre d'appareils autorisés ou le remplacement d'un PC ne donnent à eux seuls <strong>pas droit à un remboursement</strong>, mais si vous nous contactez, nous vous aidons à changer d'appareil en désactivant l'ancien.",
         faq4q: "Une alerte bleue apparaît lors de l'installation sur Windows.",
         faq4a: 'Les alertes SmartScreen sont courantes pour les apps non signées. Consultez le <a href="#" onclick="openModal(); return false;">guide d\'installation</a> : [Informations complémentaires] → [Exécuter quand même].',
         faq5q: "Quelles versions de Windows sont prises en charge ?",
@@ -614,20 +766,93 @@ Object.assign(window.PeekomI18nLocales, {
         faqSub: "Häufige Fragen zu Peekom.",
         refundPolicyTitle: "Peekom Plus Rückerstattungsrichtlinie",
         refundPolicyBody:
-            "<p>Zahlungen und Rückerstattungen für Peekom Plus werden von Lemon Squeezy, unserem Merchant of Record, abgewickelt.</p>" +
+            "<p>Zahlungen und Rückerstattungen für Peekom Plus werden über <strong>Lemon Squeezy</strong>, unseren Merchant of Record (offiziellen Verkäufer), abgewickelt.</p>" +
             '<ul class="faq-refund-list">' +
-            "<li><strong>Frist</strong> — Anträge werden innerhalb von <strong>30 Tagen</strong> nach dem Kauf akzeptiert.</li>" +
-            "<li><strong>Erstattungsfähig</strong> — Produktfehler (die App startet nicht oder funktioniert nicht korrekt) und Doppelzahlungen für dieselbe Bestellung.</li>" +
-            "<li><strong>Nicht erstattungsfähig</strong> — Meinungsänderung.</li>" +
-            "<li><strong>Lizenz nach Rückerstattung</strong> — Nach der Rückerstattung wird Ihr Peekom Plus Lizenzschlüssel deaktiviert und die App wechselt beim nächsten Online-Start automatisch zur kostenlosen Version.</li>" +
-            '<li><strong>Ablauf</strong> — Senden Sie eine Anfrage über das <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">Kontaktformular (oder per E-Mail)</a> mit Ihrer Bestellnummer → wir prüfen → wir erstatten über das Lemon-Squeezy-Dashboard → je nach Kartenanbieter kann es einige Werktage dauern.</li>' +
+            "<li><strong>Antragsfrist</strong> — Wir prüfen Anfragen, die innerhalb von <strong>30 Tagen</strong> nach dem Kauf eingehen.</li>" +
+            "<li><strong>Erstattungsfähig</strong> — Folgendes erstatten wir:" +
+            "<ul>" +
+            "<li>Ein <strong>Produktfehler</strong> — die App startet nicht oder funktioniert nicht korrekt.</li>" +
+            "<li>Eine <strong>Doppelzahlung</strong> für dieselbe Bestellung.</li>" +
+            "</ul></li>" +
+            "<li><strong>Nicht erstattungsfähig</strong> — Folgendes können wir nicht erstatten:" +
+            "<ul>" +
+            "<li><strong>Meinungsänderung</strong> nach dem Kauf.</li>" +
+            "<li><strong>Tarifwechsel</strong> — zum Beispiel Single ↔ Double/Family. Ein Upgrade gegen Aufpreis bieten wir nicht an. Wenn Sie mehr Geräte benötigen, müssen Sie den höheren Tarif <strong>separat kaufen</strong>; der ursprüngliche Tarif wird nicht automatisch erstattet und die Preisdifferenz wird nicht angerechnet.</li>" +
+            "<li><strong>Eine Rückerstattung, nachdem die Lizenz bereits aktiviert wurde.</strong> „Activated“ (aktiviert) bedeutet, dass der Schlüssel erfolgreich geprüft und registriert wurde, sodass Plus auf diesem Gerät genutzt werden kann. Eine erfolgreiche Aktivierung zeigt, dass das Produkt funktioniert, und gilt daher <strong>nicht als Produktfehler</strong>.</li>" +
+            "<li><strong>Probleme, die allein durch Ihre Umgebung verursacht werden</strong> — eine Firewall der Firma oder Schule, Sicherheitssoftware, ein vollständig abgeschottetes Netzwerk ohne Internet, blockierte GitHub-Downloads oder ein blockiertes <code>api.lemonsqueezy.com</code>. Das gilt besonders, wenn die Lizenz <strong>bereits aktiviert</strong> ist.</li>" +
+            "<li><strong>Unannehmlichkeiten durch das Gerätelimit oder einen PC-Wechsel.</strong> Wenn Sie auf ein anderes Gerät wechseln müssen, <a href=\"/contact/\">kontaktieren Sie uns</a> — wir deaktivieren das alte Gerät gern für Sie.</li>" +
+            "</ul></li>" +
+            "</ul>" +
+            "<p><strong>Bitte vor dem Kauf prüfen (Aktivierung und Netzwerk)</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>Die <strong>erste Plus-Aktivierung</strong> benötigt eine Internetverbindung und Zugriff auf <code>https://api.lemonsqueezy.com</code>.</li>" +
+            "<li>Auch wenn normale Webseiten laden, kann die Aktivierung fehlschlagen, wenn nur diese Adresse blockiert ist.</li>" +
+            "<li>Ein PC, der ausschließlich in einem <strong>vollständig abgeschotteten Netzwerk ohne Internet</strong> genutzt wird, lässt sich möglicherweise überhaupt nicht aktivieren.</li>" +
+            "<li>Die Installationsdatei liegt auf GitHub Releases, daher kann der Download dort fehlschlagen, wo github.com blockiert ist.</li>" +
+            "<li>Wenn Sie Peekom nur auf einem Firmen-PC nutzen möchten, empfehlen wir, die oben genannten Punkte vor dem Kauf zu prüfen.</li>" +
+            "</ul>" +
+            "<p><strong>Wenn Ihre Umgebung die Nutzung von Plus verhindert — so prüfen wir das</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>Der Kauf liegt innerhalb der letzten <strong>30 Tage</strong>, und</li>" +
+            "<li>die Lizenz ist <strong>Inactive (0 aktivierte Geräte)</strong> oder es handelt sich um einen Produktfehler bzw. eine Doppelzahlung, und</li>" +
+            "<li>Sie schreiben uns mit Ihrer Bestellnummer und einer Beschreibung — dann <strong>prüfen wir den Fall individuell</strong>.</li>" +
+            "<li>Ist die Lizenz jedoch <strong>bereits aktiviert</strong> und das Firmennetzwerk der einzige Grund, ist die Anfrage in der Regel nicht erstattungsfähig.</li>" +
+            "</ul>" +
+            "<p><strong>Ihre Lizenz und der Ablauf der Rückerstattung</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li><strong>Lizenz</strong> — Nach Abschluss der Rückerstattung wird Ihr Peekom Plus Lizenzschlüssel deaktiviert und die App wechselt beim nächsten Start mit Internetverbindung zur kostenlosen Version.</li>" +
+            '<li><strong>So beantragen Sie</strong> — Nutzen Sie das <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">Kontaktformular (oder eine E-Mail)</a> und geben Sie Ihre <strong>Order #</strong> (Bestellnummer) sowie eine kurze Beschreibung an. Die für die Zahlung verwendete E-Mail-Adresse hilft uns, die Bestellung schneller zu finden. Anhand einer Telefonnummer allein können wir keine Bestellung finden.</li>' +
+            "<li><strong>Abwicklung</strong> — Nach der Prüfung erstatten wir über das Lemon-Squeezy-Dashboard; je nach Kartenanbieter oder Zahlungsmethode kann es einige Werktage dauern, bis die Gutschrift erscheint.</li>" +
             "</ul>",
         faqR1q: "Wie beantrage ich eine Peekom-Plus-Rückerstattung?",
-        faqR1a: 'Senden Sie uns Ihre <strong>Bestellnummer</strong> über das <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">Kontaktformular (oder per E-Mail)</a>. Nach der Prüfung erstatten wir über das Lemon-Squeezy-Dashboard. Je nach Kartenanbieter oder Zahlungsmethode kann es einige Werktage dauern, bis die Rückerstattung erscheint.',
+        faqR1a:
+            '<p>Senden Sie Ihre <strong>Order #</strong> (Bestellnummer) über das <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">Kontaktformular (oder per E-Mail)</a>.</p>' +
+            "<p>Die <strong>für die Zahlung verwendete E-Mail-Adresse</strong> hilft uns, Ihre Bestellung schneller zu finden. Anhand einer Telefonnummer allein können wir keine Bestellung finden.</p>" +
+            "<p>Beschreiben Sie bitte auch, was passiert ist (die App startet nicht, eine Doppelzahlung usw.).</p>" +
+            "<p>Wenn die Anfrage erstattungsfähig ist, erstatten wir über das Lemon-Squeezy-Dashboard. Je nach Kartenanbieter oder Zahlungsmethode kann es einige Werktage dauern, bis die Gutschrift erscheint.</p>",
         faqR2q: "Was ist erstattungsfähig?",
-        faqR2a: "Innerhalb von <strong>30 Tagen</strong> nach dem Kauf sind Rückerstattungen bei <strong>Produktfehlern</strong> (die App startet nicht oder funktioniert nicht korrekt) und bei <strong>Doppelzahlungen</strong> für dieselbe Bestellung möglich. Eine Meinungsänderung ist nicht erstattungsfähig. Zahlungen und Rückerstattungen werden von Lemon Squeezy, unserem Merchant of Record, abgewickelt.",
+        faqR2a:
+            "<p><strong>Erstattungsfähig</strong> — Der Kauf liegt innerhalb von <strong>30 Tagen</strong> und es handelt sich um einen <strong>Produktfehler</strong> (die App startet nicht oder funktioniert nicht korrekt) oder um eine <strong>Doppelzahlung</strong> für dieselbe Bestellung.</p>" +
+            "<p><strong>Nicht erstattungsfähig</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Meinungsänderung.</strong></li>" +
+            "<li><strong>Tarifwechsel</strong> (Single ↔ Double/Family) — es gibt kein Upgrade gegen Aufpreis, der höhere Tarif muss separat gekauft werden.</li>" +
+            "<li>Eine Rückerstattung, wenn die Lizenz <strong>bereits aktiviert</strong> wurde.</li>" +
+            "<li>Probleme, die <strong>allein durch Ihre Umgebung</strong> verursacht werden, etwa eine Firewall der Firma oder Schule, ein Netzwerk ohne Internet oder blockierte GitHub-Downloads — besonders wenn die Lizenz <strong>bereits aktiviert</strong> ist.</li>" +
+            "<li>Unannehmlichkeiten durch das Gerätelimit oder einen PC-Wechsel — schreiben Sie uns stattdessen, wir helfen beim Gerätewechsel.</li>" +
+            "</ul>" +
+            "<p>Wenn der Kauf weniger als 30 Tage zurückliegt und die Lizenz <strong>Inactive (0 aktivierte Geräte)</strong> ist, schreiben Sie uns mit Ihrer Bestellnummer und einer Beschreibung — wir <strong>prüfen</strong> den Fall individuell.</p>" +
+            "<p>Zahlungen und Rückerstattungen werden von Lemon Squeezy, unserem Merchant of Record, abgewickelt.</p>",
         faqR3q: "Was passiert nach einer Rückerstattung mit meiner Lizenz?",
-        faqR3a: "Nach Abschluss der Rückerstattung wird Ihr Peekom Plus Lizenzschlüssel <strong>deaktiviert</strong>. Die App wechselt beim nächsten Online-Start automatisch zur kostenlosen Version – stellen Sie daher vor dem Antrag sicher, dass Sie Plus nicht mehr nutzen möchten.",
+        faqR3a:
+            "<p>Nach Abschluss der Rückerstattung wird Ihr Peekom Plus Lizenzschlüssel <strong>deaktiviert</strong>.</p>" +
+            "<p>Die App wechselt beim nächsten Start mit Internetverbindung automatisch zur <strong>kostenlosen Version</strong>, und die Plus-Funktionen stehen nicht mehr zur Verfügung.</p>" +
+            "<p>Ihre Memos bleiben auf dem PC, aber Sie kehren zum kostenlosen Funktionsumfang zurück (3 Indizes usw.) — exportieren Sie daher <strong>vor</strong> dem Antrag alles, was Sie benötigen.</p>" +
+            "<p>Bitte stellen Sie vor dem Absenden sicher, dass Sie Plus wirklich nicht mehr nutzen möchten.</p>",
+        faqR4q: "Kann ich Peekom Plus hinter einer Firmen-Firewall oder in einem Netzwerk ohne Internet nutzen?",
+        faqR4a:
+            "<p>Die kostenlose Version funktioniert ohne Internetverbindung.</p>" +
+            "<p>Die <strong>erste Plus-Aktivierung</strong> benötigt jedoch eine Internetverbindung und Zugriff auf <code>https://api.lemonsqueezy.com</code> über HTTPS (443).</p>" +
+            "<p>Auch wenn normale Webseiten laden, kann die Aktivierung fehlschlagen, wenn nur diese Adresse blockiert ist; ein PC, der ausschließlich in einem <strong>vollständig abgeschotteten Netzwerk ohne Internet</strong> genutzt wird, lässt sich möglicherweise überhaupt nicht aktivieren.</p>" +
+            "<p>Auch die Installationsdatei liegt auf GitHub Releases, daher kann bereits der Download dort fehlschlagen, wo github.com blockiert ist.</p>" +
+            "<p><strong>Das können Sie versuchen</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Einmal in einem anderen Netzwerk aktivieren</strong>, zum Beispiel im heimischen WLAN oder über einen Handy-Hotspot. Nach der Aktivierung können Sie Plus ohne Internet nutzen (die Lizenz wird erneut geprüft, sobald Sie wieder online sind).</li>" +
+            "<li>Bitten Sie die IT-Abteilung, <code>https://api.lemonsqueezy.com</code> über <strong>HTTPS (443)</strong> freizugeben.</li>" +
+            "<li>Wenn Sie ein Firmen-VPN oder einen Proxy verwenden, schalten Sie es kurz aus oder versuchen Sie es in einem freigegebenen Netzwerk erneut.</li>" +
+            "</ul>" +
+            "<p><strong>Bitte vor dem Kauf prüfen.</strong> Wenn Sie Peekom nur auf einem Firmen-PC nutzen möchten, können diese Einschränkungen die Aktivierung verhindern. Eine Rückerstattung, die <strong>nach der Aktivierung der Lizenz</strong> beantragt wird und deren einziger Grund das Firmennetzwerk ist, ist nicht erstattungsfähig.</p>",
+        faqR5q: "Kann ich nach der Aktivierung meiner Lizenz noch eine Rückerstattung erhalten?",
+        faqR5a:
+            "<p>In der Regel <strong>nein — die Anfrage ist nicht erstattungsfähig.</strong></p>" +
+            "<p><strong>Activated</strong> (aktiviert) bedeutet, dass der Schlüssel erfolgreich geprüft und registriert wurde, sodass Plus auf diesem Gerät genutzt werden kann. Eine erfolgreiche Aktivierung zeigt, dass das Produkt funktioniert, und gilt daher <strong>nicht als Produktfehler</strong>.</p>" +
+            "<p>Auch nach der Aktivierung erstatten wir Folgendes:</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Einen <strong>Produktfehler</strong> — die App startet nicht oder funktioniert nicht korrekt.</li>" +
+            "<li>Eine <strong>Doppelzahlung</strong> für dieselbe Bestellung.</li>" +
+            "</ul>" +
+            "<p>Wenn Sie <strong>noch nicht</strong> aktiviert haben (Lizenz <strong>Inactive</strong>, 0 aktivierte Geräte) und der Kauf weniger als 30 Tage zurückliegt, <a href=\"/contact/\">kontaktieren Sie uns</a> mit Ihrer Bestellnummer und einer Beschreibung — wir prüfen den Fall individuell.</p>" +
+            "<p>Wenn Sie lediglich auf ein anderes Gerät wechseln möchten, können wir statt einer Rückerstattung <strong>das alte Gerät deaktivieren</strong>.</p>",
         faq1q: "Was ist der Unterschied zwischen kostenlos und Plus?",
         faq1a: 'Kostenlos umfasst 3 Indexe, Gruppen-Griffverschiebung, ICE-Modus, Hover-Verzögerung, Monitorauswahl, Markdown, Formatierungsleiste und Bildeinfügung. Peekom Plus (Einführung 9,99 $, Listenpreis 12,99 $) schaltet 10 Slots, eigenes Theme, Schriftarten, Deckkraft, Bildgrößenänderung und Export in der App frei. Siehe die <a href="/features/#compare">Vergleichstabelle</a>.',
         compareFreeName: "Peekom (Kostenlos)",
@@ -707,13 +932,16 @@ Object.assign(window.PeekomI18nLocales, {
             "</ul>" +
             "<p><strong>Gerätelimit (bis zu 2)</strong> — Neuinstallation auf demselben PC gilt als dasselbe Gerät und beeinträchtigt die Aktivierung nicht. Bei einem neuen Computer erlaubt jede Lizenz bis zu zwei Geräte (z. B. Arbeits-PC + Privat-PC).</p>",
         faq3q: "Wie wird Plus aktiviert?",
-        faq3a: "Auf Lemon Squeezy kaufen und dann den Lizenzschlüssel in der App eingeben, um Peekom Plus freizuschalten (keine Neuinstallation).",
+        faq3a:
+            "<p>Installieren Sie zuerst die <strong>kostenlose App</strong> und geben Sie dann in den Einstellungen oder auf dem Plus-Sperrbildschirm den bei Lemon Squeezy gekauften Lizenzschlüssel ein. Es gibt keine separate Plus-Installationsdatei, und eine Neuinstallation ist nicht nötig.</p>" +
+            "<p>Die <strong>erste Aktivierung benötigt eine Internetverbindung</strong> und Zugriff auf <code>https://api.lemonsqueezy.com</code>. Danach können Sie Plus auch offline weiter nutzen.</p>" +
+            "<p>Nach erfolgreicher Aktivierung wird die Lizenz auf diesem Gerät als <strong>Activated</strong> (aktiviert) registriert. Nach der Aktivierung sind Rückerstattungen wegen Meinungsänderung, Tarifwechsel oder Einschränkungen im Firmennetzwerk in der Regel nicht möglich — bitte lesen Sie daher vorher die Rückerstattungsrichtlinie oben.</p>",
         faq3bq: "Kann ich einen Lizenzschlüssel auf mehr als einem PC nutzen?",
         faq3ba: "Ja. Derselbe 16-stellige Lizenzschlüssel kann einmal auf bis zu zwei PCs eingegeben werden—z. B. Arbeits- und Privat-PC—um Peekom Plus auf beiden zu nutzen.",
         faq3cq: "Kann ich Peekom weiter nutzen, wenn ich den Arbeits-PC wechsle oder den Job wechsle?",
-        faq3ca: "Eine Peekom-Plus-Lizenz kann auf bis zu zwei Geräten genutzt werden. Eine Neuinstallation auf demselben Gerät ist möglich. Wenn Sie auf ein neues Gerät wechseln müssen, kontaktieren Sie uns — wir prüfen Ihren Fall und unterstützen Sie. Je nach Situation leiten wir Sie an, nach einem Zurücksetzen zuvor aktivierter Geräte auf dem neuen Gerät erneut zu aktivieren.",
+        faq3ca: "Je nach Tarif kann Peekom Plus auf 1 Gerät (Single), 2 Geräten (Double) oder 5 Geräten (Family) genutzt werden. Eine Neuinstallation auf demselben Gerät ist möglich. Wenn Sie auf ein neues Gerät wechseln müssen, kontaktieren Sie uns — wir prüfen Ihren Fall und unterstützen Sie. Je nach Situation leiten wir Sie an, nach einem Zurücksetzen zuvor aktivierter Geräte auf dem neuen Gerät erneut zu aktivieren. Allein das Gerätelimit oder ein PC-Wechsel ist <strong>nicht erstattungsfähig</strong>, aber beim Gerätewechsel helfen wir gern: Kontaktieren Sie uns, dann deaktivieren wir das alte Gerät.",
         faq3dq: "Welche Angaben soll ich bei einem Gerätewechsel senden?",
-        faq3da: "Für eine schnellere Prüfung senden Sie bitte die beim Kauf verwendete E-Mail-Adresse, die Bestellnummer, den Lizenzschlüssel und den Grund für den Gerätewechsel. Sind beide Geräte bereits aktiviert, setzen wir die aktiven Geräte ggf. zurück, bevor wir eine Reaktivierung anleiten — sichern Sie wichtige Inhalte vorher.",
+        faq3da: "Für eine schnellere Prüfung senden Sie bitte die beim Kauf verwendete E-Mail-Adresse, die Bestellnummer, den Lizenzschlüssel und den Grund für den Gerätewechsel. Wenn Sie alle Plätze Ihres Tarifs (Single 1 · Double 2 · Family 5) bereits nutzen, setzen wir die aktiven Geräte ggf. vor einer erneuten Aktivierung zurück — sichern Sie wichtige Inhalte daher vorher. Allein das Gerätelimit oder ein PC-Wechsel ist <strong>nicht erstattungsfähig</strong>, aber wenn Sie uns kontaktieren, helfen wir beim Gerätewechsel und deaktivieren das alte Gerät.",
         faq4q: "Bei der Windows-Installation erscheint eine blaue Warnung.",
         faq4a: 'SmartScreen-Warnungen sind bei unsignierten Apps üblich. Siehe <a href="#" onclick="openModal(); return false;">Installationsanleitung</a>: [Weitere Informationen] → [Trotzdem ausführen].',
         faq5q: "Welche Windows-Versionen werden unterstützt?",
@@ -896,20 +1124,93 @@ Object.assign(window.PeekomI18nLocales, {
         faqSub: "Perguntas comuns sobre o Peekom.",
         refundPolicyTitle: "Política de reembolso do Peekom Plus",
         refundPolicyBody:
-            "<p>Os pagamentos e reembolsos do Peekom Plus são processados pela Lemon Squeezy, nosso comerciante registrado (Merchant of Record).</p>" +
+            "<p>Os pagamentos e reembolsos do Peekom Plus são processados pela <strong>Lemon Squeezy</strong>, nosso comerciante registrado (Merchant of Record).</p>" +
             '<ul class="faq-refund-list">' +
-            "<li><strong>Prazo</strong> — Solicitações são aceitas em até <strong>30 dias</strong> após a compra.</li>" +
-            "<li><strong>Casos com reembolso</strong> — Mau funcionamento do produto (o app não inicia ou não funciona corretamente) e pagamentos duplicados do mesmo pedido.</li>" +
-            "<li><strong>Sem reembolso</strong> — Mudança de ideia.</li>" +
-            "<li><strong>Licença após o reembolso</strong> — Após o reembolso, sua chave de licença do Peekom Plus é desativada e o app volta para a versão gratuita na próxima inicialização on-line.</li>" +
-            '<li><strong>Processo</strong> — Envie uma solicitação pelo <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulário de contato (ou e-mail)</a> com o número do pedido → analisamos → emitimos o reembolso pelo painel da Lemon Squeezy → conforme o emissor do cartão, pode levar alguns dias úteis.</li>' +
+            "<li><strong>Prazo para solicitar</strong> — Analisamos as solicitações enviadas em até <strong>30 dias</strong> após a compra.</li>" +
+            "<li><strong>Casos com direito a reembolso</strong> — Reembolsamos o seguinte:" +
+            "<ul>" +
+            "<li>Um <strong>defeito do produto</strong> — o app não abre ou não funciona corretamente.</li>" +
+            "<li>Um <strong>pagamento duplicado</strong> do mesmo pedido.</li>" +
+            "</ul></li>" +
+            "<li><strong>Casos sem direito a reembolso</strong> — Não podemos reembolsar o seguinte:" +
+            "<ul>" +
+            "<li><strong>Mudança de ideia</strong> após a compra.</li>" +
+            "<li><strong>Mudança de plano</strong> — por exemplo Single ↔ Double/Family. Não oferecemos upgrade pagando apenas a diferença. Se precisar de mais dispositivos, é necessário <strong>comprar o plano superior separadamente</strong>; o plano original não é reembolsado automaticamente e nenhuma diferença de preço é creditada.</li>" +
+            "<li><strong>Reembolso depois de a licença já ter sido ativada.</strong> «Activated» (ativada) significa que a chave foi verificada com sucesso e registada para que o Plus possa ser usado nesse dispositivo. Uma ativação bem-sucedida mostra que o produto funciona, por isso <strong>não é considerada um defeito do produto</strong>.</li>" +
+            "<li><strong>Problemas causados apenas pelo seu ambiente</strong> — firewall da empresa ou da escola, software de segurança, uma rede totalmente isolada (sem internet), downloads do GitHub bloqueados ou o bloqueio de <code>api.lemonsqueezy.com</code>. Isto aplica-se sobretudo quando a licença <strong>já está ativada</strong>.</li>" +
+            "<li><strong>Incómodo pelo limite de dispositivos ou pela troca de PC.</strong> Se precisar mudar para outro dispositivo, <a href=\"/contact/\">contacte-nos</a> — podemos desativar o dispositivo antigo por você.</li>" +
+            "</ul></li>" +
+            "</ul>" +
+            "<p><strong>Antes de comprar (ativação e rede)</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>A <strong>primeira ativação do Plus</strong> exige acesso à internet e acesso a <code>https://api.lemonsqueezy.com</code>.</li>" +
+            "<li>Mesmo que os sites normais abram, a ativação pode falhar se apenas esse endereço estiver bloqueado.</li>" +
+            "<li>Um PC usado exclusivamente numa <strong>rede totalmente isolada (sem internet)</strong> pode não conseguir ser ativado.</li>" +
+            "<li>O instalador está alojado no GitHub Releases, por isso o download pode falhar onde o github.com está bloqueado.</li>" +
+            "<li>Se pretende usar o Peekom apenas num PC da empresa, recomendamos verificar os pontos acima antes de comprar.</li>" +
+            "</ul>" +
+            "<p><strong>Se o seu ambiente impedir o uso do Plus — como analisamos</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li>A compra foi feita nos últimos <strong>30 dias</strong>, e</li>" +
+            "<li>a licença está <strong>Inactive (0 dispositivos ativados)</strong>, ou trata-se de um defeito do produto ou de um pagamento duplicado, e</li>" +
+            "<li>entra em contacto connosco com o número do pedido e uma descrição — então <strong>analisamos o caso individualmente</strong>.</li>" +
+            "<li>No entanto, se a licença <strong>já estiver ativada</strong> e a rede da empresa for o único motivo, em regra não há direito a reembolso.</li>" +
+            "</ul>" +
+            "<p><strong>A sua licença e o processo de reembolso</strong></p>" +
+            '<ul class="faq-refund-list">' +
+            "<li><strong>Licença</strong> — Concluído o reembolso, a sua chave de licença do Peekom Plus é desativada e o app volta à versão gratuita na próxima vez que iniciar com acesso à internet.</li>" +
+            '<li><strong>Como solicitar</strong> — Use o <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulário de contato (ou e-mail)</a> e inclua o seu <strong>Order #</strong> (número do pedido) e uma breve descrição. Indicar o endereço de e-mail usado no pagamento ajuda-nos a encontrar o pedido mais depressa. Não conseguimos localizar um pedido apenas com um número de telefone.</li>' +
+            "<li><strong>Processamento</strong> — Após a análise, emitimos o reembolso pelo painel da Lemon Squeezy; conforme o emissor do cartão ou a forma de pagamento, pode levar alguns dias úteis para aparecer.</li>" +
             "</ul>",
         faqR1q: "Como solicito um reembolso do Peekom Plus?",
-        faqR1a: 'Envie o seu <strong>número do pedido</strong> pelo <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulário de contato (ou e-mail)</a>. Após a análise, emitimos o reembolso pelo painel da Lemon Squeezy. Conforme o emissor do cartão ou a forma de pagamento, pode levar alguns dias úteis para aparecer.',
+        faqR1a:
+            '<p>Envie o seu <strong>Order #</strong> (número do pedido) pelo <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">formulário de contato (ou e-mail)</a>.</p>' +
+            "<p>Indicar o <strong>endereço de e-mail usado no pagamento</strong> ajuda-nos a encontrar o seu pedido mais depressa. Não conseguimos localizar um pedido apenas com um número de telefone.</p>" +
+            "<p>Descreva também o que aconteceu (o app não abre, um pagamento duplicado, etc.).</p>" +
+            "<p>Se a solicitação tiver direito a reembolso, emitimos o reembolso pelo painel da Lemon Squeezy. Conforme o emissor do cartão ou a forma de pagamento, pode levar alguns dias úteis para aparecer.</p>",
         faqR2q: "Quais casos têm direito a reembolso?",
-        faqR2a: "Em até <strong>30 dias</strong> após a compra, há reembolso por <strong>mau funcionamento do produto</strong> (o app não inicia ou não funciona corretamente) e por <strong>pagamentos duplicados</strong> do mesmo pedido. Mudança de ideia não dá direito a reembolso. Os pagamentos e reembolsos são processados pela Lemon Squeezy, nosso comerciante registrado.",
+        faqR2a:
+            "<p><strong>Com direito a reembolso</strong> — A compra foi feita há menos de <strong>30 dias</strong> e trata-se de um <strong>defeito do produto</strong> (o app não abre ou não funciona corretamente) ou de um <strong>pagamento duplicado</strong> do mesmo pedido.</p>" +
+            "<p><strong>Sem direito a reembolso</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Mudança de ideia.</strong></li>" +
+            "<li><strong>Mudança de plano</strong> (Single ↔ Double/Family) — não existe upgrade pela diferença e o plano superior tem de ser comprado separadamente.</li>" +
+            "<li>Reembolso depois de a licença <strong>já ter sido ativada</strong>.</li>" +
+            "<li>Problemas causados <strong>apenas pelo seu ambiente</strong>, como firewall da empresa ou da escola, rede sem internet ou downloads do GitHub bloqueados — sobretudo quando a licença <strong>já está ativada</strong>.</li>" +
+            "<li>Incómodo pelo limite de dispositivos ou pela troca de PC — nesse caso contacte-nos e ajudamos a mudar de dispositivo.</li>" +
+            "</ul>" +
+            "<p>Se estiver dentro dos 30 dias após a compra e a licença estiver <strong>Inactive (0 dispositivos ativados)</strong>, contacte-nos com o número do pedido e uma descrição e <strong>analisamos</strong> o caso individualmente.</p>" +
+            "<p>Os pagamentos e reembolsos são processados pela Lemon Squeezy, nosso comerciante registrado (Merchant of Record).</p>",
         faqR3q: "O que acontece com a minha licença após o reembolso?",
-        faqR3a: "Concluído o reembolso, sua chave de licença do Peekom Plus é <strong>desativada</strong>. O app volta automaticamente para a versão gratuita na próxima inicialização on-line, então confirme que deseja parar de usar o Plus antes de solicitar o reembolso.",
+        faqR3a:
+            "<p>Concluído o reembolso, a sua chave de licença do Peekom Plus é <strong>desativada</strong>.</p>" +
+            "<p>O app volta automaticamente à <strong>versão gratuita</strong> na próxima vez que iniciar com acesso à internet, e as funcionalidades exclusivas do Plus deixam de funcionar.</p>" +
+            "<p>Os seus memos continuam no PC, mas volta ao conjunto de funcionalidades gratuitas (3 índices, etc.), por isso exporte o que precisar <strong>antes</strong> de pedir o reembolso.</p>" +
+            "<p>Confirme que pretende deixar de usar o Plus antes de enviar o pedido.</p>",
+        faqR4q: "Posso usar o Peekom Plus atrás da firewall da empresa ou numa rede sem internet?",
+        faqR4a:
+            "<p>A versão gratuita funciona sem acesso à internet.</p>" +
+            "<p>No entanto, a <strong>primeira ativação do Plus</strong> exige acesso à internet e acesso a <code>https://api.lemonsqueezy.com</code> por HTTPS (443).</p>" +
+            "<p>Mesmo que os sites normais abram, a ativação pode falhar se apenas esse endereço estiver bloqueado, e um PC usado exclusivamente numa <strong>rede totalmente isolada (sem internet)</strong> pode não conseguir ser ativado.</p>" +
+            "<p>O instalador também está alojado no GitHub Releases, por isso o próprio download pode falhar onde o github.com está bloqueado.</p>" +
+            "<p><strong>Experimente isto</strong></p>" +
+            '<ul class="guide-step-list">' +
+            "<li><strong>Ative uma vez noutra rede</strong>, como o Wi‑Fi de casa ou um hotspot do telemóvel. Depois da ativação pode usar o Plus sem internet (a licença é verificada de novo sempre que voltar a estar online).</li>" +
+            "<li>Peça ao departamento de TI para permitir <code>https://api.lemonsqueezy.com</code> por <strong>HTTPS (443)</strong>.</li>" +
+            "<li>Se usa VPN ou proxy da empresa, desligue-o por um momento ou tente de novo numa rede permitida.</li>" +
+            "</ul>" +
+            "<p><strong>Verifique antes de comprar.</strong> Se pretende usar o Peekom apenas num PC da empresa, estas restrições podem impedir a ativação. Um reembolso pedido <strong>depois de a licença ter sido ativada</strong>, tendo a rede da empresa como único motivo, não tem direito a reembolso.</p>",
+        faqR5q: "Posso obter reembolso depois de ativar a licença?",
+        faqR5a:
+            "<p>Em regra, <strong>não — não há direito a reembolso.</strong></p>" +
+            "<p><strong>Activated</strong> (ativada) significa que a chave foi verificada com sucesso e registada para que o Plus possa ser usado nesse dispositivo. Uma ativação bem-sucedida mostra que o produto funciona, por isso <strong>não é considerada um defeito do produto</strong>.</p>" +
+            "<p>Mesmo depois da ativação, reembolsamos o seguinte:</p>" +
+            '<ul class="guide-step-list">' +
+            "<li>Um <strong>defeito do produto</strong> — o app não abre ou não funciona corretamente.</li>" +
+            "<li>Um <strong>pagamento duplicado</strong> do mesmo pedido.</li>" +
+            "</ul>" +
+            "<p>Se <strong>ainda não</strong> ativou (licença <strong>Inactive</strong>, 0 dispositivos ativados) e a compra foi feita há menos de 30 dias, <a href=\"/contact/\">contacte-nos</a> com o número do pedido e uma descrição e analisamos o caso individualmente.</p>" +
+            "<p>Se apenas precisa de mudar para outro dispositivo, podemos <strong>desativar o dispositivo antigo</strong> em vez de reembolsar.</p>",
         faq1q: "Qual é a diferença entre grátis e Plus?",
         faq1a: 'O grátis inclui 3 índices, mover alça em grupo, modo ICE, atraso ao passar o mouse, seleção de monitor, Markdown, barra de formatação e inserção de imagens. Peekom Plus (lançamento $9.99, lista $12.99) desbloqueia 10 slots, tema personalizado, fontes, opacidade, redimensionar imagens e exportar no app. Veja a <a href="/features/#compare">tabela comparativa</a>.',
         compareFreeName: "Peekom (Grátis)",
@@ -989,13 +1290,16 @@ Object.assign(window.PeekomI18nLocales, {
             "</ul>" +
             "<p><strong>Limite de dispositivos (até 2)</strong> — Reinstalar no mesmo PC conta como o mesmo dispositivo, sem afetar a ativação. Ao trocar de computador, cada licença permite até dois dispositivos (ex.: PC de trabalho + PC pessoal).</p>",
         faq3q: "Como o Plus é ativado?",
-        faq3a: "Compre no Lemon Squeezy e depois insira a chave de licença no app para desbloquear o Peekom Plus (sem reinstalar).",
+        faq3a:
+            "<p>Instale primeiro a <strong>app gratuita</strong> e depois introduza nas Configurações ou no ecrã de bloqueio do Plus a chave de licença que comprou na Lemon Squeezy. Não existe um instalador separado para o Plus e não é preciso reinstalar.</p>" +
+            "<p>A <strong>primeira ativação exige acesso à internet</strong> e acesso a <code>https://api.lemonsqueezy.com</code>. Depois disso, pode continuar a usar o Plus sem internet.</p>" +
+            "<p>Quando a ativação é concluída, a licença fica registada como <strong>Activated</strong> (ativada) nesse dispositivo. Depois da ativação, em regra não há reembolso por mudança de ideia, mudança de plano ou restrições da rede da empresa, por isso leia primeiro a política de reembolso acima.</p>",
         faq3bq: "Posso usar uma chave de licença em mais de um PC?",
         faq3ba: "Sim. Você pode inserir a mesma chave de licença de 16 caracteres uma vez em cada um de até dois PCs—por exemplo, PC de trabalho e pessoal—para usar o Peekom Plus em ambos.",
         faq3cq: "Posso continuar a usar se trocar o PC do trabalho ou mudar de emprego?",
-        faq3ca: "Uma licença Peekom Plus pode ser usada em até dois dispositivos. Reinstalar no mesmo dispositivo é permitido. Se precisar mudar para um novo dispositivo, contacte-nos — analisaremos e ajudaremos. Consoante a situação, poderemos orientá-lo a reativar no novo dispositivo após repor os dispositivos ativados anteriormente.",
+        faq3ca: "Consoante o plano, o Peekom Plus pode ser usado em 1 dispositivo (Single), 2 (Double) ou 5 (Family). Reinstalar no mesmo dispositivo é permitido. Se precisar mudar para um novo dispositivo, contacte-nos — analisaremos e ajudaremos. Consoante a situação, poderemos orientá-lo a reativar no novo dispositivo após repor os dispositivos ativados anteriormente. O limite de dispositivos ou a troca de PC, por si só, <strong>não dão direito a reembolso</strong>, mas ajudamos com gosto a mudar de dispositivo desativando o antigo — basta contactar-nos.",
         faq3dq: "Que informações devo enviar para mudar de dispositivo?",
-        faq3da: "Para uma análise mais rápida, envie o e-mail usado na compra, o número do pedido, a chave de licença e o motivo da mudança. Se ambos os dispositivos já estiverem ativados, poderemos repor os dispositivos ativos antes da reativação — faça cópia de segurança do que precisar antes de contactar.",
+        faq3da: "Para uma análise mais rápida, envie o e-mail usado na compra, o número do pedido, a chave de licença e o motivo da mudança de dispositivo. Se já estiver a usar todos os lugares do seu plano (Single 1 · Double 2 · Family 5), poderemos repor os dispositivos ativos antes da reativação — faça cópia de segurança do que precisar antes de contactar. O limite de dispositivos ou a troca de PC, por si só, <strong>não dão direito a reembolso</strong>, mas se nos contactar ajudamos a mudar de dispositivo desativando o antigo.",
         faq4q: "Um aviso azul aparece ao instalar no Windows.",
         faq4a: 'Avisos SmartScreen são comuns em apps não assinados. Consulte o <a href="#" onclick="openModal(); return false;">guia de instalação</a>: [Mais informações] → [Executar mesmo assim].',
         faq5q: "Quais versões do Windows são suportadas?",

@@ -47,18 +47,21 @@ var EXTRA = {
             "<li>IT に <strong><code>https://api.lemonsqueezy.com</code> の HTTPS（443）許可</strong>を依頼</li>" +
             "<li>社内 VPN 利用中ならオフにするか、許可された VPN で再試行</li>" +
             "</ul>" +
-            "<p><strong>有効化上限（最大 2 台）</strong>のメッセージが出た場合は <a href=\"/contact/\">お問い合わせ</a>で購入メール・注文番号・ライセンスキーをお送りください。端末のリセットをご案内できます。</p>" +
-            "<p>インストーラーを再ダウンロードしても、<strong>サーバー接続がブロックされている</strong>限り同じエラーになります。</p>",
+            "<p><strong>有効化上限（プラン別: Single 1 台 · Double 2 台 · Family 5 台）</strong>のメッセージが出た場合は <a href=\"/contact/\">お問い合わせ</a>で購入メール・注文番号・ライセンスキーをお送りください。端末のリセットをご案内できます。</p>" +
+            "<p>インストーラーを再ダウンロードしても、<strong>サーバー接続がブロックされている</strong>限り同じエラーになります。</p>" +
+            "<p><strong>返金との関係</strong> — このエラーはお使いの<strong>ネットワーク環境の制限</strong>によるもので、製品の不具合ではありません。ライセンスを<strong>すでに有効化済み</strong>の場合、この理由による返金は対象外です。まだ <strong>Inactive</strong>（有効化された端末 0 台）で、ご購入から 30 日以内であれば、注文番号と状況を添えてお問い合わせいただければ、上記の返金ポリシーに沿って個別に検討いたします。</p>",
         faq13q: "Peekom はフリーウェアですか？会社 PC にインストールできますか？",
         faq13a:
             "<p><strong>Peekom 無料版</strong>は別途ライセンス料なしで使える <strong>フリーウェア</strong>です。有料の <strong>Peekom Plus</strong>は任意で、購入しなくても無料版だけで使い続けられます。</p>" +
             "<p>（※ Microsoft Windows の<strong>公式認証プログラム</strong>を指すものではありません。）</p>" +
             "<p>会社 PC ではセキュリティ方針によりインストール・保存先が制限されることがあります。Peekom はプログラムフォルダ以外に <code>%AppData%\\Roaming\\Peekom</code> にメモと設定を保存するため、IT に以下の許可も依頼してください。</p>" +
             '<ul class="guide-step-list">' +
-            "<li>公式インストーラー: <a href=\"/download/\">peekom.com/download</a> の <code>Peekom-Setup.exe</code></li>" +
+            "<li>公式インストーラー: <a href=\"/download/\">peekom.com/download</a> の <code>Peekom-Setup.exe</code>（GitHub Releases で配布）</li>" +
             "<li>データフォルダ: <code>C:\\Users\\(ユーザー名)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus 認証時: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>無料版はインターネットがなくても使えますが、<strong>Plus の初回認証</strong>にはインターネット接続と <code>https://api.lemonsqueezy.com</code> への接続が必要です。</p>" +
+            "<p>github.com と <code>api.lemonsqueezy.com</code> の両方がブロックされている環境では、<strong>Plus をご購入になる前に</strong> IT 担当者に許可の可否をご確認ください。有効化した後に会社ネットワークの制限のみを理由とする返金は対象外です。</p>",
         faq14q: "メモが消えました。復元できますか？",
         faq14a:
             "<p>Peekom のメモは <strong>お使いの PC にのみ保存</strong>されます。クラウドサーバーはなく、こちらから遠隔で閲覧・復元することはできません。</p>" +
@@ -125,18 +128,21 @@ var EXTRA = {
             "<li>请 IT 允许 <strong><code>https://api.lemonsqueezy.com</code> 的 HTTPS（443）</strong></li>" +
             "<li>若使用公司 VPN，请关闭或改用已允许的 VPN 重试</li>" +
             "</ul>" +
-            "<p>若出现<strong>激活上限（最多 2 台设备）</strong>提示，请通过 <a href=\"/contact/\">联系我们</a>提供购买邮箱、订单号与许可证密钥，我们可协助重置设备。</p>" +
-            "<p>重新下载安装包<strong>无法</strong>解决服务器仍被拦截的情况。</p>",
+            "<p>若出现<strong>激活上限（按套餐：Single 1 台 · Double 2 台 · Family 5 台）</strong>提示，请通过 <a href=\"/contact/\">联系我们</a>提供购买邮箱、订单号与许可证密钥，我们可协助重置设备。</p>" +
+            "<p>重新下载安装包<strong>无法</strong>解决服务器仍被拦截的情况。</p>" +
+            "<p><strong>与退款的关系</strong> — 此错误源于您所在<strong>网络环境的限制</strong>，并非产品缺陷。若许可证<strong>已经激活</strong>，以此为由的退款不在受理范围内。若仍为 <strong>Inactive</strong>（已激活设备 0 台）且在购买后 30 天内，请通过 <a href=\"/contact/\">联系我们</a>提供订单号与具体情况，我们会依照上述退款政策逐案审核。</p>",
         faq13q: "Peekom 是免费软件吗？可以在公司电脑上安装吗？",
         faq13a:
             "<p><strong>Peekom 免费版</strong>为无需单独许可费的<strong>免费软件（Freeware）</strong>。付费的 <strong>Peekom Plus</strong>为可选功能，不购买也可继续使用免费版。</p>" +
             "<p>（※ 并非指 Microsoft Windows <strong>官方认证计划</strong>。）</p>" +
             "<p>公司电脑可能因安全策略限制安装或数据路径。除程序文件夹外，Peekom 还会在 <code>%AppData%\\Roaming\\Peekom</code> 保存备忘录与设置，请一并向 IT 申请允许：</p>" +
             '<ul class="guide-step-list">' +
-            "<li>官方安装包：<a href=\"/download/\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code></li>" +
+            "<li>官方安装包：<a href=\"/download/\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code>（由 GitHub Releases 提供）</li>" +
             "<li>数据文件夹：<code>C:\\Users\\(用户名)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus 激活：<code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>免费版没有网络也能使用，但 <strong>Plus 首次激活</strong>需要联网并能访问 <code>https://api.lemonsqueezy.com</code>。</p>" +
+            "<p>若 github.com 与 <code>api.lemonsqueezy.com</code> 都被拦截，请在<strong>购买 Plus 之前</strong>先向 IT 确认能否放行。激活之后仅以公司网络限制为由申请的退款不在受理范围内。</p>",
         faq14q: "备忘录不见了，能恢复吗？",
         faq14a:
             "<p>Peekom 的备忘录<strong>仅保存在您的电脑上</strong>，没有云端服务器，我们也无法远程查看或恢复。</p>" +
@@ -203,18 +209,21 @@ var EXTRA = {
             "<li>請 IT 允許 <strong><code>https://api.lemonsqueezy.com</code> 的 HTTPS（443）</strong></li>" +
             "<li>若使用公司 VPN，請關閉或改用已允許的 VPN 重試</li>" +
             "</ul>" +
-            "<p>若出現<strong>啟用上限（最多 2 台裝置）</strong>訊息，請透過 <a href=\"/contact/\">聯絡我們</a>提供購買信箱、訂單編號與授權金鑰，我們可協助重設裝置。</p>" +
-            "<p>重新下載安裝程式<strong>無法</strong>解決伺服器仍被封鎖的情況。</p>",
+            "<p>若出現<strong>啟用上限（依方案：Single 1 台 · Double 2 台 · Family 5 台）</strong>訊息，請透過 <a href=\"/contact/\">聯絡我們</a>提供購買信箱、訂單編號與授權金鑰，我們可協助重設裝置。</p>" +
+            "<p>重新下載安裝程式<strong>無法</strong>解決伺服器仍被封鎖的情況。</p>" +
+            "<p><strong>與退款的關係</strong> — 此錯誤源自您所在<strong>網路環境的限制</strong>，並非產品瑕疵。若授權<strong>已經啟用</strong>，以此為由的退款不在受理範圍內。若仍為 <strong>Inactive</strong>（已啟用裝置 0 台）且在購買後 30 天內，請透過 <a href=\"/contact/\">聯絡我們</a>提供訂單編號與具體情況，我們會依照上述退款政策逐案審核。</p>",
         faq13q: "Peekom 是免費軟體嗎？可以在公司電腦上安裝嗎？",
         faq13a:
             "<p><strong>Peekom 免費版</strong>為無需另外授權費的<strong>免費軟體（Freeware）</strong>。付費的 <strong>Peekom Plus</strong>為選用功能，不購買也可繼續使用免費版。</p>" +
             "<p>（※ 並非指 Microsoft Windows <strong>官方認證計畫</strong>。）</p>" +
             "<p>公司電腦可能因安全政策限制安裝或資料路徑。除程式資料夾外，Peekom 還會在 <code>%AppData%\\Roaming\\Peekom</code> 儲存備忘錄與設定，請一併向 IT 申請允許：</p>" +
             '<ul class="guide-step-list">' +
-            "<li>官方安裝程式：<a href=\"/download/\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code></li>" +
+            "<li>官方安裝程式：<a href=\"/download/\">peekom.com/download</a> 的 <code>Peekom-Setup.exe</code>（由 GitHub Releases 提供）</li>" +
             "<li>資料資料夾：<code>C:\\Users\\(使用者名稱)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus 啟用：<code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>免費版沒有網路也能使用，但 <strong>Plus 首次啟用</strong>需要連網並能存取 <code>https://api.lemonsqueezy.com</code>。</p>" +
+            "<p>若 github.com 與 <code>api.lemonsqueezy.com</code> 都被封鎖，請在<strong>購買 Plus 之前</strong>先向 IT 確認能否放行。啟用之後僅以公司網路限制為由申請的退款不在受理範圍內。</p>",
         faq14q: "備忘錄不見了，能復原嗎？",
         faq14a:
             "<p>Peekom 的備忘錄<strong>僅儲存在您的電腦上</strong>，沒有雲端伺服器，我們也無法遠端查看或復原。</p>" +
@@ -281,18 +290,21 @@ var EXTRA = {
             "<li>Pide a IT permitir <strong><code>https://api.lemonsqueezy.com</code> por HTTPS (443)</strong></li>" +
             "<li>Desactiva la VPN corporativa o prueba con una VPN permitida</li>" +
             "</ul>" +
-            "<p>Si aparece el límite de <strong>activación (máx. 2 dispositivos)</strong>, <a href=\"/contact/\">contáctanos</a> con el email de compra, número de pedido y clave; podemos ayudarte a restablecer dispositivos.</p>" +
-            "<p>Volver a descargar el instalador <strong>no</strong> soluciona el bloqueo del servidor.</p>",
+            "<p>Si aparece el límite de <strong>activación (según el plan: Single 1 dispositivo · Double 2 · Family 5)</strong>, <a href=\"/contact/\">contáctanos</a> con el email de compra, número de pedido y clave; podemos ayudarte a restablecer dispositivos.</p>" +
+            "<p>Volver a descargar el instalador <strong>no</strong> soluciona el bloqueo del servidor.</p>" +
+            "<p><strong>Relación con los reembolsos</strong> — este error viene de una <strong>restricción de red en tu entorno</strong>, no de un defecto del producto. Si tu licencia ya está <strong>activada</strong>, un reembolso por este motivo no es elegible. Si sigue como <strong>Inactive</strong> (0 dispositivos activados) y estás dentro de los 30 días desde la compra, <a href=\"/contact/\">escríbenos</a> con tu número de pedido y una descripción: revisaremos el caso de forma individual según la política de reembolsos anterior.</p>",
         faq13q: "¿Peekom es freeware? ¿Puedo instalarlo en un PC de empresa?",
         faq13a:
             "<p><strong>Peekom (gratis)</strong> es <strong>freeware</strong>: puedes usarlo sin licencia aparte. <strong>Peekom Plus</strong> es opcional de pago.</p>" +
             "<p>(Se refiere al <strong>tipo de licencia</strong>, no a la certificación oficial de Microsoft Windows.)</p>" +
             "<p>En PCs corporativos puede haber restricciones. Además de la carpeta del programa, Peekom guarda notas y ajustes en <code>%AppData%\\Roaming\\Peekom</code>. Pide a IT que permita:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> en <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> en <a href=\"/download/\">peekom.com/download</a> (alojado en GitHub Releases)</li>" +
             "<li>Carpeta de datos: <code>C:\\Users\\(usuario)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Activación Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>La versión gratuita funciona sin internet, pero la <strong>primera activación de Plus</strong> necesita conexión y acceso a <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Si github.com y <code>api.lemonsqueezy.com</code> están bloqueados los dos, confírmalo con IT <strong>antes de comprar Plus</strong>. Un reembolso solicitado después de la activación, cuando el único motivo es la red de la empresa, no es elegible.</p>",
         faq14q: "Desapareció mi nota. ¿Puedo recuperarla?",
         faq14a:
             "<p>Peekom guarda las notas <strong>solo en tu PC</strong>. No hay servidor en la nube y no podemos ver ni restaurar tus datos de forma remota.</p>" +
@@ -359,18 +371,21 @@ var EXTRA = {
             "<li>Demandez à l’IT d’autoriser <strong><code>https://api.lemonsqueezy.com</code> en HTTPS (443)</strong></li>" +
             "<li>Désactivez le VPN d’entreprise ou réessayez avec un VPN autorisé</li>" +
             "</ul>" +
-            "<p>Message de <strong>limite d’activation (2 appareils max)</strong> ? <a href=\"/contact/\">Contactez-nous</a> avec l’e-mail d’achat, le n° de commande et la clé — nous pouvons réinitialiser les appareils.</p>" +
-            "<p>Retélécharger l’installateur <strong>ne résout pas</strong> un blocage serveur.</p>",
+            "<p>Message de <strong>limite d’activation (selon la formule : Single 1 appareil · Double 2 · Family 5)</strong> ? <a href=\"/contact/\">Contactez-nous</a> avec l’e-mail d’achat, le n° de commande et la clé — nous pouvons réinitialiser les appareils.</p>" +
+            "<p>Retélécharger l’installateur <strong>ne résout pas</strong> un blocage serveur.</p>" +
+            "<p><strong>Lien avec les remboursements</strong> — cette erreur vient d’une <strong>restriction réseau dans votre environnement</strong>, pas d’un défaut du produit. Si votre licence est <strong>déjà activée</strong>, un remboursement pour ce motif n’est pas éligible. Si elle est encore <strong>Inactive</strong> (0 appareil activé) et que vous êtes dans les 30 jours suivant l’achat, <a href=\"/contact/\">écrivez-nous</a> avec votre n° de commande et une description : nous étudierons le cas individuellement selon la politique de remboursement ci-dessus.</p>",
         faq13q: "Peekom est-il un freeware ? Puis-je l’installer sur un PC professionnel ?",
         faq13a:
             "<p><strong>Peekom (gratuit)</strong> est un <strong>freeware</strong> utilisable sans licence séparée. <strong>Peekom Plus</strong> est une option payante.</p>" +
             "<p>(Il s’agit du <strong>type de licence</strong>, pas de la certification officielle Microsoft Windows.)</p>" +
             "<p>Sur un PC d’entreprise, l’installation ou les chemins de données peuvent être restreints. Outre le dossier programme, Peekom enregistre notes et réglages dans <code>%AppData%\\Roaming\\Peekom</code>. Demandez à l’IT d’autoriser :</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installateur officiel : <code>Peekom-Setup.exe</code> sur <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Installateur officiel : <code>Peekom-Setup.exe</code> sur <a href=\"/download/\">peekom.com/download</a> (hébergé sur GitHub Releases)</li>" +
             "<li>Dossier de données : <code>C:\\Users\\(nom)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Activation Plus : <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>La version gratuite fonctionne sans internet, mais la <strong>première activation de Plus</strong> nécessite une connexion et l’accès à <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Si github.com et <code>api.lemonsqueezy.com</code> sont tous les deux bloqués, vérifiez auprès de l’IT <strong>avant d’acheter Plus</strong>. Un remboursement demandé après l’activation, dont le réseau d’entreprise est le seul motif, n’est pas éligible.</p>",
         faq14q: "Ma note a disparu. Puis-je la récupérer ?",
         faq14a:
             "<p>Peekom stocke les notes <strong>uniquement sur votre PC</strong>. Pas de cloud : nous ne pouvons pas consulter ni restaurer vos données à distance.</p>" +
@@ -437,18 +452,21 @@ var EXTRA = {
             "<li>IT um Freigabe von <strong><code>https://api.lemonsqueezy.com</code> per HTTPS (443)</strong> bitten</li>" +
             "<li>Firmen-VPN ausschalten oder erlaubtes VPN nutzen</li>" +
             "</ul>" +
-            "<p>Meldung <strong>Aktivierungslimit (max. 2 Geräte)</strong>? <a href=\"/contact/\">Kontakt</a> mit Kauf-E-Mail, Bestellnummer und Schlüssel — wir helfen beim Zurücksetzen.</p>" +
-            "<p>Installer erneut laden hilft <strong>nicht</strong>, wenn der Server blockiert bleibt.</p>",
+            "<p>Meldung <strong>Aktivierungslimit (je Tarif: Single 1 Gerät · Double 2 · Family 5)</strong>? <a href=\"/contact/\">Kontakt</a> mit Kauf-E-Mail, Bestellnummer und Schlüssel — wir helfen beim Zurücksetzen.</p>" +
+            "<p>Installer erneut laden hilft <strong>nicht</strong>, wenn der Server blockiert bleibt.</p>" +
+            "<p><strong>Zusammenhang mit Rückerstattungen</strong> — dieser Fehler entsteht durch eine <strong>Netzwerkbeschränkung in Ihrer Umgebung</strong> und ist kein Produktfehler. Ist Ihre Lizenz <strong>bereits aktiviert</strong>, besteht aus diesem Grund kein Anspruch auf Rückerstattung. Ist sie noch <strong>Inactive</strong> (0 aktivierte Geräte) und liegt der Kauf weniger als 30 Tage zurück, schreiben Sie uns über <a href=\"/contact/\">Kontakt</a> mit Bestellnummer und Beschreibung — wir prüfen den Fall gemäß der obigen Rückerstattungsrichtlinie individuell.</p>",
         faq13q: "Ist Peekom Freeware? Darf ich es auf einem Firmen-PC installieren?",
         faq13a:
             "<p><strong>Peekom (kostenlos)</strong> ist <strong>Freeware</strong> ohne separate Lizenzgebühr. <strong>Peekom Plus</strong> ist optional kostenpflichtig.</p>" +
             "<p>(Gemeint ist der <strong>Lizenztyp</strong>, nicht die offizielle Microsoft-Windows-Zertifizierung.)</p>" +
             "<p>Auf Firmen-PCs können Installation und Datenpfade eingeschränkt sein. Neben dem Programmordner speichert Peekom in <code>%AppData%\\Roaming\\Peekom</code>. Bitte IT um Freigabe von:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Offiziellem Installer: <code>Peekom-Setup.exe</code> von <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Offiziellem Installer: <code>Peekom-Setup.exe</code> von <a href=\"/download/\">peekom.com/download</a> (über GitHub Releases bereitgestellt)</li>" +
             "<li>Datenordner: <code>C:\\Users\\(Benutzername)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus-Aktivierung: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>Die kostenlose Version läuft auch ohne Internet, die <strong>erste Plus-Aktivierung</strong> braucht jedoch eine Verbindung und Zugriff auf <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Sind github.com und <code>api.lemonsqueezy.com</code> beide blockiert, klären Sie das <strong>vor dem Kauf von Plus</strong> mit der IT. Eine Rückerstattung, die nach der Aktivierung allein wegen des Firmennetzes verlangt wird, ist nicht möglich.</p>",
         faq14q: "Meine Notiz ist weg. Kann ich sie wiederherstellen?",
         faq14a:
             "<p>Peekom speichert Notizen <strong>nur auf Ihrem PC</strong>. Kein Cloud-Server — wir können Ihre Daten nicht remote einsehen oder wiederherstellen.</p>" +
@@ -515,18 +533,21 @@ var EXTRA = {
             "<li>Peça à IT para permitir <strong><code>https://api.lemonsqueezy.com</code> em HTTPS (443)</strong></li>" +
             "<li>Desligue a VPN corporativa ou use uma VPN permitida</li>" +
             "</ul>" +
-            "<p>Mensagem de <strong>limite de ativação (máx. 2 dispositivos)</strong>? <a href=\"/contact/\">Contacte-nos</a> com e-mail de compra, n.º de encomenda e chave.</p>" +
-            "<p>Transferir o instalador de novo <strong>não resolve</strong> se o servidor continuar bloqueado.</p>",
+            "<p>Mensagem de <strong>limite de ativação (por plano: Single 1 dispositivo · Double 2 · Family 5)</strong>? <a href=\"/contact/\">Contacte-nos</a> com e-mail de compra, n.º de encomenda e chave.</p>" +
+            "<p>Transferir o instalador de novo <strong>não resolve</strong> se o servidor continuar bloqueado.</p>" +
+            "<p><strong>Relação com reembolsos</strong> — este erro vem de uma <strong>restrição de rede no seu ambiente</strong> e não de um defeito do produto. Se a licença já estiver <strong>ativada</strong>, o reembolso por este motivo não é elegível. Se ainda estiver <strong>Inactive</strong> (0 dispositivos ativados) e estiver dentro dos 30 dias após a compra, <a href=\"/contact/\">contacte-nos</a> com o n.º de encomenda e uma descrição — analisamos o caso individualmente segundo a política de reembolso acima.</p>",
         faq13q: "O Peekom é freeware? Posso instalar num PC da empresa?",
         faq13a:
             "<p><strong>Peekom (grátis)</strong> é <strong>freeware</strong> — pode usar sem licença à parte. <strong>Peekom Plus</strong> é opcional e pago.</p>" +
             "<p>(Refere-se ao <strong>tipo de licença</strong>, não à certificação oficial Microsoft Windows.)</p>" +
             "<p>Em PCs corporativos a instalação ou caminhos de dados podem ser restritos. Além da pasta do programa, o Peekom guarda em <code>%AppData%\\Roaming\\Peekom</code>. Peça à IT para permitir:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> em <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Instalador oficial: <code>Peekom-Setup.exe</code> em <a href=\"/download/\">peekom.com/download</a> (alojado no GitHub Releases)</li>" +
             "<li>Pasta de dados: <code>C:\\Users\\(utilizador)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Ativação Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>A versão gratuita funciona sem internet, mas a <strong>primeira ativação do Plus</strong> exige ligação e acesso a <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Se github.com e <code>api.lemonsqueezy.com</code> estiverem os dois bloqueados, confirme com a IT <strong>antes de comprar o Plus</strong>. Um reembolso pedido após a ativação, tendo como único motivo a rede da empresa, não é elegível.</p>",
         faq14q: "A minha nota desapareceu. Posso recuperá-la?",
         faq14a:
             "<p>O Peekom guarda notas <strong>só no seu PC</strong>. Não há servidor na nuvem — não podemos ver nem restaurar os seus dados à distância.</p>" +
@@ -593,18 +614,21 @@ var EXTRA = {
             "<li>Chiedi all’IT di consentire <strong><code>https://api.lemonsqueezy.com</code> in HTTPS (443)</strong></li>" +
             "<li>Disattiva la VPN aziendale o riprova con una VPN consentita</li>" +
             "</ul>" +
-            "<p>Messaggio <strong>limite attivazione (max 2 dispositivi)</strong>? <a href=\"/contact/\">Contattaci</a> con e-mail d’acquisto, numero ordine e chiave.</p>" +
-            "<p>Scaricare di nuovo l’installer <strong>non risolve</strong> se il server resta bloccato.</p>",
+            "<p>Messaggio <strong>limite attivazione (per piano: Single 1 dispositivo · Double 2 · Family 5)</strong>? <a href=\"/contact/\">Contattaci</a> con e-mail d’acquisto, numero ordine e chiave.</p>" +
+            "<p>Scaricare di nuovo l’installer <strong>non risolve</strong> se il server resta bloccato.</p>" +
+            "<p><strong>Rapporto con i rimborsi</strong> — questo errore deriva da una <strong>restrizione di rete nel tuo ambiente</strong>, non da un difetto del prodotto. Se la licenza è <strong>già attivata</strong>, il rimborso per questo motivo non è ammissibile. Se è ancora <strong>Inactive</strong> (0 dispositivi attivati) e sei entro 30 giorni dall’acquisto, <a href=\"/contact/\">scrivici</a> con il numero d’ordine e una descrizione: valuteremo il caso singolarmente secondo la politica di rimborso qui sopra.</p>",
         faq13q: "Peekom è freeware? Posso installarlo su un PC aziendale?",
         faq13a:
             "<p><strong>Peekom (gratuito)</strong> è <strong>freeware</strong> utilizzabile senza licenza separata. <strong>Peekom Plus</strong> è opzionale a pagamento.</p>" +
             "<p>(Si intende il <strong>tipo di licenza</strong>, non la certificazione ufficiale Microsoft Windows.)</p>" +
             "<p>Sui PC aziendali installazione e percorsi dati possono essere limitati. Oltre alla cartella programma, Peekom salva in <code>%AppData%\\Roaming\\Peekom</code>. Chiedi all’IT di autorizzare:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installer ufficiale: <code>Peekom-Setup.exe</code> da <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Installer ufficiale: <code>Peekom-Setup.exe</code> da <a href=\"/download/\">peekom.com/download</a> (ospitato su GitHub Releases)</li>" +
             "<li>Cartella dati: <code>C:\\Users\\(utente)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Attivazione Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>La versione gratuita funziona anche senza internet, ma la <strong>prima attivazione di Plus</strong> richiede una connessione e l’accesso a <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Se github.com e <code>api.lemonsqueezy.com</code> sono entrambi bloccati, verifica con l’IT <strong>prima di acquistare Plus</strong>. Un rimborso richiesto dopo l’attivazione, quando l’unico motivo è la rete aziendale, non è ammissibile.</p>",
         faq14q: "La mia nota è sparita. Posso recuperarla?",
         faq14a:
             "<p>Peekom salva le note <strong>solo sul tuo PC</strong>. Nessun cloud: non possiamo vedere o ripristinare i dati da remoto.</p>" +
@@ -671,18 +695,21 @@ var EXTRA = {
             "<li>Попросить IT разрешить <strong><code>https://api.lemonsqueezy.com</code> по HTTPS (443)</strong></li>" +
             "<li>Отключить корпоративный VPN или использовать разрешённый</li>" +
             "</ul>" +
-            "<p>Сообщение о <strong>лимите активации (макс. 2 устройства)</strong>? <a href=\"/contact/\">Напишите нам</a> с email покупки, номером заказа и ключом.</p>" +
-            "<p>Повторная загрузка установщика <strong>не поможет</strong>, если сервер по-прежнему заблокирован.</p>",
+            "<p>Сообщение о <strong>лимите активации (по тарифу: Single — 1 устройство · Double — 2 · Family — 5)</strong>? <a href=\"/contact/\">Напишите нам</a> с email покупки, номером заказа и ключом.</p>" +
+            "<p>Повторная загрузка установщика <strong>не поможет</strong>, если сервер по-прежнему заблокирован.</p>" +
+            "<p><strong>Как это связано с возвратом</strong> — эта ошибка вызвана <strong>ограничением сети в вашем окружении</strong>, а не дефектом продукта. Если лицензия <strong>уже активирована</strong>, возврат по этой причине не предоставляется. Если она всё ещё <strong>Inactive</strong> (активировано 0 устройств) и с покупки прошло не больше 30 дней, <a href=\"/contact/\">напишите нам</a> номер заказа и опишите ситуацию — мы рассмотрим случай индивидуально согласно приведённой выше политике возврата.</p>",
         faq13q: "Peekom — это freeware? Можно ли установить на рабочий ПК?",
         faq13a:
             "<p><strong>Peekom (бесплатно)</strong> — <strong>freeware</strong>, можно пользоваться без отдельной лицензии. <strong>Peekom Plus</strong> — платная опция.</p>" +
             "<p>(Речь о <strong>типе лицензии</strong>, а не об официальной сертификации Microsoft Windows.)</p>" +
             "<p>На рабочих ПК установка и пути данных могут быть ограничены. Кроме папки программы Peekom сохраняет данные в <code>%AppData%\\Roaming\\Peekom</code>. Попросите IT разрешить:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Официальный установщик: <code>Peekom-Setup.exe</code> с <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Официальный установщик: <code>Peekom-Setup.exe</code> с <a href=\"/download/\">peekom.com/download</a> (размещён на GitHub Releases)</li>" +
             "<li>Папка данных: <code>C:\\Users\\(имя)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Активация Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>Бесплатная версия работает без интернета, но для <strong>первой активации Plus</strong> нужны подключение и доступ к <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Если github.com и <code>api.lemonsqueezy.com</code> оба заблокированы, уточните у IT <strong>до покупки Plus</strong>. Возврат, запрошенный после активации, если единственная причина — корпоративная сеть, не предоставляется.</p>",
         faq14q: "Заметка пропала. Можно ли восстановить?",
         faq14a:
             "<p>Peekom хранит заметки <strong>только на вашем ПК</strong>. Облака нет — мы не можем удалённо просмотреть или восстановить данные.</p>" +
@@ -749,18 +776,21 @@ var EXTRA = {
             "<li>Nhờ IT cho phép <strong><code>https://api.lemonsqueezy.com</code> qua HTTPS (443)</strong></li>" +
             "<li>Tắt VPN công ty hoặc dùng VPN được phép</li>" +
             "</ul>" +
-            "<p>Thông báo <strong>giới hạn kích hoạt (tối đa 2 thiết bị)</strong>? <a href=\"/contact/\">Liên hệ</a> kèm email mua, mã đơn và khóa bản quyền.</p>" +
-            "<p>Tải lại installer <strong>không</strong> sửa được nếu máy chủ vẫn bị chặn.</p>",
+            "<p>Thông báo <strong>giới hạn kích hoạt (theo gói: Single 1 thiết bị · Double 2 · Family 5)</strong>? <a href=\"/contact/\">Liên hệ</a> kèm email mua, mã đơn và khóa bản quyền.</p>" +
+            "<p>Tải lại installer <strong>không</strong> sửa được nếu máy chủ vẫn bị chặn.</p>" +
+            "<p><strong>Liên quan đến hoàn tiền</strong> — lỗi này đến từ <strong>hạn chế mạng trong môi trường của bạn</strong>, không phải lỗi sản phẩm. Nếu giấy phép <strong>đã được kích hoạt</strong>, yêu cầu hoàn tiền vì lý do này không thuộc diện được hoàn. Nếu vẫn ở trạng thái <strong>Inactive</strong> (0 thiết bị đã kích hoạt) và trong vòng 30 ngày kể từ ngày mua, hãy <a href=\"/contact/\">liên hệ</a> kèm mã đơn và mô tả tình huống — chúng tôi sẽ xem xét từng trường hợp theo chính sách hoàn tiền ở trên.</p>",
         faq13q: "Peekom có phải freeware không? Cài trên PC công ty được không?",
         faq13a:
             "<p><strong>Peekom (miễn phí)</strong> là <strong>freeware</strong> — dùng không cần phí bản quyền riêng. <strong>Peekom Plus</strong> là tùy chọn trả phí.</p>" +
             "<p>(Ý nói <strong>loại giấy phép</strong>, không phải chứng nhận chính thức Microsoft Windows.)</p>" +
             "<p>PC công ty có thể hạn chế cài đặt hoặc đường dẫn dữ liệu. Ngoài thư mục chương trình, Peekom lưu tại <code>%AppData%\\Roaming\\Peekom</code>. Nhờ IT cho phép:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installer chính thức: <code>Peekom-Setup.exe</code> tại <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Installer chính thức: <code>Peekom-Setup.exe</code> tại <a href=\"/download/\">peekom.com/download</a> (được lưu trên GitHub Releases)</li>" +
             "<li>Thư mục dữ liệu: <code>C:\\Users\\(tên)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Kích hoạt Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>Bản miễn phí dùng được khi không có mạng, nhưng <strong>lần kích hoạt Plus đầu tiên</strong> cần internet và truy cập được <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Nếu github.com và <code>api.lemonsqueezy.com</code> đều bị chặn, hãy xác nhận với IT <strong>trước khi mua Plus</strong>. Yêu cầu hoàn tiền sau khi đã kích hoạt, nếu lý do duy nhất là mạng công ty, không thuộc diện được hoàn.</p>",
         faq14q: "Ghi chú của tôi biến mất. Có khôi phục được không?",
         faq14a:
             "<p>Peekom chỉ lưu ghi chú <strong>trên PC của bạn</strong>. Không có đám mây — chúng tôi không thể xem hay khôi phục từ xa.</p>" +
@@ -827,18 +857,21 @@ var EXTRA = {
             "<li>ขอ IT อนุญาต <strong><code>https://api.lemonsqueezy.com</code> ผ่าน HTTPS (443)</strong></li>" +
             "<li>ปิด VPN บริษัท หรือลอง VPN ที่อนุญาต</li>" +
             "</ul>" +
-            "<p>ข้อความ <strong>ขีดจำกัดการเปิดใช้ (สูงสุด 2 เครื่อง)</strong>? <a href=\"/contact/\">ติดต่อเรา</a> พร้อมอีเมลซื้อ เลขคำสั่งซื้อ และคีย์</p>" +
-            "<p>ดาวน์โหลดตัวติดตั้งใหม่ <strong>ไม่ช่วย</strong> หากเซิร์ฟเวอร์ยังถูกบล็อก</p>",
+            "<p>ข้อความ <strong>ขีดจำกัดการเปิดใช้ (ตามแพ็กเกจ: Single 1 เครื่อง · Double 2 เครื่อง · Family 5 เครื่อง)</strong>? <a href=\"/contact/\">ติดต่อเรา</a> พร้อมอีเมลซื้อ เลขคำสั่งซื้อ และคีย์</p>" +
+            "<p>ดาวน์โหลดตัวติดตั้งใหม่ <strong>ไม่ช่วย</strong> หากเซิร์ฟเวอร์ยังถูกบล็อก</p>" +
+            "<p><strong>ความเกี่ยวข้องกับการคืนเงิน</strong> — ข้อผิดพลาดนี้เกิดจาก<strong>ข้อจำกัดของเครือข่ายในสภาพแวดล้อมของคุณ</strong> ไม่ใช่ข้อบกพร่องของผลิตภัณฑ์ หากไลเซนส์<strong>เปิดใช้งานแล้ว</strong> การคืนเงินด้วยเหตุผลนี้ไม่เข้าเงื่อนไข หากยังเป็น <strong>Inactive</strong> (เปิดใช้งาน 0 เครื่อง) และอยู่ภายใน 30 วันนับจากวันซื้อ โปรด<a href=\"/contact/\">ติดต่อเรา</a> พร้อมเลขคำสั่งซื้อและรายละเอียด เราจะพิจารณาเป็นรายกรณีตามนโยบายคืนเงินด้านบน</p>",
         faq13q: "Peekom เป็น freeware ไหม? ติดตั้งบน PC บริษัทได้หรือไม่?",
         faq13a:
             "<p><strong>Peekom (ฟรี)</strong> เป็น <strong>freeware</strong> ใช้ได้โดยไม่ต้องจ่ายค่าใบอนุญาตแยก <strong>Peekom Plus</strong> เป็นตัวเลือกเสียเงิน</p>" +
             "<p>(หมายถึง<strong>ประเภทใบอนุญาต</strong> ไม่ใช่การรับรองอย่างเป็นทางการของ Microsoft Windows)</p>" +
             "<p>PC บริษัทอาจจำกัดการติดตั้งหรือพาธข้อมูล นอกโฟลเดอร์โปรแกรม Peekom เก็บที่ <code>%AppData%\\Roaming\\Peekom</code> ขอ IT อนุญาต:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>ตัวติดตั้งอย่างเป็นทางการ: <code>Peekom-Setup.exe</code> จาก <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>ตัวติดตั้งอย่างเป็นทางการ: <code>Peekom-Setup.exe</code> จาก <a href=\"/download/\">peekom.com/download</a> (โฮสต์บน GitHub Releases)</li>" +
             "<li>โฟลเดอร์ข้อมูล: <code>C:\\Users\\(ชื่อผู้ใช้)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>เปิดใช้ Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>เวอร์ชันฟรีใช้ได้โดยไม่ต้องมีอินเทอร์เน็ต แต่<strong>การเปิดใช้ Plus ครั้งแรก</strong>ต้องมีอินเทอร์เน็ตและเข้าถึง <code>https://api.lemonsqueezy.com</code> ได้</p>" +
+            "<p>หาก github.com และ <code>api.lemonsqueezy.com</code> ถูกบล็อกทั้งคู่ โปรดยืนยันกับ IT <strong>ก่อนซื้อ Plus</strong> การขอคืนเงินหลังเปิดใช้งานแล้ว โดยมีเหตุผลเพียงเครือข่ายบริษัท ไม่เข้าเงื่อนไข</p>",
         faq14q: "บันทึกหายไป กู้คืนได้ไหม?",
         faq14a:
             "<p>Peekom เก็บบันทึก<strong>เฉพาะบน PC ของคุณ</strong> ไม่มีคลาวด์ — เราไม่สามารถดูหรือกู้คืนจากระยะไกล</p>" +
@@ -905,18 +938,21 @@ var EXTRA = {
             "<li>Minta IT mengizinkan <strong><code>https://api.lemonsqueezy.com</code> lewat HTTPS (443)</strong></li>" +
             "<li>Matikan VPN kantor atau coba VPN yang diizinkan</li>" +
             "</ul>" +
-            "<p>Pesan <strong>batas aktivasi (maks. 2 perangkat)</strong>? <a href=\"/contact/\">Hubungi kami</a> dengan email pembelian, nomor pesanan, dan kunci.</p>" +
-            "<p>Unduh installer lagi <strong>tidak</strong> memperbaiki jika server masih diblokir.</p>",
+            "<p>Pesan <strong>batas aktivasi (per paket: Single 1 perangkat · Double 2 · Family 5)</strong>? <a href=\"/contact/\">Hubungi kami</a> dengan email pembelian, nomor pesanan, dan kunci.</p>" +
+            "<p>Unduh installer lagi <strong>tidak</strong> memperbaiki jika server masih diblokir.</p>" +
+            "<p><strong>Kaitannya dengan refund</strong> — error ini berasal dari <strong>pembatasan jaringan di lingkungan Anda</strong>, bukan cacat produk. Jika lisensi <strong>sudah diaktivasi</strong>, refund dengan alasan ini tidak memenuhi syarat. Jika masih <strong>Inactive</strong> (0 perangkat teraktivasi) dan belum lewat 30 hari sejak pembelian, <a href=\"/contact/\">hubungi kami</a> dengan nomor pesanan dan penjelasan situasinya — kami akan meninjau kasusnya satu per satu sesuai kebijakan refund di atas.</p>",
         faq13q: "Apakah Peekom freeware? Bisa dipasang di PC kantor?",
         faq13a:
             "<p><strong>Peekom (gratis)</strong> adalah <strong>freeware</strong> — bisa dipakai tanpa biaya lisensi terpisah. <strong>Peekom Plus</strong> opsional berbayar.</p>" +
             "<p>(Maksudnya <strong>jenis lisensi</strong>, bukan sertifikasi resmi Microsoft Windows.)</p>" +
             "<p>PC kantor bisa membatasi instalasi atau path data. Selain folder program, Peekom menyimpan di <code>%AppData%\\Roaming\\Peekom</code>. Minta IT mengizinkan:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Installer resmi: <code>Peekom-Setup.exe</code> dari <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>Installer resmi: <code>Peekom-Setup.exe</code> dari <a href=\"/download/\">peekom.com/download</a> (dihosting di GitHub Releases)</li>" +
             "<li>Folder data: <code>C:\\Users\\(nama)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Aktivasi Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>Versi gratis tetap jalan tanpa internet, tetapi <strong>aktivasi Plus pertama kali</strong> butuh koneksi internet dan akses ke <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>Kalau github.com dan <code>api.lemonsqueezy.com</code> sama-sama diblokir, pastikan dulu ke IT <strong>sebelum membeli Plus</strong>. Refund yang diminta setelah aktivasi, dengan jaringan kantor sebagai satu-satunya alasan, tidak memenuhi syarat.</p>",
         faq14q: "Catatan saya hilang. Bisa dipulihkan?",
         faq14a:
             "<p>Peekom menyimpan catatan <strong>hanya di PC Anda</strong>. Tidak ada cloud — kami tidak bisa melihat atau memulihkan dari jarak jauh.</p>" +
@@ -983,18 +1019,21 @@ var EXTRA = {
             "<li>IT से <strong><code>https://api.lemonsqueezy.com</code> HTTPS (443)</strong> अनुमति माँगें</li>" +
             "<li>कॉर्पोरेट VPN बंद करें या अनुमत VPN से फिर कोशिश करें</li>" +
             "</ul>" +
-            "<p><strong>सक्रियण सीमा (अधिकतम 2 डिवाइस)</strong> संदेश? <a href=\"/contact/\">संपर्क करें</a> — खरीद ईमेल, ऑर्डर नंबर और कुंजी भेजें।</p>" +
-            "<p>इंस्टॉलर दोबारा डाउनलोड करने से <strong>कोई फ़ायदा नहीं</strong> अगर सर्वर अभी भी ब्लॉक है।</p>",
+            "<p><strong>सक्रियण सीमा (प्लान के अनुसार: Single 1 डिवाइस · Double 2 · Family 5)</strong> संदेश? <a href=\"/contact/\">संपर्क करें</a> — खरीद ईमेल, ऑर्डर नंबर और कुंजी भेजें।</p>" +
+            "<p>इंस्टॉलर दोबारा डाउनलोड करने से <strong>कोई फ़ायदा नहीं</strong> अगर सर्वर अभी भी ब्लॉक है।</p>" +
+            "<p><strong>रिफ़ंड से संबंध</strong> — यह त्रुटि आपके <strong>नेटवर्क परिवेश की पाबंदी</strong> से आती है, उत्पाद की खराबी से नहीं। यदि लाइसेंस <strong>पहले से सक्रिय</strong> है, तो इस कारण से रिफ़ंड पात्र नहीं है। यदि वह अभी भी <strong>Inactive</strong> है (0 सक्रिय डिवाइस) और खरीद से 30 दिन के भीतर हैं, तो ऑर्डर नंबर और स्थिति बताकर <a href=\"/contact/\">संपर्क करें</a> — हम ऊपर दी गई रिफ़ंड नीति के अनुसार हर मामले की अलग से समीक्षा करेंगे।</p>",
         faq13q: "क्या Peekom freeware है? कंपनी PC पर इंस्टॉल कर सकते हैं?",
         faq13a:
             "<p><strong>Peekom (मुफ़्त)</strong> <strong>freeware</strong> है — अलग लाइसेंस शुल्क के बिना उपयोग कर सकते हैं। <strong>Peekom Plus</strong> वैकल्पिक सशुल्क है।</p>" +
             "<p>(यह <strong>लाइसेंस प्रकार</strong> है, Microsoft Windows की आधिकारिक प्रमाणन नहीं।)</p>" +
             "<p>कंपनी PC पर इंस्टॉल या डेटा पथ प्रतिबंधित हो सकते हैं। प्रोग्राम फ़ोल्डर के अलावा Peekom <code>%AppData%\\Roaming\\Peekom</code> में सहेजता है। IT से अनुमति माँगें:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>आधिकारिक इंस्टॉलर: <a href=\"/download/\">peekom.com/download</a> का <code>Peekom-Setup.exe</code></li>" +
+            "<li>आधिकारिक इंस्टॉलर: <a href=\"/download/\">peekom.com/download</a> का <code>Peekom-Setup.exe</code> (GitHub Releases पर उपलब्ध)</li>" +
             "<li>डेटा फ़ोल्डर: <code>C:\\Users\\(उपयोगकर्ता)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>Plus सक्रियण: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>मुफ़्त संस्करण इंटरनेट के बिना भी चलता है, पर <strong>Plus के पहले सक्रियण</strong> के लिए इंटरनेट कनेक्शन और <code>https://api.lemonsqueezy.com</code> तक पहुँच ज़रूरी है।</p>" +
+            "<p>अगर github.com और <code>api.lemonsqueezy.com</code> दोनों ब्लॉक हैं, तो <strong>Plus खरीदने से पहले</strong> IT से अनुमति की पुष्टि कर लें। सक्रियण के बाद, जहाँ एकमात्र कारण कंपनी का नेटवर्क हो, वहाँ रिफ़ंड पात्र नहीं है।</p>",
         faq14q: "मेरी नोट गायब हो गई। क्या वापस मिल सकती है?",
         faq14a:
             "<p>Peekom नोट्स <strong>सिर्फ़ आपके PC पर</strong> रखता है। कोई क्लाउड नहीं — हम दूर से देख या पुनर्स्थापित नहीं कर सकते।</p>" +
@@ -1061,18 +1100,21 @@ var EXTRA = {
             "<li>اطلب من IT السماح بـ <strong><code>https://api.lemonsqueezy.com</code> عبر HTTPS (443)</strong></li>" +
             "<li>أوقف VPN الشركة أو جرّب VPN مسموحًا</li>" +
             "</ul>" +
-            "<p>رسالة <strong>حد التفعيل (جهازان كحد أقصى)</strong>؟ <a href=\"/contact/\">تواصل معنا</a> مع بريد الشراء ورقم الطلب والمفتاح.</p>" +
-            "<p>إعادة تنزيل المثبّت <strong>لن</strong> تحل المشكلة إذا بقي الخادم محجوبًا.</p>",
+            "<p>رسالة <strong>حد التفعيل (حسب الخطة: Single جهاز واحد · Double جهازان · Family 5 أجهزة)</strong>؟ <a href=\"/contact/\">تواصل معنا</a> مع بريد الشراء ورقم الطلب والمفتاح.</p>" +
+            "<p>إعادة تنزيل المثبّت <strong>لن</strong> تحل المشكلة إذا بقي الخادم محجوبًا.</p>" +
+            "<p><strong>علاقة ذلك بالاسترداد</strong> — ينشأ هذا الخطأ عن <strong>قيود الشبكة في بيئتك</strong> وليس عن عيب في المنتج. إذا كان الترخيص <strong>مفعّلًا بالفعل</strong>، فالاسترداد لهذا السبب غير مشمول. وإذا كان لا يزال <strong>Inactive</strong> (0 أجهزة مفعّلة) وأنت داخل 30 يومًا من الشراء، <a href=\"/contact/\">فتواصل معنا</a> مع رقم الطلب ووصف الحالة وسنراجع كل حالة على حدة وفق سياسة الاسترداد أعلاه.</p>",
         faq13q: "هل Peekom برنامج مجاني (freeware)؟ هل يمكن تثبيته على جهاز الشركة؟",
         faq13a:
             "<p><strong>Peekom (مجاني)</strong> <strong>freeware</strong> — يمكنك استخدامه دون رسوم ترخيص منفصلة. <strong>Peekom Plus</strong> اختياري مدفوع.</p>" +
             "<p>(يقصد <strong>نوع الترخيص</strong>، وليس شهادة Microsoft Windows الرسمية.)</p>" +
             "<p>قد تُقيَّد التثبيت أو مسارات البيانات على أجهزة الشركة. بجانب مجلد البرنامج، يخزّن Peekom في <code>%AppData%\\Roaming\\Peekom</code>. اطلب من IT السماح بـ:</p>" +
             '<ul class="guide-step-list">' +
-            "<li>المثبّت الرسمي: <code>Peekom-Setup.exe</code> من <a href=\"/download/\">peekom.com/download</a></li>" +
+            "<li>المثبّت الرسمي: <code>Peekom-Setup.exe</code> من <a href=\"/download/\">peekom.com/download</a> (مستضاف على GitHub Releases)</li>" +
             "<li>مجلد البيانات: <code>C:\\Users\\(اسم المستخدم)\\AppData\\Roaming\\Peekom</code></li>" +
             "<li>تفعيل Plus: <code>https://api.lemonsqueezy.com</code></li>" +
-            "</ul>",
+            "</ul>" +
+            "<p>الإصدار المجاني يعمل دون إنترنت، لكن <strong>التفعيل الأول لـ Plus</strong> يحتاج اتصالًا بالإنترنت والوصول إلى <code>https://api.lemonsqueezy.com</code>.</p>" +
+            "<p>إذا كان github.com و<code>api.lemonsqueezy.com</code> محجوبين معًا، فتأكد من فريق IT <strong>قبل شراء Plus</strong>. أي استرداد يُطلب بعد التفعيل ويكون سببه الوحيد قيود شبكة الشركة غير مشمول.</p>",
         faq14q: "اختفت ملاحظتي. هل يمكن استعادتها؟",
         faq14a:
             "<p>يخزّن Peekom الملاحظات <strong>على جهازك فقط</strong>. لا يوجد سحابة — لا يمكننا العرض أو الاستعادة عن بُعد.</p>" +

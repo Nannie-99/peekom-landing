@@ -45,20 +45,93 @@ window.PeekomI18nLocales.ja = {
     faqSub: "Peekom に関するよくある質問です。",
     refundPolicyTitle: "Peekom Plus 返金ポリシー",
     refundPolicyBody:
-        "<p>Peekom Plus の決済・返金は、記録上の販売者（Merchant of Record）である Lemon Squeezy を通じて処理されます。</p>" +
+        "<p>Peekom Plus の決済と返金は、正式な販売者（Merchant of Record）である <strong>Lemon Squeezy</strong> を通じて処理されます。</p>" +
         '<ul class="faq-refund-list">' +
-        "<li><strong>申請期間</strong> — 購入日から<strong>30日以内</strong>の申請を受け付けます。</li>" +
-        "<li><strong>返金対象</strong> — 正常に動作しない不具合（アプリが起動・動作しない）および同一注文の重複決済。</li>" +
-        "<li><strong>対象外</strong> — 単なる気変わり。</li>" +
-        "<li><strong>返金後のライセンス</strong> — 返金が完了すると Peekom Plus ライセンスキーは無効化され、次回オンライン起動時に自動的に無料版へ戻ります。</li>" +
-        '<li><strong>手順</strong> — <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">お問い合わせフォーム（またはメール）</a>から注文番号を添えて申請 → 確認 → Lemon Squeezy ダッシュボードで返金を実行 → カード会社・決済手段により反映まで数営業日かかる場合があります。</li>' +
+        "<li><strong>申請期間</strong> — ご購入日から<strong>30日以内</strong>にいただいた申請を審査します。</li>" +
+        "<li><strong>返金の対象</strong> — 次の場合は返金いたします。" +
+        "<ul>" +
+        "<li>アプリが起動しない・正常に動作しないなどの<strong>製品の不具合</strong></li>" +
+        "<li>同一注文の<strong>二重決済</strong></li>" +
+        "</ul></li>" +
+        "<li><strong>返金の対象外</strong> — 次の場合は返金いたしかねます。" +
+        "<ul>" +
+        "<li><strong>お客様都合のキャンセル</strong> — ご購入後に気が変わった場合</li>" +
+        "<li><strong>プランの変更・選び直し</strong> — 例えば Single ↔ Double・Family の変更です。差額のみでのアップグレードは行っておりません。より多くの台数が必要な場合は上位プランを<strong>別途ご購入</strong>いただく必要があり、元のプランが自動的に返金されたり差額が精算されたりすることはありません。</li>" +
+        "<li><strong>ライセンスをすでに有効化（Activated）した後の返金</strong> — ここでいう有効化とは、認証が正常に完了し、その端末で Plus を使える状態として登録されたことを指します。認証が成功したということは製品が正常に動作した証拠ですので、<strong>製品の不具合とは扱いません</strong>。</li>" +
+        "<li><strong>ご利用環境のみが原因の場合</strong> — 会社や学校のファイアウォール、セキュリティソフト、インターネットにつながらない閉域網、GitHub からのダウンロード制限、<code>api.lemonsqueezy.com</code> のブロックなどです。とくにライセンスを<strong>すでに有効化している場合</strong>は返金の対象外です。</li>" +
+        "<li><strong>台数制限や PC の買い替えによるご不便</strong> — 別の端末に移したい場合は<a href=\"/contact/\">お問い合わせ</a>ください。以前の端末の有効化を解除いたします。</li>" +
+        "</ul></li>" +
+        "</ul>" +
+        "<p><strong>ご購入前にご確認ください（認証とネットワーク）</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li>Plus の<strong>初回認証</strong>には、インターネット接続と <code>https://api.lemonsqueezy.com</code> への接続が必要です。</li>" +
+        "<li>通常のウェブサイトが開ける場合でも、このアドレスだけがブロックされていると認証に失敗することがあります。</li>" +
+        "<li>インターネットに一切つながらない<strong>完全な閉域網</strong>だけで使う PC では、認証できないことがあります。</li>" +
+        "<li>インストーラーは GitHub Releases で配布しているため、github.com がブロックされた環境ではダウンロードできないことがあります。</li>" +
+        "<li>会社の PC だけでお使いになる予定でしたら、ご購入前に上記の項目をご確認いただくことをおすすめします。</li>" +
+        "</ul>" +
+        "<p><strong>ご利用環境のせいで使えない場合 — 審査の基準</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li>ご購入日から<strong>30日以内</strong>であり、</li>" +
+        "<li>ライセンスが <strong>Inactive（有効化された端末が0台）</strong> であるか、製品の不具合・二重決済に該当し、</li>" +
+        "<li>お問い合わせで注文番号と状況をお知らせいただいた場合 — <strong>個別に審査</strong>いたします。</li>" +
+        "<li>ただし、ライセンスを<strong>すでに有効化した状態</strong>で会社ネットワークの制限だけが理由の場合は、原則として返金の対象外です。</li>" +
+        "</ul>" +
+        "<p><strong>返金時のライセンスと手続き</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li><strong>ライセンス</strong> — 返金が完了すると Peekom Plus のライセンスキーは無効になり、次にオンラインでアプリを起動したときに自動的に無料版へ戻ります。</li>" +
+        '<li><strong>申請方法</strong> — <a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">お問い合わせフォーム（またはメール）</a>から <strong>Order #（注文番号）</strong>と状況をお送りください。お支払いに使われたメールアドレスも添えていただけると確認が早くなります。電話番号だけでは注文をお調べできません。</li>' +
+        "<li><strong>処理</strong> — 審査のうえ Lemon Squeezy のダッシュボードから返金を実行します。カード会社や決済手段によっては、実際に反映されるまで数営業日かかることがあります。</li>" +
         "</ul>",
     faqR1q: "Peekom Plus の返金はどう申請しますか？",
-    faqR1a: '<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">お問い合わせフォーム（またはメール）</a>から<strong>注文番号</strong>を添えて申請してください。確認後、Lemon Squeezy ダッシュボードで返金を実行します。カード会社・決済手段により、実際の返金反映まで数営業日かかる場合があります。',
+    faqR1a:
+        '<p><a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">お問い合わせフォーム（またはメール）</a>から <strong>Order #（注文番号）</strong>を添えて申請してください。</p>' +
+        "<p>あわせて<strong>お支払いに使われたメールアドレス</strong>もお知らせいただくと、注文の確認が早くなります。電話番号だけでは注文をお調べできません。</p>" +
+        "<p>どのような状況か（アプリが起動しない、二重決済など）もお書き添えください。</p>" +
+        "<p>審査のうえ返金の対象に該当する場合は、Lemon Squeezy のダッシュボードから返金を実行します。カード会社や決済手段によっては、実際に反映されるまで数営業日かかることがあります。</p>",
     faqR2q: "どんな場合に返金できますか？",
-    faqR2a: "購入日から<strong>30日以内</strong>であれば、<strong>正常に動作しない不具合</strong>（アプリが起動・動作しない）と同一注文の<strong>重複決済</strong>について返金できます。単なる気変わりは対象外です。決済・返金は記録上の販売者である Lemon Squeezy を通じて処理されます。",
+    faqR2a:
+        "<p><strong>返金の対象</strong> — ご購入日から<strong>30日以内</strong>で、アプリが起動しない・正常に動作しないなどの<strong>製品の不具合</strong>、または同一注文の<strong>二重決済</strong>の場合です。</p>" +
+        "<p><strong>返金の対象外</strong></p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>お客様都合のキャンセル</strong></li>" +
+        "<li><strong>プランの変更・選び直し</strong>（Single ↔ Double・Family） — 差額でのアップグレードはなく、上位プランは別途ご購入いただく必要があります。</li>" +
+        "<li>ライセンスを<strong>すでに有効化（Activated）</strong>した後の返金</li>" +
+        "<li>会社や学校のファイアウォール、閉域網、GitHub のブロックなど<strong>ご利用環境のみが原因の場合</strong> — とくに<strong>すでに有効化済みのライセンス</strong>は返金の対象外です。</li>" +
+        "<li>台数制限や PC の買い替えによるご不便 — 端末の移行はお問い合わせいただければお手伝いします。</li>" +
+        "</ul>" +
+        "<p>ご購入から30日以内で、ライセンスが <strong>Inactive（有効化された端末が0台）</strong> であれば、お問い合わせで注文番号と状況をお知らせください。<strong>個別に審査</strong>いたします。</p>" +
+        "<p>決済と返金は、正式な販売者である Lemon Squeezy を通じて処理されます。</p>",
     faqR3q: "返金後、ライセンスはどうなりますか？",
-    faqR3a: "返金が完了すると Peekom Plus ライセンスキーは<strong>無効化</strong>されます。次回オンラインでアプリを起動すると自動的に無料版へ戻るため、返金を申請する前に Plus の利用を停止してよいかご確認ください。",
+    faqR3a:
+        "<p>返金が完了すると、Peekom Plus のライセンスキーは<strong>無効</strong>になります。</p>" +
+        "<p>次にオンラインでアプリを起動すると自動的に<strong>無料版</strong>へ戻り、Plus 専用の機能は使えなくなります。</p>" +
+        "<p>メモ自体は PC に残りますが、無料版の範囲（インデックス3個など）に戻ります。必要な内容は返金を申請される<strong>前に</strong>書き出し（エクスポート）でバックアップしてください。</p>" +
+        "<p>返金を申請される前に、Plus の利用を停止しても差し支えないか必ずご確認ください。</p>",
+    faqR4q: "会社のファイアウォールや閉域網でも Peekom Plus を使えますか？",
+    faqR4a:
+        "<p>無料版はインターネット接続がなくてもお使いいただけます。</p>" +
+        "<p>ただし <strong>Peekom Plus の初回認証</strong>には、インターネット接続と <code>https://api.lemonsqueezy.com</code>（HTTPS 443）への接続が必要です。</p>" +
+        "<p>通常のウェブサイトが開ける場合でも、このアドレスだけがブロックされていると認証に失敗することがあり、インターネットに一切つながらない<strong>完全な閉域網</strong>の PC では認証できないことがあります。</p>" +
+        "<p>インストーラーも GitHub Releases で配布しているため、github.com がブロックされた環境ではダウンロード自体ができないことがあります。</p>" +
+        "<p><strong>次の方法をお試しください</strong></p>" +
+        '<ul class="guide-step-list">' +
+        "<li>自宅の Wi‑Fi やスマートフォンのテザリングなど、<strong>別のネットワークで一度認証</strong>します。認証が済めば、その後はインターネットがなくても Plus をお使いいただけます（オンラインに戻ったときにライセンスの有効性を再確認します）。</li>" +
+        "<li>IT 担当者に <code>https://api.lemonsqueezy.com</code> への <strong>HTTPS（443）の許可</strong>を依頼します。</li>" +
+        "<li>社内 VPN やプロキシをお使いの場合は、一時的にオフにするか、許可されたネットワークで再度お試しください。</li>" +
+        "</ul>" +
+        "<p><strong>ご購入前にご確認ください。</strong> 会社の PC 専用でお使いになる予定の場合、こうした制限で認証できないことがあります。ライセンスを<strong>有効化した後</strong>に、会社ネットワークの制限だけを理由とした返金のご依頼は対象外です。</p>",
+    faqR5q: "ライセンスを有効化した後でも返金できますか？",
+    faqR5a:
+        "<p>原則として<strong>返金の対象外です。</strong></p>" +
+        "<p><strong>有効化（Activated）</strong>とは、ライセンス認証が正常に完了し、その端末で Plus を使える状態として登録されたことを指します。認証が成功したということは製品が正常に動作した証拠ですので、<strong>製品の不具合とは扱いません</strong>。</p>" +
+        "<p>有効化の後でも、次の場合は返金いたします。</p>" +
+        '<ul class="guide-step-list">' +
+        "<li>アプリが起動しない・正常に動作しないなどの<strong>製品の不具合</strong>がある場合</li>" +
+        "<li>同一注文の<strong>二重決済</strong>が発生した場合</li>" +
+        "</ul>" +
+        "<p>まだ有効化しておらず（ライセンスが <strong>Inactive</strong>、有効化された端末が0台）、ご購入日から30日以内であれば、<a href=\"/contact/\">お問い合わせ</a>から注文番号と状況をお知らせください。個別に審査いたします。</p>" +
+        "<p>別の端末に移したいだけの場合は、返金ではなく<strong>以前の端末の有効化解除</strong>でお手伝いできます。</p>",
     faq1q: "無料版と Peekom Plus の違いは何ですか？",
     faq1a: '無料版には3インデックス、グループ移動、ICE モード、ホバー遅延、モニター選択、Markdown、書式バー、画像挿入が含まれます。Peekom Plus（発売記念 $9.99、通常 $12.99）は10スロット、カスタムテーマ、フォント、不透明度、画像リサイズ、エクスポートをアプリ内でアンロックします。<a href="/features/#compare">比較表</a>をご覧ください。',
     compareFreeName: "Peekom (無料)",
@@ -138,13 +211,16 @@ window.PeekomI18nLocales.ja = {
         "</ul>" +
         "<p><strong>端末数の制限（最大 2 台）</strong> — 同じ PC で削除後に再インストールしても同一端末として扱われ、認証回数に問題はありません。PC を変更する場合は、ライセンスあたり最大 2 台まで登録できます（例：仕事用 PC 1 台＋個人用 PC 1 台）。</p>",
     faq3q: "Peekom Plus はどう有効化しますか？",
-    faq3a: "Lemon Squeezy で購入後、アプリ内でライセンスキーを入力すると Peekom Plus がアンロックされます（再インストール不要）。",
+    faq3a:
+        "<p>まず<strong>無料アプリをインストール</strong>し、Lemon Squeezy で購入したライセンスキーを設定または Plus のロック画面に入力すると Peekom Plus が有効になります。Plus 専用のインストーラーはなく、再インストールも不要です。</p>" +
+        "<p><strong>初回認証にはインターネット接続</strong>と <code>https://api.lemonsqueezy.com</code> への接続が必要です。認証が済めば、その後はオフラインでも Plus をお使いいただけます。</p>" +
+        "<p>認証が成功すると、ライセンスはその端末で<strong>有効化（Activated）</strong>されたものとして登録されます。有効化の後は、お客様都合のキャンセル・プラン変更・会社ネットワークの制限を理由とした返金は原則としてお受けできませんので、上の返金ポリシーを先にご確認ください。</p>",
     faq3bq: "1つのライセンスキーで複数の PC で使えますか？",
     faq3ba: "はい。同じ16桁のライセンスキーを最大2台（例：仕事用 PC と個人用 PC）にそれぞれ1回ずつ入力して Peekom Plus を使えます。",
     faq3cq: "仕事用 PC を変更したり転職した場合も使い続けられますか？",
-    faq3ca: "Peekom Plus ライセンスは基本的に最大2台の端末で使用できます。同じ端末での削除後の再インストールは可能です。新しい端末への変更が必要な場合は、お問い合わせにて確認のうえサポートいたします。状況により、既存の有効化端末を初期化したうえで、新しい端末での再認証をご案内する場合があります。",
+    faq3ca: "Peekom Plus はプランに応じて Single 1台・Double 2台・Family 5台までご利用いただけます。同じ端末での削除後の再インストールは可能です。新しい端末への変更が必要な場合は、お問い合わせにて確認のうえサポートいたします。状況により、既存の有効化端末を初期化したうえで、新しい端末での再認証をご案内する場合があります。台数制限や PC の買い替えによるご不便のみを理由とした<strong>返金は対象外です</strong>が、端末の移行についてはお問い合わせいただければ以前の端末の有効化解除でお手伝いいたします。",
     faq3dq: "端末変更が必要なときは何を送ればよいですか？",
-    faq3da: "迅速な確認のため、購入時のメールアドレス、注文番号、ライセンスキー、および端末変更の理由をお送りください。すでに2台とも有効化されている場合は、既存の有効端末を初期化してから再認証をご案内する場合がありますので、必要な内容は事前にバックアップしてからお問い合わせください。",
+    faq3da: "迅速な確認のため、購入時のメールアドレス、注文番号、ライセンスキー、および端末変更の理由をお送りください。プランごとの台数（Single 1台・Double 2台・Family 5台）をすべて使い切っている場合は、既存の有効端末を初期化してから再認証をご案内することがありますので、必要な内容は事前にバックアップしてからお問い合わせください。台数制限や PC の買い替えによるご不便のみを理由とした<strong>返金は対象外です</strong>が、端末の移行についてはお問い合わせいただければ以前の端末の有効化解除でお手伝いいたします。",
     faq4q: "Windows インストール時に青い警告が表示されます。",
     faq4a: '未署名アプリでは SmartScreen 警告がよく出ます。<a href="#" onclick="openModal(); return false;">インストールガイド</a>を参照：[詳細情報] → [実行]。',
     faq5q: "対応している Windows バージョンは？",
@@ -326,20 +402,93 @@ window.PeekomI18nLocales["zh-CN"] = {
     faqSub: "关于 Peekom 的常见问题。",
     refundPolicyTitle: "Peekom Plus 退款政策",
     refundPolicyBody:
-        "<p>Peekom Plus 的付款与退款由我们的销售记录商（Merchant of Record）Lemon Squeezy 处理。</p>" +
+        "<p>Peekom Plus 的付款与退款由我们的销售记录商（Merchant of Record）<strong>Lemon Squeezy</strong> 处理。</p>" +
         '<ul class="faq-refund-list">' +
-        "<li><strong>申请期限</strong> — 自购买之日起<strong>30天内</strong>提交的申请方予受理。</li>" +
-        "<li><strong>可退款情形</strong> — 产品无法正常运行（应用无法启动或正常工作）以及同一订单的重复付款。</li>" +
-        "<li><strong>不可退款</strong> — 单纯改变主意。</li>" +
-        "<li><strong>退款后的许可证</strong> — 退款完成后，您的 Peekom Plus 许可证密钥将被停用，应用在下次联网启动时自动恢复为免费版。</li>" +
-        '<li><strong>流程</strong> — 通过<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">联系表单（或邮件）</a>附上订单号提交申请 → 我们审核 → 在 Lemon Squeezy 后台执行退款 → 实际到账时间视发卡行/支付方式而定，可能需要数个工作日。</li>' +
+        "<li><strong>申请期限</strong> — 我们会审核自购买之日起<strong>30天内</strong>提交的申请。</li>" +
+        "<li><strong>可退款情形</strong> — 以下情况我们会为您退款：" +
+        "<ul>" +
+        "<li><strong>产品缺陷</strong> — 应用无法启动或无法正常工作。</li>" +
+        "<li>同一订单的<strong>重复付款</strong>。</li>" +
+        "</ul></li>" +
+        "<li><strong>不可退款的情形</strong> — 以下情况我们无法退款：" +
+        "<ul>" +
+        "<li>购买后<strong>单纯改变主意</strong>。</li>" +
+        "<li><strong>更换套餐</strong> — 例如 Single ↔ Double／Family。我们不提供补差价升级。如果您需要更多设备，需要<strong>单独购买</strong>更高的套餐；原套餐不会自动退款，也不会折算差价。</li>" +
+        "<li><strong>许可证已激活（Activated）之后的退款。</strong>“已激活”是指密钥验证成功并已注册，可以在该设备上使用 Plus。激活成功说明产品可以正常工作，因此<strong>不视为产品缺陷</strong>。</li>" +
+        "<li><strong>仅由您的使用环境造成的问题</strong> — 例如公司或学校的防火墙、安全软件、完全离线的内网、GitHub 下载被拦截，或 <code>api.lemonsqueezy.com</code> 被封锁。许可证<strong>已经激活</strong>时尤其如此。</li>" +
+        "<li><strong>设备数量上限或更换电脑带来的不便。</strong>如果您需要换到另一台设备，请<a href=\"/contact/\">联系我们</a> — 我们可以帮您解除旧设备的激活。</li>" +
+        "</ul></li>" +
+        "</ul>" +
+        "<p><strong>购买前请先确认（激活与网络）</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li>Plus <strong>首次激活</strong>需要联网并能访问 <code>https://api.lemonsqueezy.com</code>。</li>" +
+        "<li>即使普通网站可以打开，只要这个地址被封锁，激活也可能失败。</li>" +
+        "<li>只在<strong>完全离线的内网</strong>中使用的电脑，可能根本无法完成激活。</li>" +
+        "<li>安装包托管在 GitHub Releases，因此在 github.com 被封锁的环境中可能无法下载。</li>" +
+        "<li>如果您打算只在公司电脑上使用 Peekom，建议购买前先确认以上各项。</li>" +
+        "</ul>" +
+        "<p><strong>如果使用环境导致无法使用 Plus — 我们的审核标准</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li>购买时间在<strong>30天以内</strong>；并且</li>" +
+        "<li>许可证处于 <strong>Inactive（已激活设备为 0 台）</strong> 状态，或属于产品缺陷、重复付款；并且</li>" +
+        "<li>您通过联系方式告知订单号和具体情况 — 我们会<strong>逐案单独审核</strong>。</li>" +
+        "<li>但如果许可证<strong>已经激活</strong>，而唯一的原因是公司网络限制，则原则上不属于退款范围。</li>" +
+        "</ul>" +
+        "<p><strong>退款时的许可证与流程</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li><strong>许可证</strong> — 退款完成后，您的 Peekom Plus 许可证密钥将被停用，应用在下次联网启动时会自动恢复为免费版。</li>" +
+        '<li><strong>申请方式</strong> — 请通过<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">联系表单（或邮件）</a>发送您的 <strong>Order #（订单号）</strong>和简要说明。附上付款时使用的邮箱地址可以帮助我们更快找到订单。仅凭电话号码无法查询订单。</li>' +
+        "<li><strong>处理</strong> — 审核后我们会在 Lemon Squeezy 后台执行退款；实际到账时间视发卡行或支付方式而定，可能需要数个工作日。</li>" +
         "</ul>",
     faqR1q: "如何申请 Peekom Plus 退款？",
-    faqR1a: '请通过<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">联系表单（或邮件）</a>附上<strong>订单号</strong>提交申请。我们审核后会在 Lemon Squeezy 后台执行退款；实际到账时间视发卡行或支付方式而定，可能需要数个工作日。',
+    faqR1a:
+        '<p>请通过<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">联系表单（或邮件）</a>发送您的 <strong>Order #（订单号）</strong>。</p>' +
+        "<p>同时附上<strong>付款时使用的邮箱地址</strong>，可以帮助我们更快找到订单。仅凭电话号码无法查询订单。</p>" +
+        "<p>也请说明具体情况（应用无法启动、重复付款等）。</p>" +
+        "<p>如果属于可退款情形，我们会在 Lemon Squeezy 后台执行退款；实际到账时间视发卡行或支付方式而定，可能需要数个工作日。</p>",
     faqR2q: "哪些情况可以退款？",
-    faqR2a: "自购买之日起<strong>30天内</strong>，可对<strong>产品无法正常运行</strong>（应用无法启动或正常工作）以及同一订单的<strong>重复付款</strong>申请退款。单纯改变主意不予退款。付款与退款由销售记录商 Lemon Squeezy 处理。",
+    faqR2a:
+        "<p><strong>可退款</strong> — 购买时间在<strong>30天以内</strong>，且属于<strong>产品缺陷</strong>（应用无法启动或无法正常工作）或同一订单的<strong>重复付款</strong>。</p>" +
+        "<p><strong>不可退款</strong></p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>单纯改变主意。</strong></li>" +
+        "<li><strong>更换套餐</strong>（Single ↔ Double／Family） — 不提供补差价升级，更高的套餐需要单独购买。</li>" +
+        "<li>许可证<strong>已经激活</strong>之后的退款。</li>" +
+        "<li><strong>仅由您的使用环境造成的问题</strong>，例如公司或学校的防火墙、离线内网、GitHub 下载被拦截 — 许可证<strong>已经激活</strong>时尤其如此。</li>" +
+        "<li>设备数量上限或更换电脑带来的不便 — 请改为联系我们，我们可以协助您转移设备。</li>" +
+        "</ul>" +
+        "<p>如果购买时间在30天以内，且许可证处于 <strong>Inactive（已激活设备为 0 台）</strong> 状态，请联系我们并提供订单号和具体情况，我们会逐案单独<strong>审核</strong>。</p>" +
+        "<p>付款与退款由我们的销售记录商 Lemon Squeezy 处理。</p>",
     faqR3q: "退款后许可证会怎样？",
-    faqR3a: "退款完成后，您的 Peekom Plus 许可证密钥将被<strong>停用</strong>。应用在下次联网启动时会自动恢复为免费版，因此在申请退款前请确认您确实要停止使用 Plus。",
+    faqR3a:
+        "<p>退款完成后，您的 Peekom Plus 许可证密钥将被<strong>停用</strong>。</p>" +
+        "<p>应用在下次联网启动时会自动恢复为<strong>免费版</strong>，Plus 专属功能将无法继续使用。</p>" +
+        "<p>备忘内容仍保留在您的电脑上，但功能会回到免费版范围（3 个索引等），因此请在申请退款<strong>之前</strong>先导出需要保留的内容。</p>" +
+        "<p>提交申请前，请确认您确实打算停止使用 Plus。</p>",
+    faqR4q: "在公司防火墙或离线内网环境下能使用 Peekom Plus 吗？",
+    faqR4a:
+        "<p>免费版在没有网络连接的情况下也能使用。</p>" +
+        "<p>但 <strong>Peekom Plus 首次激活</strong>需要联网，并能通过 HTTPS（443）访问 <code>https://api.lemonsqueezy.com</code>。</p>" +
+        "<p>即使普通网站可以打开，只要这个地址被封锁，激活也可能失败；只在<strong>完全离线的内网</strong>中使用的电脑，可能根本无法完成激活。</p>" +
+        "<p>安装包同样托管在 GitHub Releases，因此在 github.com 被封锁的环境中，连下载本身都可能失败。</p>" +
+        "<p><strong>可以这样试试</strong></p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>先在其他网络上激活一次</strong>，例如家里的 Wi‑Fi 或手机热点。激活完成后，即使没有网络也可以继续使用 Plus（重新联网时会再次校验许可证）。</li>" +
+        "<li>请 IT 部门放行 <code>https://api.lemonsqueezy.com</code> 的 <strong>HTTPS（443）</strong> 访问。</li>" +
+        "<li>如果使用公司 VPN 或代理，可暂时关闭，或在允许的网络中重试。</li>" +
+        "</ul>" +
+        "<p><strong>请在购买前确认。</strong>如果您打算只在公司电脑上使用 Peekom，这些限制可能导致无法激活。在<strong>许可证已激活之后</strong>，仅以公司网络限制为由申请的退款不属于退款范围。</p>",
+    faqR5q: "激活许可证之后还能退款吗？",
+    faqR5a:
+        "<p>原则上<strong>不可以，这不属于退款范围。</strong></p>" +
+        "<p><strong>已激活（Activated）</strong>是指密钥验证成功并已注册，可以在该设备上使用 Plus。激活成功说明产品可以正常工作，因此<strong>不视为产品缺陷</strong>。</p>" +
+        "<p>即使在激活之后，以下情况我们仍会退款：</p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>产品缺陷</strong> — 应用无法启动或无法正常工作。</li>" +
+        "<li>同一订单的<strong>重复付款</strong>。</li>" +
+        "</ul>" +
+        "<p>如果您<strong>尚未</strong>激活（许可证为 <strong>Inactive</strong>，已激活设备为 0 台），且购买时间在30天以内，请<a href=\"/contact/\">联系我们</a>并提供订单号和具体情况，我们会逐案单独审核。</p>" +
+        "<p>如果您只是需要换到另一台设备，我们可以<strong>解除旧设备的激活</strong>，而不是退款。</p>",
     faq1q: "免费版与 Peekom Plus 有什么区别？",
     faq1a: '免费版包含3个索引、分组移动、ICE 模式、悬停延迟、显示器选择、Markdown、格式工具栏和图片插入。Peekom Plus（首发 $9.99，原价 $12.99）在应用内解锁10个槽位、自定义主题、字体、透明度、图片缩放和导出。请参阅<a href="/features/#compare">对比表</a>。',
     compareFreeName: "Peekom (免费)",
@@ -419,13 +568,16 @@ window.PeekomI18nLocales["zh-CN"] = {
         "</ul>" +
         "<p><strong>设备数量限制（最多 2 台）</strong> — 在同一台电脑上卸载后重装视为同一设备，不影响认证次数。更换电脑时，每个许可证最多可注册 2 台设备（例如工作电脑 1 台 + 个人电脑 1 台）。</p>",
     faq3q: "如何激活 Plus？",
-    faq3a: "在 Lemon Squeezy 购买后，在应用内输入许可证密钥即可解锁 Peekom Plus（无需重新安装）。",
+    faq3a:
+        "<p>请先<strong>安装免费版应用</strong>，然后在设置或 Plus 锁定界面输入您在 Lemon Squeezy 购买的许可证密钥，即可激活 Peekom Plus。没有单独的 Plus 安装包，也无需重新安装。</p>" +
+        "<p><strong>首次激活需要联网</strong>，并能访问 <code>https://api.lemonsqueezy.com</code>。激活完成后，即使离线也可以继续使用 Plus。</p>" +
+        "<p>激活成功后，许可证会在该设备上注册为<strong>已激活（Activated）</strong>。激活之后，以改变主意、更换套餐或公司网络限制为由的退款通常无法受理，请先阅读上方的退款政策。</p>",
     faq3bq: "一个许可证密钥可以在多台电脑上使用吗？",
     faq3ba: "可以。同一组16位许可证密钥最多可在两台电脑（例如工作电脑和个人电脑）上各输入一次，以使用 Peekom Plus。",
     faq3cq: "更换公司电脑或跳槽后还能继续使用吗？",
-    faq3ca: "Peekom Plus 许可证基本上可在最多 2 台设备上使用。在同一设备上删除后重新安装是可以的。如需更换到新设备，请通过联系我们确认后获得支持。视情况可能需要先重置已激活的设备，再在新设备上重新认证。",
+    faq3ca: "Peekom Plus 可使用的设备数量取决于套餐：Single 1 台、Double 2 台、Family 5 台。在同一设备上删除后重新安装是可以的。如需更换到新设备，请通过联系我们确认后获得支持。视情况可能需要先重置已激活的设备，再在新设备上重新认证。仅以设备数量上限或更换电脑为由申请的<strong>退款不属于退款范围</strong>，但如果您需要转移设备，请联系我们，我们会通过解除旧设备的激活来协助您。",
     faq3dq: "需要更换设备时应发送哪些信息？",
-    faq3da: "为加快确认，请一并发送购买时使用的电子邮箱、订单号、许可证密钥以及更换设备的原因。若两台设备均已激活，我们可能会先重置现有激活设备再指导重新认证，因此请先备份所需内容后再联系我们。",
+    faq3da: "为加快确认，请一并发送购买时使用的电子邮箱、订单号、许可证密钥以及更换设备的原因。若您套餐内的设备名额（Single 1 台 · Double 2 台 · Family 5 台）已全部用完，我们可能会先重置现有激活设备再指导重新认证，因此请先备份所需内容后再联系我们。仅以设备数量上限或更换电脑为由申请的<strong>退款不属于退款范围</strong>，但如果您需要转移设备，请联系我们，我们会通过解除旧设备的激活来协助您。",
     faq4q: "Windows 安装时出现蓝色警告。",
     faq4a: '未签名应用常见 SmartScreen 警告。请参阅<a href="#" onclick="openModal(); return false;">安装指南</a>：[更多信息] → [仍要运行]。',
     faq5q: "支持哪些 Windows 版本？",
@@ -607,20 +759,93 @@ window.PeekomI18nLocales["zh-TW"] = {
     faqSub: "關於 Peekom 的常見問題。",
     refundPolicyTitle: "Peekom Plus 退款政策",
     refundPolicyBody:
-        "<p>Peekom Plus 的付款與退款由我們的銷售記錄商（Merchant of Record）Lemon Squeezy 處理。</p>" +
+        "<p>Peekom Plus 的付款與退款由我們的銷售記錄商（Merchant of Record）<strong>Lemon Squeezy</strong> 處理。</p>" +
         '<ul class="faq-refund-list">' +
-        "<li><strong>申請期限</strong> — 自購買之日起<strong>30天內</strong>提交的申請方予受理。</li>" +
-        "<li><strong>可退款情形</strong> — 產品無法正常運作（應用程式無法啟動或正常運作）以及同一訂單的重複付款。</li>" +
-        "<li><strong>不可退款</strong> — 單純改變心意。</li>" +
-        "<li><strong>退款後的授權</strong> — 退款完成後，您的 Peekom Plus 授權金鑰將被停用，應用程式在下次連線啟動時自動還原為免費版。</li>" +
-        '<li><strong>流程</strong> — 透過<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">聯絡表單（或電子郵件）</a>附上訂單編號提交申請 → 我們審核 → 在 Lemon Squeezy 後台執行退款 → 實際入帳時間視發卡行/付款方式而定，可能需要數個工作日。</li>' +
+        "<li><strong>申請期限</strong> — 我們會審核自購買之日起<strong>30天內</strong>提交的申請。</li>" +
+        "<li><strong>可退款情形</strong> — 以下情況我們會為您退款：" +
+        "<ul>" +
+        "<li><strong>產品瑕疵</strong> — 應用程式無法啟動或無法正常運作。</li>" +
+        "<li>同一訂單的<strong>重複付款</strong>。</li>" +
+        "</ul></li>" +
+        "<li><strong>不可退款的情形</strong> — 以下情況我們無法退款：" +
+        "<ul>" +
+        "<li>購買後<strong>單純改變心意</strong>。</li>" +
+        "<li><strong>更換方案</strong> — 例如 Single ↔ Double／Family。我們不提供補差價升級。若您需要更多裝置，必須<strong>另行購買</strong>更高的方案；原方案不會自動退款，也不會折算差額。</li>" +
+        "<li><strong>授權已啟用（Activated）之後的退款。</strong>「已啟用」是指金鑰驗證成功並完成註冊，可在該裝置上使用 Plus。啟用成功代表產品能正常運作，因此<strong>不視為產品瑕疵</strong>。</li>" +
+        "<li><strong>僅由您的使用環境造成的問題</strong> — 例如公司或學校的防火牆、防毒軟體、完全離線的封閉網路、GitHub 下載遭阻擋，或 <code>api.lemonsqueezy.com</code> 被封鎖。授權<strong>已經啟用</strong>時尤其如此。</li>" +
+        "<li><strong>裝置數量上限或更換電腦造成的不便。</strong>若您需要換到另一台裝置，請<a href=\"/contact/\">聯絡我們</a> — 我們可以協助解除舊裝置的啟用。</li>" +
+        "</ul></li>" +
+        "</ul>" +
+        "<p><strong>購買前請先確認（啟用與網路）</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li>Plus <strong>首次啟用</strong>需要連線網路，並且能連上 <code>https://api.lemonsqueezy.com</code>。</li>" +
+        "<li>即使一般網站可以開啟，只要這個位址被封鎖，啟用仍可能失敗。</li>" +
+        "<li>僅在<strong>完全離線的封閉網路</strong>中使用的電腦，可能完全無法啟用。</li>" +
+        "<li>安裝檔放在 GitHub Releases，因此在 github.com 被封鎖的環境中可能無法下載。</li>" +
+        "<li>若您打算只在公司電腦上使用 Peekom，建議購買前先確認以上各項。</li>" +
+        "</ul>" +
+        "<p><strong>若使用環境導致無法使用 Plus — 我們的審核標準</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li>購買時間在<strong>30天以內</strong>；並且</li>" +
+        "<li>授權處於 <strong>Inactive（已啟用裝置 0 台）</strong> 狀態，或屬於產品瑕疵、重複付款；並且</li>" +
+        "<li>您以聯絡方式告知訂單編號與具體情況 — 我們會<strong>逐案個別審核</strong>。</li>" +
+        "<li>但若授權<strong>已經啟用</strong>，而唯一原因是公司網路限制，原則上不屬於退款範圍。</li>" +
+        "</ul>" +
+        "<p><strong>退款時的授權與流程</strong></p>" +
+        '<ul class="faq-refund-list">' +
+        "<li><strong>授權</strong> — 退款完成後，您的 Peekom Plus 授權金鑰將被停用，應用程式在下次連線啟動時會自動還原為免費版。</li>" +
+        '<li><strong>申請方式</strong> — 請透過<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">聯絡表單（或電子郵件）</a>提供您的 <strong>Order #（訂單編號）</strong>與簡要說明。附上付款時使用的電子郵件地址，能協助我們更快找到訂單。僅憑電話號碼無法查詢訂單。</li>' +
+        "<li><strong>處理</strong> — 審核後我們會在 Lemon Squeezy 後台執行退款；實際入帳時間視發卡行或付款方式而定，可能需要數個工作日。</li>" +
         "</ul>",
     faqR1q: "如何申請 Peekom Plus 退款？",
-    faqR1a: '請透過<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">聯絡表單（或電子郵件）</a>附上<strong>訂單編號</strong>提交申請。我們審核後會在 Lemon Squeezy 後台執行退款；實際入帳時間視發卡行或付款方式而定，可能需要數個工作日。',
+    faqR1a:
+        '<p>請透過<a href="https://forms.gle/fbzSb2Gf1THnFwGD6" target="_blank" rel="noopener">聯絡表單（或電子郵件）</a>提供您的 <strong>Order #（訂單編號）</strong>。</p>' +
+        "<p>一併附上<strong>付款時使用的電子郵件地址</strong>，能協助我們更快找到訂單。僅憑電話號碼無法查詢訂單。</p>" +
+        "<p>也請說明發生了什麼情況（應用程式無法啟動、重複付款等）。</p>" +
+        "<p>若屬於可退款情形，我們會在 Lemon Squeezy 後台執行退款；實際入帳時間視發卡行或付款方式而定，可能需要數個工作日。</p>",
     faqR2q: "哪些情況可以退款？",
-    faqR2a: "自購買之日起<strong>30天內</strong>，可針對<strong>產品無法正常運作</strong>（應用程式無法啟動或正常運作）以及同一訂單的<strong>重複付款</strong>申請退款。單純改變心意不予退款。付款與退款由銷售記錄商 Lemon Squeezy 處理。",
+    faqR2a:
+        "<p><strong>可退款</strong> — 購買時間在<strong>30天以內</strong>，且屬於<strong>產品瑕疵</strong>（應用程式無法啟動或無法正常運作）或同一訂單的<strong>重複付款</strong>。</p>" +
+        "<p><strong>不可退款</strong></p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>單純改變心意。</strong></li>" +
+        "<li><strong>更換方案</strong>（Single ↔ Double／Family） — 不提供補差價升級，更高的方案必須另行購買。</li>" +
+        "<li>授權<strong>已經啟用</strong>之後的退款。</li>" +
+        "<li><strong>僅由您的使用環境造成的問題</strong>，例如公司或學校的防火牆、離線網路、GitHub 下載遭阻擋 — 授權<strong>已經啟用</strong>時尤其如此。</li>" +
+        "<li>裝置數量上限或更換電腦造成的不便 — 請改為聯絡我們，我們可以協助您轉移裝置。</li>" +
+        "</ul>" +
+        "<p>若購買時間在30天以內，且授權處於 <strong>Inactive（已啟用裝置 0 台）</strong> 狀態，請聯絡我們並提供訂單編號與具體情況，我們會逐案個別<strong>審核</strong>。</p>" +
+        "<p>付款與退款由我們的銷售記錄商 Lemon Squeezy 處理。</p>",
     faqR3q: "退款後授權會如何？",
-    faqR3a: "退款完成後，您的 Peekom Plus 授權金鑰將被<strong>停用</strong>。應用程式在下次連線啟動時會自動還原為免費版，因此在申請退款前請確認您確實要停止使用 Plus。",
+    faqR3a:
+        "<p>退款完成後，您的 Peekom Plus 授權金鑰將被<strong>停用</strong>。</p>" +
+        "<p>應用程式在下次連線啟動時會自動還原為<strong>免費版</strong>，Plus 專屬功能將無法繼續使用。</p>" +
+        "<p>備忘內容仍會留在您的電腦上，但功能會回到免費版範圍（3 個索引等），因此請在申請退款<strong>之前</strong>先匯出需要保留的內容。</p>" +
+        "<p>送出申請前，請確認您確實打算停止使用 Plus。</p>",
+    faqR4q: "在公司防火牆或離線封閉網路環境下能使用 Peekom Plus 嗎？",
+    faqR4a:
+        "<p>免費版在沒有網路連線的情況下也能使用。</p>" +
+        "<p>但 <strong>Peekom Plus 首次啟用</strong>需要連線網路，並能透過 HTTPS（443）連上 <code>https://api.lemonsqueezy.com</code>。</p>" +
+        "<p>即使一般網站可以開啟，只要這個位址被封鎖，啟用仍可能失敗；僅在<strong>完全離線的封閉網路</strong>中使用的電腦，可能完全無法啟用。</p>" +
+        "<p>安裝檔同樣放在 GitHub Releases，因此在 github.com 被封鎖的環境中，連下載本身都可能失敗。</p>" +
+        "<p><strong>可以這樣試試</strong></p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>先在其他網路上啟用一次</strong>，例如家中的 Wi‑Fi 或手機熱點。啟用完成後，即使沒有網路也可以繼續使用 Plus（重新連上網路時會再次檢查授權）。</li>" +
+        "<li>請 IT 人員放行 <code>https://api.lemonsqueezy.com</code> 的 <strong>HTTPS（443）</strong> 連線。</li>" +
+        "<li>若您使用公司 VPN 或 Proxy，可暫時關閉，或在允許的網路中重試。</li>" +
+        "</ul>" +
+        "<p><strong>請在購買前確認。</strong>若您打算只在公司電腦上使用 Peekom，這些限制可能導致無法啟用。在<strong>授權已啟用之後</strong>，僅以公司網路限制為由申請的退款不屬於退款範圍。</p>",
+    faqR5q: "啟用授權之後還能退款嗎？",
+    faqR5a:
+        "<p>原則上<strong>不行，這不屬於退款範圍。</strong></p>" +
+        "<p><strong>已啟用（Activated）</strong>是指金鑰驗證成功並完成註冊，可在該裝置上使用 Plus。啟用成功代表產品能正常運作，因此<strong>不視為產品瑕疵</strong>。</p>" +
+        "<p>即使在啟用之後，以下情況我們仍會退款：</p>" +
+        '<ul class="guide-step-list">' +
+        "<li><strong>產品瑕疵</strong> — 應用程式無法啟動或無法正常運作。</li>" +
+        "<li>同一訂單的<strong>重複付款</strong>。</li>" +
+        "</ul>" +
+        "<p>若您<strong>尚未</strong>啟用（授權為 <strong>Inactive</strong>，已啟用裝置 0 台），且購買時間在30天以內，請<a href=\"/contact/\">聯絡我們</a>並提供訂單編號與具體情況，我們會逐案個別審核。</p>" +
+        "<p>若您只是需要換到另一台裝置，我們可以<strong>解除舊裝置的啟用</strong>，而不是退款。</p>",
     faq1q: "免費版與 Peekom Plus 有什麼不同？",
     faq1a: '免費版包含3個索引、群組移動、ICE 模式、懸停延遲、螢幕選擇、Markdown、格式工具列和圖片插入。Peekom Plus（首發 $9.99，原價 $12.99）在應用程式內解鎖10個槽位、自訂主題、字型、透明度、圖片縮放和匯出。請參閱<a href="/features/#compare">比較表</a>。',
     compareFreeName: "Peekom (免費)",
@@ -700,13 +925,16 @@ window.PeekomI18nLocales["zh-TW"] = {
         "</ul>" +
         "<p><strong>裝置數量限制（最多 2 台）</strong> — 在同一台電腦上解除安裝後重装視為同一裝置，不影響認證次數。更換電腦時，每組授權最多可註冊 2 台裝置（例如工作電腦 1 台 + 個人電腦 1 台）。</p>",
     faq3q: "如何啟用 Plus？",
-    faq3a: "在 Lemon Squeezy 購買後，在應用程式內輸入授權金鑰即可解鎖 Peekom Plus（無需重新安裝）。",
+    faq3a:
+        "<p>請先<strong>安裝免費版應用程式</strong>，接著在設定或 Plus 鎖定畫面輸入您在 Lemon Squeezy 購買的授權金鑰，即可啟用 Peekom Plus。沒有另外的 Plus 安裝檔，也不需要重新安裝。</p>" +
+        "<p><strong>首次啟用需要連線網路</strong>，並能連上 <code>https://api.lemonsqueezy.com</code>。啟用完成後，即使離線也可以繼續使用 Plus。</p>" +
+        "<p>啟用成功後，授權會在該裝置上註冊為<strong>已啟用（Activated）</strong>。啟用之後，以改變心意、更換方案或公司網路限制為由的退款通常無法受理，請先閱讀上方的退款政策。</p>",
     faq3bq: "一組授權金鑰可以在多台電腦上使用嗎？",
     faq3ba: "可以。同一組16位授權金鑰最多可在兩台電腦（例如工作電腦與個人電腦）上各輸入一次，以使用 Peekom Plus。",
     faq3cq: "更換公司電腦或跳槽後還能繼續使用嗎？",
-    faq3ca: "Peekom Plus 授權基本上可在最多 2 台裝置上使用。在同一裝置上刪除後重新安裝是可以的。若需更換到新裝置，請透過聯絡我們確認後獲得支援。視情況可能需要先重設已啟用的裝置，再於新裝置上重新認證。",
+    faq3ca: "Peekom Plus 可使用的裝置數量取決於方案：Single 1 台、Double 2 台、Family 5 台。在同一裝置上刪除後重新安裝是可以的。若需更換到新裝置，請透過聯絡我們確認後獲得支援。視情況可能需要先重設已啟用的裝置，再於新裝置上重新認證。僅以裝置數量上限或更換電腦為由申請的<strong>退款不屬於退款範圍</strong>，但若您需要轉移裝置，請聯絡我們，我們會透過解除舊裝置的啟用來協助您。",
     faq3dq: "需要更換裝置時應傳送哪些資訊？",
-    faq3da: "為加快確認，請一併傳送購買時使用的電子郵件、訂單編號、授權金鑰以及更換裝置的原因。若兩台裝置均已啟用，我們可能會先重設現有啟用裝置再指導重新認證，因此請先備份所需內容後再聯絡我們。",
+    faq3da: "為加快確認，請一併傳送購買時使用的電子郵件、訂單編號、授權金鑰以及更換裝置的原因。若您方案內的裝置名額（Single 1 台 · Double 2 台 · Family 5 台）已全部用完，我們可能會先重設現有啟用裝置再指導重新認證，因此請先備份所需內容後再聯絡我們。僅以裝置數量上限或更換電腦為由申請的<strong>退款不屬於退款範圍</strong>，但若您需要轉移裝置，請聯絡我們，我們會透過解除舊裝置的啟用來協助您。",
     faq4q: "Windows 安裝時出現藍色警告。",
     faq4a: '未簽署應用程式常見 SmartScreen 警告。請參閱<a href="#" onclick="openModal(); return false;">安裝指南</a>：[詳細資訊] → [仍要執行]。',
     faq5q: "支援哪些 Windows 版本？",
