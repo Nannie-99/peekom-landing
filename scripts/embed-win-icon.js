@@ -39,10 +39,24 @@ exports.default = async function embedWinIcon(context) {
     await execFileAsync(rceditBin, [exePath, "--set-icon", iconPath], {
       windowsHide: true
     });
+    // 작업 관리자/속성창에 Electron 대신 Peekom으로 보이도록
+    await execFileAsync(
+      rceditBin,
+      [
+        exePath,
+        "--set-version-string",
+        "FileDescription",
+        "Peekom",
+        "--set-version-string",
+        "ProductName",
+        "Peekom"
+      ],
+      { windowsHide: true }
+    );
   } catch (error) {
     const detail = error?.stderr || error?.message || String(error);
     throw new Error(`[embed-win-icon] rcedit failed for ${exePath}: ${detail}`);
   }
 
-  console.log(`[embed-win-icon] ${path.basename(exePath)} ← build/icon.ico`);
+  console.log(`[embed-win-icon] ${path.basename(exePath)} ← build/icon.ico + Peekom version strings`);
 };

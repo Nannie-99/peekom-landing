@@ -993,34 +993,30 @@ const i18n = {
         faq6a:
             "<p>메인 화면과 설정창이 동시에 열려 있으면 목록이 잠시 어긋날 수 있습니다.</p>" +
             "<p>설정창을 다시 열거나 포커스를 주면 최신 인덱스 목록이 반영됩니다.</p>",
-        faq7q: "빼꼼 인덱스(구버전)를 제거한 뒤 부팅할 때 이상한 글자·오류가 뜹니다. 어떻게 하나요?",
+        faq7q: "Peekom(또는 구버전)을 지웠는데 부팅할 때 이상한 글자·오류·Electron 창이 뜹니다. 어떻게 하나요?",
         faq7a:
-            "<p>구버전(빼꼼 인덱스)을 삭제했는데 <strong>자동 실행이 켜진 상태</strong>로 제거되면, 시작 프로그램·작업 표시줄·남은 폴더가 남아 PC를 켤 때마다 삭제된 파일을 찾다가 <strong>깨진 글자·오류 창</strong>이 뜰 수 있습니다.</p>" +
-            "<p>아래 순서대로 한 번만 정리해 보세요.</p>" +
+            "<p><strong>Peekom 1.2.4 이상</strong>을 <strong>설정 → 앱 → 제거</strong>로 정상 삭제하면 시작 프로그램은 자동으로 정리됩니다. 제거 화면에서 「메모·설정도 함께 삭제」는 <strong>기본이 아니오</strong>이며, 예를 선택한 경우에만 메모가 지워집니다.</p>" +
+            "<p>그래도 부팅 시 <strong>깨진 글자·CSS 코드 창·작업 표시줄에 Electron만 보이는 창</strong>이 뜨면, 예전에 앱이 켜진 채로 지워져 잔여물이 남은 경우입니다. 아래를 한 번만 정리해 보세요.</p>" +
             "<p><strong>1. 지금 실행 중인 앱 완전히 끄기</strong></p>" +
             '<ul class="guide-step-list">' +
-            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> → 작업 관리자 → 프로세스에서 빼꼼 관련 항목이 있으면 <strong>작업 끝내기</strong></li>" +
-            "<li>작업 표시줄 빼꼼 아이콘 우클릭 → <strong>작업 표시줄에서 제거</strong>(고정 해제)</li>" +
+            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> → 작업 관리자 → <strong>Peekom</strong> 또는 <strong>Electron</strong>이 있으면 <strong>작업 끝내기</strong></li>" +
+            "<li>작업 표시줄 아이콘 우클릭 → <strong>작업 표시줄에서 제거</strong>(고정 해제)</li>" +
             "</ul>" +
-            "<p><strong>2. 시작 프로그램에서 끄기</strong> (이름이 다를 수 있습니다)</p>" +
+            "<p><strong>2. 시작 프로그램에서 끄기</strong></p>" +
             "<p><strong>Windows 11</strong> — 설정 → 앱 → 시작 프로그램</p>" +
             "<p><strong>Windows 10</strong> — 작업 관리자 → 시작 프로그램 탭</p>" +
             '<ul class="guide-step-list">' +
-            "<li>목록에서 다음이 있으면 <strong>끔 / 사용 안 함</strong>: Peekom, Peekom Plus, 빼꼼 인덱스, com.peekom.app, 이름이 깨져 보이는 항목</li>" +
-            "<li>「설치된 앱」에 없다고 나와도 시작 프로그램에는 따로 남아 있을 수 있습니다.</li>" +
+            "<li>목록에서 다음이 있으면 <strong>끔 / 사용 안 함</strong>: Peekom, Peekom Plus, com.peekom.app, 빼꼼 인덱스, 이름이 깨져 보이는 항목</li>" +
             "</ul>" +
             "<p><strong>3. 남은 폴더 직접 삭제</strong></p>" +
             '<ol class="guide-step-list">' +
-            "<li>파일 탐색기 주소창에 <code>%LocalAppData%\\Programs</code> 입력 → <strong>빼꼼</strong> 폴더가 있으면 삭제</li>" +
-            "<li><code>%AppData%\\빼꼼</code> → 통째로 삭제 (메모·설정이 들어 있을 수 있습니다. 다시 쓰지 않으실 경우만 삭제)</li>" +
-            "<li><code>%LocalAppData%</code> → 이름에 <strong>빼꼼</strong>이 있는 폴더가 있으면 삭제</li>" +
+            "<li><code>%LocalAppData%\\Programs</code> → <strong>Peekom</strong>(또는 빼꼼) 폴더가 있으면 삭제</li>" +
+            "<li><code>%AppData%\\Peekom</code> — 메모가 들어 있습니다. <strong>완전 삭제할 때만</strong> 지우세요</li>" +
+            "<li>구버전만 해당: <code>%AppData%\\빼꼼</code></li>" +
             "</ol>" +
-            "<p>삭제가 안 되면 1번에서 작업을 끝낸 뒤 다시 시도해 주세요.</p>" +
-            "<p><strong>4. 재부팅 후 확인</strong> — 위까지 하신 뒤 노트북을 다시 켜 주세요.</p>" +
-            "<p>아침에 코드·이상한 글자 창이 안 뜨고 작업 표시줄에도 빼꼼이 안 보이면 정리된 것입니다.</p>" +
-            "<p>이후 <a href=\"/download/\">Peekom(무료)</a>만 새로 설치해 사용하시면 됩니다.</p>" +
-            '<p class="privacy-doc__note">구버전 메모 내용은 Peekom과 <strong>저장 위치가 달라 자동 이전되지 않습니다.</strong></p>' +
-            '<p class="privacy-doc__note">필요한 내용은 미리 복사해 두세요.</p>',
+            "<p><strong>4. 재부팅 후 확인</strong> — 이상한 창이 없고 작업 표시줄에도 없으면 정리된 것입니다.</p>" +
+            "<p>이후 <a href=\"/download/\">Peekom(무료)</a>을 새로 설치해 사용하시면 됩니다.</p>" +
+            '<p class="privacy-doc__note">구버전(빼꼼 인덱스) 메모는 Peekom과 저장 위치가 달라 <strong>자동 이전되지 않습니다.</strong></p>',
         faq10q: "Peekom 설정(환경설정)은 어디서 열나요?",
         faq10a:
             "<p>작업 표시줄(트레이)의 Peekom 아이콘을 <strong>우클릭 → 환경설정</strong>으로 열 수 있습니다.</p>" +
@@ -1556,34 +1552,30 @@ const i18n = {
         faq6a:
             "<p>Reopen Settings to refresh the list.</p>" +
             "<p>Recent versions sync automatically.</p>",
-        faq7q: "After removing the legacy app 빼꼼 인덱스, strange text or errors appear at startup. What should I do?",
+        faq7q: "I uninstalled Peekom (or the legacy app) but still see garbled text, errors, or an Electron window at startup. What should I do?",
         faq7a:
-            "<p>If you removed the legacy app (빼꼼 인덱스) while <strong>startup at login was still enabled</strong>, leftover startup entries, taskbar pins, or folders may try to run deleted files at boot and show <strong>garbled text or errors</strong>.</p>" +
-            "<p>Follow these steps once to clean up.</p>" +
+            "<p>With <strong>Peekom 1.2.4+</strong>, a normal uninstall via <strong>Settings → Apps → Uninstall</strong> clears startup entries automatically. The “also delete memos &amp; settings” option defaults to <strong>No</strong>; memos are removed only if you choose Yes.</p>" +
+            "<p>If you still see a <strong>broken/CSS window</strong> or a taskbar entry labeled only <strong>Electron</strong>, leftovers from an interrupted uninstall remain. Clean up once as follows.</p>" +
             "<p><strong>1. Fully quit any running instance</strong></p>" +
             '<ul class="guide-step-list">' +
-            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> → Task Manager → end any Peekom / 빼꼼-related process</li>" +
+            "<li><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Esc</kbd> → Task Manager → end <strong>Peekom</strong> or <strong>Electron</strong></li>" +
             "<li>Right-click the taskbar icon → <strong>Unpin from taskbar</strong></li>" +
             "</ul>" +
-            "<p><strong>2. Turn off startup entries</strong> (names may vary)</p>" +
+            "<p><strong>2. Turn off startup entries</strong></p>" +
             "<p><strong>Windows 11</strong> — Settings → Apps → Startup</p>" +
             "<p><strong>Windows 10</strong> — Task Manager → Startup tab</p>" +
             '<ul class="guide-step-list">' +
-            "<li>Disable if present: Peekom, Peekom Plus, 빼꼼 인덱스, com.peekom.app, or garbled-looking names</li>" +
-            "<li>An entry may remain in Startup even if it no longer appears under Installed apps.</li>" +
+            "<li>Disable if present: Peekom, Peekom Plus, com.peekom.app, 빼꼼 인덱스, or garbled names</li>" +
             "</ul>" +
             "<p><strong>3. Delete leftover folders</strong></p>" +
             '<ol class="guide-step-list">' +
-            "<li>In File Explorer, open <code>%LocalAppData%\\Programs</code> → delete any <strong>빼꼼</strong> folder</li>" +
-            "<li>Open <code>%AppData%\\빼꼼</code> → delete the folder (contains memos/settings; only if you will not use it again)</li>" +
-            "<li>Open <code>%LocalAppData%</code> → delete any folder with <strong>빼꼼</strong> in the name</li>" +
+            "<li><code>%LocalAppData%\\Programs</code> → delete <strong>Peekom</strong> (or legacy 빼꼼) if present</li>" +
+            "<li><code>%AppData%\\Peekom</code> — contains memos; delete <strong>only</strong> for a full wipe</li>" +
+            "<li>Legacy only: <code>%AppData%\\빼꼼</code></li>" +
             "</ol>" +
-            "<p>If deletion fails, end tasks in step 1 and try again.</p>" +
-            "<p><strong>4. Restart and verify</strong> — Reboot your PC.</p>" +
-            "<p>If no error windows appear and Peekom is gone from the taskbar, cleanup succeeded.</p>" +
-            "<p>You can then install <a href=\"/download/\">Peekom (free)</a> fresh.</p>" +
-            '<p class="privacy-doc__note">Memo content from the legacy app is <strong>not migrated automatically</strong> because Peekom stores data in a different location.</p>' +
-            '<p class="privacy-doc__note">Copy anything you need before removing the old app.</p>',
+            "<p><strong>4. Restart and verify</strong></p>" +
+            "<p>Then install <a href=\"/download/\">Peekom (free)</a> fresh if needed.</p>" +
+            '<p class="privacy-doc__note">Legacy app memos are <strong>not migrated automatically</strong>.</p>',
         faq10q: "Where do I open Peekom Settings?",
         faq10a:
             "<p>Right-click the Peekom icon in the <strong>system tray</strong> → <strong>Settings</strong>.</p>" +

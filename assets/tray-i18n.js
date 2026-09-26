@@ -8,6 +8,14 @@ const TRAY_STRINGS = {
     upgradePlus: "✨ Plus로 업그레이드",
     restart: "재시작",
     quit: "종료",
+    uninstall: "Peekom 완전 제거…",
+    uninstallTitle: "Peekom 완전 제거",
+    uninstallDetail:
+      "로그인 항목(자동 실행)을 해제하고 Applications 폴더를 엽니다.\nPeekom.app은 직접 휴지통으로 옮겨 주세요.\n\n메모까지 지울지 아래에서 선택할 수 있습니다.",
+    uninstallCancel: "취소",
+    uninstallKeepData: "프로그램만 제거 (메모 유지)",
+    uninstallDeleteData: "메모·설정도 삭제",
+    uninstallAppsHint: "Applications에서 Peekom을 휴지통으로 옮겨 주세요.",
     exportTitle: "보내기",
     importTitle: "백업 파일 불러오기",
     imagePickTitle: "이미지 선택"
@@ -20,6 +28,14 @@ const TRAY_STRINGS = {
     upgradePlus: "✨ Upgrade to Plus",
     restart: "Restart",
     quit: "Quit",
+    uninstall: "Completely remove Peekom…",
+    uninstallTitle: "Remove Peekom completely",
+    uninstallDetail:
+      "Login Items (open at login) will be cleared and the Applications folder will open.\nPlease move Peekom.app to the Trash yourself.\n\nYou can choose whether to delete memos below.",
+    uninstallCancel: "Cancel",
+    uninstallKeepData: "Remove app only (keep memos)",
+    uninstallDeleteData: "Also delete memos & settings",
+    uninstallAppsHint: "In Applications, move Peekom to the Trash.",
     exportTitle: "Export",
     importTitle: "Load backup file",
     imagePickTitle: "Choose image"

@@ -658,12 +658,53 @@ function reapplyStartupRegistration() {
   }
 }
 
-/** 제거 후 남는 고아 시작 항목 방지: 실행 파일이 없으면 등록 해제 */
+/**
+ * 제거 후 남는 고아 시작 항목 방지.
+ * - 현재 exe가 없으면 LoginItem 해제
+ * - HKCU Run에 남은 Peekom 관련 값이 가리키는 .exe가 없으면 해당 값 삭제
+ */
 function healOrphanedStartupRegistration() {
   if (process.platform !== "win32" || !app.isPackaged) return;
   try {
     if (!fs.existsSync(process.execPath)) {
       setStartupLoginState(false);
+    }
+  } catch {
+    /* ignore */
+  }
+  try {
+    const { execSync } = require("child_process");
+    const runKey = "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run";
+    const names = [
+      "com.peekom.app",
+      "Peekom",
+      "Peekom Plus",
+      "빼꼼 인덱스",
+      "ppaekkom-index",
+      "ppaekkom-plus"
+    ];
+    for (const name of names) {
+      try {
+        const out = execSync(`reg query "${runKey}" /v "${name}"`, {
+          encoding: "utf8",
+          windowsHide: true,
+          stdio: ["ignore", "pipe", "ignore"]
+        });
+        const match = String(out).match(/REG_SZ\s+(.+)/i);
+        if (!match) continue;
+        const cmd = match[1].trim();
+        const quoted = cmd.match(/"([^"]+\.exe)"/i);
+        const bare = cmd.match(/^([A-Za-z]:\\[^\s]+\.exe)/i);
+        const exePath = quoted?.[1] || bare?.[1] || null;
+        if (exePath && !fs.existsSync(exePath)) {
+          execSync(`reg delete "${runKey}" /v "${name}" /f`, {
+            windowsHide: true,
+            stdio: "ignore"
+          });
+        }
+      } catch {
+        /* value missing or query failed */
+      }
     }
   } catch {
     /* ignore */
@@ -1282,6 +1323,65 @@ function broadcastSettingsApplied() {
   broadcastStateChanged();
 }
 
+async function promptMacCompleteUninstall() {
+  if (process.platform !== "darwin") return;
+  const lang = appUiLanguage || "ko";
+  const { response } = await dialog.showMessageBox({
+    type: "warning",
+    title: trayT("uninstallTitle", lang),
+    message: trayT("uninstallTitle", lang),
+    detail: trayT("uninstallDetail", lang),
+    buttons: [
+      trayT("uninstallCancel", lang),
+      trayT("uninstallKeepData", lang),
+      trayT("uninstallDeleteData", lang)
+    ],
+    defaultId: 1,
+    cancelId: 0,
+    noLink: true
+  });
+  if (response === 0) return;
+
+  const deleteData = response === 2;
+  try {
+    setStartupLoginState(false);
+  } catch {
+    /* ignore */
+  }
+
+  const userDataPath = app.getPath("userData");
+  if (deleteData) {
+    app.once("will-quit", () => {
+      try {
+        fs.rmSync(userDataPath, { recursive: true, force: true });
+      } catch {
+        /* ignore */
+      }
+    });
+  }
+
+  try {
+    await shell.openPath("/Applications");
+  } catch {
+    /* ignore */
+  }
+
+  try {
+    await dialog.showMessageBox({
+      type: "info",
+      title: trayT("uninstallTitle", lang),
+      message: trayT("uninstallAppsHint", lang),
+      buttons: ["OK"],
+      defaultId: 0,
+      noLink: true
+    });
+  } catch {
+    /* ignore */
+  }
+
+  app.quit();
+}
+
 function buildTrayMenu() {
   const lang = appUiLanguage || "ko";
   const shortcutLabel =
@@ -1331,8 +1431,16 @@ function buildTrayMenu() {
       }
     });
   }
+  items.push({ type: "separator" });
+  if (process.platform === "darwin") {
+    items.push({
+      label: trayT("uninstall", lang),
+      click: () => {
+        void promptMacCompleteUninstall();
+      }
+    });
+  }
   items.push(
-    { type: "separator" },
     {
       label: trayT("restart", lang),
       click: () => {
