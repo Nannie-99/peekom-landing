@@ -1493,6 +1493,7 @@
           spellcheckEnabled: false,
           setupCompleted: false,
           showTrayIcon: true,
+          hideFromTaskbar: false,
           memoAspectRatio: "3:3",
           checklistStrikethrough: true,
           imageLayout: "below",
@@ -5805,7 +5806,11 @@
         hoverDelayMs = appState.global.hoverDelayMs;
 
         try {
-          await ipcRenderer.invoke("tray:set-visible", appState.global.showTrayIcon !== false);
+          await ipcRenderer.invoke("tray:set-visible", true);
+          await ipcRenderer.invoke(
+            "shell:set-hide-from-taskbar",
+            appState.global.hideFromTaskbar === true
+          );
         } catch {
           /* ignore */
         }

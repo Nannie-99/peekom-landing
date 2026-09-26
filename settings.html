@@ -1646,9 +1646,9 @@
 
       <div class="settings-bottom-bar">
         <div class="bottom-left-checks">
-          <label class="bottom-check-label" for="showTrayIconCheckbox">
-            <input id="showTrayIconCheckbox" type="checkbox" checked />
-            트레이 / 메뉴 막대 아이콘 표시
+          <label class="bottom-check-label" for="hideFromShellCheckbox">
+            <input id="hideFromShellCheckbox" type="checkbox" />
+            작업표시줄에서 숨기기
           </label>
           <label class="bottom-check-label" for="runZoomitOnStartupCheckbox">
             <input id="runZoomitOnStartupCheckbox" type="checkbox" />
@@ -1783,6 +1783,7 @@
           spellcheckEnabled: false,
           setupCompleted: false,
           showTrayIcon: true,
+          hideFromTaskbar: false,
           memoAspectRatio: "3:3",
           checklistStrikethrough: true,
           imageLayout: "below",
@@ -2380,7 +2381,8 @@
           appState.global.imageLayout = parsed.imageLayout;
           appState.global.hoverDelayMs = parsed.hoverDelayMs;
           appState.global.openAtLogin = parsed.openAtLogin;
-          appState.global.showTrayIcon = parsed.showTrayIcon;
+          appState.global.showTrayIcon = true;
+          appState.global.hideFromTaskbar = parsed.hideFromTaskbar === true;
           appState.enabledCount = parsed.enabledCount;
           draftMonitorTarget = parsed.monitorTarget;
           parsed.slots.forEach((sl, i) => {
@@ -2652,7 +2654,8 @@
           triggerMode: state.global.triggerMode,
           shortcut: state.global.shortcut,
           openAtLogin: state.global.openAtLogin,
-          showTrayIcon: state.global.showTrayIcon,
+          showTrayIcon: true,
+          hideFromTaskbar: state.global.hideFromTaskbar === true,
           language: state.global.language,
           pinToggleMode: state.global.pinToggleMode,
           spellcheckEnabled: state.global.spellcheckEnabled === true,
@@ -2691,7 +2694,8 @@
           imageLayout: state.global.imageLayout,
           hoverDelayMs: state.global.hoverDelayMs,
           openAtLogin: state.global.openAtLogin,
-          showTrayIcon: state.global.showTrayIcon,
+          showTrayIcon: true,
+          hideFromTaskbar: state.global.hideFromTaskbar === true,
           enabledCount: state.enabledCount,
           slots: slotData,
           monitorTarget: draftMonitorTarget
@@ -2940,10 +2944,10 @@
         if (closeBtn) closeBtn.textContent = ti("settingsClose");
         const langSelect = document.getElementById("langSelect");
         if (langSelect) langSelect.setAttribute("aria-label", ti("langLabel"));
-        const trayCb = document.querySelector('label[for="showTrayIconCheckbox"]');
+        const trayCb = document.querySelector('label[for="hideFromShellCheckbox"]');
         if (trayCb) {
           trayCb.childNodes[trayCb.childNodes.length - 1].textContent = ti(
-            isMac ? "showMenuBarIcon" : "showTrayIcon"
+            isMac ? "hideFromDock" : "hideFromTaskbar"
           );
         }
         const startupCb = document.querySelector('label[for="runZoomitOnStartupCheckbox"]');
@@ -4214,11 +4218,12 @@
         }, 2000);
       }
 
-      async function applyTrayIconSetting(checked) {
+      async function applyTrayIconSetting(_checked) {
+        // 트레이/메뉴바 아이콘은 항상 표시 (사용자 OFF 제거)
         appState = await loadStateAsync();
-        appState.global.showTrayIcon = checked;
+        appState.global.showTrayIcon = true;
         try {
-          await ipcRenderer.invoke("tray:set-visible", checked);
+          await ipcRenderer.invoke("tray:set-visible", true);
         } catch (err) {
           console.error(err);
         }
@@ -4801,11 +4806,11 @@
             applyStartupSetting(runZoomitOnStartupCheckbox.checked);
           });
         }
-        const showTrayIconCheckbox = document.getElementById("showTrayIconCheckbox");
+        const showTrayIconCheckbox = document.getElementById("hideFromShellCheckbox");
         if (showTrayIconCheckbox && !showTrayIconCheckbox.dataset.bound) {
           showTrayIconCheckbox.dataset.bound = "1";
           showTrayIconCheckbox.addEventListener("change", () => {
-            applyTrayIconSetting(showTrayIconCheckbox.checked);
+            refreshApplyButton();
           });
         }
 
@@ -5035,7 +5040,7 @@
       function applySettingsForm() {
         const triggerSelect = document.getElementById("triggerSelect");
         const runZoomitOnStartupCheckbox = document.getElementById("runZoomitOnStartupCheckbox");
-        const showTrayIconCheckbox = document.getElementById("showTrayIconCheckbox");
+        const showTrayIconCheckbox = document.getElementById("hideFromShellCheckbox");
         const pinToggleSelect = document.getElementById("pinToggleSelect");
         const memoAspectSelect = document.getElementById("memoAspectSelect");
         const langSelect = document.getElementById("langSelect");
@@ -5058,7 +5063,7 @@
           clearHoverDelayError();
         }
         if (runZoomitOnStartupCheckbox) runZoomitOnStartupCheckbox.checked = Boolean(appState.global.openAtLogin);
-        if (showTrayIconCheckbox) showTrayIconCheckbox.checked = appState.global.showTrayIcon !== false;
+        if (showTrayIconCheckbox) showTrayIconCheckbox.checked = appState.global.hideFromTaskbar === true;
         if (pinToggleSelect) pinToggleSelect.value = appState.global.pinToggleMode || "dblclick";
         const spellcheckSelect = document.getElementById("spellcheckSelect");
         if (spellcheckSelect) {
@@ -5159,6 +5164,11 @@
         }
         if (langSelect) {
           appState.global.language = langSelect.value;
+        }
+        const hideFromShellCheckbox = document.getElementById("hideFromShellCheckbox");
+        appState.global.showTrayIcon = true;
+        if (hideFromShellCheckbox) {
+          appState.global.hideFromTaskbar = hideFromShellCheckbox.checked === true;
         }
 
         const opacityRange = document.getElementById("memoOpacityRange");
@@ -5449,6 +5459,11 @@
               stateJson: saved.json,
               language: appState.global?.language
             });
+            await ipcRenderer.invoke("tray:set-visible", true);
+            await ipcRenderer.invoke(
+              "shell:set-hide-from-taskbar",
+              appState.global.hideFromTaskbar === true
+            );
           } catch (err) {
             console.error(err);
             setStatus(ti("applySyncFail"), 5000);

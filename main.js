@@ -555,6 +555,7 @@ let pendingNudgeRefresh = null;
 /** @type {Tray | null} */
 let trayIcon = null;
 let trayVisible = true;
+let hideFromShell = false;
 
 function clamp(num, min, max) {
   return Math.max(min, Math.min(num, max));
@@ -1088,7 +1089,7 @@ function createMainWindow() {
     transparent: true,
     backgroundColor: "#00000000",
     alwaysOnTop: false,
-    skipTaskbar: false,
+    skipTaskbar: hideFromShell,
     hasShadow: false,
     resizable: false,
     maximizable: false,
@@ -1186,7 +1187,7 @@ function createSettingsWindow() {
     minimizable: false,
     maximizable: false,
     fullscreenable: false,
-    skipTaskbar: false,
+    skipTaskbar: hideFromShell,
     autoHideMenuBar: true,
     webPreferences: {
       preload: PRELOAD_PATH,
@@ -1480,12 +1481,42 @@ function ensureTrayIcon() {
 }
 
 function setTrayVisibility(visible) {
-  trayVisible = Boolean(visible);
-  if (trayVisible) {
-    ensureTrayIcon();
-  } else if (trayIcon) {
-    trayIcon.destroy();
-    trayIcon = null;
+  // 트레이/메뉴바 아이콘은 항상 표시 (요청: 사용자 OFF 제거)
+  trayVisible = true;
+  ensureTrayIcon();
+  void visible;
+}
+
+function applyHideFromShell(hide) {
+  hideFromShell = Boolean(hide);
+  if (process.platform === "win32") {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      try {
+        mainWindow.setSkipTaskbar(hideFromShell);
+      } catch {
+        /* ignore */
+      }
+    }
+    if (settingsWindow && !settingsWindow.isDestroyed()) {
+      try {
+        settingsWindow.setSkipTaskbar(hideFromShell);
+      } catch {
+        /* ignore */
+      }
+    }
+    return;
+  }
+  if (process.platform === "darwin" && app.dock) {
+    try {
+      if (hideFromShell) {
+        app.dock.hide();
+      } else {
+        app.dock.show();
+        applyMacDockIcon();
+      }
+    } catch {
+      /* ignore */
+    }
   }
 }
 
@@ -2084,9 +2115,14 @@ if (!gotTheLock) {
     return writeSharedStateToMain(jsonPayload);
   });
 
-  ipcMain.handle("tray:set-visible", (_, visible) => {
-    setTrayVisibility(visible);
-    return { ok: true, visible: trayVisible };
+  ipcMain.handle("tray:set-visible", () => {
+    setTrayVisibility(true);
+    return { ok: true, visible: true };
+  });
+
+  ipcMain.handle("shell:set-hide-from-taskbar", (_, hide) => {
+    applyHideFromShell(Boolean(hide));
+    return { ok: true, hide: hideFromShell };
   });
 
   ipcMain.handle("export:save", async (event, payload = {}) => {

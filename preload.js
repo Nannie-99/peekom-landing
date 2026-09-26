@@ -34,6 +34,7 @@ const ALLOWED_INVOKE = new Set([
   "system:list-fonts",
   "display:list",
   "tray:set-visible",
+  "shell:set-hide-from-taskbar",
   "startup:get",
   "startup:set",
   "premium:get",
