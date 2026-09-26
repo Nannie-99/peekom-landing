@@ -1760,7 +1760,7 @@
 
       function normalizeMemoAspectRatio(ratio) {
         if (ratio === "1:1" || ratio === "2:2") return "3:3";
-        const allowed = new Set(["3:3", "4:4", "3:4", "3:5"]);
+        const allowed = new Set(["3:3", "4:4", "5:5", "3:4", "3:5", "4:3", "5:3", "4:5"]);
         return allowed.has(ratio) ? ratio : "3:3";
       }
 
@@ -3004,8 +3004,12 @@
         if (rectGroup) rectGroup.label = ti("memoSizeGroupRect");
         setSelectOptionText("memoAspectSelect", "3:3", "memoSize33Default");
         setSelectOptionText("memoAspectSelect", "4:4", "memoSize44");
+        setSelectOptionText("memoAspectSelect", "5:5", "memoSize55");
         setSelectOptionText("memoAspectSelect", "3:4", "memoSize34");
         setSelectOptionText("memoAspectSelect", "3:5", "memoSize35");
+        setSelectOptionText("memoAspectSelect", "4:3", "memoSize43");
+        setSelectOptionText("memoAspectSelect", "5:3", "memoSize53");
+        setSelectOptionText("memoAspectSelect", "4:5", "memoSize45");
         const memoAspectHint = panel.querySelector('[for="memoAspectSelect"]')?.closest(".field-stack")?.querySelector(".field-hint-below");
         if (memoAspectHint) memoAspectHint.textContent = ti("memoAspectHint");
 
@@ -3585,10 +3589,14 @@
                   <optgroup id="memoAspectGroupSquare" label="${ti("memoSizeGroupSquare")}">
                     <option value="3:3">${ti("memoSize33Default")}</option>
                     <option value="4:4">${ti("memoSize44")}</option>
+                    <option value="5:5">${ti("memoSize55")}</option>
                   </optgroup>
                   <optgroup id="memoAspectGroupRect" label="${ti("memoSizeGroupRect")}">
                     <option value="3:4">${ti("memoSize34")}</option>
                     <option value="3:5">${ti("memoSize35")}</option>
+                    <option value="4:3">${ti("memoSize43")}</option>
+                    <option value="5:3">${ti("memoSize53")}</option>
+                    <option value="4:5">${ti("memoSize45")}</option>
                   </optgroup>
                 </select>
               </div>

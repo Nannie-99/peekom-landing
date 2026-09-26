@@ -1666,7 +1666,7 @@
 
       function normalizeMemoAspectRatio(ratio) {
         if (ratio === "1:1" || ratio === "2:2") return "3:3";
-        const allowed = new Set(["3:3", "4:4", "3:4", "3:5"]);
+        const allowed = new Set(["3:3", "4:4", "5:5", "3:4", "3:5", "4:3", "5:3", "4:5"]);
         return allowed.has(ratio) ? ratio : "3:3";
       }
 
