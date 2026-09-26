@@ -239,27 +239,43 @@ function getDisplayFingerprint(display) {
   };
 }
 
-function fingerprintsMatch(a, b) {
+function fingerprintsMatch(a, b, options = {}) {
   if (!a || !b) return false;
+  const ignoreScale = Boolean(options.ignoreScale);
+  const scaleOk =
+    ignoreScale ||
+    a.scaleFactor == null ||
+    b.scaleFactor == null ||
+    Math.abs(Number(a.scaleFactor) - Number(b.scaleFactor)) < 0.02;
   return (
     a.x === b.x &&
     a.y === b.y &&
     a.width === b.width &&
     a.height === b.height &&
-    a.scaleFactor === b.scaleFactor
+    scaleOk
   );
 }
 
 function matchDisplayByFingerprint(fingerprint) {
   if (!fingerprint) return null;
-  return screen.getAllDisplays().find((display) => fingerprintsMatch(getDisplayFingerprint(display), fingerprint)) || null;
+  const displays = screen.getAllDisplays();
+  const exact =
+    displays.find((display) => fingerprintsMatch(getDisplayFingerprint(display), fingerprint)) ||
+    null;
+  if (exact) return exact;
+  // scaleFactor만 어긋난 경우(DPI) bounds로 재매칭
+  return (
+    displays.find((display) =>
+      fingerprintsMatch(getDisplayFingerprint(display), fingerprint, { ignoreScale: true })
+    ) || null
+  );
 }
 
 function tryRematchFixedDisplay() {
   if (followCursorMode) return null;
 
-  if (targetDisplayId !== null) {
-    const byId = getDisplayById(targetDisplayId);
+  if (targetDisplayId !== null && targetDisplayId !== undefined) {
+    const byId = getDisplayById(Number(targetDisplayId));
     if (byId) return byId;
   }
 
@@ -271,6 +287,31 @@ function tryRematchFixedDisplay() {
   }
 
   return null;
+}
+
+function shouldLogMonitorDebug() {
+  return Boolean(process.env.PEEKOM_DEBUG_MONITOR) || !app.isPackaged;
+}
+
+function logMonitorDebug(display, plannedBounds) {
+  if (!shouldLogMonitorDebug()) return;
+  try {
+    const actual =
+      mainWindow && !mainWindow.isDestroyed() ? mainWindow.getBounds() : null;
+    console.log("[peekom-monitor]", {
+      followCursorMode,
+      targetDisplayId,
+      displayId: display?.id,
+      bounds: display?.bounds,
+      workArea: display?.workArea,
+      scaleFactor: display?.scaleFactor,
+      plannedBounds,
+      actualBounds: actual,
+      fingerprint: targetDisplayFingerprint
+    });
+  } catch {
+    /* ignore */
+  }
 }
 
 function loadMonitorPrefs() {
@@ -396,6 +437,7 @@ async function applyBrandingAsync() {
   if (trayIcon) {
     trayIcon.setContextMenu(buildTrayMenu());
   }
+  refreshShellContextMenus();
   if (process.platform === "win32" && app.isPackaged) {
     await updateWindowsShellBranding(premiumActive);
   }
@@ -598,6 +640,74 @@ function assertOsSupported() {
 // (바로가기 더블클릭/수동 실행은 인자가 없어 설정창을 함께 열고,
 //  로그인 자동 실행은 이 인자가 붙어 백그라운드로만 뜬다.)
 const STARTUP_LOGIN_ARG = "--autostart";
+const OPEN_SETTINGS_ARG = "--open-settings";
+const OPEN_HELP_ARG = "--open-help";
+
+function argvIncludes(argv, flag) {
+  return Array.isArray(argv) && argv.some((a) => String(a) === flag);
+}
+
+function handleShellLaunchArgs(argv, options = {}) {
+  const { asSecondInstance = false } = options;
+  const args = Array.isArray(argv) ? argv : process.argv;
+  if (argvIncludes(args, OPEN_HELP_ARG)) {
+    void shell.openExternal(DOCS_HELP_URL);
+    return "help";
+  }
+  if (argvIncludes(args, OPEN_SETTINGS_ARG) || asSecondInstance) {
+    createSettingsWindow();
+    return "settings";
+  }
+  return null;
+}
+
+function refreshShellContextMenus() {
+  const lang = appUiLanguage || "ko";
+  if (process.platform === "win32") {
+    try {
+      app.setUserTasks([
+        {
+          program: process.execPath,
+          arguments: OPEN_SETTINGS_ARG,
+          iconPath: process.execPath,
+          iconIndex: 0,
+          title: trayT("settings", lang),
+          description: trayT("settings", lang)
+        },
+        {
+          program: process.execPath,
+          arguments: OPEN_HELP_ARG,
+          iconPath: process.execPath,
+          iconIndex: 0,
+          title: trayT("help", lang),
+          description: trayT("help", lang)
+        }
+      ]);
+    } catch {
+      /* ignore */
+    }
+  }
+  if (process.platform === "darwin" && app.dock) {
+    try {
+      app.dock.setMenu(
+        Menu.buildFromTemplate([
+          {
+            label: trayT("settings", lang),
+            click: () => createSettingsWindow()
+          },
+          {
+            label: trayT("help", lang),
+            click: () => {
+              void shell.openExternal(DOCS_HELP_URL);
+            }
+          }
+        ])
+      );
+    } catch {
+      /* ignore */
+    }
+  }
+}
 
 function getStartupLoginOptions() {
   return process.platform === "darwin"
@@ -871,7 +981,16 @@ function resolveTargetDisplay() {
   if (!followCursorMode) {
     const fixedDisplay = tryRematchFixedDisplay();
     if (fixedDisplay) return fixedDisplay;
-    return getCursorDisplay();
+    // 고정 모드에서 rematch 실패 시 커서 모니터로 붙이면(노트북) 왼쪽 모니터 고정 버그가 재발함
+    if (targetDisplayFingerprint) {
+      const soft = matchDisplayByFingerprint(targetDisplayFingerprint);
+      if (soft) return soft;
+    }
+    try {
+      return screen.getPrimaryDisplay();
+    } catch {
+      return getCursorDisplay();
+    }
   }
 
   return getCursorDisplay();
@@ -1022,6 +1141,15 @@ function attachWindowToDisplay(display) {
   const { x, y, width, height } = getAttachedBounds(display);
   // 드래그 중에는 애니메이션 없이 즉시 이동 (macOS animate=true가 jitter 유발)
   mainWindow.setBounds({ x, y, width, height }, !isDraggingWindow);
+  // Windows 투명 창이 음수 좌표(왼쪽 모니터)를 0으로 클램프하는 경우 강제 보정
+  if (process.platform === "win32" && (x < 0 || y < 0)) {
+    try {
+      mainWindow.setPosition(Math.round(x), Math.round(y));
+    } catch {
+      /* ignore */
+    }
+  }
+  logMonitorDebug(display, { x, y, width, height });
 }
 
 function getAttachedSignature(display) {
@@ -1262,6 +1390,7 @@ function updateAppUiLanguageFromStateJson(stateJson) {
     if (typeof lang === "string" && lang.trim()) {
       appUiLanguage = resolveTrayLang(lang.trim());
       if (trayIcon) trayIcon.setContextMenu(buildTrayMenu());
+      refreshShellContextMenus();
     }
   } catch {
     /* ignore */
@@ -1541,10 +1670,8 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   app.quit();
 } else {
-  app.on("second-instance", () => {
-    // 바로가기(.lnk) 더블클릭 또는 --open-settings 인자로 재실행되면 설정창을 연다.
-    // (이미 실행 중인 단일 인스턴스에서 처리되며, 설정창이 열려 있으면 포커스만 한다.)
-    createSettingsWindow();
+  app.on("second-instance", (_event, commandLine) => {
+    handleShellLaunchArgs(commandLine || process.argv, { asSecondInstance: true });
   });
 
   app.whenReady().then(async () => {
@@ -1587,6 +1714,7 @@ if (!gotTheLock) {
   appSettings = normalizeSettings();
   updateShortcutRegistration();
   ensureTrayIcon();
+  refreshShellContextMenus();
   startLicenseRecheckTimer();
 
   ipcMain.handle("premium:get", () => ({
@@ -1797,8 +1925,9 @@ if (!gotTheLock) {
   });
 
   ipcMain.handle("window:set-target-display", (_, displayIdOrNull) => {
-    if (typeof displayIdOrNull === "number") {
-      const selectedDisplay = getDisplayById(displayIdOrNull);
+    if (displayIdOrNull !== null && displayIdOrNull !== undefined && displayIdOrNull !== "auto") {
+      const idNum = Number(displayIdOrNull);
+      const selectedDisplay = Number.isFinite(idNum) ? getDisplayById(idNum) : null;
       if (!selectedDisplay) {
         return { ok: false, reason: "DISPLAY_NOT_FOUND", windowState: getWindowState() };
       }
@@ -1965,6 +2094,7 @@ if (!gotTheLock) {
     if (typeof options.language === "string" && options.language.trim()) {
       appUiLanguage = resolveTrayLang(options.language.trim());
       if (trayIcon) trayIcon.setContextMenu(buildTrayMenu());
+      refreshShellContextMenus();
     }
     broadcastStateChanged({
       skipSettingsReload: Boolean(options.skipSettingsReload),
@@ -1980,6 +2110,7 @@ if (!gotTheLock) {
     if (typeof options.language === "string" && options.language.trim()) {
       appUiLanguage = resolveTrayLang(options.language.trim());
       if (trayIcon) trayIcon.setContextMenu(buildTrayMenu());
+      refreshShellContextMenus();
     }
     broadcastStateChanged({
       skipSettingsReload: Boolean(options.skipSettingsReload),
@@ -2299,10 +2430,20 @@ if (!gotTheLock) {
   // 로그인 자동 실행은 메모 본체 창만 백그라운드로 띄운다.
   // Windows: --autostart 인자 / macOS: Login Items 의 wasOpenedAtLogin
   const launchedAtLogin = wasLaunchedAtLogin();
-  const shouldOpenSettings = process.argv.includes("--open-settings") || !launchedAtLogin;
+  const helpRequested = argvIncludes(process.argv, OPEN_HELP_ARG);
+  const shouldOpenSettings =
+    argvIncludes(process.argv, OPEN_SETTINGS_ARG) ||
+    (!launchedAtLogin && !helpRequested);
+
+  if (helpRequested) {
+    void shell.openExternal(DOCS_HELP_URL);
+  }
 
   // 첫 실행(v5 상태 없음)이거나 setupCompleted가 false면 설정창 자동 오픈
   mainWindow.webContents.once("did-finish-load", () => {
+    if (helpRequested && !argvIncludes(process.argv, OPEN_SETTINGS_ARG)) {
+      return;
+    }
     try {
       mainWindow.webContents.executeJavaScript(`
         (function() {
