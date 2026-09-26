@@ -43,9 +43,16 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 
 const RELEASE_HISTORY = [
     {
+        version: "1.2.4",
+        date: "2026/09/26",
+        latest: true,
+        macAvailable: true,
+        winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.4/Peekom-Setup.exe",
+        macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.4/Peekom-macOS.dmg"
+    },
+    {
         version: "1.2.3",
         date: "2026/07/24",
-        latest: true,
         macAvailable: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.3/Peekom-Setup.exe",
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.3/Peekom-macOS.dmg"
@@ -69,6 +76,27 @@ const RELEASE_HISTORY = [
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-macOS.dmg"
     }
 ];
+
+const CHANGELOG_V124 = {
+    ko: [
+        "제거 시 시작 프로그램·바로가기 자동 정리 (메모는 기본 보존, 선택 시만 삭제)",
+        "메모 크기 옵션 추가 (5×5, 4×3, 5×3, 4×5)",
+        "메모를 외부로 복사할 때 배경·글자 크기 스타일 누출 수정",
+        "작업표시줄/Dock에서 숨기기 옵션 (트레이·메뉴바 아이콘은 항상 표시)",
+        "작업표시줄·Dock 우클릭에 환경설정·도움말 추가",
+        "듀얼 모니터「표시 모니터 고정」왼쪽 모니터 위치 오류 수정",
+        "표시 위치: 위쪽(무료)·아래쪽(Plus) 가장자리 추가"
+    ],
+    en: [
+        "Uninstall clears startup entries and shortcuts (memos kept by default; optional full wipe)",
+        "New memo sizes: 5×5, 4×3, 5×3, 4×5",
+        "Fixed background/font-size leaking when copying memos to other apps",
+        "Hide from taskbar/Dock option (tray/menu bar icon always shown)",
+        "Settings and Help on taskbar Jump List and Dock menu",
+        "Fixed dual-monitor attach when the left display is selected",
+        "Panel edges: top (free) and bottom (Plus)"
+    ]
+};
 
 const CHANGELOG_V123 = {
     ko: [
@@ -455,11 +483,13 @@ const CHANGELOG_V120 = {
 };
 
 function buildChangelogForLang(lang) {
+    const v124 = CHANGELOG_V124[lang] || CHANGELOG_V124.en;
     const v123 = CHANGELOG_V123[lang] || CHANGELOG_V123.en;
     const v122 = CHANGELOG_V122[lang] || CHANGELOG_V122.en;
     const v121 = CHANGELOG_V121[lang] || CHANGELOG_V121.en;
     const v120 = CHANGELOG_V120[lang] || CHANGELOG_V120.en;
     return [
+        { version: "1.2.4", date: "2026.09.26", items: v124 },
         { version: "1.2.3", date: "2026.07.24", items: v123 },
         { version: "1.2.2", date: "2026.07.11", items: v122 },
         { version: "1.2.1", date: "2026.07.01", items: v121 },
@@ -931,9 +961,9 @@ const i18n = {
             "<p>무료·Peekom Plus 모두 사용할 수 있습니다.</p>",
         faq8q: "Peekom은 모니터 오른쪽 가장자리에서만 사용 가능한가요?",
         faq8a:
-            "<p>오른쪽 가장자리는 무료로 사용할 수 있습니다.</p>" +
-            "<p>왼쪽 가장자리는 Peekom Plus에서 사용할 수 있습니다.</p>" +
-            "<p>위쪽·아래쪽 가장자리는 추후 업데이트를 통해 지원할 예정입니다.</p>",
+            "<p>무료: <strong>오른쪽</strong>·<strong>위쪽</strong> 가장자리</p>" +
+            "<p>Peekom Plus: <strong>왼쪽</strong>·<strong>아래쪽</strong> 가장자리도 사용 가능합니다.</p>" +
+            "<p>설정 → 표시 위치에서 바꿀 수 있습니다.</p>",
         faq9q: "실수로 Peekom Plus를 삭제하면 유료 기능은 어떻게 되나요?",
         faq9a:
             "<p>앱을 삭제해도 Lemon Squeezy에 등록된 라이선스는 그대로 남습니다.</p>" +
@@ -1490,9 +1520,9 @@ const i18n = {
             "<p>Available on Free and Plus.</p>",
         faq8q: "Can Peekom only be used on the right edge of the monitor?",
         faq8a:
-            "<p>The right edge is available on the free plan.</p>" +
-            "<p>The left edge requires Peekom Plus.</p>" +
-            "<p>Top and bottom edges are planned for a future update.</p>",
+            "<p>Free: <strong>right</strong> and <strong>top</strong> edges.</p>" +
+            "<p>Peekom Plus: also <strong>left</strong> and <strong>bottom</strong>.</p>" +
+            "<p>Change this in Settings → Panel side.</p>",
         faq9q: "I accidentally uninstalled Peekom Plus. What happens to my paid features?",
         faq9a:
             "<p>Uninstalling the app does not remove your Lemon Squeezy license.</p>" +
