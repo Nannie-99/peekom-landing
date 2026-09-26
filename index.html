@@ -3347,6 +3347,39 @@
         }, 0);
       });
 
+      // 앱 → 외부 붙여넣기 시 배경·글자크기·글꼴이 따라가지 않도록 클립보드 HTML 정리
+      function sanitizeClipboardHtmlForExport(html) {
+        const wrap = document.createElement("div");
+        wrap.innerHTML = html;
+        stripMemoInlineFontSizes(wrap);
+        stripMemoInlineFontFamilies(wrap);
+        stripMemoBackgroundColors(wrap);
+        return wrap.innerHTML;
+      }
+
+      function onMemoCopyOrCut(event) {
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed || !memoEditor.contains(selection.anchorNode)) {
+          return;
+        }
+        try {
+          const range = selection.getRangeAt(0);
+          const frag = range.cloneContents();
+          const holder = document.createElement("div");
+          holder.appendChild(frag);
+          const plain = selection.toString();
+          const cleanHtml = sanitizeClipboardHtmlForExport(holder.innerHTML);
+          event.clipboardData.setData("text/plain", plain);
+          event.clipboardData.setData("text/html", cleanHtml);
+          event.preventDefault();
+        } catch {
+          /* fall through to default copy */
+        }
+      }
+
+      memoEditor.addEventListener("copy", onMemoCopyOrCut);
+      memoEditor.addEventListener("cut", onMemoCopyOrCut);
+
       memoEditor.addEventListener("click", (event) => {
         // B-2 체크리스트 위젯 상호작용
         const checkBox = event.target.closest(".peekom-checklist-box");
