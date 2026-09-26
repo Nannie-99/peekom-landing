@@ -897,7 +897,7 @@ function normalizeSettings(partialSettings = {}) {
       ? Math.round(merged.manualYOffset)
       : 0;
 
-  const safePanelEdge = merged.panelEdge === "left" ? "left" : "right";
+  const safePanelEdge = clampPanelEdgeForPremium(normalizePanelEdge(merged.panelEdge));
 
   return {
     anchor: safeAnchor,
@@ -994,6 +994,23 @@ function resolveTargetDisplay() {
   }
 
   return getCursorDisplay();
+}
+
+function normalizePanelEdge(edge) {
+  if (edge === "left" || edge === "top" || edge === "bottom") return edge;
+  return "right";
+}
+
+function isHorizontalPanelEdge(edge) {
+  return edge === "top" || edge === "bottom";
+}
+
+function clampPanelEdgeForPremium(edge) {
+  const normalized = normalizePanelEdge(edge);
+  if (!premiumActive && (normalized === "left" || normalized === "bottom")) {
+    return "right";
+  }
+  return normalized;
 }
 
 function getCurrentPanelWidth() {
@@ -1118,9 +1135,12 @@ function getAttachArea(targetDisplay) {
 }
 
 function getWindowDimensions(targetDisplay) {
-  const width = getCurrentPanelWidth();
   const area = getAttachArea(targetDisplay);
-  return { width, height: area.height };
+  const edge = normalizePanelEdge(appSettings.panelEdge);
+  if (isHorizontalPanelEdge(edge)) {
+    return { width: area.width, height: getCurrentPanelWidth() };
+  }
+  return { width: getCurrentPanelWidth(), height: area.height };
 }
 
 function computeAnchoredY(area) {
@@ -1130,9 +1150,18 @@ function computeAnchoredY(area) {
 function getAttachedBounds(targetDisplay) {
   const area = getAttachArea(targetDisplay);
   const { width, height } = getWindowDimensions(targetDisplay);
-  const edge = appSettings.panelEdge === "left" ? "left" : "right";
-  const x = edge === "left" ? area.x : area.x + area.width - width;
-  const y = computeAnchoredY(area);
+  const edge = normalizePanelEdge(appSettings.panelEdge);
+  let x = area.x;
+  let y = computeAnchoredY(area);
+  if (edge === "left") {
+    x = area.x;
+  } else if (edge === "right") {
+    x = area.x + area.width - width;
+  } else if (edge === "top") {
+    y = area.y;
+  } else if (edge === "bottom") {
+    y = area.y + area.height - height;
+  }
   return { x, y, width, height };
 }
 
@@ -1401,8 +1430,7 @@ function syncPanelEdgeFromStateJson(stateJson) {
   if (typeof stateJson !== "string" || !stateJson) return;
   try {
     const parsed = JSON.parse(stateJson);
-    let edge = parsed?.global?.panelEdge === "left" ? "left" : "right";
-    if (edge === "left" && !premiumActive) edge = "right";
+    let edge = clampPanelEdgeForPremium(parsed?.global?.panelEdge);
     const prevEdge = appSettings.panelEdge;
     appSettings = normalizeSettings({ ...appSettings, panelEdge: edge });
     if (prevEdge !== appSettings.panelEdge) {

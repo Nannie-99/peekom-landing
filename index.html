@@ -102,6 +102,110 @@
         transform: translateX(0);
       }
 
+      .panel-edge-top .handle-column,
+      .panel-edge-bottom .handle-column {
+        top: auto;
+        right: auto;
+        bottom: auto;
+        left: 0;
+        width: 100%;
+        height: var(--collapsed-width);
+      }
+
+      .panel-edge-top .handle-column {
+        top: 0;
+      }
+
+      .panel-edge-bottom .handle-column {
+        bottom: 0;
+      }
+
+      .panel-edge-top .edge-handle,
+      .panel-edge-bottom .edge-handle {
+        top: 0;
+        right: auto;
+        width: var(--handle-slot-size, var(--handle-height));
+        height: 100%;
+        border-radius: 0 0 12px 12px;
+        border-left: 2px solid rgba(79, 84, 95, 0.28);
+        border-right: 2px solid rgba(79, 84, 95, 0.28);
+        border-top: 0;
+        border-bottom: 2px solid rgba(79, 84, 95, 0.28);
+        box-shadow: inset 0 -2px 0 rgba(255, 255, 255, 0.35);
+        cursor: ns-resize;
+      }
+
+      .panel-edge-bottom .edge-handle {
+        border-radius: 12px 12px 0 0;
+        border-top: 2px solid rgba(79, 84, 95, 0.28);
+        border-bottom: 0;
+        box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35);
+      }
+
+      .panel-edge-top .edge-handle .handle-label-text,
+      .panel-edge-bottom .edge-handle .handle-label-text {
+        writing-mode: horizontal-tb;
+        text-orientation: mixed;
+        width: auto;
+        max-width: calc(100% - 4px);
+      }
+
+      .panel-edge-top .floating-panel.expanded .edge-handle.is-active,
+      .panel-edge-bottom .floating-panel.expanded .edge-handle.is-active {
+        border-bottom: 0;
+      }
+
+      .panel-edge-bottom .floating-panel.expanded .edge-handle.is-active {
+        border-top: 0;
+      }
+
+      .panel-edge-top .note-backing {
+        top: var(--collapsed-width);
+        bottom: auto;
+        left: auto;
+        right: auto;
+        border-radius: 0 0 12px 12px;
+      }
+
+      .panel-edge-bottom .note-backing {
+        bottom: var(--collapsed-width);
+        top: auto;
+        left: auto;
+        right: auto;
+        border-radius: 12px 12px 0 0;
+      }
+
+      .panel-edge-top .note-shell {
+        top: var(--collapsed-width);
+        bottom: auto;
+        left: auto;
+        right: auto;
+        padding-top: 10px;
+        padding-bottom: 6px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 0 0 12px 12px;
+        transform: translateY(-120%);
+      }
+
+      .panel-edge-bottom .note-shell {
+        bottom: var(--collapsed-width);
+        top: auto;
+        left: auto;
+        right: auto;
+        padding-top: 10px;
+        padding-bottom: 6px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-radius: 12px 12px 0 0;
+        transform: translateY(120%);
+      }
+
+      .panel-edge-top.floating-panel.expanded .note-shell,
+      .panel-edge-bottom.floating-panel.expanded .note-shell {
+        transform: translateY(0);
+      }
+
       .edge-handle {
         position: absolute;
         right: 0;
@@ -842,6 +946,12 @@
         padding-left: 2px;
       }
 
+      .panel-edge-top .note-footer,
+      .panel-edge-bottom .note-footer {
+        margin-right: 0;
+        padding-right: 0;
+      }
+
       .mode-chip {
         display: inline-flex;
         align-items: center;
@@ -1431,6 +1541,15 @@
         packFreeYSlots();
       }
       const MAX_Y_SLOTS = 10;
+
+      function normalizePanelEdgeValue(raw) {
+        if (raw === "left" || raw === "top" || raw === "bottom") return raw;
+        return "right";
+      }
+
+      function isHorizontalPanelEdge(edge) {
+        return edge === "top" || edge === "bottom";
+      }
       const PANEL_CONTENT_WIDTH = 420;
       const COLLAPSED_WIDTH = 32;
       const DRAG_THRESHOLD = 12;
@@ -2151,12 +2270,21 @@
       }
 
       function getMemoDimensions() {
-        const handleUnit = window.innerHeight / MAX_Y_SLOTS;
+        const edge = getEffectivePanelEdge();
+        const horizontal = isHorizontalPanelEdge(edge);
+        const handleUnit = horizontal
+          ? window.innerWidth / MAX_Y_SLOTS
+          : window.innerHeight / MAX_Y_SLOTS;
         const { widthUnits, heightUnits } = parseMemoSizeUnits(appState.global.memoAspectRatio);
         let widthPx = widthUnits * handleUnit;
         let heightPx = heightUnits * handleUnit;
-        const maxW = window.innerWidth - COLLAPSED_WIDTH - 8;
-        widthPx = Math.min(widthPx, maxW);
+        if (horizontal) {
+          const maxH = window.innerHeight - COLLAPSED_WIDTH - 8;
+          heightPx = Math.min(heightPx, maxH);
+        } else {
+          const maxW = window.innerWidth - COLLAPSED_WIDTH - 8;
+          widthPx = Math.min(widthPx, maxW);
+        }
         return { widthPx, heightPx, handleUnit };
       }
 
@@ -2400,14 +2528,16 @@
       let lastPanelLayoutKey = "";
 
       function getEffectivePanelEdge() {
-        const edge = appState.global?.panelEdge === "left" ? "left" : "right";
-        if (!isPremium && edge === "left") return "right";
+        const edge = normalizePanelEdgeValue(appState.global?.panelEdge);
+        if (!isPremium && (edge === "left" || edge === "bottom")) return "right";
         return edge;
       }
 
       function applyPanelEdgeUI() {
         const edge = getEffectivePanelEdge();
         panel.classList.toggle("panel-edge-left", edge === "left");
+        panel.classList.toggle("panel-edge-top", edge === "top");
+        panel.classList.toggle("panel-edge-bottom", edge === "bottom");
         lastPanelLayoutKey = "";
         updatePanelPosition();
       }
@@ -2415,59 +2545,142 @@
       function updatePanelPosition() {
         const ySlot = appState.slots[appState.activeSlot]?.ySlot ?? 0;
         const { widthPx, heightPx, handleUnit } = getMemoDimensions();
-        const totalH = window.innerHeight;
-        const handleTopPx = ySlot * handleUnit;
-        const availableBelow = totalH - handleTopPx;
-        let topPx;
-        if (availableBelow >= heightPx) {
-          topPx = handleTopPx;
-        } else {
-          topPx = Math.max(0, handleTopPx + handleUnit - heightPx);
-        }
-        const finalHeight = Math.min(heightPx, totalH - topPx);
         const edge = getEffectivePanelEdge();
-        const layoutKey = `${edge}|${ySlot}|${widthPx}|${finalHeight}|${topPx}`;
-        if (layoutKey === lastPanelLayoutKey) return;
-        lastPanelLayoutKey = layoutKey;
+        const horizontal = isHorizontalPanelEdge(edge);
 
+        document.documentElement.style.setProperty("--handle-height", `${handleUnit}px`);
+        document.documentElement.style.setProperty("--handle-slot-size", `${handleUnit}px`);
         document.documentElement.style.setProperty("--active-y-slot", String(ySlot));
-        noteShell.style.top = `${topPx}px`;
-        noteShell.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
-        noteShell.style.height = `${finalHeight}px`;
-        noteShell.style.maxHeight = `${finalHeight}px`;
-        if (edge === "left") {
-          noteShell.style.left = "0";
-          noteShell.style.right = "auto";
-          noteShell.style.paddingLeft = `calc(${COLLAPSED_WIDTH}px + 8px)`;
-          noteShell.style.paddingRight = "10px";
-        } else {
-          noteShell.style.left = "auto";
-          noteShell.style.right = "0";
-          noteShell.style.paddingRight = `calc(${COLLAPSED_WIDTH}px + 8px)`;
-          noteShell.style.paddingLeft = "10px";
-        }
-        if (noteBacking) {
-          noteBacking.style.top = `${topPx}px`;
-          noteBacking.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
-          noteBacking.style.height = `${finalHeight}px`;
-          if (edge === "left") {
-            noteBacking.style.left = "0";
-            noteBacking.style.right = "auto";
-          } else {
-            noteBacking.style.left = "auto";
-            noteBacking.style.right = "0";
-          }
-        }
-        document.documentElement.style.setProperty("--note-shell-height", `${finalHeight}px`);
-        document.documentElement.style.setProperty("--note-shell-maxh", `${finalHeight}px`);
 
-        firstRunTip.style.top = `${topPx + 14}px`;
-        firstRunTip.style.bottom = "auto";
-        firstRunTip.style.left = "";
+        let layoutKey;
+        let finalShellHeight = heightPx;
+        if (horizontal) {
+          const totalW = window.innerWidth;
+          const handleLeftPx = ySlot * handleUnit;
+          const availableRight = totalW - handleLeftPx;
+          let leftPx;
+          if (availableRight >= widthPx) {
+            leftPx = handleLeftPx;
+          } else {
+            leftPx = Math.max(0, handleLeftPx + handleUnit - widthPx);
+          }
+          const finalWidth = Math.min(widthPx, totalW - leftPx);
+          const finalHeight = heightPx;
+          finalShellHeight = finalHeight;
+          layoutKey = `${edge}|${ySlot}|${finalWidth}|${finalHeight}|${leftPx}`;
+          if (layoutKey === lastPanelLayoutKey) return;
+          lastPanelLayoutKey = layoutKey;
+
+          noteShell.style.width = `${finalWidth}px`;
+          noteShell.style.height = `${finalHeight}px`;
+          noteShell.style.maxHeight = `${finalHeight}px`;
+          noteShell.style.left = `${leftPx}px`;
+          noteShell.style.right = "auto";
+          noteShell.style.paddingLeft = "10px";
+          noteShell.style.paddingRight = "10px";
+          if (edge === "top") {
+            noteShell.style.top = `${COLLAPSED_WIDTH}px`;
+            noteShell.style.bottom = "auto";
+            noteShell.style.paddingTop = "10px";
+            noteShell.style.paddingBottom = "6px";
+          } else {
+            noteShell.style.top = "auto";
+            noteShell.style.bottom = `${COLLAPSED_WIDTH}px`;
+            noteShell.style.paddingTop = "10px";
+            noteShell.style.paddingBottom = "6px";
+          }
+          if (noteBacking) {
+            noteBacking.style.width = `${finalWidth}px`;
+            noteBacking.style.height = `${finalHeight}px`;
+            noteBacking.style.left = `${leftPx}px`;
+            noteBacking.style.right = "auto";
+            if (edge === "top") {
+              noteBacking.style.top = `${COLLAPSED_WIDTH}px`;
+              noteBacking.style.bottom = "auto";
+            } else {
+              noteBacking.style.top = "auto";
+              noteBacking.style.bottom = `${COLLAPSED_WIDTH}px`;
+            }
+          }
+          firstRunTip.style.left = `${leftPx + 14}px`;
+          firstRunTip.style.right = "auto";
+          if (edge === "top") {
+            firstRunTip.style.top = `${COLLAPSED_WIDTH + 14}px`;
+            firstRunTip.style.bottom = "auto";
+          } else {
+            firstRunTip.style.top = "auto";
+            firstRunTip.style.bottom = `${COLLAPSED_WIDTH + 14}px`;
+          }
+        } else {
+          const totalH = window.innerHeight;
+          const handleTopPx = ySlot * handleUnit;
+          const availableBelow = totalH - handleTopPx;
+          let topPx;
+          if (availableBelow >= heightPx) {
+            topPx = handleTopPx;
+          } else {
+            topPx = Math.max(0, handleTopPx + handleUnit - heightPx);
+          }
+          const finalHeight = Math.min(heightPx, totalH - topPx);
+          finalShellHeight = finalHeight;
+          layoutKey = `${edge}|${ySlot}|${widthPx}|${finalHeight}|${topPx}`;
+          if (layoutKey === lastPanelLayoutKey) return;
+          lastPanelLayoutKey = layoutKey;
+
+          noteShell.style.top = `${topPx}px`;
+          noteShell.style.bottom = "auto";
+          noteShell.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
+          noteShell.style.height = `${finalHeight}px`;
+          noteShell.style.maxHeight = `${finalHeight}px`;
+          if (edge === "left") {
+            noteShell.style.left = "0";
+            noteShell.style.right = "auto";
+            noteShell.style.paddingLeft = `calc(${COLLAPSED_WIDTH}px + 8px)`;
+            noteShell.style.paddingRight = "10px";
+          } else {
+            noteShell.style.left = "auto";
+            noteShell.style.right = "0";
+            noteShell.style.paddingRight = `calc(${COLLAPSED_WIDTH}px + 8px)`;
+            noteShell.style.paddingLeft = "10px";
+          }
+          if (noteBacking) {
+            noteBacking.style.top = `${topPx}px`;
+            noteBacking.style.bottom = "auto";
+            noteBacking.style.width = `${widthPx + COLLAPSED_WIDTH}px`;
+            noteBacking.style.height = `${finalHeight}px`;
+            if (edge === "left") {
+              noteBacking.style.left = "0";
+              noteBacking.style.right = "auto";
+            } else {
+              noteBacking.style.left = "auto";
+              noteBacking.style.right = "0";
+            }
+          }
+          firstRunTip.style.top = `${topPx + 14}px`;
+          firstRunTip.style.bottom = "auto";
+          firstRunTip.style.left = "";
+        }
+        document.documentElement.style.setProperty("--note-shell-height", `${finalShellHeight}px`);
+        document.documentElement.style.setProperty("--note-shell-maxh", `${finalShellHeight}px`);
+      }
+
+      function applyHandleSlotPosition(btn, slotIndex) {
+        const slot = appState.slots[slotIndex]?.ySlot ?? slotIndex;
+        const edge = getEffectivePanelEdge();
+        if (isHorizontalPanelEdge(edge)) {
+          btn.style.top = "";
+          btn.style.left = `calc(var(--handle-slot-size, var(--handle-height)) * ${slot})`;
+        } else {
+          btn.style.left = "";
+          btn.style.top = `calc(var(--handle-height) * ${slot})`;
+        }
       }
 
       function getSlotHeightPx() {
-        return window.innerHeight / MAX_Y_SLOTS;
+        const edge = getEffectivePanelEdge();
+        return isHorizontalPanelEdge(edge)
+          ? window.innerWidth / MAX_Y_SLOTS
+          : window.innerHeight / MAX_Y_SLOTS;
       }
 
       function pixelYToSlot(pixelY) {
@@ -2695,12 +2908,17 @@
         if (!labelEl || !handleEl) return;
         const text = labelEl.textContent || "";
         const chars = Math.max(1, Array.from(text).length);
-        const available = Math.max(10, handleEl.clientHeight - 4);
+        const horizontal = isHorizontalPanelEdge(getEffectivePanelEdge());
+        const available = Math.max(
+          10,
+          horizontal ? handleEl.clientWidth - 4 : handleEl.clientHeight - 4
+        );
         let px = Math.min(11, available / (chars + 0.35));
         px = Math.max(5, Math.floor(px * 10) / 10);
         labelEl.style.fontSize = `${px}px`;
-        // 세로쓰기에서 scrollHeight가 실제 필요 높이
-        for (let i = 0; i < 24 && labelEl.scrollHeight > available + 1 && px > 5; i += 1) {
+        for (let i = 0; i < 24 && px > 5; i += 1) {
+          const overflow = horizontal ? labelEl.scrollWidth : labelEl.scrollHeight;
+          if (overflow <= available + 1) break;
           px = Math.max(5, px - 0.4);
           labelEl.style.fontSize = `${px}px`;
         }
@@ -2837,8 +3055,7 @@
           btn.type = "button";
           btn.className = "edge-handle";
           btn.dataset.slotIndex = String(slotIndex);
-          const ySlot = appState.slots[slotIndex].ySlot ?? slotIndex;
-          btn.style.top = `calc(var(--handle-height) * ${ySlot})`;
+          applyHandleSlotPosition(btn, slotIndex);
           if (slotIndex === appState.activeSlot) btn.classList.add("is-active");
 
           applyHandleThemeStyles(btn, slotIndex);
@@ -2876,8 +3093,7 @@
       function repositionHandle(slotIndex) {
         const btn = handleColumn.querySelector(`[data-slot-index="${slotIndex}"]`);
         if (!btn) return;
-        const ySlot = appState.slots[slotIndex].ySlot ?? 0;
-        btn.style.top = `calc(var(--handle-height) * ${ySlot})`;
+        applyHandleSlotPosition(btn, slotIndex);
       }
 
       // is-active 클래스만 교체 — DOM 전체 재생성 없이 깜빡임 방지
@@ -2979,7 +3195,17 @@
         const dist = Math.hypot(dx, dy);
 
         if (!dragMode && dist >= DRAG_THRESHOLD) {
-          if (Math.abs(dy) >= Math.abs(dx)) {
+          const horizEdge = isHorizontalPanelEdge(getEffectivePanelEdge());
+          if (horizEdge) {
+            if (Math.abs(dx) >= Math.abs(dy)) {
+              dragMode = "moveSlot";
+            } else {
+              dragMode = "reorder";
+              clearHoverTimer();
+              const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
+              if (btn) btn.classList.add("is-dragging-reorder");
+            }
+          } else if (Math.abs(dy) >= Math.abs(dx)) {
             dragMode = "moveSlot";
           } else {
             dragMode = "reorder";
@@ -2994,8 +3220,12 @@
           const btn = handleColumn.querySelector(`[data-slot-index="${reorderSlot}"]`);
           if (btn) {
             const rect = handleColumn.getBoundingClientRect();
-            const relativeY = event.clientY - rect.top;
-            const newSlot = pixelYToSlot(relativeY - getSlotHeightPx() / 2);
+            const horizEdge = isHorizontalPanelEdge(getEffectivePanelEdge());
+            const slotUnit = getSlotHeightPx();
+            const relativeCoord = horizEdge
+              ? event.clientX - rect.left
+              : event.clientY - rect.top;
+            const newSlot = pixelYToSlot(relativeCoord - slotUnit / 2);
             const currentSlot = appState.slots[reorderSlot].ySlot;
 
             if (newSlot !== currentSlot) {

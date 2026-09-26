@@ -2998,6 +2998,8 @@
         setLabelFor("panelEdgeSelect", "panelEdgeLabel");
         setSelectOptionText("panelEdgeSelect", "right", "panelEdgeRight");
         setSelectOptionText("panelEdgeSelect", "left", "panelEdgeLeft");
+        setSelectOptionText("panelEdgeSelect", "top", "panelEdgeTop");
+        setSelectOptionText("panelEdgeSelect", "bottom", "panelEdgeBottom");
         const panelEdgeHint = panel.querySelector("#panelEdgeFieldWrap .field-hint-below");
         if (panelEdgeHint) panelEdgeHint.textContent = ti("panelEdgeHint");
 
@@ -3226,7 +3228,8 @@
         }
         if (appState.global) {
           appState.global.memoDefaultOpacity = 100;
-          appState.global.panelEdge = "right";
+          const pe = appState.global.panelEdge;
+          if (pe === "left" || pe === "bottom") appState.global.panelEdge = "right";
           appState.global.checklistStrikethrough = true;
         }
         packFreeYSlots();
@@ -3416,9 +3419,15 @@
         const panelEdgeBadge = document.getElementById("panelEdgePremiumBadge");
         const panelEdgeWrap = document.getElementById("panelEdgeTriggerWrap");
         if (panelEdgeSel) {
-          panelEdgeSel.classList.toggle("premium-control-locked", !isPremium);
-          panelEdgeSel.style.pointerEvents = isPremium ? "" : "none";
-          if (!isPremium) panelEdgeSel.value = "right";
+          panelEdgeSel.classList.remove("premium-control-locked");
+          panelEdgeSel.style.pointerEvents = "";
+          panelEdgeSel.querySelectorAll('option[value="left"], option[value="bottom"]').forEach((opt) => {
+            opt.disabled = !isPremium;
+          });
+          if (!isPremium && (panelEdgeSel.value === "left" || panelEdgeSel.value === "bottom")) {
+            panelEdgeSel.value =
+              appState.global.panelEdge === "top" ? "top" : "right";
+          }
         }
         if (panelEdgeBadge) panelEdgeBadge.hidden = isPremium;
         if (panelEdgeWrap) panelEdgeWrap.toggleAttribute("data-premium-trigger", !isPremium);
@@ -3579,6 +3588,8 @@
                   <select id="panelEdgeSelect" class="setting-select">
                     <option value="right">${ti("panelEdgeRight")}</option>
                     <option value="left">${ti("panelEdgeLeft")}</option>
+                    <option value="top">${ti("panelEdgeTop")}</option>
+                    <option value="bottom">${ti("panelEdgeBottom")}</option>
                   </select>
                   <span class="premium-lock-badge" id="panelEdgePremiumBadge" hidden>Plus</span>
                 </span>
@@ -5076,7 +5087,9 @@
         }
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
-          panelEdgeSelect.value = appState.global.panelEdge === "left" ? "left" : "right";
+          const pe = appState.global.panelEdge;
+          panelEdgeSelect.value =
+            pe === "left" || pe === "top" || pe === "bottom" ? pe : "right";
         }
         if (memoAspectSelect) {
           memoAspectSelect.value = normalizeMemoAspectRatio(appState.global.memoAspectRatio);
@@ -5156,8 +5169,16 @@
         }
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
-          const nextEdge = panelEdgeSelect.value === "left" ? "left" : "right";
-          appState.global.panelEdge = isPremium ? nextEdge : "right";
+          let nextEdge =
+            panelEdgeSelect.value === "left" ||
+            panelEdgeSelect.value === "top" ||
+            panelEdgeSelect.value === "bottom"
+              ? panelEdgeSelect.value
+              : "right";
+          if (!isPremium && (nextEdge === "left" || nextEdge === "bottom")) {
+            nextEdge = "right";
+          }
+          appState.global.panelEdge = nextEdge;
         }
         if (memoAspectSelect) {
           appState.global.memoAspectRatio = normalizeMemoAspectRatio(memoAspectSelect.value);
@@ -5399,7 +5420,12 @@
             shortcutSlotPrev: appState.global.shortcutSlotPrev,
             shortcutSlotNext: appState.global.shortcutSlotNext,
             manualYOffset: appState.global.manualYOffset,
-            panelEdge: isPremium && appState.global.panelEdge === "left" ? "left" : "right"
+            panelEdge: (() => {
+              const pe = appState.global.panelEdge;
+              if (!isPremium && (pe === "left" || pe === "bottom")) return "right";
+              if (pe === "left" || pe === "top" || pe === "bottom") return pe;
+              return "right";
+            })()
           };
 
           try {
