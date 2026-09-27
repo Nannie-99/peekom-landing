@@ -837,6 +837,8 @@ const i18n = {
         reviewBtnLabel: "후기 남기기",
         reviewEmpty: "첫 후기를 남겨주세요!",
         reviewAnonymous: "익명",
+        reviewListTitle: "사용자 후기",
+        reviewListHint: "전체 후기 보기",
         detectWin: "현재 환경: <strong>Windows</strong> — Windows 버튼 권장",
         detectMac: "현재 환경: <strong>macOS</strong> — macOS 버튼 권장",
         detectGeneric: "운영체제를 자동으로 감지하지 못했습니다. 직접 선택해 주세요.",
@@ -1150,7 +1152,7 @@ const i18n = {
                 '<ul class="guide-step-list">' +
                     "<li>인덱스 <strong>추가·삭제</strong> (무료 3개)</li>" +
                     "<li>각 인덱스 <strong>제목·색상</strong> 지정</li>" +
-                    "<li>메모 <strong>비율</strong> (1:1 / 3:4) 선택</li>" +
+                    "<li>메모 <strong>크기</strong> (2×2 · 3×3 · 4×3 등) 선택</li>" +
                 "</ul>" +
                 '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> 최대 10개 슬롯, 슬롯마다 손잡이 위치를 따로 저장할 수 있습니다.</div>' +
             "</div>" +
@@ -1179,7 +1181,7 @@ const i18n = {
         contactReviewBtn: "후기 폼 열기",
         contactEmailTitle: "이메일 연락",
         contactEmailDesc: "직접 연락이 필요할 때",
-        contactNote: "문의는 영업일 기준 10일 이내에 답변드리도록 노력하겠습니다. 이메일보다 구글 폼이 더 빠르게 전달되니 가능하면 폼을 이용해 주세요.",
+        contactNote: "문의는 영업일 기준 10일 이내에 답변드리도록 노력하겠습니다.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "개인정보 처리방침",
@@ -1222,7 +1224,7 @@ const i18n = {
         fz3Items: [
             { text: "서식바 사용" },
             { text: "인덱스 제목 변경" },
-            { text: "메모 비율 변경 (1:1, 3:4)" },
+            { text: "메모 크기 변경 (2×2 · 3×3 · 4×3 등)" },
             { text: "메모 기본 배경 색상 지원" }
         ],
         fz4Title: "Plus로 더욱 강력하게",
@@ -1231,7 +1233,7 @@ const i18n = {
             { text: "보내기 · JSON 백업", plus: true },
             { text: "메모당 최대 5개의 이미지 삽입", plus: true },
             { text: "이미지 크기 조절 · 비율 자르기", plus: true },
-            { text: "모니터 왼쪽 패널 지원", plus: true }
+            { text: "모니터 왼쪽·위쪽 패널 지원", plus: true }
         ],
         fz5Title: "Plus만의 커스터마이즈",
         fz5Items: [
@@ -1349,6 +1351,8 @@ const i18n = {
         reviewBtnLabel: "Leave a Review",
         reviewEmpty: "Be the first to share your experience!",
         reviewAnonymous: "Anonymous",
+        reviewListTitle: "User reviews",
+        reviewListHint: "View all reviews",
         detectWin: "Detected: <strong>Windows</strong> — Windows recommended",
         detectMac: "Detected: <strong>macOS</strong> — macOS recommended",
         detectGeneric: "OS not detected — choose manually",
@@ -1484,7 +1488,7 @@ const i18n = {
                 '<ul class="guide-step-list">' +
                     "<li>Add/remove <strong>indexes</strong> (3 free)</li>" +
                     "<li>Set <strong>title and color</strong> per index</li>" +
-                    "<li>Choose memo <strong>aspect ratio</strong> (1:1 / 3:4)</li>" +
+                    "<li>Choose memo <strong>size</strong> (2×2 · 3×3 · 4×3…)</li>" +
                 "</ul>" +
                 '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> Up to 10 slots with independent handle positions.</div>' +
             "</div>" +
@@ -1697,7 +1701,7 @@ const i18n = {
         contactReviewBtn: "Open review form",
         contactEmailTitle: "Email us",
         contactEmailDesc: "When you need to reach us directly",
-        contactNote: "We aim to reply within about 10 business days. Google Forms are faster than email, so please use a form when you can.",
+        contactNote: "We aim to reply within about 10 business days.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "Privacy",
@@ -1780,7 +1784,7 @@ const i18n = {
         fz3Items: [
             { text: "Formatting toolbar" },
             { text: "Custom index titles" },
-            { text: "Memo aspect (1:1, 3:4)" },
+            { text: "Memo sizes (2×2 · 3×3 · 4×3…)" },
             { text: "Default background colors" }
         ],
         fz4Title: "Go further with Plus",
@@ -1789,7 +1793,7 @@ const i18n = {
             { text: "Export · JSON backup", plus: true },
             { text: "Up to 5 images per memo", plus: true },
             { text: "Image resize · aspect crop", plus: true },
-            { text: "Left-edge panel (Plus)", plus: true }
+            { text: "Left & top panel edges (Plus)", plus: true }
         ],
         fz5Title: "Plus-only customization",
         fz5Items: [
@@ -1924,6 +1928,8 @@ function enrichLocaleData(data, lang) {
     next.contactEmailTitle = next.contactEmailTitle || en.contactEmailTitle;
     next.contactEmailDesc = next.contactEmailDesc || en.contactEmailDesc;
     next.contactNote = next.contactNote || en.contactNote;
+    next.reviewListTitle = next.reviewListTitle || en.reviewListTitle;
+    next.reviewListHint = next.reviewListHint || en.reviewListHint;
     next.footerCopy = next.footerCopy || "© 2026. Peekom All rights reserved.";
     next.dlWinNote = next.dlWinNote || en.dlWinNote;
     next.faq5q = next.faq5q || en.faq5q;
@@ -2538,7 +2544,9 @@ function updateUI() {
     if (window.PeekomReviews) {
         window.PeekomReviews.refresh({
             reviewEmpty: d.reviewEmpty,
-            reviewAnonymous: d.reviewAnonymous
+            reviewAnonymous: d.reviewAnonymous,
+            reviewListTitle: d.reviewListTitle,
+            reviewListHint: d.reviewListHint
         });
     }
 
@@ -2713,6 +2721,8 @@ function updateUI() {
     if (step3El) step3El.innerHTML = d.step3;
     const modalCloseBtn = document.querySelector('.modal__close');
     if (modalCloseBtn) modalCloseBtn.setAttribute('aria-label', d.modalClose);
+    const reviewsCloseBtn = document.getElementById('reviewsListClose');
+    if (reviewsCloseBtn) reviewsCloseBtn.setAttribute('aria-label', d.modalClose);
 
     const brandIcon = document.getElementById('brandIcon');
     if (brandIcon) brandIcon.alt = 'Peekom';
@@ -2866,7 +2876,13 @@ function closeImgZoomOnBackdrop(e) {
 }
 
 document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') { closeModal(); closeImgZoom(); }
+    if (e.key === 'Escape') {
+        if (window.PeekomReviews && window.PeekomReviews.closeList) {
+            window.PeekomReviews.closeList();
+        }
+        closeModal();
+        closeImgZoom();
+    }
 });
 
 function updateActiveNav() {
@@ -2892,7 +2908,9 @@ window.onload = function() {
         const d = enrichLocaleData(i18n[currentLang] || i18n.en, currentLang);
         window.PeekomReviews.init({
             reviewEmpty: d.reviewEmpty,
-            reviewAnonymous: d.reviewAnonymous
+            reviewAnonymous: d.reviewAnonymous,
+            reviewListTitle: d.reviewListTitle,
+            reviewListHint: d.reviewListHint
         });
     }
 };

@@ -35,6 +35,8 @@ Object.assign(window.PeekomI18nLocales, {
         reviewBtnLabel: "Dejar una reseña",
         reviewEmpty: "¡Sé el primero en compartir tu experiencia!",
         reviewAnonymous: "Anónimo",
+        reviewListTitle: "Opiniones de usuarios",
+        reviewListHint: "Ver todas las opiniones",
         detectWin: "Detectado: <strong>Windows</strong> — se recomienda Windows",
         detectMac: "Detectado: <strong>macOS</strong> — se recomienda macOS",
         detectGeneric: "SO no detectado — elija manualmente",
@@ -167,7 +169,7 @@ Object.assign(window.PeekomI18nLocales, {
                 '<ul class="guide-step-list">' +
                     "<li>Añadir/eliminar <strong>índices</strong> (3 gratis)</li>" +
                     "<li>Establecer <strong>título y color</strong> por índice</li>" +
-                    "<li>Elegir <strong>relación de aspecto</strong> del memo (1:1 / 3:4)</li>" +
+                    "<li>Elegir <strong>relación de aspecto</strong> del memo (2×2 · 3×3 · 4×3…)</li>" +
                 "</ul>" +
                 '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> Hasta 10 ranuras con posiciones de mango independientes.</div>' +
             "</div>" +
@@ -205,7 +207,10 @@ Object.assign(window.PeekomI18nLocales, {
         faq2q: "¿Cómo funciona el soporte de doble monitor?",
         faq2a: "En Ajustes → Monitor de visualización, elija auto (seguir el ratón) o un monitor fijo. Disponible en Gratis y Plus.",
         faq8q: "¿Peekom solo se puede usar en el borde derecho del monitor?",
-        faq8a: "Actualmente, Peekom funciona solo en el borde derecho. Planeamos añadir soporte para los bordes izquierdo, superior e inferior en una futura actualización.",
+        faq8a:
+            "<p>Gratis: borde <strong>derecho</strong>.</p>" +
+            "<p>Peekom Plus: también <strong>izquierdo</strong> y <strong>superior</strong>.</p>" +
+            "<p>Cámbialo en Ajustes → Lado del panel.</p>",
         faq9q: "Desinstalé Peekom Plus por error. ¿Qué pasa con mis funciones de pago?",
         faq9a:
             "<p>Desinstalar la app no elimina su licencia en Lemon Squeezy. Siga estos pasos para restaurar Peekom Plus y todas las funciones de pago.</p>" +
@@ -244,7 +249,7 @@ Object.assign(window.PeekomI18nLocales, {
         contactReviewBtn: "Abrir formulario de reseñas",
         contactEmailTitle: "Contacto por correo",
         contactEmailDesc: "Cuando necesite contactarnos directamente",
-        contactNote: "Intentamos responder en unos 10 días hábiles. Los formularios de Google llegan más rápido que el correo, así que úselos cuando pueda.",
+        contactNote: "Intentamos responder en unos 10 días hábiles.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "Privacidad",
@@ -327,7 +332,7 @@ Object.assign(window.PeekomI18nLocales, {
         fz3Items: [
             { text: "Barra de formato" },
             { text: "Títulos de índice personalizados" },
-            { text: "Aspecto del memo (1:1, 3:4)" },
+            { text: "Tamaños de memo (2×2 · 3×3 · 4×3…)" },
             { text: "Colores de fondo predeterminados" }
         ],
         fz4Title: "Más con Plus",
@@ -335,7 +340,8 @@ Object.assign(window.PeekomI18nLocales, {
             { text: "Hasta 10 índices independientes", plus: true },
             { text: "Exportar · copia JSON", plus: true },
             { text: "Hasta 5 imágenes por memo", plus: true },
-            { text: "Redimensionar imagen · recorte de aspecto", plus: true }
+            { text: "Redimensionar imagen · recorte de aspecto", plus: true },
+            { text: "Panel izquierdo y superior (Plus)", plus: true }
         ],
         fz5Title: "Personalización solo Plus",
         fz5Items: [
@@ -393,6 +399,8 @@ Object.assign(window.PeekomI18nLocales, {
         reviewBtnLabel: "Laisser un avis",
         reviewEmpty: "Soyez le premier à partager votre expérience !",
         reviewAnonymous: "Anonyme",
+        reviewListTitle: "Avis des utilisateurs",
+        reviewListHint: "Voir tous les avis",
         detectWin: "Détecté : <strong>Windows</strong> — Windows recommandé",
         detectMac: "Détecté : <strong>macOS</strong> — macOS recommandé",
         detectGeneric: "OS non détecté — choisissez manuellement",
@@ -525,7 +533,7 @@ Object.assign(window.PeekomI18nLocales, {
                 '<ul class="guide-step-list">' +
                     "<li>Ajouter/supprimer des <strong>index</strong> (3 gratuits)</li>" +
                     "<li>Définir <strong>titre et couleur</strong> par index</li>" +
-                    "<li>Choisir le <strong>format du mémo</strong> (1:1 / 3:4)</li>" +
+                    "<li>Choisir le <strong>format du mémo</strong> (2×2 · 3×3 · 4×3…)</li>" +
                 "</ul>" +
                 '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> Jusqu\'à 10 emplacements avec positions de poignée indépendantes.</div>' +
             "</div>" +
@@ -563,7 +571,10 @@ Object.assign(window.PeekomI18nLocales, {
         faq2q: "Comment fonctionne le double écran ?",
         faq2a: "Dans Réglages → Moniteur d'affichage, choisissez auto (suivre la souris) ou un moniteur fixe. Disponible en Gratuit et Plus.",
         faq8q: "Peekom ne peut-il être utilisé que sur le bord droit du moniteur ?",
-        faq8a: "Actuellement, Peekom fonctionne uniquement sur le bord droit. Nous prévoyons d'ajouter le support des bords gauche, haut et bas dans une future mise à jour.",
+        faq8a:
+            "<p>Gratuit : bord <strong>droit</strong>.</p>" +
+            "<p>Peekom Plus : aussi <strong>gauche</strong> et <strong>haut</strong>.</p>" +
+            "<p>Modifiez-le dans Paramètres → Côté du panneau.</p>",
         faq9q: "J'ai désinstallé Peekom Plus par erreur. Que deviennent mes fonctionnalités payantes ?",
         faq9a:
             "<p>La désinstallation de l'app ne supprime pas votre licence Lemon Squeezy. Suivez ces étapes pour restaurer Peekom Plus et toutes les fonctionnalités payantes.</p>" +
@@ -602,7 +613,7 @@ Object.assign(window.PeekomI18nLocales, {
         contactReviewBtn: "Ouvrir le formulaire d'avis",
         contactEmailTitle: "Nous écrire par e-mail",
         contactEmailDesc: "Quand vous avez besoin de nous contacter directement",
-        contactNote: "Nous visons une réponse sous environ 10 jours ouvrés. Les formulaires Google arrivent plus vite que l'e-mail, merci de les utiliser quand c'est possible.",
+        contactNote: "Nous visons une réponse sous environ 10 jours ouvrés.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "Confidentialité",
@@ -685,7 +696,7 @@ Object.assign(window.PeekomI18nLocales, {
         fz3Items: [
             { text: "Barre de formatage" },
             { text: "Titres d'index personnalisés" },
-            { text: "Format du mémo (1:1, 3:4)" },
+            { text: "Tailles de mémo (2×2 · 3×3 · 4×3…)" },
             { text: "Couleurs d'arrière-plan par défaut" }
         ],
         fz4Title: "Allez plus loin avec Plus",
@@ -693,7 +704,8 @@ Object.assign(window.PeekomI18nLocales, {
             { text: "Jusqu'à 10 index indépendants", plus: true },
             { text: "Export · sauvegarde JSON", plus: true },
             { text: "Jusqu'à 5 images par mémo", plus: true },
-            { text: "Redimensionner l'image · recadrage du format", plus: true }
+            { text: "Redimensionner l'image · recadrage du format", plus: true },
+            { text: "Bords panneau gauche et haut (Plus)", plus: true }
         ],
         fz5Title: "Personnalisation réservée à Plus",
         fz5Items: [
@@ -751,6 +763,8 @@ Object.assign(window.PeekomI18nLocales, {
         reviewBtnLabel: "Bewertung abgeben",
         reviewEmpty: "Teile als Erster deine Erfahrung!",
         reviewAnonymous: "Anonym",
+        reviewListTitle: "Nutzerbewertungen",
+        reviewListHint: "Alle Bewertungen anzeigen",
         detectWin: "Erkannt: <strong>Windows</strong> — Windows empfohlen",
         detectMac: "Erkannt: <strong>macOS</strong> — macOS empfohlen",
         detectGeneric: "OS nicht erkannt — manuell wählen",
@@ -883,7 +897,7 @@ Object.assign(window.PeekomI18nLocales, {
                 '<ul class="guide-step-list">' +
                     "<li><strong>Indexe</strong> hinzufügen/entfernen (3 kostenlos)</li>" +
                     "<li><strong>Titel und Farbe</strong> pro Index festlegen</li>" +
-                    "<li>Memo-<strong>Seitenverhältnis</strong> wählen (1:1 / 3:4)</li>" +
+                    "<li>Memo-<strong>Seitenverhältnis</strong> wählen (2×2 · 3×3 · 4×3…)</li>" +
                 "</ul>" +
                 '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> Bis zu 10 Slots mit unabhängigen Griffpositionen.</div>' +
             "</div>" +
@@ -921,7 +935,10 @@ Object.assign(window.PeekomI18nLocales, {
         faq2q: "Wie funktioniert die Dual-Monitor-Unterstützung?",
         faq2a: "In Einstellungen → Anzeigemonitor wählen Sie auto (Maus folgen) oder einen festen Monitor. Verfügbar in Kostenlos und Plus.",
         faq8q: "Kann Peekom nur am rechten Monitorrand verwendet werden?",
-        faq8a: "Derzeit funktioniert Peekom nur am rechten Rand. Wir planen, in einem zukünftigen Update auch links, oben und unten zu unterstützen.",
+        faq8a:
+            "<p>Kostenlos: <strong>rechter</strong> Rand.</p>" +
+            "<p>Peekom Plus: auch <strong>links</strong> und <strong>oben</strong>.</p>" +
+            "<p>Ändern Sie dies unter Einstellungen → Panel-Seite.</p>",
         faq9q: "Ich habe Peekom Plus versehentlich deinstalliert. Was passiert mit meinen kostenpflichtigen Funktionen?",
         faq9a:
             "<p>Die Deinstallation der App löscht Ihre Lemon-Squeezy-Lizenz nicht. Folgen Sie diesen Schritten, um Peekom Plus und alle kostenpflichtigen Funktionen wiederherzustellen.</p>" +
@@ -960,7 +977,7 @@ Object.assign(window.PeekomI18nLocales, {
         contactReviewBtn: "Bewertungsformular öffnen",
         contactEmailTitle: "Per E-Mail kontaktieren",
         contactEmailDesc: "Wenn Sie uns direkt erreichen möchten",
-        contactNote: "Wir antworten in der Regel innerhalb von etwa 10 Werktagen. Google-Formulare kommen schneller an als E-Mails — bitte nutzen Sie sie, wenn möglich.",
+        contactNote: "Wir antworten in der Regel innerhalb von etwa 10 Werktagen.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "Datenschutz",
@@ -1043,7 +1060,7 @@ Object.assign(window.PeekomI18nLocales, {
         fz3Items: [
             { text: "Formatierungsleiste" },
             { text: "Eigene Indextitel" },
-            { text: "Memo-Format (1:1, 3:4)" },
+            { text: "Memo-Größen (2×2 · 3×3 · 4×3…)" },
             { text: "Standard-Hintergrundfarben" }
         ],
         fz4Title: "Mehr mit Plus",
@@ -1051,7 +1068,8 @@ Object.assign(window.PeekomI18nLocales, {
             { text: "Bis zu 10 unabhängige Indexe", plus: true },
             { text: "Export · JSON-Backup", plus: true },
             { text: "Bis zu 5 Bilder pro Memo", plus: true },
-            { text: "Bildgröße ändern · Seitenverhältnis zuschneiden", plus: true }
+            { text: "Bildgröße ändern · Seitenverhältnis zuschneiden", plus: true },
+            { text: "Linker und oberer Panel-Rand (Plus)", plus: true }
         ],
         fz5Title: "Nur-Plus-Anpassung",
         fz5Items: [
@@ -1109,6 +1127,8 @@ Object.assign(window.PeekomI18nLocales, {
         reviewBtnLabel: "Deixar avaliação",
         reviewEmpty: "Seja o primeiro a compartilhar sua experiência!",
         reviewAnonymous: "Anônimo",
+        reviewListTitle: "Avaliações de usuários",
+        reviewListHint: "Ver todas as avaliações",
         detectWin: "Detectado: <strong>Windows</strong> — Windows recomendado",
         detectMac: "Detectado: <strong>macOS</strong> — macOS recomendado",
         detectGeneric: "SO não detectado — escolha manualmente",
@@ -1241,7 +1261,7 @@ Object.assign(window.PeekomI18nLocales, {
                 '<ul class="guide-step-list">' +
                     "<li>Adicionar/remover <strong>índices</strong> (3 grátis)</li>" +
                     "<li>Definir <strong>título e cor</strong> por índice</li>" +
-                    "<li>Escolher <strong>proporção</strong> do memo (1:1 / 3:4)</li>" +
+                    "<li>Escolher <strong>proporção</strong> do memo (2×2 · 3×3 · 4×3…)</li>" +
                 "</ul>" +
                 '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> Até 10 slots com posições de alça independentes.</div>' +
             "</div>" +
@@ -1279,7 +1299,10 @@ Object.assign(window.PeekomI18nLocales, {
         faq2q: "Como funciona o suporte a dual monitor?",
         faq2a: "Em Configurações → Monitor de exibição, escolha auto (seguir o mouse) ou um monitor fixo. Disponível no Grátis e Plus.",
         faq8q: "O Peekom só pode ser usado na borda direita do monitor?",
-        faq8a: "Atualmente, o Peekom funciona apenas na borda direita. Planejamos adicionar suporte para as bordas esquerda, superior e inferior em uma atualização futura.",
+        faq8a:
+            "<p>Grátis: borda <strong>direita</strong>.</p>" +
+            "<p>Peekom Plus: também <strong>esquerda</strong> e <strong>superior</strong>.</p>" +
+            "<p>Altere em Configurações → Lado do painel.</p>",
         faq9q: "Desinstalei o Peekom Plus por engano. O que acontece com os recursos pagos?",
         faq9a:
             "<p>Desinstalar o app não remove sua licença no Lemon Squeezy. Siga estes passos para restaurar o Peekom Plus e todos os recursos pagos.</p>" +
@@ -1318,7 +1341,7 @@ Object.assign(window.PeekomI18nLocales, {
         contactReviewBtn: "Abrir formulário de avaliação",
         contactEmailTitle: "Contato por e-mail",
         contactEmailDesc: "Quando precisar falar conosco diretamente",
-        contactNote: "Buscamos responder em cerca de 10 dias úteis. Os formulários do Google chegam mais rápido que o e-mail, então use-os quando puder.",
+        contactNote: "Buscamos responder em cerca de 10 dias úteis.",
         contactEmail: "hello.peekom@gmail.com",
         footerCopy: "© 2026. Peekom All rights reserved.",
         footerPrivacy: "Privacidade",
@@ -1401,7 +1424,7 @@ Object.assign(window.PeekomI18nLocales, {
         fz3Items: [
             { text: "Barra de formatação" },
             { text: "Títulos de índice personalizados" },
-            { text: "Proporção do memo (1:1, 3:4)" },
+            { text: "Tamanhos de memo (2×2 · 3×3 · 4×3…)" },
             { text: "Cores de fundo padrão" }
         ],
         fz4Title: "Vá além com Plus",
@@ -1409,7 +1432,8 @@ Object.assign(window.PeekomI18nLocales, {
             { text: "Até 10 índices independentes", plus: true },
             { text: "Exportar · backup JSON", plus: true },
             { text: "Até 5 imagens por memo", plus: true },
-            { text: "Redimensionar imagem · recorte de proporção", plus: true }
+            { text: "Redimensionar imagem · recorte de proporção", plus: true },
+            { text: "Painel esquerdo e superior (Plus)", plus: true }
         ],
         fz5Title: "Personalização exclusiva Plus",
         fz5Items: [

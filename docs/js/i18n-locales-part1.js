@@ -30,6 +30,8 @@ window.PeekomI18nLocales.ja = {
     reviewBtnLabel: "レビューを書く",
     reviewEmpty: "最初のレビューを投稿してください！",
     reviewAnonymous: "匿名",
+    reviewListTitle: "ユーザーレビュー",
+    reviewListHint: "すべてのレビューを見る",
     detectWin: "検出: <strong>Windows</strong> — Windows 推奨",
     detectMac: "検出: <strong>macOS</strong> — macOS 推奨",
     detectGeneric: "OS を検出できません — 手動で選択してください",
@@ -162,7 +164,7 @@ window.PeekomI18nLocales.ja = {
             '<ul class="guide-step-list">' +
                 "<li><strong>インデックス</strong>の追加・削除（無料3個）</li>" +
                 "<li>各インデックスの <strong>タイトルと色</strong>を設定</li>" +
-                "<li>メモの <strong>アスペクト比</strong>を選択（1:1 / 3:4）</li>" +
+                "<li>メモの <strong>アスペクト比</strong>を選択（2×2 · 3×3 · 4×3 など）</li>" +
             "</ul>" +
             '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> 最大10スロット、スロットごとにハンドル位置を個別保存できます。</div>' +
         "</div>" +
@@ -200,7 +202,10 @@ window.PeekomI18nLocales.ja = {
     faq2q: "デュアルモニターではどう動作しますか？",
     faq2a: "設定 → 表示モニターで、マウス追従（自動）または特定モニターを固定できます。無料・Plus どちらでも利用可能です。",
     faq8q: "Peekom はモニター右端でのみ使えますか？",
-    faq8a: "現在はモニター右端のみ対応しています。今後のアップデートで左・上・下端にも対応予定です。",
+    faq8a:
+        "<p>無料：<strong>右</strong>端</p>" +
+        "<p>Peekom Plus：<strong>左</strong>・<strong>上</strong>端も利用できます。</p>" +
+        "<p>設定 → 表示位置で変更できます。</p>",
     faq9q: "誤って Peekom Plus を削除した場合、有料機能はどうなりますか？",
     faq9a:
         "<p>アプリを削除しても Lemon Squeezy に登録されたライセンスは残ります。次の手順で Peekom Plus とすべての有料機能を復元できます。</p>" +
@@ -237,7 +242,7 @@ window.PeekomI18nLocales.ja = {
     contactReviewBtn: "レビューフォームを開く",
     contactEmailTitle: "メールで連絡",
     contactEmailDesc: "直接連絡が必要な場合",
-    contactNote: "お問い合わせには営業日10日以内の返信を目指します。メールより Google フォームの方が早く届くため、可能であればフォームのご利用をお願いします。",
+    contactNote: "お問い合わせには営業日10日以内の返信を目指します。",
     contactEmail: "hello.peekom@gmail.com",
     footerCopy: "© 2026. Peekom All rights reserved.",
     footerPrivacy: "プライバシー",
@@ -320,7 +325,7 @@ window.PeekomI18nLocales.ja = {
     fz3Items: [
         { text: "書式バー" },
         { text: "インデックスタイトルの変更" },
-        { text: "メモ比率 (1:1, 3:4)" },
+        { text: "メモサイズ (2×2 · 3×3 · 4×3 など)" },
         { text: "デフォルト背景色" }
     ],
     fz4Title: "Plus でさらに強力に",
@@ -328,7 +333,8 @@ window.PeekomI18nLocales.ja = {
         { text: "最大10個の独立インデックス", plus: true },
         { text: "エクスポート · JSON バックアップ", plus: true },
         { text: "メモあたり最大5枚の画像", plus: true },
-        { text: "画像リサイズ · 比率切り抜き", plus: true }
+        { text: "画像リサイズ · 比率切り抜き", plus: true },
+        { text: "モニター左・上パネル対応", plus: true }
     ],
     fz5Title: "Plus 限定カスタマイズ",
     fz5Items: [
@@ -387,6 +393,8 @@ window.PeekomI18nLocales["zh-CN"] = {
     reviewBtnLabel: "写评价",
     reviewEmpty: "成为第一个分享体验的人！",
     reviewAnonymous: "匿名",
+    reviewListTitle: "用户评价",
+    reviewListHint: "查看全部评价",
     detectWin: "检测: <strong>Windows</strong> — 推荐 Windows",
     detectMac: "检测: <strong>macOS</strong> — 推荐 macOS",
     detectGeneric: "未能检测操作系统 — 请手动选择",
@@ -519,7 +527,7 @@ window.PeekomI18nLocales["zh-CN"] = {
             '<ul class="guide-step-list">' +
                 "<li>添加/删除 <strong>索引</strong>（免费3个）</li>" +
                 "<li>为每个索引设置 <strong>标题和颜色</strong></li>" +
-                "<li>选择备忘 <strong>宽高比</strong>（1:1 / 3:4）</li>" +
+                "<li>选择备忘 <strong>宽高比</strong>（2×2 · 3×3 · 4×3 など）</li>" +
             "</ul>" +
             '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> 最多10个槽位，每个槽位可独立保存手柄位置。</div>' +
         "</div>" +
@@ -557,7 +565,10 @@ window.PeekomI18nLocales["zh-CN"] = {
     faq2q: "双显示器如何工作？",
     faq2a: "在 设置 → 显示显示器 中，可选择自动（跟随鼠标）或固定显示器。免费版与 Plus 均可用。",
     faq8q: "Peekom 只能在显示器右边缘使用吗？",
-    faq8a: "目前仅支持显示器右边缘。我们计划在后续更新中支持左、上、下边缘。",
+    faq8a:
+        "<p>免费版：<strong>右侧</strong>边缘</p>" +
+        "<p>Peekom Plus：还可使用<strong>左侧</strong>和<strong>上方</strong>边缘。</p>" +
+        "<p>可在「设置 → 显示位置」中更改。</p>",
     faq9q: "误删了 Peekom Plus，付费功能会怎样？",
     faq9a:
         "<p>卸载应用不会取消您在 Lemon Squeezy 的许可证。按以下步骤可恢复 Peekom Plus 及所有付费功能。</p>" +
@@ -594,7 +605,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     contactReviewBtn: "打开评价表单",
     contactEmailTitle: "邮件联系",
     contactEmailDesc: "需要直接联系时",
-    contactNote: "我们会在约10个工作日内回复。Google 表单比邮件更快送达，请尽量使用表单提交。",
+    contactNote: "我们会在约10个工作日内回复。",
     contactEmail: "hello.peekom@gmail.com",
     footerCopy: "© 2026. Peekom All rights reserved.",
     footerPrivacy: "隐私政策",
@@ -677,7 +688,7 @@ window.PeekomI18nLocales["zh-CN"] = {
     fz3Items: [
         { text: "格式工具栏" },
         { text: "自定义索引标题" },
-        { text: "备忘宽高比 (1:1, 3:4)" },
+        { text: "备忘尺寸 (2×2 · 3×3 · 4×3 等)" },
         { text: "默认背景色" }
     ],
     fz4Title: "Plus 更进一步",
@@ -685,7 +696,8 @@ window.PeekomI18nLocales["zh-CN"] = {
         { text: "最多10个独立索引", plus: true },
         { text: "导出 · JSON 备份", plus: true },
         { text: "每条备忘最多5张图片", plus: true },
-        { text: "图片缩放 · 比例裁剪", plus: true }
+        { text: "图片缩放 · 比例裁剪", plus: true },
+        { text: "支持显示器左侧·上方面板", plus: true }
     ],
     fz5Title: "Plus 专属自定义",
     fz5Items: [
@@ -744,6 +756,8 @@ window.PeekomI18nLocales["zh-TW"] = {
     reviewBtnLabel: "撰寫評論",
     reviewEmpty: "成為第一個分享體驗的人！",
     reviewAnonymous: "匿名",
+    reviewListTitle: "使用者評價",
+    reviewListHint: "查看全部評價",
     detectWin: "偵測: <strong>Windows</strong> — 建議 Windows",
     detectMac: "偵測: <strong>macOS</strong> — 建議 macOS",
     detectGeneric: "無法偵測作業系統 — 請手動選擇",
@@ -876,7 +890,7 @@ window.PeekomI18nLocales["zh-TW"] = {
             '<ul class="guide-step-list">' +
                 "<li>新增/刪除 <strong>索引</strong>（免費3個）</li>" +
                 "<li>為每個索引設定 <strong>標題和顏色</strong></li>" +
-                "<li>選擇備忘 <strong>寬高比</strong>（1:1 / 3:4）</li>" +
+                "<li>選擇備忘 <strong>寬高比</strong>（2×2 · 3×3 · 4×3 など）</li>" +
             "</ul>" +
             '<div class="guide-plus-card"><span class="guide-plus-card__label">Plus</span> 最多10個槽位，每個槽位可獨立儲存手柄位置。</div>' +
         "</div>" +
@@ -914,7 +928,10 @@ window.PeekomI18nLocales["zh-TW"] = {
     faq2q: "雙螢幕如何運作？",
     faq2a: "在 設定 → 顯示螢幕 中，可選擇自動（跟隨滑鼠）或固定螢幕。免費版與 Plus 均可用。",
     faq8q: "Peekom 只能在螢幕右邊緣使用嗎？",
-    faq8a: "目前僅支援螢幕右邊緣。我們計劃在後續更新中支援左、上、下邊緣。",
+    faq8a:
+        "<p>免費版：<strong>右側</strong>邊緣</p>" +
+        "<p>Peekom Plus：也可使用<strong>左側</strong>與<strong>上方</strong>邊緣。</p>" +
+        "<p>可在「設定 → 顯示位置」中變更。</p>",
     faq9q: "誤刪了 Peekom Plus，付費功能會怎樣？",
     faq9a:
         "<p>解除安裝應用程式不會取消您在 Lemon Squeezy 的授權。依下列步驟可恢復 Peekom Plus 與所有付費功能。</p>" +
@@ -951,7 +968,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     contactReviewBtn: "開啟評價表單",
     contactEmailTitle: "電子郵件聯絡",
     contactEmailDesc: "需要直接聯絡時",
-    contactNote: "我們會在約10個工作天內回覆。Google 表單比電子郵件更快送達，請盡量使用表單提交。",
+    contactNote: "我們會在約10個工作天內回覆。",
     contactEmail: "hello.peekom@gmail.com",
     footerCopy: "© 2026. Peekom All rights reserved.",
     footerPrivacy: "隱私權政策",
@@ -1034,7 +1051,7 @@ window.PeekomI18nLocales["zh-TW"] = {
     fz3Items: [
         { text: "格式工具列" },
         { text: "自訂索引標題" },
-        { text: "備忘寬高比 (1:1, 3:4)" },
+        { text: "備忘尺寸 (2×2 · 3×3 · 4×3 等)" },
         { text: "預設背景色" }
     ],
     fz4Title: "Plus 更進一步",
@@ -1042,7 +1059,8 @@ window.PeekomI18nLocales["zh-TW"] = {
         { text: "最多10個獨立索引", plus: true },
         { text: "匯出 · JSON 備份", plus: true },
         { text: "每則備忘最多5張圖片", plus: true },
-        { text: "圖片縮放 · 比例裁剪", plus: true }
+        { text: "圖片縮放 · 比例裁剪", plus: true },
+        { text: "支援螢幕左側·上方面板", plus: true }
     ],
     fz5Title: "Plus 專屬自訂",
     fz5Items: [

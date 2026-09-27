@@ -21,8 +21,8 @@
             rows: [
                 { feature: "단일 / 듀얼 모니터", free: "✓", plus: "✓" },
                 { feature: "표시 모니터 선택", free: "✓", plus: "✓" },
-                { feature: "표시 위치 (왼쪽/오른쪽)", free: "오른쪽", plus: "왼쪽 / 오른쪽" },
-                { feature: "메모 비율 1:1 / 3:4", free: "✓", plus: "✓" },
+                { feature: "표시 위치", free: "오른쪽", plus: "왼쪽 · 위쪽 · 오른쪽" },
+                { feature: "메모 크기 (2×2 · 3×3 · 4×3 등)", free: "✓", plus: "✓" },
                 { feature: "단축키 — 최근 메모 토글", free: "✓", plus: "✓" },
                 { feature: "단축키 — 위/아래 인덱스 열기", free: "✓", plus: "✓" },
                 { feature: "마우스 조작 — ↑↓ 인덱스 전환", free: "✓", plus: "✓" },
@@ -82,8 +82,8 @@
             rows: [
                 { feature: "Single / dual monitor", free: "✓", plus: "✓" },
                 { feature: "Target display", free: "✓", plus: "✓" },
-                { feature: "Panel side (left/right)", free: "Right", plus: "Left / Right" },
-                { feature: "Memo aspect 1:1 / 3:4", free: "✓", plus: "✓" },
+                { feature: "Panel side", free: "Right", plus: "Left · Top · Right" },
+                { feature: "Memo sizes (2×2 · 3×3 · 4×3…)", free: "✓", plus: "✓" },
                 { feature: "Shortcut — recent memo toggle", free: "✓", plus: "✓" },
                 { feature: "Shortcut — open prev/next index", free: "✓", plus: "✓" },
                 { feature: "Mouse control — ↑↓ index switch", free: "✓", plus: "✓" },

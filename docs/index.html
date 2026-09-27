@@ -211,7 +211,7 @@
                             <span class="hero-reviews__btn-star" aria-hidden="true">★</span>
                             <span id="reviewBtnLabel">후기 남기기</span>
                         </a>
-                        <div class="hero-reviews__box" id="reviewBox" aria-live="polite">
+                        <div class="hero-reviews__box" id="reviewBox" aria-live="polite" role="button" tabindex="0" title="전체 후기 보기">
                             <div class="hero-reviews__content" id="reviewContent"></div>
                         </div>
                     </div>
@@ -260,6 +260,16 @@
         </div>
     </div>
 
+    <div class="reviews-overlay" id="reviewsOverlay" aria-hidden="true">
+        <div class="reviews-modal" role="dialog" aria-modal="true" aria-labelledby="reviewsListTitle">
+            <div class="reviews-modal__head">
+                <h3 class="reviews-modal__title" id="reviewsListTitle">사용자 후기</h3>
+                <button type="button" class="reviews-modal__close" id="reviewsListClose" aria-label="Close">&times;</button>
+            </div>
+            <div class="reviews-list" id="reviewsListBody"></div>
+        </div>
+    </div>
+
     <div class="img-zoom-overlay" id="imgZoomOverlay" onclick="closeImgZoomOnBackdrop(event)">
         <div class="img-zoom" role="dialog" aria-modal="true">
             <button class="img-zoom__close" onclick="closeImgZoom()" aria-label="Close">&times;</button>
@@ -278,6 +288,7 @@
     <script src="/js/i18n-site-extra.js"></script>
     <script src="/js/i18n-plus-tiers.js"></script>
     <script src="/js/i18n-privacy.js"></script>
+    <script src="/js/i18n-localize-gaps.js"></script>
     <script src="/js/site.js"></script>
 </body>
 </html>
