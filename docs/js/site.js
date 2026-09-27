@@ -80,26 +80,26 @@ const RELEASE_HISTORY = [
 const CHANGELOG_V124 = {
     ko: [
         "제거 시 시작 프로그램·바로가기 자동 정리 (메모는 기본 보존, 선택 시만 삭제)",
-        "메모 크기 옵션 조정 (2×2·2×3·3×2 추가, 5×5·5×3 제거)",
+        "메모 크기 옵션 조정 (2×2·2×3·3×2 추가)",
         "메모를 외부로 복사할 때 배경·글자 크기·체크리스트 UI 누출 수정",
         "작업표시줄/Dock에서 숨기기 옵션 (트레이·메뉴바 아이콘은 항상 표시)",
         "작업표시줄·Dock 우클릭에 환경설정·도움말 추가 (Peekom 아이콘)",
         "듀얼 모니터「표시 모니터 고정」왼쪽 모니터 위치 오류 수정",
-        "표시 위치: 오른쪽(무료)·왼쪽·위쪽(Plus), 아래쪽 제거",
-        "위쪽 표시 시 가장자리 12등분·메모 크기 선택 제한, 손잡이 위치 유지 개선",
+        "표시 위치: 오른쪽(무료)·왼쪽·위쪽(Plus)",
+        "위쪽 표시 시 가장자리 12등분, 손잡이 위치 유지 개선",
         "서식바가 인덱스에 가리지 않도록 여백 조정, 작은 메모에서 빼꼼/얼음 점 표시",
         "이미지 넣기 슬라이더 기본값을 가운데로 (더 작게·크게 조절 가능)",
         "macOS: 자동 실행·Dock 메뉴·완전 제거 흐름 개선"
     ],
     en: [
         "Uninstall clears startup entries and shortcuts (memos kept by default; optional full wipe)",
-        "Memo sizes: added 2×2 / 2×3 / 3×2; removed 5×5 / 5×3",
+        "Memo sizes: added 2×2 / 2×3 / 3×2",
         "Fixed background/font-size/checklist UI leaking when copying memos outward",
         "Hide from taskbar/Dock option (tray/menu bar icon always shown)",
         "Settings and Help on taskbar Jump List and Dock menu (Peekom icons)",
         "Fixed dual-monitor attach when the left display is selected",
-        "Panel edges: right (free), left & top (Plus); bottom removed",
-        "Top edge uses 12 position slots with size limits; handle positions preserved better",
+        "Panel edges: right (free), left & top (Plus)",
+        "Top edge uses 12 position slots; handle positions preserved better",
         "Format bar spacing so index handles don’t cover controls; compact peek/ice dot on small memos",
         "Image staging scale slider defaults to the middle (can go smaller or larger)",
         "macOS: improved login item, Dock menu, and uninstall flow"
