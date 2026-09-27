@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3（既定）",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[長方形]---",
   "memoSizeGroupSquare": "---[正方形]---",
   "indexTitleMaxHint": "最大6文字",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "ディスプレイ {id}",
   "indexTabFallback": "インデックス {n}",
   "contrastWarning": "コントラストが低いと文字が読みにくくなる場合があります。（比率 {ratio}:1）",
-  "monitorAuto": "自動（マウス位置に追従）"
+  "monitorAuto": "自動（マウス位置に追従）",
+  "hideFromTaskbar": "タスクバーから隠す",
+  "hideFromDock": "Dockから隠す",
+  "panelEdgeHint": "メモパネルを付ける画面端の位置を選択",
+  "panelEdgeLabel": "表示位置",
+  "panelEdgeRight": "右（既定）",
+  "panelEdgeLeft": "左",
+  "panelEdgeTop": "上"
 }

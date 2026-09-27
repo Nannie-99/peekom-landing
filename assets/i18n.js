@@ -37,7 +37,7 @@
       panelEdgeRight: "오른쪽 (기본)",
       panelEdgeLeft: "왼쪽",
       panelEdgeTop: "위쪽",
-      panelEdgeHint: "메모 패널이 붙는 화면 가장자리를 고릅니다.",
+      panelEdgeHint: "메모 패널이 붙을 화면 가장자리 위치 선택",
       triggerLabel: "동작 방식",
       triggerHover: "마우스 조작",
       triggerShortcut: "단축키 조작",
@@ -328,7 +328,7 @@
       panelEdgeRight: "Right (default)",
       panelEdgeLeft: "Left",
       panelEdgeTop: "Top",
-      panelEdgeHint: "Choose which screen edge the memo panel attaches to.",
+      panelEdgeHint: "Choose the screen edge position for the memo panel",
       triggerLabel: "Trigger",
       triggerHover: "Auto-close when mouse leaves",
       triggerShortcut: "Open / close with shortcut",
@@ -698,7 +698,7 @@
       panelEdgeRight: "右（既定）",
       panelEdgeLeft: "左",
       panelEdgeTop: "上",
-      panelEdgeHint: "メモパネルを画面のどの端に付けるかを選びます。",
+      panelEdgeHint: "メモパネルを付ける画面端の位置を選択",
       premiumModalTitle: "Plus機能のロック解除",
       premiumModalLead: "Peekom Plusにアップグレードして、以下の機能をすべてお使いください。",
       premiumFeat1: "最大10個の独立インデックス",
@@ -805,7 +805,7 @@
       statusApplied: "设置已应用。", statusShortcutFail: "快捷键注册失败，请尝试其他组合。",
       statusStartupFail: "无法应用开机启动设置。", statusApplyError: "应用设置时出错。",
       panelEdgeLabel: "显示位置", panelEdgeRight: "右侧（默认）", panelEdgeLeft: "左侧", panelEdgeTop: "上方",
-      panelEdgeHint: "备忘录面板贴在屏幕的哪一侧边缘。",
+      panelEdgeHint: "选择备忘录面板贴齐的屏幕边缘位置",
       premiumModalTitle: "解锁 Plus 功能", premiumModalLead: "升级到 Peekom Plus，尽享以下全部功能。",
       premiumFeat1: "最多 10 个独立索引", premiumFeat2: "导出 · JSON 备份", premiumFeat3: "每条备忘录最多 5 张图片",
       premiumFeat4: "图片缩放 · 比例裁剪", premiumFeat5: "显示器左侧面板支持", premiumFeat6: "备忘录默认不透明度",
@@ -853,7 +853,7 @@
       statusApplied: "設定已套用。", statusShortcutFail: "快捷鍵註冊失敗，請嘗試其他組合。",
       statusStartupFail: "無法套用開機啟動設定。", statusApplyError: "套用設定時發生錯誤。",
       panelEdgeLabel: "顯示位置", panelEdgeRight: "右側（預設）", panelEdgeLeft: "左側", panelEdgeTop: "上方",
-      panelEdgeHint: "選擇備忘錄面板貼齊的螢幕邊緣。",
+      panelEdgeHint: "選擇備忘錄面板貼齊的螢幕邊緣位置",
       premiumModalTitle: "解鎖 Plus 功能", premiumModalLead: "升級至 Peekom Plus，盡享以下全部功能。",
       premiumFeat1: "最多 10 個獨立索引", premiumFeat2: "匯出 · JSON 備份", premiumFeat3: "每則備忘錄最多 5 張圖片",
       premiumFeat4: "圖片縮放 · 比例裁剪", premiumFeat5: "螢幕左側面板支援", premiumFeat6: "備忘錄預設不透明度",
@@ -900,7 +900,7 @@
       statusApplied: "Configuración aplicada.", statusShortcutFail: "Error al registrar el atajo. Prueba otra combinación.",
       statusStartupFail: "No se pudo actualizar el inicio automático.", statusApplyError: "Error al aplicar la configuración.",
       panelEdgeLabel: "Posición del panel", panelEdgeRight: "Derecha (predeterminado)", panelEdgeLeft: "Izquierda", panelEdgeTop: "Arriba",
-      panelEdgeHint: "Elige el borde de la pantalla al que se fija el panel.",
+      panelEdgeHint: "Elija la posición del borde de pantalla del panel",
       premiumModalTitle: "Desbloquear funciones Plus", premiumModalLead: "Actualiza a Peekom Plus para disfrutar de todas las funciones siguientes.",
       premiumFeat1: "Hasta 10 índices independientes", premiumFeat2: "Exportar · copia JSON", premiumFeat3: "Hasta 5 imágenes por nota",
       premiumFeat4: "Redimensionar imagen · recorte de proporción", premiumFeat5: "Panel en el borde izquierdo del monitor", premiumFeat6: "Opacidad predeterminada de la nota",
@@ -947,7 +947,7 @@
       statusApplied: "Paramètres appliqués.", statusShortcutFail: "Échec du raccourci. Essayez une autre combinaison.",
       statusStartupFail: "Impossible d'appliquer le démarrage automatique.", statusApplyError: "Erreur lors de l'application des paramètres.",
       panelEdgeLabel: "Position du panneau", panelEdgeRight: "Droite (par défaut)", panelEdgeLeft: "Gauche", panelEdgeTop: "Haut",
-      panelEdgeHint: "Choisissez le bord de l’écran où coller le panneau.",
+      panelEdgeHint: "Choisir la position du bord d’écran pour le panneau",
       premiumModalTitle: "Débloquer les fonctions Plus", premiumModalLead: "Passez à Peekom Plus pour profiter de toutes les fonctions ci-dessous.",
       premiumFeat1: "Jusqu'à 10 index indépendants", premiumFeat2: "Exporter · sauvegarde JSON", premiumFeat3: "Jusqu'à 5 images par note",
       premiumFeat4: "Redimensionner l'image · recadrage proportionnel", premiumFeat5: "Panneau sur le bord gauche de l'écran", premiumFeat6: "Opacité par défaut de la note",
@@ -994,7 +994,7 @@
       statusApplied: "Einstellungen übernommen.", statusShortcutFail: "Tastenkürzel-Registrierung fehlgeschlagen. Probiere eine andere Kombination.",
       statusStartupFail: "Autostart-Einstellung konnte nicht übernommen werden.", statusApplyError: "Fehler beim Übernehmen der Einstellungen.",
       panelEdgeLabel: "Panelposition", panelEdgeRight: "Rechts (Standard)", panelEdgeLeft: "Links", panelEdgeTop: "Oben",
-      panelEdgeHint: "Wählen Sie den Bildschirmrand für das Memo-Panel.",
+      panelEdgeHint: "Bildschirmrand-Position für das Memo-Panel wählen",
       premiumModalTitle: "Plus-Funktionen freischalten", premiumModalLead: "Upgrade auf Peekom Plus und nutze alle folgenden Funktionen.",
       premiumFeat1: "Bis zu 10 unabhängige Indizes", premiumFeat2: "Export · JSON-Backup", premiumFeat3: "Bis zu 5 Bilder pro Notiz",
       premiumFeat4: "Bildgröße · Seitenverhältnis zuschneiden", premiumFeat5: "Panel am linken Bildschirmrand", premiumFeat6: "Standard-Deckkraft der Notiz",
@@ -1041,7 +1041,7 @@
       statusApplied: "Configurações aplicadas.", statusShortcutFail: "Falha ao registrar atalho. Tente outra combinação.",
       statusStartupFail: "Não foi possível aplicar a inicialização automática.", statusApplyError: "Erro ao aplicar configurações.",
       panelEdgeLabel: "Posição do painel", panelEdgeRight: "Direita (padrão)", panelEdgeLeft: "Esquerda", panelEdgeTop: "Em cima",
-      panelEdgeHint: "Escolha a borda da tela onde o painel fica preso.",
+      panelEdgeHint: "Escolha a posição da borda da tela do painel",
       premiumModalTitle: "Desbloquear recursos Plus", premiumModalLead: "Atualize para o Peekom Plus e aproveite todos os recursos abaixo.",
       premiumFeat1: "Até 10 índices independentes", premiumFeat2: "Exportar · backup JSON", premiumFeat3: "Até 5 imagens por nota",
       premiumFeat4: "Redimensionar imagem · recorte proporcional", premiumFeat5: "Painel na borda esquerda do monitor", premiumFeat6: "Opacidade padrão da nota",
@@ -1088,7 +1088,7 @@
       statusApplied: "Impostazioni applicate.", statusShortcutFail: "Registrazione scorciatoia fallita. Prova un'altra combinazione.",
       statusStartupFail: "Impossibile applicare l'avvio automatico.", statusApplyError: "Errore nell'applicare le impostazioni.",
       panelEdgeLabel: "Posizione pannello", panelEdgeRight: "Destra (predefinita)", panelEdgeLeft: "Sinistra", panelEdgeTop: "In alto",
-      panelEdgeHint: "Scegli il bordo dello schermo a cui attaccare il pannello.",
+      panelEdgeHint: "Scegli la posizione del bordo schermo del pannello",
       premiumModalTitle: "Sblocca funzioni Plus", premiumModalLead: "Passa a Peekom Plus per usare tutte le funzioni seguenti.",
       premiumFeat1: "Fino a 10 indici indipendenti", premiumFeat2: "Esporta · backup JSON", premiumFeat3: "Fino a 5 immagini per nota",
       premiumFeat4: "Ridimensiona immagine · ritaglio proporzionale", premiumFeat5: "Pannello sul bordo sinistro del monitor", premiumFeat6: "Opacità predefinita della nota",
@@ -1135,7 +1135,7 @@
       statusApplied: "Настройки применены.", statusShortcutFail: "Не удалось зарегистрировать горячие клавиши. Попробуйте другую комбинацию.",
       statusStartupFail: "Не удалось применить настройку автозапуска.", statusApplyError: "Ошибка при применении настроек.",
       panelEdgeLabel: "Положение панели", panelEdgeRight: "Справа (по умолчанию)", panelEdgeLeft: "Слева", panelEdgeTop: "Сверху",
-      panelEdgeHint: "Выберите край экрана, к которому крепится панель.",
+      panelEdgeHint: "Выберите положение края экрана для панели",
       premiumModalTitle: "Разблокировать функции Plus", premiumModalLead: "Обновитесь до Peekom Plus и пользуйтесь всеми функциями ниже.",
       premiumFeat1: "До 10 независимых индексов", premiumFeat2: "Экспорт · JSON-резервная копия", premiumFeat3: "До 5 изображений на заметку",
       premiumFeat4: "Изменение размера · обрезка по пропорции", premiumFeat5: "Панель у левого края монитора", premiumFeat6: "Непрозрачность заметки по умолчанию",
@@ -1182,7 +1182,7 @@
       statusApplied: "Đã áp dụng cài đặt.", statusShortcutFail: "Đăng ký phím tắt thất bại. Thử tổ hợp khác.",
       statusStartupFail: "Không thể áp dụng cài đặt khởi động.", statusApplyError: "Lỗi khi áp dụng cài đặt.",
       panelEdgeLabel: "Vị trí bảng", panelEdgeRight: "Phải (mặc định)", panelEdgeLeft: "Trái", panelEdgeTop: "Trên",
-      panelEdgeHint: "Chọn cạnh màn hình để gắn bảng ghi chú.",
+      panelEdgeHint: "Chọn vị trí cạnh màn hình cho bảng ghi chú",
       premiumModalTitle: "Mở khóa tính năng Plus", premiumModalLead: "Nâng cấp lên Peekom Plus để dùng tất cả tính năng bên dưới.",
       premiumFeat1: "Tối đa 10 chỉ mục độc lập", premiumFeat2: "Xuất · sao lưu JSON", premiumFeat3: "Tối đa 5 ảnh mỗi ghi chú",
       premiumFeat4: "Đổi kích thước ảnh · cắt theo tỷ lệ", premiumFeat5: "Bảng ở cạnh trái màn hình", premiumFeat6: "Độ mờ mặc định của ghi chú",
@@ -1229,7 +1229,7 @@
       statusApplied: "ใช้การตั้งค่าแล้ว", statusShortcutFail: "ลงทะเบียนปุ่มลัดล้มเหลว ลองคอมโบอื่น",
       statusStartupFail: "ไม่สามารถใช้การตั้งค่าเริ่มต้นได้", statusApplyError: "เกิดข้อผิดพลาดขณะใช้การตั้งค่า",
       panelEdgeLabel: "ตำแหน่งแผง", panelEdgeRight: "ขวา (ค่าเริ่มต้น)", panelEdgeLeft: "ซ้าย", panelEdgeTop: "ด้านบน",
-      panelEdgeHint: "เลือกขอบจอที่แผงบันทึกจะติดอยู่",
+      panelEdgeHint: "เลือกตำแหน่งขอบจอสำหรับแผงบันทึก",
       premiumModalTitle: "ปลดล็อกฟีเจอร์ Plus", premiumModalLead: "อัปเกรดเป็น Peekom Plus เพื่อใช้ฟีเจอร์ทั้งหมดด้านล่าง",
       premiumFeat1: "ดัชนีอิสระสูงสุด 10 รายการ", premiumFeat2: "ส่งออก · สำรอง JSON", premiumFeat3: "รูปภาพสูงสุด 5 รูปต่อโน้ต",
       premiumFeat4: "ปรับขนาดรูป · ครอปตามสัดส่วน", premiumFeat5: "แผงที่ขอบซ้ายของจอ", premiumFeat6: "ความโปร่งใสเริ่มต้นของโน้ต",
@@ -1276,7 +1276,7 @@
       statusApplied: "Pengaturan diterapkan.", statusShortcutFail: "Gagal mendaftarkan pintasan. Coba kombinasi lain.",
       statusStartupFail: "Tidak dapat menerapkan pengaturan startup.", statusApplyError: "Kesalahan saat menerapkan pengaturan.",
       panelEdgeLabel: "Posisi panel", panelEdgeRight: "Kanan (bawaan)", panelEdgeLeft: "Kiri", panelEdgeTop: "Atas",
-      panelEdgeHint: "Pilih tepi layar tempat panel memo menempel.",
+      panelEdgeHint: "Pilih posisi tepi layar untuk panel memo",
       premiumModalTitle: "Buka kunci fitur Plus", premiumModalLead: "Upgrade ke Peekom Plus untuk menikmati semua fitur di bawah.",
       premiumFeat1: "Hingga 10 indeks independen", premiumFeat2: "Ekspor · cadangan JSON", premiumFeat3: "Hingga 5 gambar per catatan",
       premiumFeat4: "Ubah ukuran gambar · potong proporsi", premiumFeat5: "Panel di tepi kiri monitor", premiumFeat6: "Opasitas bawaan catatan",
@@ -1323,7 +1323,7 @@
       statusApplied: "सेटिंग लागू की गई।", statusShortcutFail: "शॉर्टकट पंजीकरण विफल। दूसरा संयोजन आज़माएं।",
       statusStartupFail: "स्टार्टअप सेटिंग लागू नहीं हो सकी।", statusApplyError: "सेटिंग लागू करने में त्रुटि।",
       panelEdgeLabel: "पैनल की स्थिति", panelEdgeRight: "दाएँ (डिफ़ॉल्ट)", panelEdgeLeft: "बाएँ", panelEdgeTop: "ऊपर",
-      panelEdgeHint: "मेमो पैनल किस स्क्रीन किनारे पर लगे, चुनें।",
+      panelEdgeHint: "मेमो पैनल के लिए स्क्रीन किनारे की स्थिति चुनें",
       premiumModalTitle: "Plus सुविधाएँ अनलॉक करें", premiumModalLead: "नीचे की सभी सुविधाओं के लिए Peekom Plus में अपग्रेड करें।",
       premiumFeat1: "10 तक स्वतंत्र इंडेक्स", premiumFeat2: "निर्यात · JSON बैकअप", premiumFeat3: "प्रति नोट अधिकतम 5 चित्र",
       premiumFeat4: "चित्र आकार · अनुपात क्रॉप", premiumFeat5: "मॉनिटर के बाएँ किनारे पर पैनल", premiumFeat6: "नोट की डिफ़ॉल्ट अपारदर्शिता",
@@ -1370,7 +1370,7 @@
       statusApplied: "تم تطبيق الإعدادات.", statusShortcutFail: "فشل تسجيل الاختصار. جرب تركيباً آخر.",
       statusStartupFail: "تعذر تطبيق إعداد بدء التشغيل.", statusApplyError: "خطأ أثناء تطبيق الإعدادات.",
       panelEdgeLabel: "موضع اللوحة", panelEdgeRight: "يمين (افتراضي)", panelEdgeLeft: "يسار", panelEdgeTop: "أعلى",
-      panelEdgeHint: "اختر حافة الشاشة التي تلتصق بها لوحة المذكرة.",
+      panelEdgeHint: "اختر موضع حافة الشاشة للوحة المذكرة",
       premiumModalTitle: "فتح ميزات Plus", premiumModalLead: "قم بالترقية إلى Peekom Plus للاستمتاع بجميع الميزات أدناه.",
       premiumFeat1: "حتى 10 فهارس مستقلة", premiumFeat2: "تصدير · نسخ JSON احتياطي", premiumFeat3: "حتى 5 صور لكل ملاحظة",
       premiumFeat4: "تغيير حجم الصورة · قص بنسبة", premiumFeat5: "لوحة على الحافة اليسرى للشاشة", premiumFeat6: "شفافية الملاحظة الافتراضية",
@@ -1384,11 +1384,13 @@
     }
   };
 
-  // Fill missing keys from Korean (canonical source)
+  // Fill missing keys: Korean base → English → language-specific overrides
+  // (언어별 키가 비면 한국어 대신 영어가 보이게 해서 미번역이 덜 어색함)
   const base = STRINGS.ko;
+  const enBase = STRINGS.en || {};
   Object.keys(STRINGS).forEach((lang) => {
     if (lang === "ko") return;
-    STRINGS[lang] = Object.assign({}, base, STRINGS[lang]);
+    STRINGS[lang] = Object.assign({}, base, enBase, STRINGS[lang]);
     if (lang !== "ko" && lang !== "ja") {
       STRINGS[lang].modePeek = "PEEK";
       STRINGS[lang].modeIce = "ICE";

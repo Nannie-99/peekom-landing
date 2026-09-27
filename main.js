@@ -768,10 +768,20 @@ function refreshShellContextMenus() {
   }
 }
 
+/** macOS: Contents/MacOS/... → Peekom.app 번들 경로 */
+function resolveMacAppBundlePath() {
+  const exe = process.execPath;
+  const marker = ".app/";
+  const idx = exe.indexOf(marker);
+  if (idx !== -1) return exe.slice(0, idx + ".app".length);
+  return exe;
+}
+
 function getStartupLoginOptions() {
-  return process.platform === "darwin"
-    ? {}
-    : { path: process.execPath, args: [STARTUP_LOGIN_ARG] };
+  if (process.platform === "darwin") {
+    return { path: resolveMacAppBundlePath() };
+  }
+  return { path: process.execPath, args: [STARTUP_LOGIN_ARG] };
 }
 
 function readStartupLoginState() {
@@ -781,10 +791,12 @@ function readStartupLoginState() {
 function setStartupLoginState(openAtLogin) {
   const enabled = Boolean(openAtLogin);
   if (process.platform === "darwin") {
-    // macOS Login Items: 백그라운드 기동 시 창이 튀지 않도록 openAsHidden 사용.
+    // path를 .app 번들로 명시하고, 가능하면 openAsHidden으로 로그인 기동 시 창 튀김을 줄인다.
+    // (최신 macOS/Electron에서는 openAsHidden이 무시될 수 있으나, wasOpenedAtLogin·wasOpenedAsHidden과 함께 유지)
     app.setLoginItemSettings({
       openAtLogin: enabled,
-      openAsHidden: enabled
+      openAsHidden: enabled,
+      path: resolveMacAppBundlePath()
     });
     return;
   }
@@ -804,7 +816,7 @@ function wasLaunchedAtLogin() {
   if (process.argv.includes(STARTUP_LOGIN_ARG)) return true;
   if (process.platform !== "darwin") return false;
   try {
-    const login = app.getLoginItemSettings();
+    const login = app.getLoginItemSettings(getStartupLoginOptions());
     return Boolean(login.wasOpenedAtLogin || login.wasOpenedAsHidden);
   } catch {
     return false;
@@ -815,9 +827,11 @@ function wasLaunchedAtLogin() {
  * 시작 프로그램이 켜져 있어야 하면 현재 실행 파일·고정 이름으로 등록을 다시 맞춘다.
  * Plus 전환(앱 이름 변경)이나 과거 버전이 다른 이름으로 등록한 항목이 있어도
  * 고정 이름으로 자동 이전되어 재부팅 시 자동 실행이 유지된다.
+ * Mac: Applications로 옮긴 뒤에도 Login Item path가 현재 .app을 가리키도록 재등록.
  */
 function reapplyStartupRegistration() {
-  if (process.platform !== "win32" || !app.isPackaged) return;
+  if (!app.isPackaged) return;
+  if (process.platform !== "win32" && process.platform !== "darwin") return;
   try {
     const state = readStartupLoginState();
     if (state.openAtLogin || state.executableWillLaunchAtLogin) {
@@ -825,6 +839,74 @@ function reapplyStartupRegistration() {
     }
   } catch {
     /* ignore */
+  }
+}
+
+function getMacApplicationsHintPath() {
+  return path.join(app.getPath("userData"), "mac-applications-hint.json");
+}
+
+function isMacRunningFromApplications() {
+  if (process.platform !== "darwin" || !app.isPackaged) return true;
+  try {
+    const bundle = path.resolve(resolveMacAppBundlePath());
+    if (bundle === "/Applications" || bundle.startsWith("/Applications/")) return true;
+    const homeApps = path.join(os.homedir(), "Applications");
+    return bundle === homeApps || bundle.startsWith(`${homeApps}${path.sep}`);
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * DMG·다운로드 폴더 등 Applications 밖에서 실행 시 1회 안내.
+ * 「Applications로 이동」을 권장하고, 원하면 Finder에서 Applications를 연다.
+ */
+async function maybeShowMacApplicationsHint() {
+  if (process.platform !== "darwin" || !app.isPackaged) return;
+  if (isMacRunningFromApplications()) return;
+  const markerPath = getMacApplicationsHintPath();
+  try {
+    if (fs.existsSync(markerPath)) return;
+  } catch {
+    return;
+  }
+
+  const lang = appUiLanguage || "ko";
+  let response = 1;
+  try {
+    const result = await dialog.showMessageBox({
+      type: "info",
+      title: trayT("macInstallTitle", lang),
+      message: trayT("macInstallMessage", lang),
+      detail: trayT("macInstallDetail", lang),
+      buttons: [trayT("macInstallOpenApps", lang), trayT("macInstallLater", lang)],
+      defaultId: 0,
+      cancelId: 1,
+      noLink: true
+    });
+    response = result.response;
+  } catch {
+    /* ignore */
+  }
+
+  try {
+    fs.mkdirSync(path.dirname(markerPath), { recursive: true });
+    fs.writeFileSync(
+      markerPath,
+      JSON.stringify({ shownAt: new Date().toISOString() }),
+      "utf8"
+    );
+  } catch {
+    /* ignore */
+  }
+
+  if (response === 0) {
+    try {
+      await shell.openPath("/Applications");
+    } catch {
+      /* ignore */
+    }
   }
 }
 
@@ -1227,10 +1309,13 @@ function attachWindowToDisplay(display) {
   const { x, y, width, height } = getAttachedBounds(display);
   // 드래그 중에는 애니메이션 없이 즉시 이동 (macOS animate=true가 jitter 유발)
   mainWindow.setBounds({ x, y, width, height }, !isDraggingWindow);
-  // Windows 투명 창이 음수 좌표(왼쪽 모니터)를 0으로 클램프하는 경우 강제 보정
-  if (process.platform === "win32" && (x < 0 || y < 0)) {
+  // Win/Mac: 왼쪽 모니터(음수 좌표)가 0으로 클램프되면 강제 보정
+  if ((process.platform === "win32" || process.platform === "darwin") && (x < 0 || y < 0)) {
     try {
-      mainWindow.setPosition(Math.round(x), Math.round(y));
+      const actual = mainWindow.getBounds();
+      if (Math.abs(actual.x - x) > 2 || Math.abs(actual.y - y) > 2) {
+        mainWindow.setPosition(Math.round(x), Math.round(y));
+      }
     } catch {
       /* ignore */
     }
@@ -1727,6 +1812,8 @@ function applyHideFromShell(hide) {
       } else {
         app.dock.show();
         applyMacDockIcon();
+        // dock.hide 후 show 시 Dock 우클릭 메뉴(환경설정·도움말)를 다시 걸어야 함
+        refreshShellContextMenus();
       }
     } catch {
       /* ignore */
@@ -1795,6 +1882,8 @@ if (!gotTheLock) {
   applyMacDockIcon();
   healOrphanedStartupRegistration();
   applyDefaultStartupOnce();
+  reapplyStartupRegistration();
+  void maybeShowMacApplicationsHint();
 
   appSettings = normalizeSettings();
   updateShortcutRegistration();

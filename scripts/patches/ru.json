@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3 (по умолчанию)",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[Прямоугольник]---",
   "memoSizeGroupSquare": "---[Квадрат]---",
   "indexTitleMaxHint": "До 6 символов",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "Дисплей {id}",
   "indexTabFallback": "Индекс {n}",
   "contrastWarning": "Низкая контрастность может затруднить чтение. (соотношение {ratio}:1)",
-  "monitorAuto": "Авто (следовать за мышью)"
+  "monitorAuto": "Авто (следовать за мышью)",
+  "hideFromTaskbar": "Скрыть с панели задач",
+  "hideFromDock": "Скрыть из Dock",
+  "panelEdgeHint": "Выберите положение края экрана для панели",
+  "panelEdgeLabel": "Положение панели",
+  "panelEdgeRight": "Справа (по умолчанию)",
+  "panelEdgeLeft": "Слева",
+  "panelEdgeTop": "Сверху"
 }

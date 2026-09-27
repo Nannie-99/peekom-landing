@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3 (bawaan)",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[Persegi panjang]---",
   "memoSizeGroupSquare": "---[Persegi]---",
   "indexTitleMaxHint": "Hingga 6 karakter",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "Layar {id}",
   "indexTabFallback": "Indeks {n}",
   "contrastWarning": "Kontras rendah dapat menyulitkan membaca. (rasio {ratio}:1)",
-  "monitorAuto": "Otomatis (ikuti mouse)"
+  "monitorAuto": "Otomatis (ikuti mouse)",
+  "hideFromTaskbar": "Sembunyikan dari bilah tugas",
+  "hideFromDock": "Sembunyikan dari Dock",
+  "panelEdgeHint": "Pilih posisi tepi layar untuk panel memo",
+  "panelEdgeLabel": "Posisi panel",
+  "panelEdgeRight": "Kanan (bawaan)",
+  "panelEdgeLeft": "Kiri",
+  "panelEdgeTop": "Atas"
 }

@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3 (Standard)",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[Rechteck]---",
   "memoSizeGroupSquare": "---[Quadrat]---",
   "indexTitleMaxHint": "Bis zu 6 Zeichen",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "Anzeige {id}",
   "indexTabFallback": "Index {n}",
   "contrastWarning": "Geringer Kontrast kann das Lesen erschweren. (Verhältnis {ratio}:1)",
-  "monitorAuto": "Auto (Maus folgen)"
+  "monitorAuto": "Auto (Maus folgen)",
+  "hideFromTaskbar": "Aus der Taskleiste ausblenden",
+  "hideFromDock": "Aus dem Dock ausblenden",
+  "panelEdgeHint": "Bildschirmrand-Position für das Memo-Panel wählen",
+  "panelEdgeLabel": "Panelposition",
+  "panelEdgeRight": "Rechts (Standard)",
+  "panelEdgeLeft": "Links",
+  "panelEdgeTop": "Oben"
 }

@@ -20,7 +20,7 @@ const SHARED_KEYS = [
   "resetCommonDefaults", "resetCommonDefaultsHint", "backupManageTitle", "backupHeadHint", "backupExpand",
   "backupCollapse", "backupExportTab", "backupImportTab", "exportIndicesLabel", "exportRunBtn",
   "exportFormatTxtShort", "exportFormatMdShort", "exportFormatJsonShort", "importOverwriteHint",
-  "showTrayIcon", "showMenuBarIcon", "runAtStartupWin", "runAtStartupMac", "shortcutIndexHintMac", "shortcutConflictError", "checklistStrikeOff", "checklistStrikeOn", "checklistLabel", "memoSize35", "memoSize34", "memoSize33Default", "memoSize44", "memoSizeGroupRect", "memoSizeGroupSquare", "indexTitleMaxHint", "handlePositionLabel", "handlePositionHint",
+  "showTrayIcon", "showMenuBarIcon", "runAtStartupWin", "runAtStartupMac", "shortcutIndexHintMac", "shortcutConflictError", "checklistStrikeOff", "checklistStrikeOn", "checklistLabel", "memoSize35", "memoSize34", "memoSize33Default", "memoSize44", "memoSize22", "memoSize23", "memoSize32", "memoSize43", "memoSize45", "memoSizeGroupRect", "memoSizeGroupSquare", "indexTitleMaxHint", "handlePositionLabel", "handlePositionHint",
   "handleSlotOption", "fontSizePlusHint", "fontFamilyLabel", "fontSystemDefault", "fontFamilyPlusHint",
   "attachedImagesLabel", "attachedImagesHint", "attachedImagesEmpty", "commonTabAriaLabel", "upgradePlusBtn",
   "eyedropperTitle", "eyedropperUnsupported", "colorAdvancedPicker", "colorPickScreen", "settingsTierPaid",
@@ -31,7 +31,8 @@ const SHARED_KEYS = [
   "fmtColorGreen", "fmtBold", "fmtItalic", "fmtUnderline", "fmtStrike", "fmtAlignMenu", "fmtAlignLeft",
   "fmtAlignCenter", "fmtAlignRight", "fmtAlignJustify", "fmtListMenu", "fmtListBullet", "fmtListSquare",
   "fmtListNumber", "fmtListPlain", "fmtInsertImage", "fmtImageScale", "monitorDisplayLabel",
-  "monitorDisplayFallback", "indexTabFallback", "contrastWarning", "monitorAuto"
+  "monitorDisplayFallback", "indexTabFallback", "contrastWarning", "monitorAuto",
+  "hideFromTaskbar", "hideFromDock", "panelEdgeHint", "panelEdgeLabel", "panelEdgeRight", "panelEdgeLeft", "panelEdgeTop"
 ];
 
 const T = require("./locale-translations.js");

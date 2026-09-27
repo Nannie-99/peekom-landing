@@ -1813,12 +1813,18 @@
         for (let s = 0; s < (appState?.enabledCount || 0); s++) {
           const ySlotSel = document.getElementById(`slot${s}YSlot`);
           if (!ySlotSel) continue;
+          // select 이전 값보다 메모리(앱 상태)의 ySlot을 우선 — 옵션 재생성 시 위치가 초기화되지 않게
+          const fromState = Number(appState.slots[s]?.ySlot);
           const prev = Number(ySlotSel.value);
           ySlotSel.innerHTML = Array.from({ length: count }, (_, i) =>
             `<option value="${i}">${ti("handleSlotOption", { n: i + 1 })}</option>`
           ).join("");
           const next = clamp(
-            Number.isFinite(prev) ? prev : appState.slots[s]?.ySlot ?? s,
+            Number.isFinite(fromState)
+              ? fromState
+              : Number.isFinite(prev)
+                ? prev
+                : s,
             0,
             maxSlot
           );
@@ -2521,6 +2527,46 @@
           if (Array.isArray(diskState.slots[i]?.images)) {
             appState.slots[i].images = diskState.slots[i].images.slice();
           }
+        }
+      }
+
+      /**
+       * 적용 직전: 설정창에서 손잡이 위치를 바꾸지 않았다면 디스크(메인에서 드래그한 최신 위치)를 우선한다.
+       * 메모 크기만 바꾸고 적용할 때 예전 select 값으로 위치가 덮이는 것을 막는다.
+       */
+      async function preferDiskPositionsUnlessFormEdited() {
+        const diskState = await loadStateAsync();
+        if (!diskState || !Array.isArray(diskState.slots)) return;
+        let baseline = null;
+        try {
+          baseline = JSON.parse(baselineSnapshot);
+        } catch {
+          baseline = null;
+        }
+        const count = Math.min(appState.enabledCount, diskState.enabledCount, MAX_SLOTS);
+        for (let s = 0; s < count; s++) {
+          const sel = document.getElementById(`slot${s}YSlot`);
+          const baselineY = Number(baseline?.slots?.[s]?.ySlot);
+          const formY = sel ? Number(sel.value) : NaN;
+          const userEditedPosition =
+            isPremium &&
+            sel &&
+            Number.isFinite(formY) &&
+            Number.isFinite(baselineY) &&
+            formY !== baselineY;
+          if (userEditedPosition) continue;
+          const diskY = diskState.slots[s]?.ySlot;
+          if (typeof diskY === "number" && Number.isFinite(diskY)) {
+            appState.slots[s].ySlot = Math.round(diskY);
+            appState.slots[s].ySlotUpdatedAt =
+              typeof diskState.slots[s].ySlotUpdatedAt === "number"
+                ? diskState.slots[s].ySlotUpdatedAt
+                : appState.slots[s].ySlotUpdatedAt ?? 0;
+            if (sel) sel.value = String(appState.slots[s].ySlot);
+          }
+        }
+        if (Array.isArray(diskState.order) && diskState.order.length) {
+          appState.order = normalizeOrder(diskState.order, appState.enabledCount);
         }
       }
 
@@ -3280,13 +3326,20 @@
         const ec = appState.enabledCount;
         if (ec <= 0) return false;
         const ord = appState.order.slice(0, ec);
-        const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
+        // order(탭 순서)가 아니라 화면에 보이는 ySlot 순서를 유지한 채 붙인다.
+        const byVisual = ord.slice().sort((a, b) => {
+          const ya = appState.slots[a].ySlot ?? 0;
+          const yb = appState.slots[b].ySlot ?? 0;
+          if (ya !== yb) return ya - yb;
+          return ord.indexOf(a) - ord.indexOf(b);
+        });
+        const minY = Math.min(...byVisual.map((si) => appState.slots[si].ySlot ?? 0));
         const posCount = getPositionSlotCountForEdge(appState.global?.panelEdge);
         const maxBase = Math.max(0, posCount - ec);
         const baseY = clamp(minY, 0, maxBase);
         const now = Date.now();
         let changed = false;
-        ord.forEach((si, i) => {
+        byVisual.forEach((si, i) => {
           const next = baseY + i;
           if (appState.slots[si].ySlot !== next) changed = true;
           appState.slots[si].ySlot = next;
@@ -5488,6 +5541,7 @@
         applyBtn.disabled = true;
         try {
           await populateFontSelects();
+          await preferDiskPositionsUnlessFormEdited();
           readSettingsForm();
           markSettingsLocalMutation();
 

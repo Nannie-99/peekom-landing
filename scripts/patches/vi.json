@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3 (mặc định)",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[Chữ nhật]---",
   "memoSizeGroupSquare": "---[Vuông]---",
   "indexTitleMaxHint": "Tối đa 6 ký tự",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "Màn hình {id}",
   "indexTabFallback": "Chỉ mục {n}",
   "contrastWarning": "Độ tương phản thấp có thể khó đọc. (tỷ lệ {ratio}:1)",
-  "monitorAuto": "Tự động (theo chuột)"
+  "monitorAuto": "Tự động (theo chuột)",
+  "hideFromTaskbar": "Ẩn khỏi thanh tác vụ",
+  "hideFromDock": "Ẩn khỏi Dock",
+  "panelEdgeHint": "Chọn vị trí cạnh màn hình cho bảng ghi chú",
+  "panelEdgeLabel": "Vị trí bảng",
+  "panelEdgeRight": "Phải (mặc định)",
+  "panelEdgeLeft": "Trái",
+  "panelEdgeTop": "Trên"
 }

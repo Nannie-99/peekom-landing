@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3 (डिफ़ॉल्ट)",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[आयत]---",
   "memoSizeGroupSquare": "---[वर्ग]---",
   "indexTitleMaxHint": "अधिकतम 6 अक्षर",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "डिस्प्ले {id}",
   "indexTabFallback": "इंडेक्स {n}",
   "contrastWarning": "कम कंट्रास्ट पढ़ना कठिन बना सकता है। (अनुपात {ratio}:1)",
-  "monitorAuto": "स्वतः (माउस का अनुसरण)"
+  "monitorAuto": "स्वतः (माउस का अनुसरण)",
+  "hideFromTaskbar": "टास्कबार से छिपाएँ",
+  "hideFromDock": "Dock से छिपाएँ",
+  "panelEdgeHint": "मेमो पैनल के लिए स्क्रीन किनारे की स्थिति चुनें",
+  "panelEdgeLabel": "पैनल की स्थिति",
+  "panelEdgeRight": "दाएँ (डिफ़ॉल्ट)",
+  "panelEdgeLeft": "बाएँ",
+  "panelEdgeTop": "ऊपर"
 }

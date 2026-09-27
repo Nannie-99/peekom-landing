@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3（預設）",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[長方形]---",
   "memoSizeGroupSquare": "---[正方形]---",
   "indexTitleMaxHint": "最多6個字元",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "顯示器 {id}",
   "indexTabFallback": "索引 {n}",
   "contrastWarning": "對比度過低可能導致文字難以閱讀。（比率 {ratio}:1）",
-  "monitorAuto": "自動（跟隨滑鼠）"
+  "monitorAuto": "自動（跟隨滑鼠）",
+  "hideFromTaskbar": "從工作列隱藏",
+  "hideFromDock": "從 Dock 隱藏",
+  "panelEdgeHint": "選擇備忘錄面板貼齊的螢幕邊緣位置",
+  "panelEdgeLabel": "顯示位置",
+  "panelEdgeRight": "右側（預設）",
+  "panelEdgeLeft": "左側",
+  "panelEdgeTop": "上方"
 }

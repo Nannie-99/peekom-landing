@@ -1535,12 +1535,20 @@
         const ec = appState.enabledCount;
         if (ec <= 0) return false;
         const ord = appState.order.slice(0, ec);
-        const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
+        // order(탭 순서)가 아니라 화면에 보이는 ySlot 순서를 유지한 채 붙인다.
+        // (좌우 드래그로 order만 바뀐 뒤 적용/자동실행 시 손잡이가 섞이던 문제 방지)
+        const byVisual = ord.slice().sort((a, b) => {
+          const ya = appState.slots[a].ySlot ?? 0;
+          const yb = appState.slots[b].ySlot ?? 0;
+          if (ya !== yb) return ya - yb;
+          return ord.indexOf(a) - ord.indexOf(b);
+        });
+        const minY = Math.min(...byVisual.map((si) => appState.slots[si].ySlot ?? 0));
         const maxBase = Math.max(0, getPositionSlotCount() - ec);
         const baseY = clamp(minY, 0, maxBase);
         const now = Date.now();
         let changed = false;
-        ord.forEach((si, i) => {
+        byVisual.forEach((si, i) => {
           const next = baseY + i;
           if (appState.slots[si].ySlot !== next) changed = true;
           appState.slots[si].ySlot = next;

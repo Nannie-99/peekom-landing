@@ -55,6 +55,11 @@
   "memoSize34": "3×4",
   "memoSize33Default": "3×3 (افتراضي)",
   "memoSize44": "4×4",
+  "memoSize22": "2×2",
+  "memoSize23": "2×3",
+  "memoSize32": "3×2",
+  "memoSize43": "4×3",
+  "memoSize45": "4×5",
   "memoSizeGroupRect": "---[مستطيل]---",
   "memoSizeGroupSquare": "---[مربع]---",
   "indexTitleMaxHint": "حتى 6 أحرف",
@@ -119,5 +124,12 @@
   "monitorDisplayFallback": "الشاشة {id}",
   "indexTabFallback": "الفهرس {n}",
   "contrastWarning": "التباين المنخفض قد يصعّب القراءة. (النسبة {ratio}:1)",
-  "monitorAuto": "تلقائي (اتباع المؤشر)"
+  "monitorAuto": "تلقائي (اتباع المؤشر)",
+  "hideFromTaskbar": "إخفاء من شريط المهام",
+  "hideFromDock": "إخفاء من Dock",
+  "panelEdgeHint": "اختر موضع حافة الشاشة للوحة المذكرة",
+  "panelEdgeLabel": "موضع اللوحة",
+  "panelEdgeRight": "يمين (افتراضي)",
+  "panelEdgeLeft": "يسار",
+  "panelEdgeTop": "أعلى"
 }
