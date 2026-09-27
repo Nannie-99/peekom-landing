@@ -44,7 +44,7 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 const RELEASE_HISTORY = [
     {
         version: "1.2.4",
-        date: "2026/09/26",
+        date: "2026/09/27",
         latest: true,
         macAvailable: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.4/Peekom-Setup.exe",
@@ -85,7 +85,11 @@ const CHANGELOG_V124 = {
         "작업표시줄/Dock에서 숨기기 옵션 (트레이·메뉴바 아이콘은 항상 표시)",
         "작업표시줄·Dock 우클릭에 환경설정·도움말 추가 (Peekom 아이콘)",
         "듀얼 모니터「표시 모니터 고정」왼쪽 모니터 위치 오류 수정",
-        "표시 위치: 오른쪽(무료)·왼쪽·위쪽(Plus), 위쪽일 때 메모 크기 제한"
+        "표시 위치: 오른쪽(무료)·왼쪽·위쪽(Plus), 아래쪽 제거",
+        "위쪽 표시 시 가장자리 12등분·메모 크기 선택 제한, 손잡이 위치 유지 개선",
+        "서식바가 인덱스에 가리지 않도록 여백 조정, 작은 메모에서 빼꼼/얼음 점 표시",
+        "이미지 넣기 슬라이더 기본값을 가운데로 (더 작게·크게 조절 가능)",
+        "macOS: 자동 실행·Dock 메뉴·완전 제거 흐름 개선"
     ],
     en: [
         "Uninstall clears startup entries and shortcuts (memos kept by default; optional full wipe)",
@@ -94,7 +98,11 @@ const CHANGELOG_V124 = {
         "Hide from taskbar/Dock option (tray/menu bar icon always shown)",
         "Settings and Help on taskbar Jump List and Dock menu (Peekom icons)",
         "Fixed dual-monitor attach when the left display is selected",
-        "Panel edges: right (free), left & top (Plus); size limits when top is selected"
+        "Panel edges: right (free), left & top (Plus); bottom removed",
+        "Top edge uses 12 position slots with size limits; handle positions preserved better",
+        "Format bar spacing so index handles don’t cover controls; compact peek/ice dot on small memos",
+        "Image staging scale slider defaults to the middle (can go smaller or larger)",
+        "macOS: improved login item, Dock menu, and uninstall flow"
     ]
 };
 
@@ -489,7 +497,7 @@ function buildChangelogForLang(lang) {
     const v121 = CHANGELOG_V121[lang] || CHANGELOG_V121.en;
     const v120 = CHANGELOG_V120[lang] || CHANGELOG_V120.en;
     return [
-        { version: "1.2.4", date: "2026.09.26", items: v124 },
+        { version: "1.2.4", date: "2026.09.27", items: v124 },
         { version: "1.2.3", date: "2026.07.24", items: v123 },
         { version: "1.2.2", date: "2026.07.11", items: v122 },
         { version: "1.2.1", date: "2026.07.01", items: v121 },
