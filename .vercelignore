@@ -1,0 +1,17 @@
+node_modules
+dist
+.peekom-dist
+peekom-dist
+peekom-dist.zip
+.env
+*.log
+.DS_Store
+Thumbs.db
+.git
+mac-arm64
+mac-universal
+*.dmg
+*.exe
+*.blockmap
+*.zip
+!docs/**/*.zip
