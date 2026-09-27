@@ -1759,9 +1759,72 @@
       }
 
       function normalizeMemoAspectRatio(ratio) {
-        if (ratio === "1:1" || ratio === "2:2") return "3:3";
-        const allowed = new Set(["3:3", "4:4", "5:5", "3:4", "3:5", "4:3", "5:3", "4:5"]);
+        if (ratio === "1:1") return "3:3";
+        if (ratio === "5:5") return "4:4";
+        if (ratio === "5:3") return "4:3";
+        const allowed = new Set(["2:2", "2:3", "3:2", "3:3", "4:4", "3:4", "3:5", "4:3", "4:5"]);
         return allowed.has(ratio) ? ratio : "3:3";
+      }
+
+      const TOP_EDGE_MEMO_ASPECTS = new Set(["2:2", "2:3", "3:2", "3:3", "4:3"]);
+
+      function normalizeMemoAspectRatioForEdge(ratio, panelEdge) {
+        const normalized = normalizeMemoAspectRatio(ratio);
+        if (panelEdge === "top" && !TOP_EDGE_MEMO_ASPECTS.has(normalized)) {
+          return "3:3";
+        }
+        return normalized;
+      }
+
+      function syncMemoAspectOptionsForEdge(panelEdge) {
+        const select = document.getElementById("memoAspectSelect");
+        if (!select) return;
+        const isTop = panelEdge === "top";
+        Array.from(select.querySelectorAll("option")).forEach((opt) => {
+          const allowed = !isTop || TOP_EDGE_MEMO_ASPECTS.has(opt.value);
+          opt.hidden = !allowed;
+          opt.disabled = !allowed;
+        });
+        const current = normalizeMemoAspectRatioForEdge(select.value, panelEdge);
+        if (select.value !== current) select.value = current;
+        if (appState?.global) {
+          appState.global.memoAspectRatio = current;
+        }
+        syncYSlotOptionsForEdge(panelEdge);
+      }
+
+      const MAX_INDEX_SLOTS = 10;
+      const TOP_EDGE_POSITION_SLOTS = 12;
+
+      function getPositionSlotCountForEdge(panelEdge) {
+        return panelEdge === "top" ? TOP_EDGE_POSITION_SLOTS : MAX_INDEX_SLOTS;
+      }
+
+      function syncYSlotOptionsForEdge(panelEdge) {
+        const count = getPositionSlotCountForEdge(panelEdge);
+        const maxSlot = count - 1;
+        if (appState?.slots) {
+          for (let i = 0; i < (appState.enabledCount || 0); i++) {
+            const slot = appState.slots[i];
+            if (!slot) continue;
+            slot.ySlot = clamp(Math.round(slot.ySlot ?? i), 0, maxSlot);
+          }
+        }
+        for (let s = 0; s < (appState?.enabledCount || 0); s++) {
+          const ySlotSel = document.getElementById(`slot${s}YSlot`);
+          if (!ySlotSel) continue;
+          const prev = Number(ySlotSel.value);
+          ySlotSel.innerHTML = Array.from({ length: count }, (_, i) =>
+            `<option value="${i}">${ti("handleSlotOption", { n: i + 1 })}</option>`
+          ).join("");
+          const next = clamp(
+            Number.isFinite(prev) ? prev : appState.slots[s]?.ySlot ?? s,
+            0,
+            maxSlot
+          );
+          ySlotSel.value = String(next);
+          if (appState?.slots?.[s]) appState.slots[s].ySlot = next;
+        }
       }
 
       function defaultGlobal() {
@@ -1956,7 +2019,7 @@
           memoHtml: typeof raw?.memoHtml === "string" ? raw.memoHtml : "",
           ySlot:
             typeof raw?.ySlot === "number" && Number.isFinite(raw.ySlot)
-              ? clamp(Math.round(raw.ySlot), 0, 9)
+              ? clamp(Math.round(raw.ySlot), 0, TOP_EDGE_POSITION_SLOTS - 1)
               : index,
           ySlotUpdatedAt:
             typeof raw?.ySlotUpdatedAt === "number" && Number.isFinite(raw.ySlotUpdatedAt)
@@ -2077,7 +2140,12 @@
           if (!s || s.version !== 5 || !Array.isArray(s.slots) || s.slots.length !== MAX_SLOTS) return null;
           s.global = { ...defaultGlobal(), ...s.global };
           delete s.global.imageSize;
-          s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
+          if (s.global.panelEdge === "bottom") s.global.panelEdge = "right";
+          if (s.global.panelEdge !== "left" && s.global.panelEdge !== "top") s.global.panelEdge = "right";
+          s.global.memoAspectRatio = normalizeMemoAspectRatioForEdge(
+            s.global.memoAspectRatio,
+            s.global.panelEdge
+          );
           s.global.checklistStrikethrough = s.global.checklistStrikethrough !== false;
           s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
           s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
@@ -2109,7 +2177,12 @@
               s.version = 5;
               s.global = { ...defaultGlobal(), ...s.global };
               delete s.global.imageSize;
-              s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
+              if (s.global.panelEdge === "bottom") s.global.panelEdge = "right";
+              if (s.global.panelEdge !== "left" && s.global.panelEdge !== "top") s.global.panelEdge = "right";
+              s.global.memoAspectRatio = normalizeMemoAspectRatioForEdge(
+                s.global.memoAspectRatio,
+                s.global.panelEdge
+              );
               s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
               s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
               s.order = normalizeOrder(s.order, s.enabledCount);
@@ -2999,7 +3072,6 @@
         setSelectOptionText("panelEdgeSelect", "right", "panelEdgeRight");
         setSelectOptionText("panelEdgeSelect", "left", "panelEdgeLeft");
         setSelectOptionText("panelEdgeSelect", "top", "panelEdgeTop");
-        setSelectOptionText("panelEdgeSelect", "bottom", "panelEdgeBottom");
         const panelEdgeHint = panel.querySelector("#panelEdgeFieldWrap .field-hint-below");
         if (panelEdgeHint) panelEdgeHint.textContent = ti("panelEdgeHint");
 
@@ -3008,13 +3080,14 @@
         const rectGroup = document.getElementById("memoAspectGroupRect");
         if (squareGroup) squareGroup.label = ti("memoSizeGroupSquare");
         if (rectGroup) rectGroup.label = ti("memoSizeGroupRect");
+        setSelectOptionText("memoAspectSelect", "2:2", "memoSize22");
         setSelectOptionText("memoAspectSelect", "3:3", "memoSize33Default");
         setSelectOptionText("memoAspectSelect", "4:4", "memoSize44");
-        setSelectOptionText("memoAspectSelect", "5:5", "memoSize55");
+        setSelectOptionText("memoAspectSelect", "2:3", "memoSize23");
+        setSelectOptionText("memoAspectSelect", "3:2", "memoSize32");
         setSelectOptionText("memoAspectSelect", "3:4", "memoSize34");
         setSelectOptionText("memoAspectSelect", "3:5", "memoSize35");
         setSelectOptionText("memoAspectSelect", "4:3", "memoSize43");
-        setSelectOptionText("memoAspectSelect", "5:3", "memoSize53");
         setSelectOptionText("memoAspectSelect", "4:5", "memoSize45");
         const memoAspectHint = panel.querySelector('[for="memoAspectSelect"]')?.closest(".field-stack")?.querySelector(".field-hint-below");
         if (memoAspectHint) memoAspectHint.textContent = ti("memoAspectHint");
@@ -3208,7 +3281,9 @@
         if (ec <= 0) return false;
         const ord = appState.order.slice(0, ec);
         const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
-        const baseY = clamp(minY, 0, 9 - ec + 1);
+        const posCount = getPositionSlotCountForEdge(appState.global?.panelEdge);
+        const maxBase = Math.max(0, posCount - ec);
+        const baseY = clamp(minY, 0, maxBase);
         const now = Date.now();
         let changed = false;
         ord.forEach((si, i) => {
@@ -3229,21 +3304,23 @@
         if (appState.global) {
           appState.global.memoDefaultOpacity = 100;
           const pe = appState.global.panelEdge;
-          if (pe === "left" || pe === "bottom") appState.global.panelEdge = "right";
+          if (pe === "left" || pe === "top" || pe === "bottom") appState.global.panelEdge = "right";
           appState.global.checklistStrikethrough = true;
         }
         packFreeYSlots();
       }
 
       function assignNextFreeYSlot(slots, enabledCount, slotIndex) {
+        const posCount = getPositionSlotCountForEdge(appState.global?.panelEdge);
+        const maxSlot = posCount - 1;
         const occupied = new Set();
         for (let i = 0; i < enabledCount; i++) {
           if (i === slotIndex) continue;
-          occupied.add(clamp(slots[i].ySlot ?? i, 0, 9));
+          occupied.add(clamp(slots[i].ySlot ?? i, 0, maxSlot));
         }
         let free = 0;
-        while (occupied.has(free) && free < 10) free++;
-        slots[slotIndex].ySlot = free < 10 ? free : clamp(slotIndex, 0, 9);
+        while (occupied.has(free) && free < posCount) free++;
+        slots[slotIndex].ySlot = free < posCount ? free : clamp(slotIndex, 0, maxSlot);
         slots[slotIndex].ySlotUpdatedAt = Date.now();
       }
 
@@ -3258,11 +3335,13 @@
           packFreeYSlots();
           return;
         }
+        const posCount = getPositionSlotCountForEdge(appState.global?.panelEdge);
+        const maxSlot = posCount - 1;
         const entries = [];
         for (let i = 0; i < enabledCount; i++) {
           entries.push({
             slot: i,
-            ySlot: clamp(slots[i].ySlot ?? i, 0, 9),
+            ySlot: clamp(slots[i].ySlot ?? i, 0, maxSlot),
             at: slots[i].ySlotUpdatedAt ?? 0
           });
         }
@@ -3279,8 +3358,8 @@
         }
         for (const slot of displaced) {
           let free = 0;
-          while (occupied.has(free) && free < 10) free++;
-          const assigned = free < 10 ? free : clamp(slot, 0, 9);
+          while (occupied.has(free) && free < posCount) free++;
+          const assigned = free < posCount ? free : clamp(slot, 0, maxSlot);
           occupied.add(assigned);
           slots[slot].ySlot = assigned;
           if (!slots[slot].ySlotUpdatedAt) {
@@ -3421,12 +3500,11 @@
         if (panelEdgeSel) {
           panelEdgeSel.classList.remove("premium-control-locked");
           panelEdgeSel.style.pointerEvents = "";
-          panelEdgeSel.querySelectorAll('option[value="left"], option[value="bottom"]').forEach((opt) => {
+          panelEdgeSel.querySelectorAll('option[value="left"], option[value="top"]').forEach((opt) => {
             opt.disabled = !isPremium;
           });
-          if (!isPremium && (panelEdgeSel.value === "left" || panelEdgeSel.value === "bottom")) {
-            panelEdgeSel.value =
-              appState.global.panelEdge === "top" ? "top" : "right";
+          if (!isPremium && (panelEdgeSel.value === "left" || panelEdgeSel.value === "top")) {
+            panelEdgeSel.value = "right";
           }
         }
         if (panelEdgeBadge) panelEdgeBadge.hidden = isPremium;
@@ -3589,7 +3667,6 @@
                     <option value="right">${ti("panelEdgeRight")}</option>
                     <option value="left">${ti("panelEdgeLeft")}</option>
                     <option value="top">${ti("panelEdgeTop")}</option>
-                    <option value="bottom">${ti("panelEdgeBottom")}</option>
                   </select>
                   <span class="premium-lock-badge" id="panelEdgePremiumBadge" hidden>Plus</span>
                 </span>
@@ -3602,15 +3679,16 @@
                 <label class="field-label" for="memoAspectSelect">${ti("memoAspectLabel")}</label>
                 <select id="memoAspectSelect" class="setting-select">
                   <optgroup id="memoAspectGroupSquare" label="${ti("memoSizeGroupSquare")}">
+                    <option value="2:2">${ti("memoSize22")}</option>
                     <option value="3:3">${ti("memoSize33Default")}</option>
                     <option value="4:4">${ti("memoSize44")}</option>
-                    <option value="5:5">${ti("memoSize55")}</option>
                   </optgroup>
                   <optgroup id="memoAspectGroupRect" label="${ti("memoSizeGroupRect")}">
+                    <option value="2:3">${ti("memoSize23")}</option>
+                    <option value="3:2">${ti("memoSize32")}</option>
                     <option value="3:4">${ti("memoSize34")}</option>
                     <option value="3:5">${ti("memoSize35")}</option>
                     <option value="4:3">${ti("memoSize43")}</option>
-                    <option value="5:3">${ti("memoSize53")}</option>
                     <option value="4:5">${ti("memoSize45")}</option>
                   </optgroup>
                 </select>
@@ -3759,7 +3837,8 @@
         div.className = "settings-panel";
         div.dataset.settingsPanel = `idx${slotIndex}`;
 
-        const ySlotOptions = Array.from({ length: 10 }, (_, i) =>
+        const ySlotCount = getPositionSlotCountForEdge(appState?.global?.panelEdge);
+        const ySlotOptions = Array.from({ length: ySlotCount }, (_, i) =>
           `<option value="${i}">${ti("handleSlotOption", { n: i + 1 })}</option>`
         ).join("");
 
@@ -4714,6 +4793,19 @@
           sel.addEventListener("change", () => refreshApplyButton());
         });
 
+        const panelEdgeSelectBound = document.getElementById("panelEdgeSelect");
+        if (panelEdgeSelectBound && !panelEdgeSelectBound.dataset.aspectBound) {
+          panelEdgeSelectBound.dataset.aspectBound = "1";
+          panelEdgeSelectBound.addEventListener("change", () => {
+            const edge =
+              panelEdgeSelectBound.value === "left" || panelEdgeSelectBound.value === "top"
+                ? panelEdgeSelectBound.value
+                : "right";
+            syncMemoAspectOptionsForEdge(edge);
+            refreshApplyButton();
+          });
+        }
+
         const backupToggleBtn = document.getElementById("backupToggleBtn");
         const backupBody = document.getElementById("backupBody");
         if (backupToggleBtn && backupBody) {
@@ -5087,12 +5179,19 @@
         }
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
-          const pe = appState.global.panelEdge;
-          panelEdgeSelect.value =
-            pe === "left" || pe === "top" || pe === "bottom" ? pe : "right";
+          let pe = appState.global.panelEdge;
+          if (pe === "bottom") pe = "right";
+          if (!isPremium && (pe === "left" || pe === "top")) pe = "right";
+          appState.global.panelEdge = pe === "left" || pe === "top" ? pe : "right";
+          panelEdgeSelect.value = appState.global.panelEdge;
         }
+        syncMemoAspectOptionsForEdge(appState.global.panelEdge);
         if (memoAspectSelect) {
-          memoAspectSelect.value = normalizeMemoAspectRatio(appState.global.memoAspectRatio);
+          memoAspectSelect.value = normalizeMemoAspectRatioForEdge(
+            appState.global.memoAspectRatio,
+            appState.global.panelEdge
+          );
+          appState.global.memoAspectRatio = memoAspectSelect.value;
         }
         if (langSelect) langSelect.value = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "ko");
 
@@ -5170,18 +5269,19 @@
         const panelEdgeSelect = document.getElementById("panelEdgeSelect");
         if (panelEdgeSelect) {
           let nextEdge =
-            panelEdgeSelect.value === "left" ||
-            panelEdgeSelect.value === "top" ||
-            panelEdgeSelect.value === "bottom"
+            panelEdgeSelect.value === "left" || panelEdgeSelect.value === "top"
               ? panelEdgeSelect.value
               : "right";
-          if (!isPremium && (nextEdge === "left" || nextEdge === "bottom")) {
+          if (!isPremium && (nextEdge === "left" || nextEdge === "top")) {
             nextEdge = "right";
           }
           appState.global.panelEdge = nextEdge;
         }
         if (memoAspectSelect) {
-          appState.global.memoAspectRatio = normalizeMemoAspectRatio(memoAspectSelect.value);
+          appState.global.memoAspectRatio = normalizeMemoAspectRatioForEdge(
+            memoAspectSelect.value,
+            appState.global.panelEdge
+          );
         }
         if (langSelect) {
           appState.global.language = langSelect.value;
@@ -5422,8 +5522,8 @@
             manualYOffset: appState.global.manualYOffset,
             panelEdge: (() => {
               const pe = appState.global.panelEdge;
-              if (!isPremium && (pe === "left" || pe === "bottom")) return "right";
-              if (pe === "left" || pe === "top" || pe === "bottom") return pe;
+              if (!isPremium && (pe === "left" || pe === "top")) return "right";
+              if (pe === "left" || pe === "top") return pe;
               return "right";
             })()
           };

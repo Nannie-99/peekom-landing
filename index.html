@@ -924,14 +924,14 @@
         flex-wrap: nowrap;
         align-items: center;
         justify-content: flex-start;
-        gap: 0 4px;
+        gap: 0 2px;
         height: 30px;
         min-height: 30px;
         flex-shrink: 0;
         padding-top: 2px;
-        /* 손잡이 영역까지 서식바가 닿도록 우측 패딩을 끌어씀 */
+        /* 배경은 손잡이까지 이어지되, 버튼은 인덱스에 가리지 않도록 패딩 */
         margin-right: calc(-1 * (var(--collapsed-width) + 4px));
-        padding-right: 2px;
+        padding-right: calc(var(--collapsed-width) + 4px);
         color: var(--muted-text);
         font-size: 11px;
         overflow: visible;
@@ -941,15 +941,17 @@
 
       .panel-edge-left .note-footer {
         margin-right: 0;
-        padding-right: 0;
+        padding-right: 2px;
         margin-left: calc(-1 * (var(--collapsed-width) + 4px));
-        padding-left: 2px;
+        padding-left: calc(var(--collapsed-width) + 4px);
       }
 
       .panel-edge-top .note-footer,
       .panel-edge-bottom .note-footer {
         margin-right: 0;
-        padding-right: 0;
+        padding-right: 2px;
+        margin-left: 0;
+        padding-left: 0;
       }
 
       .mode-chip {
@@ -967,6 +969,16 @@
         border: 0;
         cursor: pointer;
         position: relative;
+      }
+      .mode-chip.is-dot {
+        width: 10px;
+        min-width: 10px;
+        height: 10px;
+        padding: 0;
+        font-size: 0;
+        line-height: 0;
+        letter-spacing: 0;
+        color: transparent;
       }
       .mode-chip:focus-visible {
         outline: 2px solid var(--accent);
@@ -999,6 +1011,11 @@
         color: #21518f;
       }
 
+      .mode-chip.is-dot.peek,
+      .mode-chip.is-dot.ice {
+        color: transparent;
+      }
+
       .format-bar {
         display: flex;
         flex-wrap: nowrap;
@@ -1024,13 +1041,13 @@
         min-width: 0;
       }
 
-      /* 글자색·B·I·U·S 사이 간격을 기존 균등 배치의 0.8배로 */
+      /* 글자색·B·I·U·S 사이 간격을 조금 더 촘촘히 */
       .format-bar > #colorDropdownWrap,
       .format-bar > .tool-btn[data-cmd="bold"],
       .format-bar > .tool-btn[data-cmd="italic"],
       .format-bar > .tool-btn[data-cmd="underline"],
       .format-bar > .tool-btn[data-cmd="strikeThrough"] {
-        flex: 0.8 1 0;
+        flex: 0.72 1 0;
       }
 
       /* 각 버튼/드롭다운이 칸을 가득 채움 */
@@ -1519,7 +1536,8 @@
         if (ec <= 0) return false;
         const ord = appState.order.slice(0, ec);
         const minY = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
-        const baseY = clamp(minY, 0, MAX_Y_SLOTS - ec);
+        const maxBase = Math.max(0, getPositionSlotCount() - ec);
+        const baseY = clamp(minY, 0, maxBase);
         const now = Date.now();
         let changed = false;
         ord.forEach((si, i) => {
@@ -1541,14 +1559,41 @@
         packFreeYSlots();
       }
       const MAX_Y_SLOTS = 10;
+      /** 위쪽 가장자리일 때만 손잡이·위치 칸을 12등분 (인덱스는 최대 10개) */
+      const TOP_EDGE_POSITION_SLOTS = 12;
 
       function normalizePanelEdgeValue(raw) {
-        if (raw === "left" || raw === "top" || raw === "bottom") return raw;
+        if (raw === "left" || raw === "top") return raw;
         return "right";
       }
 
       function isHorizontalPanelEdge(edge) {
-        return edge === "top" || edge === "bottom";
+        return edge === "top";
+      }
+
+      function getPositionSlotCount() {
+        return isHorizontalPanelEdge(getEffectivePanelEdge())
+          ? TOP_EDGE_POSITION_SLOTS
+          : MAX_Y_SLOTS;
+      }
+
+      function getMaxPositionSlot() {
+        return getPositionSlotCount() - 1;
+      }
+
+      function clampYSlotForCurrentEdge(ySlot) {
+        return clamp(Math.round(Number(ySlot) || 0), 0, getMaxPositionSlot());
+      }
+
+      function clampAllYSlotsToCurrentEdge() {
+        if (!appState?.slots) return;
+        const maxSlot = getMaxPositionSlot();
+        for (let i = 0; i < (appState.enabledCount || 0); i++) {
+          const slot = appState.slots[i];
+          if (!slot) continue;
+          const next = clamp(Math.round(slot.ySlot ?? i), 0, maxSlot);
+          if (slot.ySlot !== next) slot.ySlot = next;
+        }
       }
       const PANEL_CONTENT_WIDTH = 420;
       const COLLAPSED_WIDTH = 32;
@@ -1728,7 +1773,7 @@
               ? Math.round(raw.ySlot)
               : index,
             0,
-            MAX_Y_SLOTS - 1
+            TOP_EDGE_POSITION_SLOTS - 1
           ),
           ySlotUpdatedAt:
             typeof raw?.ySlotUpdatedAt === "number" && Number.isFinite(raw.ySlotUpdatedAt)
@@ -1785,9 +1830,21 @@
       }
 
       function normalizeMemoAspectRatio(ratio) {
-        if (ratio === "1:1" || ratio === "2:2") return "3:3";
-        const allowed = new Set(["3:3", "4:4", "5:5", "3:4", "3:5", "4:3", "5:3", "4:5"]);
+        if (ratio === "1:1") return "3:3";
+        if (ratio === "5:5") return "4:4";
+        if (ratio === "5:3") return "4:3";
+        const allowed = new Set(["2:2", "2:3", "3:2", "3:3", "4:4", "3:4", "3:5", "4:3", "4:5"]);
         return allowed.has(ratio) ? ratio : "3:3";
+      }
+
+      const TOP_EDGE_MEMO_ASPECTS = new Set(["2:2", "2:3", "3:2", "3:3", "4:3"]);
+
+      function normalizeMemoAspectRatioForEdge(ratio, panelEdge) {
+        const normalized = normalizeMemoAspectRatio(ratio);
+        if (panelEdge === "top" && !TOP_EDGE_MEMO_ASPECTS.has(normalized)) {
+          return "3:3";
+        }
+        return normalized;
       }
 
       function parseMemoSizeUnits(ratio) {
@@ -1803,7 +1860,10 @@
 
       function migrateFromV4(v4) {
         const global = { ...defaultGlobal(), ...v4.global };
-        global.memoAspectRatio = normalizeMemoAspectRatio(global.memoAspectRatio);
+        global.memoAspectRatio = normalizeMemoAspectRatioForEdge(
+          global.memoAspectRatio,
+          normalizePanelEdgeValue(global.panelEdge)
+        );
         return {
           version: 5,
           global,
@@ -1877,7 +1937,14 @@
           if (!s || s.version !== 5 || !Array.isArray(s.slots) || s.slots.length !== MAX_SLOTS) return null;
           s.global = { ...defaultGlobal(), ...s.global };
           delete s.global.imageSize;
-          s.global.memoAspectRatio = normalizeMemoAspectRatio(s.global.memoAspectRatio);
+          s.global.panelEdge = normalizePanelEdgeValue(s.global.panelEdge);
+          if (!isPremium && (s.global.panelEdge === "left" || s.global.panelEdge === "top")) {
+            s.global.panelEdge = "right";
+          }
+          s.global.memoAspectRatio = normalizeMemoAspectRatioForEdge(
+            s.global.memoAspectRatio,
+            s.global.panelEdge
+          );
           s.global.checklistStrikethrough = s.global.checklistStrikethrough !== false;
           s.slots = s.slots.map((sl, i) => normalizeSlot(sl, i));
           s.enabledCount = clamp(Math.round(s.enabledCount) || 1, 1, MAX_SLOTS);
@@ -2216,14 +2283,16 @@
       };
 
       function assignNextFreeYSlot(slots, enabledCount, slotIndex) {
+        const maxSlot = getMaxPositionSlot();
+        const slotCount = getPositionSlotCount();
         const occupied = new Set();
         for (let i = 0; i < enabledCount; i++) {
           if (i === slotIndex) continue;
-          occupied.add(clamp(slots[i].ySlot ?? i, 0, MAX_Y_SLOTS - 1));
+          occupied.add(clamp(slots[i].ySlot ?? i, 0, maxSlot));
         }
         let free = 0;
-        while (occupied.has(free) && free < MAX_Y_SLOTS) free++;
-        slots[slotIndex].ySlot = free < MAX_Y_SLOTS ? free : clamp(slotIndex, 0, MAX_Y_SLOTS - 1);
+        while (occupied.has(free) && free < slotCount) free++;
+        slots[slotIndex].ySlot = free < slotCount ? free : clamp(slotIndex, 0, maxSlot);
         slots[slotIndex].ySlotUpdatedAt = Date.now();
       }
 
@@ -2238,11 +2307,13 @@
           packFreeYSlots();
           return;
         }
+        const maxSlot = getMaxPositionSlot();
+        const slotCount = getPositionSlotCount();
         const entries = [];
         for (let i = 0; i < enabledCount; i++) {
           entries.push({
             slot: i,
-            ySlot: clamp(slots[i].ySlot ?? i, 0, MAX_Y_SLOTS - 1),
+            ySlot: clamp(slots[i].ySlot ?? i, 0, maxSlot),
             at: slots[i].ySlotUpdatedAt ?? 0
           });
         }
@@ -2259,8 +2330,8 @@
         }
         for (const slot of displaced) {
           let free = 0;
-          while (occupied.has(free) && free < MAX_Y_SLOTS) free++;
-          const assigned = free < MAX_Y_SLOTS ? free : clamp(slot, 0, MAX_Y_SLOTS - 1);
+          while (occupied.has(free) && free < slotCount) free++;
+          const assigned = free < slotCount ? free : clamp(slot, 0, maxSlot);
           occupied.add(assigned);
           slots[slot].ySlot = assigned;
           if (!slots[slot].ySlotUpdatedAt) {
@@ -2272,10 +2343,13 @@
       function getMemoDimensions() {
         const edge = getEffectivePanelEdge();
         const horizontal = isHorizontalPanelEdge(edge);
+        const positionSlots = getPositionSlotCount();
         const handleUnit = horizontal
-          ? window.innerWidth / MAX_Y_SLOTS
-          : window.innerHeight / MAX_Y_SLOTS;
-        const { widthUnits, heightUnits } = parseMemoSizeUnits(appState.global.memoAspectRatio);
+          ? window.innerWidth / positionSlots
+          : window.innerHeight / positionSlots;
+        const { widthUnits, heightUnits } = parseMemoSizeUnits(
+          normalizeMemoAspectRatioForEdge(appState.global.memoAspectRatio, edge)
+        );
         let widthPx = widthUnits * handleUnit;
         let heightPx = heightUnits * handleUnit;
         if (horizontal) {
@@ -2529,7 +2603,7 @@
 
       function getEffectivePanelEdge() {
         const edge = normalizePanelEdgeValue(appState.global?.panelEdge);
-        if (!isPremium && (edge === "left" || edge === "bottom")) return "right";
+        if (!isPremium && (edge === "left" || edge === "top")) return "right";
         return edge;
       }
 
@@ -2537,13 +2611,15 @@
         const edge = getEffectivePanelEdge();
         panel.classList.toggle("panel-edge-left", edge === "left");
         panel.classList.toggle("panel-edge-top", edge === "top");
-        panel.classList.toggle("panel-edge-bottom", edge === "bottom");
+        panel.classList.toggle("panel-edge-bottom", false);
+        clampAllYSlotsToCurrentEdge();
+        syncModeChipAppearance();
         lastPanelLayoutKey = "";
         updatePanelPosition();
       }
 
       function updatePanelPosition() {
-        const ySlot = appState.slots[appState.activeSlot]?.ySlot ?? 0;
+        const ySlot = clampYSlotForCurrentEdge(appState.slots[appState.activeSlot]?.ySlot ?? 0);
         const { widthPx, heightPx, handleUnit } = getMemoDimensions();
         const edge = getEffectivePanelEdge();
         const horizontal = isHorizontalPanelEdge(edge);
@@ -2662,10 +2738,11 @@
         }
         document.documentElement.style.setProperty("--note-shell-height", `${finalShellHeight}px`);
         document.documentElement.style.setProperty("--note-shell-maxh", `${finalShellHeight}px`);
+        syncModeChipAppearance();
       }
 
       function applyHandleSlotPosition(btn, slotIndex) {
-        const slot = appState.slots[slotIndex]?.ySlot ?? slotIndex;
+        const slot = clampYSlotForCurrentEdge(appState.slots[slotIndex]?.ySlot ?? slotIndex);
         const edge = getEffectivePanelEdge();
         if (isHorizontalPanelEdge(edge)) {
           btn.style.top = "";
@@ -2678,15 +2755,16 @@
 
       function getSlotHeightPx() {
         const edge = getEffectivePanelEdge();
+        const positionSlots = getPositionSlotCount();
         return isHorizontalPanelEdge(edge)
-          ? window.innerWidth / MAX_Y_SLOTS
-          : window.innerHeight / MAX_Y_SLOTS;
+          ? window.innerWidth / positionSlots
+          : window.innerHeight / positionSlots;
       }
 
       function pixelYToSlot(pixelY) {
         const slotH = getSlotHeightPx();
         if (slotH <= 0) return 0;
-        return clamp(Math.round(pixelY / slotH), 0, MAX_Y_SLOTS - 1);
+        return clamp(Math.round(pixelY / slotH), 0, getMaxPositionSlot());
       }
 
       /** 손잡이·메모·설정버튼 등 실제 인터랙션이 있는 영역 */
@@ -2885,12 +2963,34 @@
         }
       }
 
+      function shouldUseModeChipDot() {
+        const edge = getEffectivePanelEdge();
+        if (edge !== "left" && edge !== "right") return false;
+        const ratio = normalizeMemoAspectRatio(appState.global?.memoAspectRatio);
+        return ratio === "2:2" || ratio === "2:3";
+      }
+
+      function syncModeChipAppearance() {
+        if (!modeChip) return;
+        const useDot = shouldUseModeChipDot();
+        const label = isPinned ? ti("modeIce") : ti("modePeek");
+        modeChip.classList.toggle("is-dot", useDot);
+        modeChip.classList.toggle("ice", isPinned);
+        modeChip.classList.toggle("peek", !isPinned);
+        if (useDot) {
+          modeChip.textContent = "";
+          modeChip.setAttribute("title", label);
+          modeChip.setAttribute("aria-label", label);
+        } else {
+          modeChip.textContent = label;
+          modeChip.removeAttribute("title");
+          modeChip.setAttribute("aria-label", label);
+        }
+      }
+
       function setPinned(nextPinned) {
         isPinned = nextPinned;
-        modeChip.textContent = nextPinned ? ti("modeIce") : ti("modePeek");
-        modeChip.removeAttribute("title");
-        modeChip.classList.toggle("ice", nextPinned);
-        modeChip.classList.toggle("peek", !nextPinned);
+        syncModeChipAppearance();
         syncPeekAutoCollapseToMain();
       }
 
@@ -3318,7 +3418,8 @@
         const ec = appState.enabledCount;
         if (ec <= 0) return;
         const ord = appState.order.slice(0, ec);
-        const clampedBase = clamp(baseY, 0, MAX_Y_SLOTS - ec);
+        const maxBase = Math.max(0, getPositionSlotCount() - ec);
+        const clampedBase = clamp(baseY, 0, maxBase);
         const currentBase = Math.min(...ord.map((si) => appState.slots[si].ySlot ?? 0));
         let needsUpdate = clampedBase !== currentBase;
         if (!needsUpdate) {
@@ -3579,13 +3680,45 @@
       });
 
       // 앱 → 외부 붙여넣기 시 배경·글자크기·글꼴이 따라가지 않도록 클립보드 HTML 정리
+      function stripChecklistChromeForExport(root) {
+        if (!root) return;
+        root
+          .querySelectorAll(
+            ".peekom-checklist-box, .peekom-checklist-remove, .peekom-checklist-add, .peekom-task-check"
+          )
+          .forEach((el) => el.remove());
+        root.querySelectorAll(".peekom-checklist-row").forEach((row) => {
+          const text = row.querySelector(".peekom-checklist-text");
+          if (!text) {
+            row.remove();
+            return;
+          }
+          const replacement = document.createElement("div");
+          replacement.innerHTML = text.innerHTML;
+          if (text.style?.textAlign) replacement.style.textAlign = text.style.textAlign;
+          row.replaceWith(replacement);
+        });
+        root.querySelectorAll(".peekom-checklist, .peekom-task-list").forEach((widget) => {
+          const parent = widget.parentNode;
+          if (!parent) return;
+          while (widget.firstChild) parent.insertBefore(widget.firstChild, widget);
+          widget.remove();
+        });
+        root.querySelectorAll(".peekom-task-content").forEach((content) => {
+          const replacement = document.createElement("div");
+          replacement.innerHTML = content.innerHTML;
+          content.replaceWith(replacement);
+        });
+      }
+
       function sanitizeClipboardHtmlForExport(html) {
         const wrap = document.createElement("div");
         wrap.innerHTML = html;
+        stripChecklistChromeForExport(wrap);
         stripMemoInlineFontSizes(wrap);
         stripMemoInlineFontFamilies(wrap);
         stripMemoBackgroundColors(wrap);
-        return wrap.innerHTML;
+        return wrap;
       }
 
       function onMemoCopyOrCut(event) {
@@ -3598,10 +3731,10 @@
           const frag = range.cloneContents();
           const holder = document.createElement("div");
           holder.appendChild(frag);
-          const plain = selection.toString();
-          const cleanHtml = sanitizeClipboardHtmlForExport(holder.innerHTML);
+          const cleaned = sanitizeClipboardHtmlForExport(holder.innerHTML);
+          const plain = (cleaned.innerText || cleaned.textContent || "").replace(/\u00a0/g, " ");
           event.clipboardData.setData("text/plain", plain);
-          event.clipboardData.setData("text/html", cleanHtml);
+          event.clipboardData.setData("text/html", cleaned.innerHTML);
           event.preventDefault();
         } catch {
           /* fall through to default copy */
@@ -4733,12 +4866,13 @@
       function getStagingZoomRange(layout) {
         if (!layout) return { minZoom: 1, maxZoom: 1 };
         const { wrapW, wrapH, baseDispW, baseDispH } = layout;
-        const minZoom = baseDispH > 0 ? wrapH / baseDispH : 1;
-        const maxZoom = baseDispW > 0 ? wrapW / baseDispW : 1;
-        return {
-          minZoom: Math.min(minZoom, maxZoom),
-          maxZoom: Math.max(minZoom, maxZoom)
-        };
+        const fitMin = baseDispH > 0 ? wrapH / baseDispH : 1;
+        const fitMax = baseDispW > 0 ? wrapW / baseDispW : 1;
+        const fitLo = Math.min(fitMin, fitMax);
+        const fitHi = Math.max(fitMin, fitMax);
+        const minZoom = Math.max(0.1, fitLo * 0.5);
+        const maxZoom = Math.max(minZoom, fitHi);
+        return { minZoom, maxZoom };
       }
 
       function syncStagingSliderRange(preserveZoom = true) {
@@ -4750,7 +4884,10 @@
         const maxPct = Math.max(minPct, Math.round(maxZoom * 100));
         imageStagingSlider.min = String(minPct);
         imageStagingSlider.max = String(maxPct);
-        const curZoom = preserveZoom ? (Number(imageStagingSlider.value) || 100) / 100 : 1;
+        const midPct = Math.round((minPct + maxPct) / 2);
+        const curZoom = preserveZoom
+          ? (Number(imageStagingSlider.value) || midPct) / 100
+          : midPct / 100;
         const clamped = clamp(curZoom, minZoom, maxZoom);
         imageStagingSlider.value = String(Math.round(clamped * 100));
       }

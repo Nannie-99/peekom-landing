@@ -80,21 +80,21 @@ const RELEASE_HISTORY = [
 const CHANGELOG_V124 = {
     ko: [
         "제거 시 시작 프로그램·바로가기 자동 정리 (메모는 기본 보존, 선택 시만 삭제)",
-        "메모 크기 옵션 추가 (5×5, 4×3, 5×3, 4×5)",
-        "메모를 외부로 복사할 때 배경·글자 크기 스타일 누출 수정",
+        "메모 크기 옵션 조정 (2×2·2×3·3×2 추가, 5×5·5×3 제거)",
+        "메모를 외부로 복사할 때 배경·글자 크기·체크리스트 UI 누출 수정",
         "작업표시줄/Dock에서 숨기기 옵션 (트레이·메뉴바 아이콘은 항상 표시)",
-        "작업표시줄·Dock 우클릭에 환경설정·도움말 추가",
+        "작업표시줄·Dock 우클릭에 환경설정·도움말 추가 (Peekom 아이콘)",
         "듀얼 모니터「표시 모니터 고정」왼쪽 모니터 위치 오류 수정",
-        "표시 위치: 위쪽(무료)·아래쪽(Plus) 가장자리 추가"
+        "표시 위치: 오른쪽(무료)·왼쪽·위쪽(Plus), 위쪽일 때 메모 크기 제한"
     ],
     en: [
         "Uninstall clears startup entries and shortcuts (memos kept by default; optional full wipe)",
-        "New memo sizes: 5×5, 4×3, 5×3, 4×5",
-        "Fixed background/font-size leaking when copying memos to other apps",
+        "Memo sizes: added 2×2 / 2×3 / 3×2; removed 5×5 / 5×3",
+        "Fixed background/font-size/checklist UI leaking when copying memos outward",
         "Hide from taskbar/Dock option (tray/menu bar icon always shown)",
-        "Settings and Help on taskbar Jump List and Dock menu",
+        "Settings and Help on taskbar Jump List and Dock menu (Peekom icons)",
         "Fixed dual-monitor attach when the left display is selected",
-        "Panel edges: top (free) and bottom (Plus)"
+        "Panel edges: right (free), left & top (Plus); size limits when top is selected"
     ]
 };
 
@@ -961,8 +961,8 @@ const i18n = {
             "<p>무료·Peekom Plus 모두 사용할 수 있습니다.</p>",
         faq8q: "Peekom은 모니터 오른쪽 가장자리에서만 사용 가능한가요?",
         faq8a:
-            "<p>무료: <strong>오른쪽</strong>·<strong>위쪽</strong> 가장자리</p>" +
-            "<p>Peekom Plus: <strong>왼쪽</strong>·<strong>아래쪽</strong> 가장자리도 사용 가능합니다.</p>" +
+            "<p>무료: <strong>오른쪽</strong> 가장자리</p>" +
+            "<p>Peekom Plus: <strong>왼쪽</strong>·<strong>위쪽</strong> 가장자리도 사용 가능합니다.</p>" +
             "<p>설정 → 표시 위치에서 바꿀 수 있습니다.</p>",
         faq9q: "실수로 Peekom Plus를 삭제하면 유료 기능은 어떻게 되나요?",
         faq9a:
@@ -1520,8 +1520,8 @@ const i18n = {
             "<p>Available on Free and Plus.</p>",
         faq8q: "Can Peekom only be used on the right edge of the monitor?",
         faq8a:
-            "<p>Free: <strong>right</strong> and <strong>top</strong> edges.</p>" +
-            "<p>Peekom Plus: also <strong>left</strong> and <strong>bottom</strong>.</p>" +
+            "<p>Free: <strong>right</strong> edge.</p>" +
+            "<p>Peekom Plus: also <strong>left</strong> and <strong>top</strong>.</p>" +
             "<p>Change this in Settings → Panel side.</p>",
         faq9q: "I accidentally uninstalled Peekom Plus. What happens to my paid features?",
         faq9a:

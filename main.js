@@ -97,6 +97,14 @@ const SHARED_STATE_KEY = "ppaekkom-plus-state-v5";
 const SHARED_STATE_BACKUP_KEY = "ppaekkom-plus-state-v5-backup";
 const MONITOR_PREFS_FILE = "monitor-prefs.json";
 const APP_ID = "com.peekom.app";
+if (process.platform === "win32") {
+  // Jump List·작업표시줄 그룹이 Electron이 아닌 Peekom으로 묶이도록 가능한 한 일찍 설정
+  try {
+    app.setAppUserModelId(APP_ID);
+  } catch {
+    /* ignore */
+  }
+}
 const DOCS_HELP_URL = "https://www.peekom.com/#help";
 const LEMON_BUY_URL =
   "https://peekom.lemonsqueezy.com/checkout/buy/97457035-6963-4cc0-9348-63dbb738e6a8";
@@ -661,28 +669,79 @@ function handleShellLaunchArgs(argv, options = {}) {
   return null;
 }
 
+function resolveJumpListIconPath() {
+  const name = premiumActive ? "plus.ico" : "icon.ico";
+  const candidates = app.isPackaged
+    ? [path.join(process.resourcesPath, name), path.join(process.resourcesPath, "icon.ico")]
+    : [path.join(__dirname, "build", name), path.join(__dirname, "build", "icon.ico")];
+  for (const candidate of candidates) {
+    try {
+      if (fs.existsSync(candidate)) return candidate;
+    } catch {
+      /* ignore */
+    }
+  }
+  return process.execPath;
+}
+
+function jumpListTaskArguments(flag) {
+  if (app.isPackaged) return flag;
+  return `"${app.getAppPath()}" ${flag}`;
+}
+
 function refreshShellContextMenus() {
   const lang = appUiLanguage || "ko";
   if (process.platform === "win32") {
     try {
-      app.setUserTasks([
+      // setJumpList(작업만)를 쓰면 Windows가 관리하는 Recent/Frequent가 사라져
+      // 개발 실행 시 생기던 "Electron" 항목이 Jump List에 남지 않는다.
+      const iconPath = resolveJumpListIconPath();
+      const result = app.setJumpList([
         {
-          program: process.execPath,
-          arguments: OPEN_SETTINGS_ARG,
-          iconPath: process.execPath,
-          iconIndex: 0,
-          title: trayT("settings", lang),
-          description: trayT("settings", lang)
-        },
-        {
-          program: process.execPath,
-          arguments: OPEN_HELP_ARG,
-          iconPath: process.execPath,
-          iconIndex: 0,
-          title: trayT("help", lang),
-          description: trayT("help", lang)
+          type: "tasks",
+          items: [
+            {
+              type: "task",
+              program: process.execPath,
+              args: jumpListTaskArguments(OPEN_SETTINGS_ARG),
+              iconPath,
+              iconIndex: 0,
+              title: trayT("settings", lang),
+              description: trayT("settings", lang)
+            },
+            {
+              type: "task",
+              program: process.execPath,
+              args: jumpListTaskArguments(OPEN_HELP_ARG),
+              iconPath,
+              iconIndex: 0,
+              title: trayT("help", lang),
+              description: trayT("help", lang)
+            }
+          ]
         }
       ]);
+      if (result !== "ok") {
+        // Jump List 실패 시에도 작업만은 보이도록 폴백
+        app.setUserTasks([
+          {
+            program: process.execPath,
+            arguments: jumpListTaskArguments(OPEN_SETTINGS_ARG),
+            iconPath,
+            iconIndex: 0,
+            title: trayT("settings", lang),
+            description: trayT("settings", lang)
+          },
+          {
+            program: process.execPath,
+            arguments: jumpListTaskArguments(OPEN_HELP_ARG),
+            iconPath,
+            iconIndex: 0,
+            title: trayT("help", lang),
+            description: trayT("help", lang)
+          }
+        ]);
+      }
     } catch {
       /* ignore */
     }
@@ -997,17 +1056,17 @@ function resolveTargetDisplay() {
 }
 
 function normalizePanelEdge(edge) {
-  if (edge === "left" || edge === "top" || edge === "bottom") return edge;
+  if (edge === "left" || edge === "top") return edge;
   return "right";
 }
 
 function isHorizontalPanelEdge(edge) {
-  return edge === "top" || edge === "bottom";
+  return edge === "top";
 }
 
 function clampPanelEdgeForPremium(edge) {
   const normalized = normalizePanelEdge(edge);
-  if (!premiumActive && (normalized === "left" || normalized === "bottom")) {
+  if (!premiumActive && (normalized === "left" || normalized === "top")) {
     return "right";
   }
   return normalized;
@@ -1159,8 +1218,6 @@ function getAttachedBounds(targetDisplay) {
     x = area.x + area.width - width;
   } else if (edge === "top") {
     y = area.y;
-  } else if (edge === "bottom") {
-    y = area.y + area.height - height;
   }
   return { x, y, width, height };
 }
