@@ -4,11 +4,10 @@ const fs = require("fs");
 const os = require("os");
 const path = require("path");
 const license = require("./license");
-const { initAutoUpdater } = require("./updater");
+const { initAutoUpdater, readLatestStateBackup } = require("./updater");
 const { trayT, resolveTrayLang } = require("./assets/tray-i18n");
 
 const PRELOAD_PATH = path.join(__dirname, "preload.js");
-const IMAGE_EXTENSIONS = new Set(["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg"]);
 const EXTERNAL_URL_ALLOWLIST = [
   "peekom.com",
   "www.peekom.com",
@@ -33,6 +32,77 @@ function requirePremiumAccess() {
   return null;
 }
 
+const LOG_MAX_BYTES = 1024 * 1024;
+const LICENSE_FILE_NAME = "peekom-license.json";
+let settingsCloseTimer = null;
+
+function appendAppLog(message) {
+  try {
+    const dir = path.join(app.getPath("userData"), "logs");
+    fs.mkdirSync(dir, { recursive: true });
+    const file = path.join(dir, "peekom.log");
+    try {
+      if (fs.statSync(file).size > LOG_MAX_BYTES) {
+        const rotated = path.join(dir, "peekom.log.1");
+        fs.rmSync(rotated, { force: true });
+        fs.renameSync(file, rotated);
+      }
+    } catch {
+      /* first write */
+    }
+    fs.appendFileSync(file, `${new Date().toISOString()} ${message}\n`, "utf8");
+  } catch {
+    /* ignore */
+  }
+}
+
+function appResourcesPresent() {
+  if (!app.isPackaged) return true;
+  try {
+    return fs.existsSync(path.join(process.resourcesPath, "app.asar"));
+  } catch {
+    return false;
+  }
+}
+
+function attachRendererGuards(win, htmlFile) {
+  if (!win || win.isDestroyed()) return;
+  let retried = false;
+  win.webContents.on("did-fail-load", (_event, code, desc, url, isMainFrame) => {
+    if (!isMainFrame) return;
+    appendAppLog(`did-fail-load ${code} ${desc || ""} ${url || ""}`);
+    if (!appResourcesPresent()) {
+      app.exit(0);
+      return;
+    }
+    if (!retried) {
+      retried = true;
+      win.loadFile(path.join(__dirname, htmlFile)).catch(() => app.exit(0));
+    }
+  });
+  win.webContents.on("render-process-gone", (_event, details) => {
+    appendAppLog(`render-process-gone ${details?.reason || ""}`);
+    if (!appResourcesPresent()) app.exit(0);
+  });
+}
+
+function startResourceWatchdog() {
+  if (!app.isPackaged) return;
+  setInterval(() => {
+    if (!appResourcesPresent()) {
+      appendAppLog("app resources missing; exiting");
+      app.exit(0);
+    }
+  }, 5000);
+}
+
+function clearSettingsCloseTimer() {
+  if (settingsCloseTimer) {
+    clearTimeout(settingsCloseTimer);
+    settingsCloseTimer = null;
+  }
+}
+
 function isSafeExternalUrl(rawUrl) {
   try {
     const safe = /^(https?:|mailto:)/i.test(rawUrl) ? rawUrl : `https://${rawUrl}`;
@@ -46,37 +116,6 @@ function isSafeExternalUrl(rawUrl) {
   } catch {
     return null;
   }
-}
-
-function looksLikeImage(buf, ext) {
-  if (!buf || buf.length < 4) return false;
-  if (ext === "png" && buf[0] === 0x89 && buf[1] === 0x50) return true;
-  if ((ext === "jpg" || ext === "jpeg") && buf[0] === 0xff && buf[1] === 0xd8) return true;
-  if (ext === "gif" && buf[0] === 0x47 && buf[1] === 0x49) return true;
-  if (ext === "webp" && buf[0] === 0x52 && buf[1] === 0x49) return true;
-  if (ext === "bmp" && buf[0] === 0x42 && buf[1] === 0x4d) return true;
-  if (ext === "svg") {
-    const text = buf.toString("utf8", 0, Math.min(buf.length, 256)).trim();
-    return text.includes("<svg") || text.startsWith("<?xml");
-  }
-  return false;
-}
-
-function isAllowedImagePath(filePath) {
-  if (typeof filePath !== "string" || !filePath.trim()) return false;
-  let resolved;
-  try {
-    resolved = path.resolve(filePath.trim());
-  } catch {
-    return false;
-  }
-  const ext = path.extname(resolved).slice(1).toLowerCase();
-  if (!IMAGE_EXTENSIONS.has(ext)) return false;
-  if (!fs.existsSync(resolved)) return false;
-  const stat = fs.statSync(resolved);
-  if (!stat.isFile() || stat.size > 15 * 1024 * 1024) return false;
-  const header = fs.readFileSync(resolved).subarray(0, 32);
-  return looksLikeImage(header, ext);
 }
 
 const MAX_STATE_JSON_BYTES = 20 * 1024 * 1024;
@@ -1388,6 +1427,7 @@ function createMainWindow() {
     transparent: true,
     backgroundColor: "#00000000",
     alwaysOnTop: false,
+    title: "Peekom",
     skipTaskbar: hideFromShell,
     hasShadow: false,
     resizable: false,
@@ -1410,6 +1450,7 @@ function createMainWindow() {
 
   mainWindow.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   mainWindow.setFullScreenable(false);
+  attachRendererGuards(mainWindow, "index.html");
   mainWindow.loadFile(path.join(__dirname, "index.html"));
 
   mainWindow.on("focus", () => {
@@ -1504,6 +1545,7 @@ function createSettingsWindow() {
 
   settingsWindow.setMenuBarVisibility(false);
   settingsWindow.setAlwaysOnTop(true, "screen-saver");
+  attachRendererGuards(settingsWindow, "settings.html");
   settingsWindow.loadFile(path.join(__dirname, "settings.html"));
 
   settingsWindow.webContents.once("did-finish-load", () => {
@@ -1535,11 +1577,21 @@ function createSettingsWindow() {
   settingsWindow.on("close", (e) => {
     if (settingsAllowClose) {
       settingsAllowClose = false;
+      clearSettingsCloseTimer();
       return;
     }
     e.preventDefault();
     if (settingsWindow && !settingsWindow.isDestroyed()) {
       settingsWindow.webContents.send("settings:request-close");
+      clearSettingsCloseTimer();
+      const target = settingsWindow;
+      settingsCloseTimer = setTimeout(() => {
+        settingsCloseTimer = null;
+        if (!target || target.isDestroyed()) return;
+        appendAppLog("settings close fallback destroy");
+        settingsAllowClose = true;
+        target.destroy();
+      }, 1500);
     }
   });
 
@@ -1651,9 +1703,20 @@ async function promptMacCompleteUninstall() {
 
   const userDataPath = app.getPath("userData");
   if (deleteData) {
+    const licensePath = path.join(userDataPath, LICENSE_FILE_NAME);
+    let licenseBackup = null;
+    try {
+      if (fs.existsSync(licensePath)) licenseBackup = fs.readFileSync(licensePath);
+    } catch {
+      licenseBackup = null;
+    }
     app.once("will-quit", () => {
       try {
         fs.rmSync(userDataPath, { recursive: true, force: true });
+        if (licenseBackup) {
+          fs.mkdirSync(userDataPath, { recursive: true });
+          fs.writeFileSync(path.join(userDataPath, LICENSE_FILE_NAME), licenseBackup);
+        }
       } catch {
         /* ignore */
       }
@@ -2197,6 +2260,7 @@ if (!gotTheLock) {
   });
 
   ipcMain.handle("settings:close-window", () => {
+    clearSettingsCloseTimer();
     if (settingsWindow && !settingsWindow.isDestroyed()) {
       settingsAllowClose = true;
       settingsWindow.close();
@@ -2204,20 +2268,59 @@ if (!gotTheLock) {
     return { ok: true };
   });
 
+  ipcMain.handle("settings:close-handled", () => {
+    clearSettingsCloseTimer();
+    return { ok: true };
+  });
+
+  ipcMain.handle("log:write", (event, message) => {
+    if (!isTrustedRenderer(event)) return { ok: false };
+    appendAppLog(String(message || "").slice(0, 2000));
+    return { ok: true };
+  });
+
+  ipcMain.on("state-backup:read-sync", (event) => {
+    if (!isTrustedRenderer(event)) {
+      event.returnValue = "";
+      return;
+    }
+    event.returnValue = readLatestStateBackup() || "";
+  });
+
   ipcMain.handle("settings:update", (_, partialSettings) => {
-    appSettings = normalizeSettings(partialSettings);
-    if (appSettings.anchor !== "custom") {
-      appSettings.manualYOffset = 0;
+    const warnings = [];
+    try {
+      appSettings = normalizeSettings(partialSettings);
+      if (appSettings.anchor !== "custom") {
+        appSettings.manualYOffset = 0;
+      }
+    } catch (err) {
+      appendAppLog(`settings:update normalize ${err?.message || err}`);
+      return { ok: false, reason: "NORMALIZE", warnings: ["normalize"] };
     }
 
-    const shortcutStatus = updateShortcutRegistration();
-    if (trayIcon) {
-      trayIcon.setContextMenu(buildTrayMenu());
+    let shortcutStatus = { ok: true };
+    try {
+      shortcutStatus = updateShortcutRegistration();
+    } catch (err) {
+      warnings.push("shortcut");
+      appendAppLog(`settings:update shortcut ${err?.message || err}`);
+    }
+    try {
+      if (trayIcon) trayIcon.setContextMenu(buildTrayMenu());
+    } catch (err) {
+      warnings.push("tray");
+      appendAppLog(`settings:update tray ${err?.message || err}`);
     }
     lastAttachedSignature = null;
-    refreshWindowPosition(true);
+    try {
+      refreshWindowPosition(true);
+    } catch (err) {
+      warnings.push("position");
+      appendAppLog(`settings:update position ${err?.message || err}`);
+    }
 
-    return { ok: true, shortcutStatus, windowState: getWindowState() };
+    return { ok: true, shortcutStatus, warnings, windowState: getWindowState() };
   });
 
       ipcMain.handle("memo:flush", async () => {
@@ -2528,44 +2631,6 @@ if (!gotTheLock) {
     }
   });
 
-  ipcMain.handle("image:file-exists", async (event, filePath) => {
-    if (!isTrustedRenderer(event)) {
-      return { ok: false, exists: false, message: "UNTRUSTED_SENDER" };
-    }
-    const premiumBlock = requirePremiumAccess();
-    if (premiumBlock) return { ok: false, exists: false, message: premiumBlock.reason };
-    if (typeof filePath !== "string" || !filePath.trim()) {
-      return { ok: false, exists: false };
-    }
-    try {
-      return { ok: true, exists: fs.existsSync(filePath) };
-    } catch (err) {
-      return { ok: false, exists: false, message: String(err?.message || err) };
-    }
-  });
-
-  ipcMain.handle("image:read-file", async (event, filePath) => {
-    if (!isTrustedRenderer(event)) {
-      return { ok: false, message: "UNTRUSTED_SENDER" };
-    }
-    const premiumBlock = requirePremiumAccess();
-    if (premiumBlock) return premiumBlock;
-
-    if (!isAllowedImagePath(filePath)) {
-      return { ok: false, message: "INVALID_IMAGE_PATH" };
-    }
-    try {
-      const resolved = path.resolve(filePath.trim());
-      const buf = fs.readFileSync(resolved);
-      const ext = path.extname(resolved).slice(1).toLowerCase();
-      const mimeExt = ext === "jpg" ? "jpeg" : ext;
-      const dataUrl = `data:image/${mimeExt};base64,${buf.toString("base64")}`;
-      return { ok: true, dataUrl, filePath: resolved };
-    } catch (err) {
-      return { ok: false, message: String(err?.message || err) };
-    }
-  });
-
   ipcMain.handle("startup:get", () => {
     try {
       const login = readStartupLoginState();
@@ -2600,22 +2665,18 @@ if (!gotTheLock) {
   createMainWindow();
   initAutoUpdater();
 
-  // 로그인 자동 실행이 아니면(=바로가기 더블클릭/수동 실행) 설정창을 함께 연다.
-  // 로그인 자동 실행은 메모 본체 창만 백그라운드로 띄운다.
-  // Windows: --autostart 인자 / macOS: Login Items 의 wasOpenedAtLogin
-  const launchedAtLogin = wasLaunchedAtLogin();
+  // 설정창은 첫 실행(설정 완료 전)이거나 --open-settings 일 때만 연다.
   const helpRequested = argvIncludes(process.argv, OPEN_HELP_ARG);
-  const shouldOpenSettings =
-    argvIncludes(process.argv, OPEN_SETTINGS_ARG) ||
-    (!launchedAtLogin && !helpRequested);
+  const openSettingsArg = argvIncludes(process.argv, OPEN_SETTINGS_ARG);
 
   if (helpRequested) {
     void shell.openExternal(DOCS_HELP_URL);
   }
 
-  // 첫 실행(v5 상태 없음)이거나 setupCompleted가 false면 설정창 자동 오픈
+  startResourceWatchdog();
+
   mainWindow.webContents.once("did-finish-load", () => {
-    if (helpRequested && !argvIncludes(process.argv, OPEN_SETTINGS_ARG)) {
+    if (helpRequested && !openSettingsArg) {
       return;
     }
     try {
@@ -2626,18 +2687,18 @@ if (!gotTheLock) {
           try { const s = JSON.parse(v5); return !s?.global?.setupCompleted; } catch(e) { return true; }
         })()
       `).then((isFirstRun) => {
-        if (isFirstRun || shouldOpenSettings) {
+        if (isFirstRun || openSettingsArg) {
           setTimeout(() => {
             createSettingsWindow();
           }, 400);
         }
       }).catch(() => {
-        if (shouldOpenSettings) {
+        if (openSettingsArg) {
           setTimeout(() => createSettingsWindow(), 400);
         }
       });
     } catch (e) {
-      if (shouldOpenSettings) {
+      if (openSettingsArg) {
         setTimeout(() => createSettingsWindow(), 400);
       }
     }
@@ -2694,9 +2755,12 @@ app.on("before-quit", (event) => {
   if (quitFlushDone) return;
   event.preventDefault();
   quitFlushDone = true;
-  flushMainWindowMemo().finally(() => {
-    app.quit();
-  });
+  flushMainWindowMemo()
+    .then(() => session.defaultSession.flushStorageData())
+    .catch(() => {})
+    .finally(() => {
+      app.quit();
+    });
 });
 
 app.on("will-quit", () => {

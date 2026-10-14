@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "मूल फ़ाइल से लोड किया गया",
   "imagePreviewFallback": "मूल फ़ाइल नहीं मिली; सहेजा पूर्वावलोकन दिखाया जा रहा है।",
   "imageNoPathInfo": "मूल पथ नहीं; सहेजा पूर्वावलोकन दिखाया जा रहा है।",
-  "fontSizeRangeHint": "सीमा: 8 – 36 px",
+  "fontSizeRangeHint": "सीमा: 8 – 45 px",
   "startupCheckFail": "स्टार्टअप पंजीकरण सत्यापित नहीं हो सका। पुनः प्रयास करें।",
   "startupSetError": "स्टार्टअप सेटिंग कॉन्फ़िगर करते समय त्रुटि।",
   "stateChangedConfirm": "सेटिंग कहीं और बदली गई।\n\nसहेजे न गए बदलाव छोड़कर रीफ़्रेश करें?",

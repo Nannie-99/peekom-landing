@@ -115,48 +115,6 @@
         min-width: 0;
       }
 
-      .slot-image-thumb-box {
-        margin-top: 6px;
-        padding: 8px;
-        border-radius: var(--radius-md);
-        background: #eceef1;
-        border: 1px solid var(--border);
-        min-height: 72px;
-      }
-
-      .slot-image-thumb-grid {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 6px;
-        width: 100%;
-        align-items: stretch;
-      }
-
-      .slot-image-thumb {
-        flex: 1 1 0;
-        max-width: calc(20% - 5px);
-        aspect-ratio: 1;
-        min-width: 0;
-        min-height: 48px;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        cursor: pointer;
-        background: var(--surface);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
-
-      .slot-image-thumb-empty {
-        width: 100%;
-        min-height: 56px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        color: var(--muted);
-      }
-
       .color-advanced-btn {
         flex-shrink: 0;
         height: 30px;
@@ -227,56 +185,6 @@
         border: 1px solid var(--border);
         border-radius: var(--radius);
         font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      }
-
-      .image-lightbox {
-        position: fixed;
-        inset: 0;
-        z-index: 10000;
-        background: rgba(0, 0, 0, 0.72);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-      }
-
-      .image-lightbox.hidden {
-        display: none;
-      }
-
-      .image-lightbox-card {
-        background: #fff;
-        border-radius: 8px;
-        max-width: min(92vw, 720px);
-        max-height: 88vh;
-        overflow: auto;
-        padding: 12px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .image-lightbox-card img {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-      }
-
-      .image-lightbox-note {
-        font-size: 12px;
-        color: var(--muted);
-        text-align: center;
-      }
-
-      .image-lightbox-close {
-        align-self: flex-end;
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        background: var(--surface);
-        padding: 4px 10px;
-        cursor: pointer;
-        font-size: 12px;
       }
 
       .settings-meta {
@@ -1732,7 +1640,7 @@
         : "hello.peekom@gmail.com";
       let isPremium = false;
       const FONT_SIZE_MIN = 8;
-      const FONT_SIZE_MAX = 36;
+      const FONT_SIZE_MAX = 45;
       const HOVER_DELAY_MIN_SEC = 0.1;
       const HOVER_DELAY_MAX_SEC = 10;
       const HOVER_DELAY_STEP_SEC = 0.1;
@@ -1785,11 +1693,9 @@
           opt.hidden = !allowed;
           opt.disabled = !allowed;
         });
+        // appState에는 쓰지 않는다: 폼 초기화 전 select 기본값(첫 옵션 2:2)이 저장값을 덮어쓰는 회귀 방지
         const current = normalizeMemoAspectRatioForEdge(select.value, panelEdge);
         if (select.value !== current) select.value = current;
-        if (appState?.global) {
-          appState.global.memoAspectRatio = current;
-        }
         syncYSlotOptionsForEdge(panelEdge);
       }
 
@@ -2017,10 +1923,34 @@
         return images;
       }
 
+      function clampIndexLabel(raw) {
+        if (typeof raw !== "string") return "";
+        return Array.from(raw.trim()).slice(0, LABEL_MAX).join("");
+      }
+
+      function isSlotLabelFocused(slotIndex) {
+        const active = document.activeElement;
+        return Boolean(active && active.id === `slot${slotIndex}Label`);
+      }
+
+      function restoreFocusAfterNativeDialog(prev) {
+        const prevId = prev && prev.id ? prev.id : "";
+        window.focus();
+        if (!prevId) return;
+        const el = document.getElementById(prevId);
+        if (el && typeof el.focus === "function") el.focus();
+      }
+
+      function logSettings(code, err) {
+        const message = `[settings] ${code}: ${err && err.message ? err.message : err || ""}`;
+        console.error(message);
+        ipcRenderer.invoke("log:write", message).catch(() => {});
+      }
+
       function normalizeSlot(raw, index) {
         const base = defaultSlot(index);
         return {
-          label: typeof raw?.label === "string" ? raw.label.slice(0, LABEL_MAX) : "",
+          label: clampIndexLabel(raw?.label),
           theme: THEME_NAMES.includes(raw?.theme) ? raw.theme : "yellow",
           memoHtml: typeof raw?.memoHtml === "string" ? raw.memoHtml : "",
           ySlot:
@@ -2364,7 +2294,7 @@
             dst.fontSize = src.fontSize;
             dst.ySlot = src.ySlot;
             dst.ySlotUpdatedAt = src.ySlotUpdatedAt;
-            dst.label = src.label;
+            if (!isSlotLabelFocused(s)) dst.label = src.label;
             dst.theme = src.theme;
             dst.customBg = src.customBg;
             dst.customText = src.customText;
@@ -2374,7 +2304,9 @@
             const ySlotSel = document.getElementById(`slot${s}YSlot`);
             if (ySlotSel) ySlotSel.value = String(dst.ySlot ?? s);
             const inp = document.getElementById(`slot${s}Label`);
-            if (inp) inp.value = getSlotLabelFormValue(s);
+            if (inp && !isSlotLabelFocused(s) && inp.dataset.composing !== "1") {
+              inp.value = getSlotLabelFormValue(s);
+            }
             const tabLabel = tabRow.querySelector(`[data-settings-tab="idx${s}"] span:last-child`);
             if (tabLabel) tabLabel.textContent = resolveSlotLabel(dst.label, s);
             const dot = tabRow.querySelector(`[data-settings-tab="idx${s}"] .tab-color-dot`);
@@ -2394,7 +2326,6 @@
           syncCustomColorVisibility();
           patchBaseline();
         }
-        renderAllSlotImageThumbs();
       }
 
       async function reloadStateFromDisk(options = {}) {
@@ -2417,6 +2348,7 @@
 
         if (!force && !structuralChange && isDirty()) {
           reloadConfirmOpen = true;
+          const prevFocus = document.activeElement;
           let ok = false;
           try {
             ok = confirm(
@@ -2424,6 +2356,7 @@
             );
           } finally {
             reloadConfirmOpen = false;
+            restoreFocusAfterNativeDialog(prevFocus);
           }
           if (!ok) {
             suppressExternalReloadUntil = Date.now() + 3000;
@@ -2509,11 +2442,30 @@
       }
 
       async function requestSettingsClose() {
-        if (isDirty()) {
-          showUnsavedModal(true);
-          return;
+        try {
+          await ipcRenderer.invoke("settings:close-handled");
+        } catch {
+          /* ignore */
         }
-        await ipcRenderer.invoke("settings:close-window");
+        let dirty = false;
+        try {
+          dirty = isDirty();
+        } catch (err) {
+          logSettings("E-CLOSE", err);
+        }
+        if (dirty) {
+          try {
+            showUnsavedModal(true);
+            return;
+          } catch (err) {
+            logSettings("E-CLOSE-MODAL", err);
+          }
+        }
+        try {
+          await ipcRenderer.invoke("settings:close-window");
+        } catch (err) {
+          logSettings("E-CLOSE-IPC", err);
+        }
       }
 
       async function refreshSlotMemosFromDisk() {
@@ -2720,7 +2672,9 @@
 
       async function onImportBackup() {
         if (showPremiumModalIfFree()) return;
+        const prevFocus = document.activeElement;
         const ok = confirm(ti("importConfirm"));
+        restoreFocusAfterNativeDialog(prevFocus);
         if (!ok) return;
         try {
           const result = await ipcRenderer.invoke("import:load");
@@ -3081,8 +3035,6 @@
           const collapsed = document.getElementById("backupBody")?.classList.contains("hidden");
           backupToggleBtn.textContent = collapsed ? ti("backupExpand") : ti("backupCollapse");
         }
-        const lightboxClose = document.getElementById("settingsImageLightboxClose");
-        if (lightboxClose) lightboxClose.textContent = ti("settingsClose");
       }
 
       function setLabelFor(forId, key) {
@@ -3288,14 +3240,6 @@
         panel.querySelectorAll(`[data-color-advanced="bg-${slotIndex}"], [data-color-advanced="text-${slotIndex}"]`).forEach((btn) => {
           btn.textContent = ti("colorAdvancedPicker");
         });
-
-        const imagesBlock = panel.querySelector(`[data-slot-images="${slotIndex}"]`)?.closest(".field-block");
-        const imagesLabel = imagesBlock?.querySelector(".field-label");
-        if (imagesLabel) imagesLabel.textContent = ti("attachedImagesLabel");
-        const imagesHint = imagesBlock?.querySelector(".field-hint-below");
-        if (imagesHint) imagesHint.textContent = ti("attachedImagesHint");
-        const emptyThumb = panel.querySelector(`#slot${slotIndex}ImageThumbs .slot-image-thumb-empty`);
-        if (emptyThumb) emptyThumb.textContent = ti("attachedImagesEmpty");
       }
 
       function refreshSettingsTabsI18n() {
@@ -3907,7 +3851,7 @@
             <div class="field-stack">
               <div class="field-inline">
                 <label class="field-label" for="slot${slotIndex}Label">${ti("indexTitleLabel")}</label>
-                <input id="slot${slotIndex}Label" class="setting-input" type="text" maxlength="6" />
+                <input id="slot${slotIndex}Label" class="setting-input" type="text" autocomplete="off" />
               </div>
               <p class="field-hint-below">${ti("indexTitleMaxHint")}</p>
               <p class="field-error hidden" id="slot${slotIndex}LabelError" role="alert"></p>
@@ -4011,108 +3955,11 @@
               </div>
             </div>
 
-            <div class="field-block">
-              <label class="field-label">${ti("attachedImagesLabel")}</label>
-              <div class="slot-image-thumb-box">
-                <div class="slot-image-thumb-grid" id="slot${slotIndex}ImageThumbs" data-slot-images="${slotIndex}">
-                  <span class="slot-image-thumb-empty">${ti("attachedImagesEmpty")}</span>
-                </div>
-              </div>
-              <p class="field-hint-below">${ti("attachedImagesHint")}</p>
-            </div>
           </div>
         `;
         const ySlotSel = div.querySelector(`#slot${slotIndex}YSlot`);
         if (ySlotSel) ySlotSel.innerHTML = ySlotOptions;
         return div;
-      }
-
-      function ensureImageLightbox() {
-        if (document.getElementById("settingsImageLightbox")) return;
-        const el = document.createElement("div");
-        el.id = "settingsImageLightbox";
-        el.className = "image-lightbox hidden";
-        el.innerHTML = `
-          <div class="image-lightbox-card" role="dialog" aria-modal="true">
-            <button type="button" class="image-lightbox-close" id="settingsImageLightboxClose">${ti("settingsClose")}</button>
-            <img id="settingsImageLightboxImg" alt="${ti("imagePreviewAlt")}" />
-            <p class="image-lightbox-note" id="settingsImageLightboxNote"></p>
-          </div>
-        `;
-        document.body.appendChild(el);
-        el.addEventListener("click", (e) => {
-          if (e.target === el) hideImageLightbox();
-        });
-        document.getElementById("settingsImageLightboxClose")?.addEventListener("click", hideImageLightbox);
-      }
-
-      function hideImageLightbox() {
-        const el = document.getElementById("settingsImageLightbox");
-        const img = document.getElementById("settingsImageLightboxImg");
-        if (el) el.classList.add("hidden");
-        if (img) img.removeAttribute("src");
-      }
-
-      async function openImageLightbox(imageEntry) {
-        if (!imageEntry) return;
-        ensureImageLightbox();
-        const el = document.getElementById("settingsImageLightbox");
-        const img = document.getElementById("settingsImageLightboxImg");
-        const note = document.getElementById("settingsImageLightboxNote");
-        if (!el || !img) return;
-
-        let src = imageEntry.dataUrl || "";
-        let noteText = "";
-        if (imageEntry.sourcePath) {
-          try {
-            const exists = await ipcRenderer.invoke("image:file-exists", imageEntry.sourcePath);
-            if (exists?.ok && exists.exists) {
-              const loaded = await ipcRenderer.invoke("image:read-file", imageEntry.sourcePath);
-              if (loaded?.ok && loaded.dataUrl) {
-                src = loaded.dataUrl;
-                noteText = ti("imageLoadedFromFile");
-              }
-            } else {
-              noteText = ti("imagePreviewFallback");
-            }
-          } catch {
-            noteText = ti("imagePreviewFallback");
-          }
-        } else {
-          noteText = ti("imageNoPathInfo");
-        }
-
-        img.src = src;
-        if (note) note.textContent = noteText;
-        el.classList.remove("hidden");
-      }
-
-      function renderSlotImageThumbs(slotIndex) {
-        const host = document.getElementById(`slot${slotIndex}ImageThumbs`);
-        if (!host) return;
-        const maxImages = isPremium ? 5 : 1;
-        const images = collectSlotImages(appState.slots[slotIndex]).slice(0, maxImages);
-        host.innerHTML = "";
-        if (!images.length) {
-          host.innerHTML = `<span class="slot-image-thumb-empty">${ti("attachedImagesEmpty")}</span>`;
-          return;
-        }
-        images.forEach((entry) => {
-          const btn = document.createElement("button");
-          btn.type = "button";
-          btn.className = "slot-image-thumb";
-          btn.style.backgroundImage = `url("${entry.dataUrl}")`;
-          btn.title = ti("attachedImagesHint");
-          btn.addEventListener("click", () => openImageLightbox(entry));
-          host.appendChild(btn);
-        });
-      }
-
-      function renderAllSlotImageThumbs() {
-        syncAllSlotsImagesFromMemo();
-        for (let s = 0; s < appState.enabledCount; s++) {
-          renderSlotImageThumbs(s);
-        }
       }
 
       const GEAR_ICON_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.05 1.41 1.15H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
@@ -4187,6 +4034,10 @@
       }
 
       function renderPanels() {
+        const active = document.activeElement;
+        const focusId = active && panelHost.contains(active) && active.id ? active.id : "";
+        const selStart = active && typeof active.selectionStart === "number" ? active.selectionStart : null;
+        const selEnd = active && typeof active.selectionEnd === "number" ? active.selectionEnd : null;
         panelHost.innerHTML = "";
         panelHost.appendChild(buildCommonPanel());
         for (let s = 0; s < appState.enabledCount; s++) {
@@ -4195,7 +4046,19 @@
         applyActivePanel();
         bindPanelEvents();
         applyPremiumGating();
-        renderAllSlotImageThumbs();
+        if (focusId) {
+          const el = document.getElementById(focusId);
+          if (el) {
+            el.focus();
+            if (selStart != null && typeof el.setSelectionRange === "function") {
+              try {
+                el.setSelectionRange(selStart, selEnd ?? selStart);
+              } catch {
+                /* ignore */
+              }
+            }
+          }
+        }
       }
 
       function applyActivePanel() {
@@ -4224,12 +4087,15 @@
       }
 
       function onTabDeleteClick(slotIndex) {
+        const prevFocus = document.activeElement;
         if (appState.enabledCount <= 1) {
           alert(ti("indexMinOneAlert"));
+          restoreFocusAfterNativeDialog(prevFocus);
           return;
         }
         const label = resolveSlotLabel(appState.slots[slotIndex]?.label, slotIndex);
         const ok = confirm(ti("indexDeleteConfirm", { label }));
+        restoreFocusAfterNativeDialog(prevFocus);
         if (!ok) return;
         readSettingsForm();
         void performDelete(slotIndex);
@@ -4543,7 +4409,10 @@
       }
 
       function resetCommonSettingsToDefaults() {
-        if (!confirm(ti("resetCommonConfirm"))) return;
+        const prevFocus = document.activeElement;
+        const ok = confirm(ti("resetCommonConfirm"));
+        restoreFocusAfterNativeDialog(prevFocus);
+        if (!ok) return;
         const defaults = commonResetDefaults();
         appState.global.monitorMode = defaults.monitorMode;
         appState.global.monitorTargetId = defaults.monitorTargetId;
@@ -4998,16 +4867,39 @@
           const match = inp.id.match(/slot(\d+)Label/);
           if (!match) return;
           const slot = Number(match[1]);
-          inp.addEventListener("input", () => {
-            const chars = Array.from(inp.value);
-            appState.slots[slot].label = chars.slice(0, LABEL_MAX).join("");
+          const commitLabel = () => {
+            if (inp.dataset.composing === "1") {
+              appState.slots[slot].label = inp.value;
+            } else {
+              const chars = Array.from(inp.value);
+              if (chars.length > LABEL_MAX) {
+                const next = chars.slice(0, LABEL_MAX).join("");
+                const caret = inp.selectionStart;
+                inp.value = next;
+                const pos = Math.min(typeof caret === "number" ? caret : next.length, next.length);
+                try {
+                  inp.setSelectionRange(pos, pos);
+                } catch {
+                  /* ignore */
+                }
+              }
+              appState.slots[slot].label = Array.from(inp.value).slice(0, LABEL_MAX).join("");
+            }
             clearSlotLabelError(slot);
             const tabLabel = tabRow.querySelector(
               `[data-settings-tab="idx${slot}"] span:last-child`
             );
             if (tabLabel) tabLabel.textContent = resolveSlotLabel(appState.slots[slot].label, slot);
             refreshApplyButton();
+          };
+          inp.addEventListener("compositionstart", () => {
+            inp.dataset.composing = "1";
           });
+          inp.addEventListener("compositionend", () => {
+            inp.dataset.composing = "0";
+            commitLabel();
+          });
+          inp.addEventListener("input", commitLabel);
         });
 
         panelHost.querySelectorAll("[data-yslot]").forEach((sel) => {
@@ -5238,14 +5130,14 @@
           appState.global.panelEdge = pe === "left" || pe === "top" ? pe : "right";
           panelEdgeSelect.value = appState.global.panelEdge;
         }
-        syncMemoAspectOptionsForEdge(appState.global.panelEdge);
+        appState.global.memoAspectRatio = normalizeMemoAspectRatioForEdge(
+          appState.global.memoAspectRatio,
+          appState.global.panelEdge
+        );
         if (memoAspectSelect) {
-          memoAspectSelect.value = normalizeMemoAspectRatioForEdge(
-            appState.global.memoAspectRatio,
-            appState.global.panelEdge
-          );
-          appState.global.memoAspectRatio = memoAspectSelect.value;
+          memoAspectSelect.value = appState.global.memoAspectRatio;
         }
+        syncMemoAspectOptionsForEdge(appState.global.panelEdge);
         if (langSelect) langSelect.value = appState.global.language || (typeof PeekomI18n !== "undefined" ? PeekomI18n.getCurrentLang() : "ko");
 
         const opacityRange = document.getElementById("memoOpacityRange");
@@ -5259,7 +5151,9 @@
 
         for (let s = 0; s < appState.enabledCount; s++) {
           const inp = document.getElementById(`slot${s}Label`);
-          if (inp) inp.value = getSlotLabelFormValue(s);
+          if (inp && !isSlotLabelFocused(s) && inp.dataset.composing !== "1") {
+            inp.value = getSlotLabelFormValue(s);
+          }
 
           const ySlotSel = document.getElementById(`slot${s}YSlot`);
           if (ySlotSel) ySlotSel.value = String(appState.slots[s].ySlot ?? s);
@@ -5540,22 +5434,32 @@
         if (!applyBtn) return;
         applyBtn.disabled = true;
         try {
-          await populateFontSelects();
-          await preferDiskPositionsUnlessFormEdited();
-          readSettingsForm();
+          try {
+            await populateFontSelects();
+          } catch (err) {
+            logSettings("E-FONTS", err);
+          }
+          try {
+            await preferDiskPositionsUnlessFormEdited();
+          } catch (err) {
+            logSettings("E-POSITIONS", err);
+          }
+          try {
+            readSettingsForm();
+          } catch (err) {
+            logSettings("E-FORM", err);
+            setStatus(`${ti("statusApplyError")} (E-FORM)`, 5000);
+            return;
+          }
           markSettingsLocalMutation();
 
           clearAllSlotLabelErrors();
           for (let s = 0; s < appState.enabledCount; s++) {
-            const labelVal = (document.getElementById(`slot${s}Label`)?.value || "").trim();
-            if (!labelVal) {
-              activeTab = `idx${s}`;
-              applyActivePanel();
-              showSlotLabelError(s);
-              setStatus(ti("indexTitleRequired"), 5000);
-              return;
-            }
+            let labelVal = (document.getElementById(`slot${s}Label`)?.value || "").trim();
+            if (!labelVal) labelVal = resolveSlotLabel("", s);
             appState.slots[s].label = Array.from(labelVal).slice(0, LABEL_MAX).join("");
+            const labelInput = document.getElementById(`slot${s}Label`);
+            if (labelInput && !labelInput.value.trim()) labelInput.value = appState.slots[s].label;
           }
 
           if (appState.global.triggerMode === "shortcut" && !validateShortcutUniqueness()) {
@@ -5584,6 +5488,11 @@
 
           try {
             const result = await ipcRenderer.invoke("settings:update", payload);
+            if (result?.ok === false) {
+              logSettings("E-UPDATE", result.reason || "failed");
+              setStatus(`${ti("statusApplyError")} (E-UPDATE)`, 5000);
+              return;
+            }
             if (result?.shortcutStatus?.ok === false) {
               showShortcutConflictError(result.shortcutStatus.failedAccelerator || "");
               setStatus(ti("statusShortcutFail"), 5000);
@@ -5591,8 +5500,8 @@
             }
             clearShortcutConflictError();
           } catch (err) {
-            console.error(err);
-            setStatus(ti("statusApplyError"), 5000);
+            logSettings("E-UPDATE", err);
+            setStatus(`${ti("statusApplyError")} (E-UPDATE)`, 5000);
             return;
           }
 
@@ -5655,14 +5564,18 @@
           renderTabs();
           syncThemeGroupSelection();
           syncCustomColorVisibility();
-          renderAllSlotImageThumbs();
           patchBaseline();
           setStatus(ti("statusApplied"), 2500);
         } catch (err) {
-          console.error(err);
-          setStatus(ti("statusApplyError"), 5000);
+          logSettings("E-APPLY", err);
+          setStatus(`${ti("statusApplyError")} (E-APPLY)`, 5000);
         } finally {
-          refreshApplyButton();
+          try {
+            refreshApplyButton();
+          } catch (err) {
+            logSettings("E-APPLY-BTN", err);
+            if (applyBtn) applyBtn.disabled = false;
+          }
         }
       }
 
@@ -5675,8 +5588,16 @@
       });
 
       document.getElementById("unsavedModalCancelBtn")?.addEventListener("click", () => {
-        revertToBaseline();
+        const shouldClose = pendingCloseAfterApply;
+        try {
+          revertToBaseline();
+        } catch (err) {
+          logSettings("E-REVERT", err);
+        }
         hideUnsavedModal();
+        if (shouldClose) {
+          void ipcRenderer.invoke("settings:close-window").catch((err) => logSettings("E-CLOSE-IPC", err));
+        }
       });
 
       document.getElementById("unsavedModalApplyBtn")?.addEventListener("click", async () => {

@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "Dimuat dari file asli",
   "imagePreviewFallback": "File asli tidak ditemukan; menampilkan pratinjau tersimpan.",
   "imageNoPathInfo": "Tidak ada path asli; menampilkan pratinjau tersimpan.",
-  "fontSizeRangeHint": "Rentang: 8 – 36 px",
+  "fontSizeRangeHint": "Rentang: 8 – 45 px",
   "startupCheckFail": "Tidak dapat memverifikasi pendaftaran startup. Coba lagi.",
   "startupSetError": "Kesalahan saat mengonfigurasi startup.",
   "stateChangedConfirm": "Pengaturan diubah di tempat lain.\n\nBuang perubahan yang belum disimpan dan segarkan?",

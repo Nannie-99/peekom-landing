@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "元のファイルから読み込み",
   "imagePreviewFallback": "元のファイルが見つからないため、保存済みプレビューを表示しています。",
   "imageNoPathInfo": "元のパス情報がないため、保存済みプレビューを表示しています。",
-  "fontSizeRangeHint": "範囲: 8 – 36 px",
+  "fontSizeRangeHint": "範囲: 8 – 45 px",
   "startupCheckFail": "起動登録の状態を確認できませんでした。もう一度お試しください。",
   "startupSetError": "起動設定の構成中にエラーが発生しました。",
   "stateChangedConfirm": "他の画面で設定が変更されました。\n\n未保存の変更を破棄して更新しますか？",

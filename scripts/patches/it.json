@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "Caricato dal file originale",
   "imagePreviewFallback": "File originale non trovato; mostra anteprima salvata.",
   "imageNoPathInfo": "Nessun percorso originale; mostra anteprima salvata.",
-  "fontSizeRangeHint": "Intervallo: 8 – 36 px",
+  "fontSizeRangeHint": "Intervallo: 8 – 45 px",
   "startupCheckFail": "Impossibile verificare la registrazione all'avvio. Riprova.",
   "startupSetError": "Errore durante la configurazione dell'avvio automatico.",
   "stateChangedConfirm": "Le impostazioni sono state modificate altrove.\n\nIgnorare le modifiche non salvate e aggiornare?",

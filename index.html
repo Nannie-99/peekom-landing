@@ -160,7 +160,7 @@
       }
 
       .panel-edge-top .note-backing {
-        top: var(--collapsed-width);
+        top: 0;
         bottom: auto;
         left: auto;
         right: auto;
@@ -176,11 +176,11 @@
       }
 
       .panel-edge-top .note-shell {
-        top: var(--collapsed-width);
+        top: 0;
         bottom: auto;
         left: auto;
         right: auto;
-        padding-top: 10px;
+        padding-top: calc(var(--collapsed-width) + 10px);
         padding-bottom: 6px;
         padding-left: 10px;
         padding-right: 10px;
@@ -1608,7 +1608,7 @@
       const DRAG_THRESHOLD = 12;
       const SWAP_HOLD_MS = 400;
       const FONT_SIZE_MIN = 8;
-      const FONT_SIZE_MAX = 36;
+      const FONT_SIZE_MAX = 45;
       const DEFAULT_FONT_SIZE = 18;
       const THEME_NAMES = ["yellow", "pink", "blue", "green", "custom"];
       const THEME_MAP = {
@@ -2008,6 +2008,21 @@
             if (v3 && v3.version === 3 && Array.isArray(v3.slots)) {
               return ensureMinimumOneSlot(migrateFromV3(v3));
             }
+          }
+        } catch {
+          /* fallthrough */
+        }
+
+        try {
+          const rawFile = ipcRenderer.sendSync("state-backup:read-sync");
+          const parsedFile = tryParseV5State(typeof rawFile === "string" ? rawFile : "");
+          if (parsedFile) {
+            try {
+              localStorage.setItem(STATE_KEY, rawFile);
+            } catch {
+              /* ignore */
+            }
+            return parsedFile;
           }
         } catch {
           /* fallthrough */
@@ -2655,17 +2670,19 @@
           if (layoutKey === lastPanelLayoutKey) return;
           lastPanelLayoutKey = layoutKey;
 
+          const topShellHeight = edge === "top" ? finalHeight + COLLAPSED_WIDTH : finalHeight;
+          finalShellHeight = topShellHeight;
           noteShell.style.width = `${finalWidth}px`;
-          noteShell.style.height = `${finalHeight}px`;
-          noteShell.style.maxHeight = `${finalHeight}px`;
+          noteShell.style.height = `${topShellHeight}px`;
+          noteShell.style.maxHeight = `${topShellHeight}px`;
           noteShell.style.left = `${leftPx}px`;
           noteShell.style.right = "auto";
           noteShell.style.paddingLeft = "10px";
           noteShell.style.paddingRight = "10px";
           if (edge === "top") {
-            noteShell.style.top = `${COLLAPSED_WIDTH}px`;
+            noteShell.style.top = "0";
             noteShell.style.bottom = "auto";
-            noteShell.style.paddingTop = "10px";
+            noteShell.style.paddingTop = `${COLLAPSED_WIDTH + 10}px`;
             noteShell.style.paddingBottom = "6px";
           } else {
             noteShell.style.top = "auto";
@@ -2675,11 +2692,11 @@
           }
           if (noteBacking) {
             noteBacking.style.width = `${finalWidth}px`;
-            noteBacking.style.height = `${finalHeight}px`;
+            noteBacking.style.height = `${topShellHeight}px`;
             noteBacking.style.left = `${leftPx}px`;
             noteBacking.style.right = "auto";
             if (edge === "top") {
-              noteBacking.style.top = `${COLLAPSED_WIDTH}px`;
+              noteBacking.style.top = "0";
               noteBacking.style.bottom = "auto";
             } else {
               noteBacking.style.top = "auto";
@@ -3729,6 +3746,22 @@
         return wrap;
       }
 
+      function plainTextFromExportNode(cleaned) {
+        const host = document.createElement("div");
+        host.style.cssText = "position:fixed;left:-99999px;top:0;white-space:pre-wrap;width:640px;";
+        host.appendChild(cleaned);
+        document.body.appendChild(host);
+        let plain = "";
+        try {
+          plain = host.innerText || cleaned.textContent || "";
+        } finally {
+          host.remove();
+        }
+        plain = plain.replace(/\u00a0/g, " ").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+        if (window.peekom?.isWin) plain = plain.replace(/\n/g, "\r\n");
+        return plain;
+      }
+
       function onMemoCopyOrCut(event) {
         const selection = window.getSelection();
         if (!selection || selection.isCollapsed || !memoEditor.contains(selection.anchorNode)) {
@@ -3740,9 +3773,12 @@
           const holder = document.createElement("div");
           holder.appendChild(frag);
           const cleaned = sanitizeClipboardHtmlForExport(holder.innerHTML);
-          const plain = (cleaned.innerText || cleaned.textContent || "").replace(/\u00a0/g, " ");
+          const plain = plainTextFromExportNode(cleaned);
+          const htmlWrap = document.createElement("div");
+          htmlWrap.setAttribute("style", "white-space:pre-wrap");
+          htmlWrap.innerHTML = cleaned.innerHTML;
           event.clipboardData.setData("text/plain", plain);
-          event.clipboardData.setData("text/html", cleaned.innerHTML);
+          event.clipboardData.setData("text/html", htmlWrap.outerHTML);
           event.preventDefault();
         } catch {
           /* fall through to default copy */

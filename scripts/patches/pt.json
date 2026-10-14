@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "Carregado do arquivo original",
   "imagePreviewFallback": "Arquivo original não encontrado; exibindo pré-visualização salva.",
   "imageNoPathInfo": "Sem caminho original; exibindo pré-visualização salva.",
-  "fontSizeRangeHint": "Intervalo: 8 – 36 px",
+  "fontSizeRangeHint": "Intervalo: 8 – 45 px",
   "startupCheckFail": "Não foi possível verificar o registro de inicialização. Tente novamente.",
   "startupSetError": "Erro ao configurar inicialização automática.",
   "stateChangedConfirm": "As configurações foram alteradas em outro lugar.\n\nDescartar alterações não salvas e atualizar?",

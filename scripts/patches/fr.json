@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "Chargé depuis le fichier d'origine",
   "imagePreviewFallback": "Fichier d'origine introuvable ; affichage de l'aperçu enregistré.",
   "imageNoPathInfo": "Aucun chemin d'origine ; affichage de l'aperçu enregistré.",
-  "fontSizeRangeHint": "Plage : 8 – 36 px",
+  "fontSizeRangeHint": "Plage : 8 – 45 px",
   "startupCheckFail": "Impossible de vérifier l'enregistrement au démarrage. Veuillez réessayer.",
   "startupSetError": "Erreur lors de la configuration du démarrage automatique.",
   "stateChangedConfirm": "Les paramètres ont changé ailleurs.\n\nAbandonner les modifications non enregistrées et actualiser ?",

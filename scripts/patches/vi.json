@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "Đã tải từ tệp gốc",
   "imagePreviewFallback": "Không tìm thấy tệp gốc; hiển thị bản xem trước đã lưu.",
   "imageNoPathInfo": "Không có đường dẫn gốc; hiển thị bản xem trước đã lưu.",
-  "fontSizeRangeHint": "Phạm vi: 8 – 36 px",
+  "fontSizeRangeHint": "Phạm vi: 8 – 45 px",
   "startupCheckFail": "Không thể xác minh đăng ký khởi động. Vui lòng thử lại.",
   "startupSetError": "Lỗi khi cấu hình khởi động cùng hệ thống.",
   "stateChangedConfirm": "Cài đặt đã thay đổi ở nơi khác.\n\nBỏ thay đổi chưa lưu và làm mới?",

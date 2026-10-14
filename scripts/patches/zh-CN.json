@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "已从原始文件加载",
   "imagePreviewFallback": "找不到原始文件，显示已保存的预览。",
   "imageNoPathInfo": "无原始路径信息，显示已保存的预览。",
-  "fontSizeRangeHint": "范围: 8 – 36 px",
+  "fontSizeRangeHint": "范围: 8 – 45 px",
   "startupCheckFail": "无法验证开机启动注册。请重试。",
   "startupSetError": "配置开机启动设置时出错。",
   "stateChangedConfirm": "其他位置已更改设置。\n\n放弃未保存的更改并刷新？",

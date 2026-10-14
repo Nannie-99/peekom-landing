@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "已從原始檔案載入",
   "imagePreviewFallback": "找不到原始檔案，顯示已儲存的預覽。",
   "imageNoPathInfo": "無原始路徑資訊，顯示已儲存的預覽。",
-  "fontSizeRangeHint": "範圍: 8 – 36 px",
+  "fontSizeRangeHint": "範圍: 8 – 45 px",
   "startupCheckFail": "無法驗證開機啟動註冊。請重試。",
   "startupSetError": "設定開機啟動時發生錯誤。",
   "stateChangedConfirm": "其他位置已變更設定。\n\n放棄未儲存的變更並重新整理？",

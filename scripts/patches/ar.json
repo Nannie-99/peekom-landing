@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "تم التحميل من الملف الأصلي",
   "imagePreviewFallback": "الملف الأصلي غير موجود؛ عرض المعاينة المحفوظة.",
   "imageNoPathInfo": "لا يوجد مسار أصلي؛ عرض المعاينة المحفوظة.",
-  "fontSizeRangeHint": "النطاق: 8 – 36 px",
+  "fontSizeRangeHint": "النطاق: 8 – 45 px",
   "startupCheckFail": "تعذّر التحقق من تسجيل بدء التشغيل. حاول مرة أخرى.",
   "startupSetError": "خطأ أثناء إعداد بدء التشغيل.",
   "stateChangedConfirm": "تم تغيير الإعدادات في مكان آخر.\n\nتجاهل التغييرات غير المحفوظة وتحديث؟",

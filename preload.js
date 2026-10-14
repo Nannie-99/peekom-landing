@@ -18,6 +18,8 @@ const ALLOWED_INVOKE = new Set([
   "settings:notify-changed",
   "settings:open-window",
   "settings:close-window",
+  "settings:close-handled",
+  "log:write",
   "settings:get",
   "window:sync-interaction",
   "window:set-peek-auto-collapse",
@@ -29,8 +31,6 @@ const ALLOWED_INVOKE = new Set([
   "export:save",
   "import:load",
   "image:pick",
-  "image:file-exists",
-  "image:read-file",
   "system:list-fonts",
   "display:list",
   "tray:set-visible",
@@ -46,7 +46,7 @@ const ALLOWED_INVOKE = new Set([
   "color:prepare-advanced-picker"
 ]);
 
-const ALLOWED_SEND = new Set([]);
+const ALLOWED_SEND = new Set(["state-backup:read-sync"]);
 
 const ALLOWED_ON = new Set([
   "shared-state:read-request",

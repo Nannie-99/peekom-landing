@@ -184,7 +184,7 @@
   "imageLoadedFromFile": "Loaded from original file",
   "imagePreviewFallback": "Original file not found; showing saved preview.",
   "imageNoPathInfo": "No original path; showing saved preview.",
-  "fontSizeRangeHint": "Range: 8 – 36 px",
+  "fontSizeRangeHint": "Range: 8 – 45 px",
   "startupCheckFail": "Could not verify startup registration. Please try again.",
   "startupSetError": "Error while configuring startup settings.",
   "stateChangedConfirm": "Settings changed elsewhere.\n\nDiscard unsaved changes and refresh?",

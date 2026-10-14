@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "Cargado desde el archivo original",
   "imagePreviewFallback": "Archivo original no encontrado; mostrando vista previa guardada.",
   "imageNoPathInfo": "Sin ruta original; mostrando vista previa guardada.",
-  "fontSizeRangeHint": "Rango: 8 – 36 px",
+  "fontSizeRangeHint": "Rango: 8 – 45 px",
   "startupCheckFail": "No se pudo verificar el registro de inicio. Inténtalo de nuevo.",
   "startupSetError": "Error al configurar el inicio automático.",
   "stateChangedConfirm": "Los ajustes cambiaron en otro lugar.\n\n¿Descartar cambios sin guardar y actualizar?",

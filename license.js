@@ -337,7 +337,17 @@ async function tryReuseExistingActivation(key) {
   return null;
 }
 
+let activateInFlight = null;
+
 async function activateLicenseKey(licenseKey) {
+  if (activateInFlight) return activateInFlight;
+  activateInFlight = activateLicenseKeyInner(licenseKey).finally(() => {
+    activateInFlight = null;
+  });
+  return activateInFlight;
+}
+
+async function activateLicenseKeyInner(licenseKey) {
   const key = String(licenseKey || "").trim();
   if (!key) {
     return { ok: false, code: "EMPTY_KEY" };

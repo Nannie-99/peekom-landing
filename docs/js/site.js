@@ -43,9 +43,16 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 
 const RELEASE_HISTORY = [
     {
+        version: "1.2.5",
+        date: "2026/10/14",
+        latest: true,
+        macAvailable: true,
+        winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.5/Peekom-Setup.exe",
+        macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.5/Peekom-macOS.dmg"
+    },
+    {
         version: "1.2.4",
         date: "2026/09/27",
-        latest: true,
         macAvailable: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.4/Peekom-Setup.exe",
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.4/Peekom-macOS.dmg"
@@ -76,6 +83,31 @@ const RELEASE_HISTORY = [
         macUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.0/Peekom-macOS.dmg"
     }
 ];
+
+const CHANGELOG_V125 = {
+    ko: [
+        "위쪽 손잡이에서 메모가 손잡이 뒤까지 이어지도록 수정",
+        "설정창을 열 때 메모 크기가 2×2로 바뀌던 오류 수정",
+        "인덱스 제목 입력이 막히지 않도록 개선, 글자 크기 8~45px",
+        "설정창의 첨부 이미지 목록 제거 (메모에 그림 넣기는 유지)",
+        "메모 복사 시 줄바꿈과 띄어쓰기 유지",
+        "Windows 제거 후 글자 잔해(유령 창)가 남지 않도록 개선",
+        "업데이트 시 메모·서식 보존, 라이선스 중복 등록 방지",
+        "설정 적용 오류가 나도 설정창을 닫을 수 있도록 수정",
+        "유료 구매 버튼을 누르면 결제 페이지와 함께 최신 설치 파일 다운로드"
+    ],
+    en: [
+        "Top-edge memos now extend behind the handle",
+        "Fixed memo size resetting to 2×2 whenever Settings opened",
+        "Index titles no longer get stuck while typing; font size 8–45px",
+        "Removed the attached-images section in Settings (inserting images in memos stays)",
+        "Copying a memo keeps line breaks and spaces",
+        "Windows uninstall no longer leaves a ghost text window",
+        "Updates keep memo formatting and avoid duplicate license activation",
+        "Settings can be closed even if applying settings fails",
+        "Paid buttons open checkout and download the latest installer"
+    ]
+};
 
 const CHANGELOG_V124 = {
     ko: [
@@ -491,12 +523,14 @@ const CHANGELOG_V120 = {
 };
 
 function buildChangelogForLang(lang) {
+    const v125 = CHANGELOG_V125[lang] || CHANGELOG_V125.en;
     const v124 = CHANGELOG_V124[lang] || CHANGELOG_V124.en;
     const v123 = CHANGELOG_V123[lang] || CHANGELOG_V123.en;
     const v122 = CHANGELOG_V122[lang] || CHANGELOG_V122.en;
     const v121 = CHANGELOG_V121[lang] || CHANGELOG_V121.en;
     const v120 = CHANGELOG_V120[lang] || CHANGELOG_V120.en;
     return [
+        { version: "1.2.5", date: "2026.10.14", items: v125 },
         { version: "1.2.4", date: "2026.09.27", items: v124 },
         { version: "1.2.3", date: "2026.07.24", items: v123 },
         { version: "1.2.2", date: "2026.07.11", items: v122 },
@@ -1319,6 +1353,7 @@ const i18n = {
         versionMac: "Universal",
         versionMacSoon: "출시 예정",
         changelogTitle: "변경 기록",
+        paidDownloadNote: "구매 페이지가 열리고, 이 컴퓨터에 맞는 최신 버전도 함께 받아집니다.",
         linkChangelog: "Changelog / Releases", linkPrev: "Previous Versions", linkSmartScreen: "SmartScreen Guide"
     },
     en: {
@@ -1766,6 +1801,7 @@ const i18n = {
         versionColVersion: "Version", versionColDate: "Release Date", versionColWin: "Windows", versionColMac: "macOS",
         versionLatest: "Latest", versionWin: "64-bit", versionMac: "Universal", versionMacSoon: "Coming soon",
         changelogTitle: "Changelog",
+        paidDownloadNote: "Checkout opens, and the latest installer for this computer downloads too.",
         fz1Title: "Peek from the edge",
         fz1Items: [
             { text: "Click index to open memo quickly" },
@@ -2021,6 +2057,7 @@ function enrichLocaleData(data, lang) {
     next.versionWin = next.versionWin || en.versionWin;
     next.versionMac = next.versionMac || en.versionMac;
     next.changelogTitle = next.changelogTitle || en.changelogTitle;
+    next.paidDownloadNote = next.paidDownloadNote || en.paidDownloadNote;
     next.guideKeysTitle = next.guideKeysTitle || en.guideKeysTitle;
     next.guideKeysIntro = next.guideKeysIntro || en.guideKeysIntro;
     next.gkColAction = next.gkColAction || en.gkColAction;
@@ -2379,10 +2416,40 @@ function showMacComingSoon(event) {
 
 var heroOfferActionsBound = false;
 
+function triggerLatestDownload() {
+    if (userOS !== "win" && userOS !== "mac") return;
+    const a = document.createElement("a");
+    a.href = userOS === "mac" ? LINKS.mac : LINKS.win;
+    a.download = userOS === "mac" ? MAC_DMG_FILENAME : WIN_SETUP_FILENAME;
+    a.rel = "noopener";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+}
+
+function refreshPaidDownloadNotes() {
+    const d = getLocaleData();
+    const text = d.paidDownloadNote || "";
+    document.querySelectorAll("[data-paid-download-note]").forEach(function (el) {
+        el.textContent = text;
+    });
+}
+
 function initHeroOfferActions() {
     if (heroOfferActionsBound) return;
     heroOfferActionsBound = true;
-    // Mac/Windows free cards are direct download links (href set in applyLinks).
+    document.querySelectorAll("[data-tier]").forEach(function (el) {
+        if (el.dataset.paidDownloadBound === "1") return;
+        el.dataset.paidDownloadBound = "1";
+        const note = document.createElement("p");
+        note.className = "paid-download-note";
+        note.setAttribute("data-paid-download-note", "1");
+        el.insertAdjacentElement("afterend", note);
+        el.addEventListener("click", function () {
+            triggerLatestDownload();
+        });
+    });
+    refreshPaidDownloadNotes();
 }
 
 function setThemeBtnA11y(id, label) {
@@ -2730,6 +2797,7 @@ function updateUI() {
     highlightOSButtons();
     renderPrivacyPage(d);
     syncHeroHeights();
+    refreshPaidDownloadNotes();
 }
 
 function syncHeroHeights() {

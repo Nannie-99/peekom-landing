@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "Aus Originaldatei geladen",
   "imagePreviewFallback": "Originaldatei nicht gefunden; gespeicherte Vorschau wird angezeigt.",
   "imageNoPathInfo": "Kein Originalpfad; gespeicherte Vorschau wird angezeigt.",
-  "fontSizeRangeHint": "Bereich: 8 – 36 px",
+  "fontSizeRangeHint": "Bereich: 8 – 45 px",
   "startupCheckFail": "Startregistrierung konnte nicht überprüft werden. Bitte erneut versuchen.",
   "startupSetError": "Fehler beim Konfigurieren der Starteinstellungen.",
   "stateChangedConfirm": "Einstellungen wurden an anderer Stelle geändert.\n\nUngespeicherte Änderungen verwerfen und aktualisieren?",

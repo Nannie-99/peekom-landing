@@ -94,7 +94,7 @@
   "imageLoadedFromFile": "โหลดจากไฟล์ต้นฉบับ",
   "imagePreviewFallback": "ไม่พบไฟล์ต้นฉบับ แสดงตัวอย่างที่บันทึกไว้",
   "imageNoPathInfo": "ไม่มีเส้นทางต้นฉบับ แสดงตัวอย่างที่บันทึกไว้",
-  "fontSizeRangeHint": "ช่วง: 8 – 36 px",
+  "fontSizeRangeHint": "ช่วง: 8 – 45 px",
   "startupCheckFail": "ตรวจสอบการลงทะเบียนเริ่มต้นไม่ได้ โปรดลองอีกครั้ง",
   "startupSetError": "เกิดข้อผิดพลาดขณะตั้งค่าเริ่มต้น",
   "stateChangedConfirm": "การตั้งค่าเปลี่ยนในที่อื่น\n\nทิ้งการเปลี่ยนแปลงที่ยังไม่บันทึกและรีเฟรช?",
