@@ -44,7 +44,7 @@ const CONTACT_EMAIL = "hello.peekom@gmail.com";
 const RELEASE_HISTORY = [
     {
         version: "1.2.5",
-        date: "2026/10/14",
+        date: "2026/10/15",
         latest: true,
         macAvailable: true,
         winUrl: "https://github.com/Nannie-99/peekom-landing/releases/download/v1.2.5/Peekom-Setup.exe",
@@ -530,7 +530,7 @@ function buildChangelogForLang(lang) {
     const v121 = CHANGELOG_V121[lang] || CHANGELOG_V121.en;
     const v120 = CHANGELOG_V120[lang] || CHANGELOG_V120.en;
     return [
-        { version: "1.2.5", date: "2026.10.14", items: v125 },
+        { version: "1.2.5", date: "2026.10.15", items: v125 },
         { version: "1.2.4", date: "2026.09.27", items: v124 },
         { version: "1.2.3", date: "2026.07.24", items: v123 },
         { version: "1.2.2", date: "2026.07.11", items: v122 },
