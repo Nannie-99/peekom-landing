@@ -847,7 +847,7 @@ const i18n = {
         heroTitleMain: "Peekom",
         heroTagline: "빼꼼 인덱스가 <strong>Peekom</strong>으로 돌아왔습니다.<br>가볍고 빠르게—업무 흐름을 이어가세요.",
         heroPlusNote: '무료 앱 설치 후 설정에서 Peekom Plus로 업그레이드할 수 있습니다.<br><a href="/features/#compare">기능 표에서 무료·Plus 차이</a>를 확인하세요.',
-        heroUpgradeNote: "무료 앱 설치 후 설정에서 Peekom Plus로 업그레이드할 수 있습니다.",
+        heroUpgradeNote: "구매 버튼을 누르면 결제 창이 열립니다. 브라우저에서 팝업을 허용해 주세요.",
         heroFreeCompareNote: '<a href="/features/#compare">무료와 Plus 차이</a>를 확인하세요.',
         heroWinBtn: "Windows 다운로드", heroMacBtn: "macOS 다운로드",
         heroPlusBuyBtn: "구입하기",
@@ -1362,7 +1362,7 @@ const i18n = {
         heroTitleMain: "Peekom",
         heroTagline: "The edge memo app is back as <strong>Peekom</strong>.<br>Light, fast notes at your screen edge—stay organized without breaking your work or presentation flow.",
         heroPlusNote: 'After installing the free app, upgrade to Peekom Plus in Settings.<br><a href="/features/#compare">See free vs Plus</a> in the comparison table.',
-        heroUpgradeNote: "After installing the free app, upgrade to Peekom Plus in Settings.",
+        heroUpgradeNote: "The purchase button opens the checkout window. Please allow popups in your browser.",
         heroFreeCompareNote: '<a href="/features/#compare">See free vs Plus</a>.',
         heroWinBtn: "Download for Windows", heroMacBtn: "Download for macOS",
         heroPlusBuyBtn: "Buy now",
@@ -2418,21 +2418,13 @@ var heroOfferActionsBound = false;
 
 function triggerLatestDownload() {
     if (userOS !== "win" && userOS !== "mac") return;
-    const a = document.createElement("a");
-    a.href = userOS === "mac" ? LINKS.mac : LINKS.win;
-    a.download = userOS === "mac" ? MAC_DMG_FILENAME : WIN_SETUP_FILENAME;
-    a.rel = "noopener";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-}
-
-function refreshPaidDownloadNotes() {
-    const d = getLocaleData();
-    const text = d.paidDownloadNote || "";
-    document.querySelectorAll("[data-paid-download-note]").forEach(function (el) {
-        el.textContent = text;
-    });
+    const iframe = document.createElement("iframe");
+    iframe.hidden = true;
+    iframe.setAttribute("aria-hidden", "true");
+    iframe.style.cssText = "position:absolute;width:0;height:0;border:0;";
+    iframe.src = userOS === "mac" ? LINKS.mac : LINKS.win;
+    document.body.appendChild(iframe);
+    setTimeout(function () { iframe.remove(); }, 60000);
 }
 
 function initHeroOfferActions() {
@@ -2441,15 +2433,10 @@ function initHeroOfferActions() {
     document.querySelectorAll("[data-tier]").forEach(function (el) {
         if (el.dataset.paidDownloadBound === "1") return;
         el.dataset.paidDownloadBound = "1";
-        const note = document.createElement("p");
-        note.className = "paid-download-note";
-        note.setAttribute("data-paid-download-note", "1");
-        el.insertAdjacentElement("afterend", note);
         el.addEventListener("click", function () {
             triggerLatestDownload();
         });
     });
-    refreshPaidDownloadNotes();
 }
 
 function setThemeBtnA11y(id, label) {
@@ -2797,7 +2784,6 @@ function updateUI() {
     highlightOSButtons();
     renderPrivacyPage(d);
     syncHeroHeights();
-    refreshPaidDownloadNotes();
 }
 
 function syncHeroHeights() {
